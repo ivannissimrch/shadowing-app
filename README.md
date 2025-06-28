@@ -15,36 +15,37 @@ An app to help English learners improve their spoken English by mimicking native
 
 ### Core Features
 
+## MVP
 
- ## MVP
-- Import and playback YouTube video segments (10–15 second loopable chunks)
-- Record and playback the user’s voice per segment
+- have predefined list of videos to choose from
+- Import and playback YouTube videos
+- Play the video in 10–15 second segments, looped
+- Record and playback the user’s voice
 - Side-by-side comparison between native and user audio
-- Visual and textual feedback on:
-  - Pronunciation accuracy (word or syllable level)
-  - Intonation curve and pitch contour  
+- Feedback on: Pronunciation accuracy (word or syllable level)
 
+## Stretch Goals
 
+- Graph of intonation curve and pitch contour
+- Display captions when playing video
 
 ---
 
 ## User Stories
 
-- As a user, I want to import a YouTube video and play it in 10–15 second segments on loop so I can practice naturally.
-- As a learner, I want to record myself repeating a segment so I can hear my performance.
+- As a user, I want to import a YouTube video and play it in short segments so I can shadow effectively.
+- As a learner, I want each segment to repeat automatically so I can practice without manually rewinding.
 - As a learner, I want to compare my recording to the native speaker to improve my pronunciation.
-- As a user, I want visual feedback showing pitch and stress so I can better mimic native rhythm.
-- As a casual user, I want to use the app without logging in.
-
+- As a user, I want to get basic feedback on which words I mispronounced.
+- As a User, I want to use the app without logging in.
 
 ---
 
 ## Spikes (Technical Research)
 
-| Topic                  | Goal                                                                                 | Status      |
-| ---------------------- | ------------------------------------------------------------------------------------ | ----------- |
-| Azure Speech API       | Test pronunciation scoring and speech-to-text accuracy for user recordings           | In progress |
-| YouTube API            | Test video import and segment slicing for shadowing playback                         | In progress |
-| Parselmouth            | Analyze pitch, intonation feedback (and visualize it)                                | Not started |
-| React Audio Recorder   | Find best library for in-browser recording with waveform preview                     | Not started |
-
+| Topic                | Goal                                                                            | Status      |
+| -------------------- | ------------------------------------------------------------------------------- | ----------- |
+| Azure Speech API     | Test pronunciation scoring and speech-to-text accuracy for user recordings      | In progress |
+| YouTube API          | Test video import and segment slicing for shadowing playback                    | In progress |
+| React Audio Recorder | Find best library for in-browser recording with waveform preview                | Not started |
+| Parselmouth          | Analyze pitch, intonation feedback (and visualize it), maybe for a stretch goal | Not started |
