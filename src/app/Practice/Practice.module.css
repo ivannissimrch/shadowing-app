@@ -1,0 +1,61 @@
+.main {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  flex-direction: column;
+  background-color: #f5f7fe;
+}
+
+.container {
+  width: 95rem;
+  padding: 2rem;
+  background-color: #f5f7fe;
+  min-height: 100vh;
+}
+
+.title {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #7c3aed;
+  text-align: center;
+}
+
+.subtitle {
+  text-align: center;
+  margin-bottom: 2rem;
+  color: black;
+}
+
+.headerRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.backBtn {
+  background: #7c3aed;
+  border: none;
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.meta h2 {
+  font-size: 1.25rem;
+  margin: 0;
+  color: black;
+}
+
+.meta p {
+  color: black;
+  font-size: 0.9rem;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+}
