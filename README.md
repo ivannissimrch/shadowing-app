@@ -23,9 +23,8 @@ An app to help English learners improve their spoken English by mimicking native
 - Browse list of practice videos (YouTube)
 - Video playback in 10–15 second looped segments
 - Record voice using browser mic
-- AI-generated feedback (Azure Speech API)
-- Submit and save recordings anonymously or to local storage
-- View list of past recordings (locally or session-based)
+- Submit and save recordings
+- View list of past recordings
 
 ---
 
@@ -51,9 +50,11 @@ An app to help English learners improve their spoken English by mimicking native
 
 ## Stretch Goals
 
+- AI-generated feedback (Azure Speech API)
 - Display captions synced to YouTube video
 - Pitch/intonation graph (using Parselmouth)
 - Anonymous guest mode with persistent session history
+- As a student, I want to get AI feedback on my pronunciation.
 
 ---
 
@@ -61,7 +62,6 @@ An app to help English learners improve their spoken English by mimicking native
 
 - As a student, I want to choose a video and shadow it by repeating short segments.
 - As a student, I want to record my voice and compare it to the native speaker.
-- As a student, I want to get AI feedback on my pronunciation.
 - As a student, I want to save and replay my recordings.
 
 ---
@@ -94,7 +94,7 @@ An app to help English learners improve their spoken English by mimicking native
 - [ ] Audio recording component (mic access + playback)
 - [ ] Save recording (anonymously or to local/session storage)
 - [ ] Display native and user audio side-by-side
-- [ ] Get pronunciation feedback using Azure Speech API
+- [ ] Get pronunciation feedback using Azure Speech API stretch goal
 - [ ] Basic UI styling with Tailwind CSS
 
 ---
