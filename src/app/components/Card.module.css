@@ -1,73 +1,51 @@
 .card {
   background: white;
-  border-radius: 12px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
   overflow: hidden;
-  padding: 1rem;
+  padding: 0.5rem;
   text-align: center;
   color: black;
+  width: 26.25rem;
 }
 
 .thumbnail {
   padding: 1rem;
-  background: linear-gradient(to right, #f0f4ff, #e9ecff);
-  border-radius: 8px;
+  background: #e9ecff;
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
 }
 
-.camera {
-  font-size: 2rem;
+.image {
+  object-fit: cover;
 }
 
 .content {
   margin-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .title {
+  text-align: left;
   font-size: 1rem;
   font-weight: 600;
-  width: 300px;
-}
-
-.tags {
-  display: flex;
-  justify-content: center;
-  gap: 0.5rem;
-  margin: 0.5rem 0;
-}
-
-.tag {
-  font-size: 0.75rem;
-  padding: 0.2rem 0.5rem;
-  border-radius: 8px;
-  text-transform: capitalize;
-}
-
-.beginner {
-  background-color: #e0f8e9;
-  color: #1d8732;
-}
-
-.intermediate {
-  background-color: #fff2cc;
-  color: #c97b00;
-}
-
-.advanced {
-  background-color: #fde2e2;
-  color: #c0392b;
-}
-
-.duration {
-  font-size: 0.8rem;
-  margin: 0.5rem 0;
+  width: 18.75rem;
 }
 
 .button {
-  background: linear-gradient(to right, #5f41ff, #8b4dff);
+  margin: 0.5rem 0;
+  background: blue;
   color: white;
   border: none;
-  padding: 0.5rem 1rem;
+  padding: 1rem 1.5rem;
   font-weight: bold;
-  border-radius: 6px;
   cursor: pointer;
+}
+
+.button:hover {
+  background-color: rgb(47, 47, 223);
+  transform: scale(0.99);
 }

@@ -11,12 +11,12 @@
   text-align: center;
   background-color: #f5f7fe;
   min-height: 100vh;
-  width: 75rem;
+  width: 85rem;
 }
 
 .title {
   font-size: 2rem;
-  color: #6b4eff;
+  color: blue;
   font-weight: bold;
 }
 
@@ -38,10 +38,8 @@
   margin-bottom: 2rem;
 }
 
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 1.5rem;
-  justify-items: center;
-  margin-top: 1rem;
+.cards-container {
+  display: flex;
+  gap: 2rem;
+  justify-content: center;
 }

@@ -3,40 +3,19 @@ import Card from "./components/Card";
 
 const videos = [
   {
-    title: "Daily Conversation - At the Coffee Shop",
-    level: "beginner",
-    topic: "Daily Life",
-    duration: "2:00",
+    title: "Suits week 109",
+    image: "109",
+    videoId: "",
   },
   {
-    title: "Job Interview Tips and Phrases",
-    level: "intermediate",
-    topic: "Business",
-    duration: "3:00",
+    title: "Suits week 110",
+    image: "110",
+    videoId: "",
   },
   {
-    title: "Academic Presentation Skills",
-    level: "advanced",
-    topic: "Academic",
-    duration: "4:00",
-  },
-  {
-    title: "Ordering Food at a Restaurant",
-    level: "beginner",
-    topic: "Daily Life",
-    duration: "1:30",
-  },
-  {
-    title: "Discussing Weather and Small Talk",
-    level: "beginner",
-    topic: "Social",
-    duration: "2:30",
-  },
-  {
-    title: "Technical Product Presentation",
-    level: "advanced",
-    topic: "Technology",
-    duration: "5:00",
+    title: "Suits week 111",
+    image: "111",
+    videoId: "",
   },
 ];
 
@@ -53,9 +32,9 @@ export default function Home() {
           Select a video that matches your level and interests
         </p>
 
-        <div className={styles.grid}>
-          {videos.map((video, index) => (
-            <Card key={index} {...video} />
+        <div className={styles["cards-container"]}>
+          {videos.map((video) => (
+            <Card key={video.title} video={video} />
           ))}
         </div>
       </div>
