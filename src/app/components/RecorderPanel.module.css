@@ -1,7 +1,6 @@
 .panel {
-  background: #f0fdf4;
-  padding: 2rem;
-  border-radius: 12px;
+  background: #f5f7fe;
+  padding-top: 2rem;
   text-align: center;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
   height: 100%;
@@ -9,9 +8,9 @@
 
 .mic {
   padding: 2rem;
-  background: linear-gradient(to bottom right, #fdf4ff, #e0f2fe);
-  border-radius: 10px;
+  background: white;
   border: 1px solid #e5e7eb;
+  color: black;
 }
 
 .icon {
@@ -27,7 +26,6 @@
   padding: 0.5rem 1rem;
   font-weight: bold;
   border: none;
-  border-radius: 6px;
   margin-top: 1rem;
   cursor: pointer;
 }

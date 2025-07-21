@@ -1,7 +1,9 @@
-import React from "react";
+"use client";
 import styles from "./Practice.module.css";
 import SegmentPlayer from "../components/SegmentPlayer";
 import RecorderPanel from "../components/RecorderPanel";
+import Image from "next/image";
+import Link from "next/link";
 
 export default function Practice() {
   return (
@@ -13,17 +15,27 @@ export default function Practice() {
         </p>
 
         <div className={styles.headerRow}>
-          <button className={styles.backBtn}>← Back to Videos</button>
-          <div className={styles.meta}>
+          <Link href="/" className={styles.backBtn}>
+            ← Back to Lessons
+          </Link>
+          {/* <div className={styles.meta}>
             <h2>Daily Conversation - At the Coffee Shop</h2>
             <p>Beginner · Daily Life</p>
-          </div>
+          </div> */}
         </div>
 
         <div className={styles.grid}>
           <SegmentPlayer />
-          <RecorderPanel />
+          <Image
+            src={`/images/${"110"}.png`}
+            alt="ESL lesson"
+            quality={100}
+            width={710}
+            height={426}
+            // sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          />
         </div>
+        <RecorderPanel />
       </div>
     </main>
   );

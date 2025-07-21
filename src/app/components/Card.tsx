@@ -1,30 +1,34 @@
 import Image from "next/image";
 import styles from "./Card.module.css";
+import Link from "next/link";
 
 interface CardProps {
-  video: {
+  lesson: {
     title: string;
     image: string;
-    videoId: string;
+    lessonId: string;
   };
 }
 
-export default function Card({ video }: CardProps) {
-  const { title, image } = video;
+export default function Card({ lesson }: CardProps) {
+  const { title, image } = lesson;
   return (
     <div className={styles.card}>
       <div className={styles.thumbnail}>
         <Image
           src={`/images/${image}.png`}
           alt="ESL lesson"
-          fill
           quality={100}
+          fill
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           className={styles.image}
         />
       </div>
       <div className={styles.content}>
         <h3 className={styles.title}>{title}</h3>
-        <button className={styles.button}>Start Practicing</button>
+        <Link href={`${lesson.lessonId}`} className={styles.button}>
+          Start Practicing
+        </Link>
       </div>
     </div>
   );
