@@ -4,12 +4,8 @@ import SegmentPlayer from "../components/SegmentPlayer";
 import RecorderPanel from "../components/RecorderPanel";
 import Image from "next/image";
 import Link from "next/link";
-import { useParams } from "next/navigation";
 
 export default function Practice() {
-  const params = useParams();
-  const videoId = typeof params?.id === "string" ? params.id : "";
-
   return (
     <main className={styles.main}>
       <div className={styles.container}>
