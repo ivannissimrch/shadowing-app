@@ -1,12 +1,13 @@
 "use client";
-
 import YouTube, { YouTubeProps } from "react-youtube";
+import { useParams } from "next/navigation";
 
 export default function YouTubePlayer() {
   const onPlayerReady: YouTubeProps["onReady"] = (event) => {
-    // access to player in all event handlers via event.target
     event.target.pauseVideo();
   };
+  const params = useParams();
+  const videoId = typeof params?.id === "string" ? params.id : "";
 
   const opts: YouTubeProps["opts"] = {
     height: "390",
@@ -17,5 +18,5 @@ export default function YouTubePlayer() {
     },
   };
 
-  return <YouTube videoId="ImEnWAVRLU0" opts={opts} onReady={onPlayerReady} />;
+  return <YouTube videoId={videoId} opts={opts} onReady={onPlayerReady} />;
 }

@@ -1,13 +1,12 @@
 "use client";
-// components/SegmentPlayer.tsx
-import React, { useState } from "react";
+// import React, { useState } from "react";
 import styles from "./SegmetPlayer.module.css";
 import YouTubePlayer from "./YouTubePlayer";
-
-const SegmentPlayer = () => {
-  const [start, setStart] = useState(0);
-  const [end, setEnd] = useState(15);
-  const [loop, setLoop] = useState(true);
+export default function SegmentPlayer() {
+  // const [start, setStart] = useState(0);
+  // const [end, setEnd] = useState(15);
+  // const [loop, setLoop] = useState(true);
+  // console.log(id);
 
   return (
     <div className={styles.card}>
@@ -20,7 +19,7 @@ const SegmentPlayer = () => {
         </p> */}
       </div>
 
-      <div className={styles.controls}>
+      {/* <div className={styles.controls}>
         <button className={styles.restart}>↻ Restart</button>
         <button className={styles.play}>▶ Play</button>
         <button
@@ -29,9 +28,9 @@ const SegmentPlayer = () => {
         >
           Loop: {loop ? "ON" : "OFF"}
         </button>
-      </div>
+      </div> */}
 
-      <div className={styles.sliderGroup}>
+      {/* <div className={styles.sliderGroup}>
         <label>Segment Start: {start}s</label>
         <input
           type="range"
@@ -48,9 +47,7 @@ const SegmentPlayer = () => {
           value={end}
           onChange={(e) => setEnd(Number(e.target.value))}
         />
-      </div>
+      </div> */}
     </div>
   );
-};
-
-export default SegmentPlayer;
+}

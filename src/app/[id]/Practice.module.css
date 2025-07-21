@@ -16,7 +16,7 @@
 .title {
   font-size: 2rem;
   font-weight: bold;
-  color: #7c3aed;
+  color: blue;
   text-align: center;
 }
 
@@ -35,10 +35,10 @@
 }
 
 .backBtn {
-  background: #7c3aed;
+  background: blue;
+
   border: none;
-  padding: 0.5rem 0.75rem;
-  border-radius: 6px;
+  padding: 1rem 1.25rem;
   font-weight: 500;
   cursor: pointer;
 }

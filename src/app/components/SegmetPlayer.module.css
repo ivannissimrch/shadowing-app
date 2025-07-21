@@ -1,7 +1,6 @@
 .card {
   background: #fff;
-  padding: 1rem;
-  border-radius: 12px;
+  /* padding: 1rem; */
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
   width: 100%;
 }
@@ -10,7 +9,6 @@
   background: #0f172a;
   color: #fff;
   padding: 1rem;
-  border-radius: 10px;
   text-align: center;
 }
 
@@ -37,7 +35,6 @@
   padding: 0.5rem 0.75rem;
   border: none;
   font-weight: 600;
-  border-radius: 6px;
   cursor: pointer;
 }
 
