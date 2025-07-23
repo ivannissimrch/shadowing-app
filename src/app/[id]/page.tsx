@@ -18,16 +18,12 @@ export default function Practice() {
           <Link href="/" className={styles.backBtn}>
             ← Back to Lessons
           </Link>
-          {/* <div className={styles.meta}>
-            <h2>Daily Conversation - At the Coffee Shop</h2>
-            <p>Beginner · Daily Life</p>
-          </div> */}
         </div>
 
         <div className={styles.grid}>
           <SegmentPlayer />
           <Image
-            src={`/images/${"110"}.png`}
+            src={`/images/${"112"}.png`}
             alt="ESL lesson"
             quality={100}
             width={710}
