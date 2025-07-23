@@ -3,18 +3,18 @@ import Card from "./components/Card";
 
 const lessons = [
   {
-    title: "Suits week 109",
-    image: "109",
-    lessonId: "ImEnWAVRLU0",
-  },
-  {
     title: "Suits week 110",
     image: "110",
-    lessonId: "jjeLzr1JR4o",
+    lessonId: "ImEnWAVRLU0",
   },
   {
     title: "Suits week 111",
     image: "111",
+    lessonId: "jjeLzr1JR4o",
+  },
+  {
+    title: "Suits week 112",
+    image: "112",
     lessonId: "jjeLzr1JR4o",
   },
 ];
