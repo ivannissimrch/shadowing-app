@@ -31,7 +31,6 @@ export default function Home() {
         <p className={styles.description}>
           Select a video that matches your level and interests
         </p>
-
         <div className={styles["cards-container"]}>
           {lessons.map((lesson) => (
             <Card key={lesson.title} lesson={lesson} />

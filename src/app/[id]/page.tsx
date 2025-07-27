@@ -1,4 +1,3 @@
-"use client";
 import styles from "./Practice.module.css";
 import SegmentPlayer from "../components/SegmentPlayer";
 import RecorderPanel from "../components/RecorderPanel";
@@ -13,13 +12,11 @@ export default function Practice() {
         <p className={styles.subtitle}>
           Master English pronunciation through shadowing practice
         </p>
-
         <div className={styles.headerRow}>
           <Link href="/" className={styles.backBtn}>
             ← Back to Lessons
           </Link>
         </div>
-
         <div className={styles.grid}>
           <SegmentPlayer />
           <Image
@@ -28,7 +25,6 @@ export default function Practice() {
             quality={100}
             width={710}
             height={426}
-            // sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           />
         </div>
         <RecorderPanel />
