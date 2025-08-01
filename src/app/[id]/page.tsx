@@ -1,10 +1,18 @@
+"use client";
 import styles from "./Practice.module.css";
 import SegmentPlayer from "../components/SegmentPlayer";
 import RecorderPanel from "../components/RecorderPanel";
 import Image from "next/image";
 import Link from "next/link";
+import { useAppContext } from "../AppContext";
 
 export default function Practice() {
+  const { getActiveLesson } = useAppContext();
+  const activeLesson = getActiveLesson();
+  if (!activeLesson) {
+    return <main className={styles.main}>Loading</main>;
+  }
+
   return (
     <main className={styles.main}>
       <div className={styles.container}>
@@ -20,7 +28,7 @@ export default function Practice() {
         <div className={styles.grid}>
           <SegmentPlayer />
           <Image
-            src={`/images/${"112"}.png`}
+            src={`/images/${activeLesson.image}.png`}
             alt="ESL lesson"
             quality={100}
             width={710}

@@ -1,17 +1,13 @@
 import Image from "next/image";
 import styles from "./Card.module.css";
 import Link from "next/link";
+import { useAppContext } from "../AppContext";
+import { Lesson } from "../Types";
 
-interface CardProps {
-  lesson: {
-    title: string;
-    image: string;
-    lessonId: string;
-  };
-}
-
-export default function Card({ lesson }: CardProps) {
-  const { title, image } = lesson;
+export default function Card({ lesson }: { lesson: Lesson }) {
+  const context = useAppContext();
+  const { setActiveLesson } = context;
+  const { title, image, videoId } = lesson;
   return (
     <div className={styles.card}>
       <div className={styles.thumbnail}>
@@ -26,7 +22,11 @@ export default function Card({ lesson }: CardProps) {
       </div>
       <div className={styles.content}>
         <h3 className={styles.title}>{title}</h3>
-        <Link href={`${lesson.lessonId}`} className={styles.button}>
+        <Link
+          href={`${videoId}`}
+          className={styles.button}
+          onClick={() => setActiveLesson(lesson.lessonId)}
+        >
           Start Practicing
         </Link>
       </div>
