@@ -1,6 +1,7 @@
 "use client";
 import React, { createContext, useContext, useState } from "react";
 import { Lesson, LessonsContextType } from "./Types";
+//TODO updfate this to get lessons from API
 const lessons: Lesson[] = [
   {
     title: "Suits week 110",
