@@ -1,13 +1,12 @@
 "use client";
 import YouTube, { YouTubeProps } from "react-youtube";
-import { useParams } from "next/navigation";
+import useSelectedLesson from "../hooks/useSelectedLesson";
 
 export default function YouTubePlayer() {
   const onPlayerReady: YouTubeProps["onReady"] = (event) => {
     event.target.pauseVideo();
   };
-  const params = useParams();
-  const videoId = typeof params?.id === "string" ? params.id : "";
+  const selectedLesson = useSelectedLesson();
 
   const opts: YouTubeProps["opts"] = {
     height: "390",
@@ -18,5 +17,11 @@ export default function YouTubePlayer() {
     },
   };
 
-  return <YouTube videoId={videoId} opts={opts} onReady={onPlayerReady} />;
+  return (
+    <YouTube
+      videoId={selectedLesson?.videoId}
+      opts={opts}
+      onReady={onPlayerReady}
+    />
+  );
 }
