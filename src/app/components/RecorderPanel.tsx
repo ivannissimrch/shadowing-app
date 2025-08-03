@@ -1,17 +1,24 @@
 "use client";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 import styles from "./RecorderPanel.module.css";
 import { useState, useRef } from "react";
 import AudioPlayer from "react-h5-audio-player";
 import "react-h5-audio-player/lib/styles.css";
+import { Snackbar } from "@mui/material";
+import useSelectedLesson from "../hooks/useSelectedLesson";
+import { useAppContext } from "../AppContext";
 
 export default function RecorderPanel() {
+  const selectedLesson = useSelectedLesson();
+  const { addAudioToLesson } = useAppContext();
+  const router = useRouter();
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunks = useRef<Blob[]>([]);
   const [recording, setRecording] = useState(false);
   const [paused, setPaused] = useState(false);
   const [audioURL, setAudioURL] = useState<string | null>(null);
   const [blob, setBlob] = useState<Blob | null>(null);
+  const [open, setOpen] = useState(false);
 
   async function startRecording() {
     const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -60,14 +67,17 @@ export default function RecorderPanel() {
     reader.readAsDataURL(blob);
     reader.onloadend = () => {
       const base64Audio = reader.result;
-      console.log("Base64 audio string:", base64Audio);
-      // send base64Audio to localStorage or supabase
-      // localStorage.setItem("audio", base64Audio as string);
-      // or use supabase client to upload the audio blob
-      // supabase.storage.from("audio").upload("lesson-audio.webm", blob);
-      //show a success message or handle the submission
-      //mark the lesson as submitted
-      //navigate to home page
+      if (
+        typeof base64Audio !== "string" ||
+        selectedLesson?.lessonId === undefined
+      ) {
+        console.error("Invalid audio data or lesson ID");
+        return;
+      }
+
+      addAudioToLesson(selectedLesson.lessonId, base64Audio);
+      setOpen(true);
+      setTimeout(() => router.push("/"), 2000);
     };
   }
 
@@ -111,11 +121,17 @@ export default function RecorderPanel() {
           >
             Delete
           </button>
-          <Link href="/" className={styles.recordBtn} onClick={handleSubmit}>
+          <button className={styles.recordBtn} onClick={handleSubmit}>
             Submit
-          </Link>
+          </button>
         </div>
       )}
+      <Snackbar
+        open={open}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+        autoHideDuration={2000}
+        message="Audio submitted successfully!"
+      />
     </div>
   );
 }

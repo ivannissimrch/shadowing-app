@@ -4,7 +4,7 @@ import Link from "next/link";
 import { Lesson } from "../Types";
 
 export default function Card({ lesson }: { lesson: Lesson }) {
-  const { title, image, lessonId } = lesson;
+  const { title, image, lessonId, status } = lesson;
   return (
     <div className={styles.card}>
       <div className={styles.thumbnail}>
@@ -18,7 +18,10 @@ export default function Card({ lesson }: { lesson: Lesson }) {
         />
       </div>
       <div className={styles.content}>
-        <h3 className={styles.title}>{title}</h3>
+        <div className={styles.text}>
+          <h3 className={styles.title}>{title}</h3>
+          <h3 className={styles.status}>{status}</h3>
+        </div>
         <Link href={lessonId} className={styles.button}>
           Start Practicing
         </Link>

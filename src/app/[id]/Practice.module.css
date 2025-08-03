@@ -1,13 +1,14 @@
 .main {
   display: flex;
   align-items: center;
+  background-color: blue;
   width: 100%;
   flex-direction: column;
   background-color: #f5f7fe;
 }
 
 .container {
-  width: 95rem;
+  width: 100%;
   padding: 2rem;
   background-color: #f5f7fe;
   min-height: 100vh;
@@ -43,13 +44,13 @@
   cursor: pointer;
 }
 
-.meta h2 {
+.h2 {
   font-size: 1.25rem;
   margin: 0;
   color: black;
 }
 
-.meta p {
+.p {
   color: black;
   font-size: 0.9rem;
 }
@@ -57,5 +58,5 @@
 .grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 2rem;
+  gap: 1rem;
 }

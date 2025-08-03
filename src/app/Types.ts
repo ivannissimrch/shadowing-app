@@ -4,10 +4,10 @@ export interface Lesson {
   videoId: string;
   lessonId: string;
   status: string;
+  audioFile: string;
 }
 
 export interface LessonsContextType {
   lessons: Lesson[] | undefined;
-  setActiveLesson: (id: string) => void;
-  getActiveLesson: () => Lesson | void;
+  addAudioToLesson: (id: string, audioFile: string) => void;
 }
