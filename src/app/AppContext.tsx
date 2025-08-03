@@ -1,6 +1,7 @@
 "use client";
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext } from "react";
 import { Lesson, LessonsContextType } from "./Types";
+import { usePersistedState } from "./hooks/usePersistedState";
 //TODO update this to get lessons from API
 const lessons: Lesson[] = [
   {
@@ -39,7 +40,10 @@ export default function StocksContextProvider({
 }: {
   children: React.ReactNode;
 }) {
-  const [eslLessons, setEslLessons] = useState<Lesson[]>(lessons);
+  const [eslLessons, setEslLessons] = usePersistedState<Lesson[]>(
+    "lessons",
+    lessons
+  );
 
   function addAudioToLesson(id: string, audioFile: string) {
     setEslLessons((prevLessons) => {
@@ -54,7 +58,7 @@ export default function StocksContextProvider({
 
   return (
     <lessonsContext.Provider value={{ lessons: eslLessons, addAudioToLesson }}>
-      {children}s
+      {children}
     </lessonsContext.Provider>
   );
 }
