@@ -5,6 +5,7 @@ import { useAppContext } from "./AppContext";
 
 export default function Home() {
   const { lessons } = useAppContext();
+  console.log("Lessons in Home:", lessons);
 
   return (
     <main className={styles.main}>

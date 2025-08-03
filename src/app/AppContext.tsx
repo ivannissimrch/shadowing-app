@@ -1,7 +1,7 @@
 "use client";
 import React, { createContext, useContext, useState } from "react";
 import { Lesson, LessonsContextType } from "./Types";
-//TODO updfate this to get lessons from API
+//TODO update this to get lessons from API
 const lessons: Lesson[] = [
   {
     title: "Suits week 110",
@@ -9,6 +9,7 @@ const lessons: Lesson[] = [
     videoId: "ImEnWAVRLU0",
     lessonId: "110",
     status: "completed",
+    audioFile: "",
   },
   {
     title: "Suits week 111",
@@ -16,20 +17,21 @@ const lessons: Lesson[] = [
     videoId: "jjeLzr1JR4o",
     lessonId: "111",
     status: "completed",
+    audioFile: "",
   },
   {
     title: "Suits week 112",
     image: "112",
     videoId: "jjeLzr1JR4o",
     lessonId: "112",
-    status: "not-started",
+    status: "new",
+    audioFile: "",
   },
 ];
 
 export const lessonsContext = createContext<LessonsContextType>({
   lessons: undefined,
-  setActiveLesson: () => {},
-  getActiveLesson: () => {},
+  addAudioToLesson: () => {},
 });
 
 export default function StocksContextProvider({
@@ -37,28 +39,21 @@ export default function StocksContextProvider({
 }: {
   children: React.ReactNode;
 }) {
-  const [eslLessons, seEslLessons] = useState<Lesson[]>(lessons);
+  const [eslLessons, setEslLessons] = useState<Lesson[]>(lessons);
 
-  function setActiveLesson(id: string) {
-    seEslLessons((prevLessons) => {
+  function addAudioToLesson(id: string, audioFile: string) {
+    setEslLessons((prevLessons) => {
       return prevLessons.map((lesson) => {
         if (lesson.lessonId === id) {
-          return { ...lesson, status: "active" };
+          return { ...lesson, status: "completed", audioFile: audioFile };
         }
         return lesson;
       });
     });
   }
 
-  function getActiveLesson() {
-    const result = eslLessons.find((lesson) => lesson.status === "active");
-    return result;
-  }
-
   return (
-    <lessonsContext.Provider
-      value={{ lessons: eslLessons, setActiveLesson, getActiveLesson }}
-    >
+    <lessonsContext.Provider value={{ lessons: eslLessons, addAudioToLesson }}>
       {children}s
     </lessonsContext.Provider>
   );

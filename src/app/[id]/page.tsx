@@ -27,8 +27,8 @@ export default function Practice() {
             src={`/images/${selectedLesson?.image}.png`}
             alt="ESL lesson"
             quality={100}
-            width={710}
-            height={426}
+            width={625}
+            height={390}
           />
         </div>
         <RecorderPanel />
