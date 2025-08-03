@@ -12,6 +12,7 @@
     "next": "15.3.4",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "react-h5-audio-player": "^3.10.0",
     "react-voice-recorder-player": "^1.2.0",
     "react-youtube": "^10.1.0"
   },

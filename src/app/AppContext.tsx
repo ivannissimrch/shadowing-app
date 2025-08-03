@@ -22,7 +22,7 @@ const lessons: Lesson[] = [
     image: "112",
     videoId: "jjeLzr1JR4o",
     lessonId: "112",
-    status: "active",
+    status: "not-started",
   },
 ];
 
@@ -45,7 +45,7 @@ export default function StocksContextProvider({
         if (lesson.lessonId === id) {
           return { ...lesson, status: "active" };
         }
-        return { ...lesson, status: "completed" };
+        return lesson;
       });
     });
   }
