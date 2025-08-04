@@ -4,13 +4,12 @@ import styles from "./RecorderPanel.module.css";
 import { useState, useRef } from "react";
 import AudioPlayer from "react-h5-audio-player";
 import "react-h5-audio-player/lib/styles.css";
-import { Snackbar } from "@mui/material";
 import useSelectedLesson from "../hooks/useSelectedLesson";
 import { useAppContext } from "../AppContext";
 
 export default function RecorderPanel() {
   const selectedLesson = useSelectedLesson();
-  const { addAudioToLesson } = useAppContext();
+  const { addAudioToLesson, openSnackBar } = useAppContext();
   const router = useRouter();
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunks = useRef<Blob[]>([]);
@@ -18,7 +17,6 @@ export default function RecorderPanel() {
   const [paused, setPaused] = useState(false);
   const [audioURL, setAudioURL] = useState<string | null>(null);
   const [blob, setBlob] = useState<Blob | null>(null);
-  const [open, setOpen] = useState(false);
 
   async function startRecording() {
     const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -76,8 +74,9 @@ export default function RecorderPanel() {
       }
 
       addAudioToLesson(selectedLesson.lessonId, base64Audio);
-      setOpen(true);
-      setTimeout(() => router.push("/"), 2000);
+      router.push("/");
+      openSnackBar();
+      //   setTimeout(() => router.push("/"), 2000);
     };
   }
 
@@ -126,12 +125,6 @@ export default function RecorderPanel() {
           </button>
         </div>
       )}
-      <Snackbar
-        open={open}
-        anchorOrigin={{ vertical: "top", horizontal: "center" }}
-        autoHideDuration={2000}
-        message="Audio submitted successfully!"
-      />
     </div>
   );
 }

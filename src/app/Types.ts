@@ -10,4 +10,7 @@ export interface Lesson {
 export interface LessonsContextType {
   lessons: Lesson[] | undefined;
   addAudioToLesson: (id: string, audioFile: string) => void;
+  openSnackBar: () => void;
+  closeSnackBar: () => void;
+  isSnackBarOpen: boolean;
 }
