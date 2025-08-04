@@ -1,9 +1,8 @@
 "use client";
-import React, { createContext, useContext } from "react";
+import React, { createContext, useContext, useState } from "react";
 import { Lesson, LessonsContextType } from "./Types";
 import { usePersistedState } from "./hooks/usePersistedState";
 //TODO update this to get lessons from API
-//TODO modify context object to include multiple students. and teacher.
 const lessons: Lesson[] = [
   {
     title: "Suits week 110",
@@ -34,6 +33,9 @@ const lessons: Lesson[] = [
 export const lessonsContext = createContext<LessonsContextType>({
   lessons: undefined,
   addAudioToLesson: () => {},
+  openSnackBar: () => {},
+  closeSnackBar: () => {},
+  isSnackBarOpen: false,
 });
 
 export default function StocksContextProvider({
@@ -41,10 +43,19 @@ export default function StocksContextProvider({
 }: {
   children: React.ReactNode;
 }) {
+  const [isSnackBarOpen, setIsSnackBarOpen] = useState(false);
   const [eslLessons, setEslLessons] = usePersistedState<Lesson[]>(
     "lessons",
     lessons
   );
+
+  function openSnackBar() {
+    setIsSnackBarOpen(true);
+  }
+
+  function closeSnackBar() {
+    setIsSnackBarOpen(false);
+  }
 
   function addAudioToLesson(id: string, audioFile: string) {
     setEslLessons((prevLessons) => {
@@ -58,7 +69,15 @@ export default function StocksContextProvider({
   }
 
   return (
-    <lessonsContext.Provider value={{ lessons: eslLessons, addAudioToLesson }}>
+    <lessonsContext.Provider
+      value={{
+        lessons: eslLessons,
+        addAudioToLesson,
+        isSnackBarOpen,
+        openSnackBar,
+        closeSnackBar,
+      }}
+    >
       {children}
     </lessonsContext.Provider>
   );
