@@ -3,6 +3,7 @@ import React, { createContext, useContext } from "react";
 import { Lesson, LessonsContextType } from "./Types";
 import { usePersistedState } from "./hooks/usePersistedState";
 //TODO update this to get lessons from API
+//TODO modify context object to include multiple students. and teacher.
 const lessons: Lesson[] = [
   {
     title: "Suits week 110",
