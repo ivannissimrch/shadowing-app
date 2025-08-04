@@ -1,12 +1,8 @@
 "use client";
 import styles from "./page.module.css";
-import Card from "./components/Card";
-import { useAppContext } from "./AppContext";
+import Link from "next/link";
 
-export default function Home() {
-  const { lessons } = useAppContext();
-  console.log("Lessons in Home:", lessons);
-
+export default function Login() {
   return (
     <main className={styles.main}>
       <div className={styles.container}>
@@ -14,14 +10,11 @@ export default function Home() {
         <p className={styles.subtitle}>
           Master English pronunciation through shadowing practice
         </p>
-        <h2 className={styles.heading}>Choose a Video to Practice</h2>
-        <p className={styles.description}>
-          Select a video that matches your level and interests
-        </p>
-        <div className={styles["cards-container"]}>
-          {lessons?.map((lesson) => (
-            <Card key={lesson.title} lesson={lesson} />
-          ))}
+        <div className={styles.buttonsContainer}>
+          <Link href="teacher">Teacher</Link>
+          <Link href="student1">Student1</Link>
+          <Link href="student2">Student2</Link>
+          <Link href="student2">Student3</Link>
         </div>
       </div>
     </main>

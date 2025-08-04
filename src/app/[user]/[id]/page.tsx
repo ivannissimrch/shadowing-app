@@ -1,10 +1,10 @@
 "use client";
 import styles from "./Practice.module.css";
-import SegmentPlayer from "../components/SegmentPlayer";
-import RecorderPanel from "../components/RecorderPanel";
+import SegmentPlayer from "../../components/SegmentPlayer";
+import RecorderPanel from "../../components/RecorderPanel";
 import Image from "next/image";
 import Link from "next/link";
-import useSelectedLesson from "../hooks/useSelectedLesson";
+import useSelectedLesson from "../../hooks/useSelectedLesson";
 
 export default function Practice() {
   const selectedLesson = useSelectedLesson();

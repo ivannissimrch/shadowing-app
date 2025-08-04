@@ -23,7 +23,7 @@ export default function Card({ lesson }: { lesson: Lesson }) {
           <h3 className={styles.title}>{title}</h3>
           <h3 className={styles.status}>{status}</h3>
         </div>
-        <Link href={lessonId} className={styles.button}>
+        <Link href={`/user/${lessonId}`} className={styles.button}>
           Start Practicing
         </Link>
       </div>
