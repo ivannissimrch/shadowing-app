@@ -1,13 +1,24 @@
-"use client";
 import styles from "./Practice.module.css";
 import SegmentPlayer from "../../components/SegmentPlayer";
 import RecorderPanel from "../../components/RecorderPanel";
 import Image from "next/image";
 import Link from "next/link";
-import useSelectedLesson from "../../hooks/useSelectedLesson";
+import { fetchUsers } from "@/app/data/mock_data";
 
-export default function Practice() {
-  const selectedLesson = useSelectedLesson();
+export default async function Practice({
+  params,
+}: {
+  params: Promise<{ user: string; id: string }>;
+}) {
+  const users = await fetchUsers();
+  const resolvedParams = await params;
+  const currentUser = users.find((user) => user.name === resolvedParams.user);
+  const selectedLesson = currentUser?.lessons.find(
+    (lesson) => lesson.lessonId === resolvedParams.id
+  );
+  if (!selectedLesson) {
+    <div>Lesson not found</div>;
+  }
 
   return (
     <main className={styles.main}>
@@ -22,16 +33,20 @@ export default function Practice() {
           </Link>
         </div>
         <div className={styles.grid}>
-          <SegmentPlayer />
+          <SegmentPlayer selectedLesson={selectedLesson} />
           <Image
             src={`/images/${selectedLesson?.image}.png`}
             alt="ESL lesson"
             quality={100}
             width={625}
             height={390}
+            priority
           />
         </div>
-        <RecorderPanel />
+        <RecorderPanel
+          currentUser={currentUser}
+          selectedLesson={selectedLesson}
+        />
       </div>
     </main>
   );

@@ -4,11 +4,24 @@ import styles from "./RecorderPanel.module.css";
 import { useState, useRef } from "react";
 import AudioPlayer from "react-h5-audio-player";
 import "react-h5-audio-player/lib/styles.css";
-import useSelectedLesson from "../hooks/useSelectedLesson";
 import { useAppContext } from "../AppContext";
+import { Lesson } from "../Types";
 
-export default function RecorderPanel() {
-  const selectedLesson = useSelectedLesson();
+interface RecorderProps {
+  currentUser:
+    | {
+        name: string;
+        email: string;
+        lessons: Lesson[];
+      }
+    | undefined;
+  selectedLesson: Lesson | undefined;
+}
+
+export default function RecorderPanel({
+  currentUser,
+  selectedLesson,
+}: RecorderProps) {
   const { addAudioToLesson, openSnackBar } = useAppContext();
   const router = useRouter();
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
@@ -74,9 +87,8 @@ export default function RecorderPanel() {
       }
 
       addAudioToLesson(selectedLesson.lessonId, base64Audio);
-      router.push("/");
+      router.push(`/${currentUser?.name}`);
       openSnackBar();
-      //   setTimeout(() => router.push("/"), 2000);
     };
   }
 

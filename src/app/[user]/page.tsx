@@ -1,11 +1,16 @@
-"use client";
 import styles from "./page.module.css";
 import Card from "../components/Card";
-import { useAppContext } from "../AppContext";
+import { fetchUsers } from "../data/mock_data";
 
-export default function Home() {
-  const { lessons } = useAppContext();
-  console.log("Lessons in Home:", lessons);
+export default async function User({
+  params,
+}: {
+  params: Promise<{ user: string }>;
+}) {
+  const users = await fetchUsers();
+  const resolvedParams = await params;
+  const user = resolvedParams.user;
+  const currentUser = users.find((currentUser) => currentUser.name === user);
 
   return (
     <main className={styles.main}>
@@ -19,8 +24,12 @@ export default function Home() {
           Select a video that matches your level and interests
         </p>
         <div className={styles["cards-container"]}>
-          {lessons?.map((lesson) => (
-            <Card key={lesson.title} lesson={lesson} />
+          {currentUser?.lessons.map((lesson) => (
+            <Card
+              key={lesson.title}
+              lesson={lesson}
+              user={resolvedParams.user}
+            />
           ))}
         </div>
       </div>
