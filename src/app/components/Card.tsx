@@ -1,10 +1,15 @@
-"use client";
 import Image from "next/image";
 import styles from "./Card.module.css";
 import Link from "next/link";
 import { Lesson } from "../Types";
 
-export default function Card({ lesson }: { lesson: Lesson }) {
+export default function Card({
+  lesson,
+  user,
+}: {
+  lesson: Lesson;
+  user: string;
+}) {
   const { title, image, lessonId, status } = lesson;
   return (
     <div className={styles.card}>
@@ -23,7 +28,7 @@ export default function Card({ lesson }: { lesson: Lesson }) {
           <h3 className={styles.title}>{title}</h3>
           <h3 className={styles.status}>{status}</h3>
         </div>
-        <Link href={`/user/${lessonId}`} className={styles.button}>
+        <Link href={`/${user}/${lessonId}`} className={styles.button}>
           Start Practicing
         </Link>
       </div>

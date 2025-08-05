@@ -1,11 +1,19 @@
-"use client";
+import { Lesson } from "../Types";
 import styles from "./SegmetPlayer.module.css";
 import YouTubePlayer from "./YouTubePlayer";
-export default function SegmentPlayer() {
+export default function SegmentPlayer({
+  selectedLesson,
+}: {
+  selectedLesson: Lesson | undefined;
+}) {
+  if (!selectedLesson) {
+    return <div>Lesson not found</div>;
+  }
+
   return (
     <div className={styles.card}>
       <div className={styles.videoBox}>
-        <YouTubePlayer />
+        <YouTubePlayer selectedLesson={selectedLesson} />
       </div>
     </div>
   );

@@ -1,19 +1,22 @@
 "use client";
 import YouTube, { YouTubeProps } from "react-youtube";
-import useSelectedLesson from "../hooks/useSelectedLesson";
+import { Lesson } from "../Types";
 
-export default function YouTubePlayer() {
+export default function YouTubePlayer({
+  selectedLesson,
+}: {
+  selectedLesson: Lesson;
+}) {
   const onPlayerReady: YouTubeProps["onReady"] = (event) => {
     event.target.pauseVideo();
   };
-  const selectedLesson = useSelectedLesson();
 
   const opts: YouTubeProps["opts"] = {
     height: "390",
     width: "620",
     playerVars: {
       // https://developers.google.com/youtube/player_parameters
-      autoplay: 1,
+      autoplay: 0,
     },
   };
 

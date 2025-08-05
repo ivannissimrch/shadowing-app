@@ -1,8 +1,9 @@
-"use client";
 import styles from "./page.module.css";
 import Link from "next/link";
+import { fetchUsers } from "./data/mock_data";
 
-export default function Login() {
+export default async function Login() {
+  const users = await fetchUsers();
   return (
     <main className={styles.main}>
       <div className={styles.container}>
@@ -11,10 +12,15 @@ export default function Login() {
           Master English pronunciation through shadowing practice
         </p>
         <div className={styles.buttonsContainer}>
-          <Link href="teacher">Teacher</Link>
-          <Link href="student1">Student1</Link>
-          <Link href="student2">Student2</Link>
-          <Link href="student2">Student3</Link>
+          {users.map((user) => (
+            <Link
+              key={user.name}
+              href={`/${user.name}`}
+              className={styles.button}
+            >
+              {user.name}
+            </Link>
+          ))}
         </div>
       </div>
     </main>
