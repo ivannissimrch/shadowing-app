@@ -4,13 +4,14 @@ import Link from "next/link";
 import { Lesson } from "../Types";
 
 export default function Card({
-  lesson,
-  user,
+  currentLesson,
+  userName,
 }: {
-  lesson: Lesson;
-  user: string;
+  currentLesson: Lesson;
+  userName: string;
 }) {
-  const { title, image, lessonId, status } = lesson;
+  const { title, image, lessonId, status } = currentLesson;
+  console.log(status);
   return (
     <div className={styles.card}>
       <div className={styles.thumbnail}>
@@ -28,7 +29,7 @@ export default function Card({
           <h3 className={styles.title}>{title}</h3>
           <h3 className={styles.status}>{status}</h3>
         </div>
-        <Link href={`/${user}/${lessonId}`} className={styles.button}>
+        <Link href={`/${userName}/${lessonId}`} className={styles.button}>
           Start Practicing
         </Link>
       </div>

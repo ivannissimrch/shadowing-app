@@ -1,4 +1,29 @@
 
 node_modules/
 .next/
+
+# Environment files
+.env
+.env.local
+.env.*.local
+backend/.env*
+frontend/.env*
+
+# Build outputs
+frontend/build/
+frontend/dist/
+frontend/.next/
+backend/build/
+backend/dist/
+
+# Logs
+*.log
+npm-debug.log*
+
+# IDE
+.vscode/
+.idea/
+
+# OS
 .DS_Store
+Thumbs.db

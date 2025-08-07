@@ -3,19 +3,24 @@ import SegmentPlayer from "../../components/SegmentPlayer";
 import RecorderPanel from "../../components/RecorderPanel";
 import Image from "next/image";
 import Link from "next/link";
-import { fetchUsers } from "@/app/data/mock_data";
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export default async function Practice({
   params,
 }: {
   params: Promise<{ user: string; id: string }>;
 }) {
-  const users = await fetchUsers();
   const resolvedParams = await params;
-  const currentUser = users.find((user) => user.name === resolvedParams.user);
-  const selectedLesson = currentUser?.lessons.find(
-    (lesson) => lesson.lessonId === resolvedParams.id
+  const response = await fetch(
+    `${API_URL}/api/users/${resolvedParams.user}/lessons/${resolvedParams.id}`
   );
+  const responseData = await response.json();
+  const selectedLesson = responseData.data;
+
+  const response2 = await fetch(`${API_URL}/api/users/${resolvedParams.user}`);
+  const response2Data = await response2.json();
+  const currentUser = response2Data.data;
+
   if (!selectedLesson) {
     <div>Lesson not found</div>;
   }

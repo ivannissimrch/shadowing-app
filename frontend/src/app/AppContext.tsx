@@ -2,7 +2,7 @@
 import React, { createContext, useContext, useState } from "react";
 import { Lesson, LessonsContextType } from "./Types";
 import { usePersistedState } from "./hooks/usePersistedState";
-import { lessons } from "./data/mock_data";
+
 //TODO update this to get lessons from API
 
 export const lessonsContext = createContext<LessonsContextType>({
@@ -19,9 +19,9 @@ export default function StocksContextProvider({
   children: React.ReactNode;
 }) {
   const [isSnackBarOpen, setIsSnackBarOpen] = useState(false);
-  const [eslLessons, setEslLessons] = usePersistedState<Lesson[]>(
+  const [eslLessons, setEslLessons] = usePersistedState<Lesson[] | undefined>(
     "lessons",
-    lessons
+    undefined
   );
 
   function openSnackBar() {
@@ -34,7 +34,7 @@ export default function StocksContextProvider({
 
   function addAudioToLesson(id: string, audioFile: string) {
     setEslLessons((prevLessons) => {
-      return prevLessons.map((lesson) => {
+      return prevLessons?.map((lesson) => {
         if (lesson.lessonId === id) {
           return { ...lesson, status: "completed", audioFile: audioFile };
         }
