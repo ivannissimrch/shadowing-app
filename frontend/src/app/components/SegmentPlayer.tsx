@@ -6,6 +6,7 @@ export default function SegmentPlayer({
 }: {
   selectedLesson: Lesson | undefined;
 }) {
+  console.log(selectedLesson);
   if (!selectedLesson) {
     return <div>Lesson not found</div>;
   }

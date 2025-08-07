@@ -1,16 +1,18 @@
 import styles from "./page.module.css";
 import Card from "../components/Card";
-import { fetchUsers } from "../data/mock_data";
+import { User } from "../Types";
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
-export default async function User({
+export default async function Users({
   params,
 }: {
   params: Promise<{ user: string }>;
 }) {
-  const users = await fetchUsers();
   const resolvedParams = await params;
-  const user = resolvedParams.user;
-  const currentUser = users.find((currentUser) => currentUser.name === user);
+  const userName = resolvedParams.user;
+  const response = await fetch(`${API_URL}/api/users/${userName}`);
+  const result = await response.json();
+  const currentUser: User = result.data;
 
   return (
     <main className={styles.main}>
@@ -24,11 +26,11 @@ export default async function User({
           Select a video that matches your level and interests
         </p>
         <div className={styles["cards-container"]}>
-          {currentUser?.lessons.map((lesson) => (
+          {currentUser?.lessons.map((currentLesson) => (
             <Card
-              key={lesson.title}
-              lesson={lesson}
-              user={resolvedParams.user}
+              key={currentLesson.title}
+              currentLesson={currentLesson}
+              userName={userName}
             />
           ))}
         </div>

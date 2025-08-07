@@ -6,6 +6,7 @@ import AudioPlayer from "react-h5-audio-player";
 import "react-h5-audio-player/lib/styles.css";
 import { useAppContext } from "../AppContext";
 import { Lesson } from "../Types";
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 interface RecorderProps {
   currentUser:
@@ -22,7 +23,8 @@ export default function RecorderPanel({
   currentUser,
   selectedLesson,
 }: RecorderProps) {
-  const { addAudioToLesson, openSnackBar } = useAppContext();
+  console.log(currentUser, selectedLesson);
+  const { openSnackBar } = useAppContext();
   const router = useRouter();
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunks = useRef<Blob[]>([]);
@@ -44,7 +46,9 @@ export default function RecorderPanel({
 
     mediaRecorder.onstop = () => {
       const blob = new Blob(audioChunks.current, { type: "audio/webm" });
+      console.log("Recording stopped, blob created:", blob);
       const url = URL.createObjectURL(blob);
+      console.log("Audio URL:", url);
       setAudioURL(url);
       setBlob(blob);
     };
@@ -76,8 +80,9 @@ export default function RecorderPanel({
     }
     const reader = new FileReader();
     reader.readAsDataURL(blob);
-    reader.onloadend = () => {
+    reader.onloadend = async () => {
       const base64Audio = reader.result;
+
       if (
         typeof base64Audio !== "string" ||
         selectedLesson?.lessonId === undefined
@@ -86,7 +91,21 @@ export default function RecorderPanel({
         return;
       }
 
-      addAudioToLesson(selectedLesson.lessonId, base64Audio);
+      // addAudioToLesson(selectedLesson.lessonId, base64Audio);
+      const response = await fetch(
+        `${API_URL}/api/users/${currentUser?.name}/lessons/${selectedLesson.lessonId}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            audioFile: base64Audio,
+          }),
+        }
+      );
+      const data = await response.json();
+      console.log(data);
       router.push(`/${currentUser?.name}`);
       openSnackBar();
     };
@@ -125,7 +144,7 @@ export default function RecorderPanel({
       )}
       {audioURL && (
         <div className={styles.MediaRecorder}>
-          <AudioPlayer autoPlay src={audioURL} showJumpControls={false} />
+          <AudioPlayer src={audioURL} showJumpControls={false} />
           <button
             className={styles.recordBtn}
             onClick={() => setAudioURL(null)}

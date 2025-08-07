@@ -1,9 +1,12 @@
 import styles from "./page.module.css";
 import Link from "next/link";
-import { fetchUsers } from "./data/mock_data";
+import { User } from "./Types";
 
 export default async function Login() {
-  const users = await fetchUsers();
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users`);
+  const data = await response.json();
+  const users: User[] = data.data;
+
   return (
     <main className={styles.main}>
       <div className={styles.container}>
