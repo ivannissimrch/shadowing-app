@@ -3,14 +3,15 @@
   "version": "1.0.0",
   "description": "Express server for ESL Shadowing App",
   "main": "index.js",
-  "type": "commonjs",
+  "type": "module",
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon index.js"
   },
   "dependencies": {
+    "cors": "^2.8.5",
     "express": "^4.18.2",
-    "cors": "^2.8.5"
+    "lowdb": "^7.0.1"
   },
   "devDependencies": {
     "nodemon": "^3.0.1"

@@ -92,7 +92,7 @@ export default function RecorderPanel({
       }
 
       // addAudioToLesson(selectedLesson.lessonId, base64Audio);
-      const response = await fetch(
+      fetch(
         `${API_URL}/api/users/${currentUser?.name}/lessons/${selectedLesson.lessonId}`,
         {
           method: "PATCH",
@@ -104,8 +104,8 @@ export default function RecorderPanel({
           }),
         }
       );
-      const data = await response.json();
-      console.log(data);
+      // const data = await response.json();
+      // console.log(data);
       router.push(`/${currentUser?.name}`);
       openSnackBar();
     };
