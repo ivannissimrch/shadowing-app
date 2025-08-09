@@ -2,6 +2,9 @@ import { JSONFilePreset } from "lowdb/node";
 import express from "express";
 import cors from "cors";
 
+// Read or create db.json
+const db = await JSONFilePreset("db.json", { users: [] });
+
 const app = express();
 const PORT = process.env.PORT || 3001; // Different port from Next.js (3000)
 
@@ -10,11 +13,66 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Read or create db.json
-const db = await JSONFilePreset("db.json", { users: [] });
+//User lessons data
+const lessonsIvan = [
+  {
+    title: "Suits week 110",
+    image: "110",
+    videoId: "ImEnWAVRLU0",
+    lessonId: "110",
+    status: "completed",
+    audioFile: "",
+  },
+  {
+    title: "Suits week 111",
+    image: "111",
+    videoId: "jjeLzr1JR4o",
+    lessonId: "111",
+    status: "completed",
+    audioFile: "",
+  },
+  {
+    title: "Suits week 112",
+    image: "112",
+    videoId: "jjeLzr1JR4o",
+    lessonId: "112",
+    status: "new",
+    audioFile: "",
+  },
+];
+
+const lessonsLeo = [
+  {
+    title: "Suits week 110",
+    image: "110",
+    videoId: "ImEnWAVRLU0",
+    lessonId: "110",
+    status: "new",
+    audioFile: "",
+  },
+];
+
+const lessonsPapo = [
+  {
+    title: "Suits week 110",
+    image: "110",
+    videoId: "ImEnWAVRLU0",
+    lessonId: "110",
+    status: "new",
+    audioFile: "",
+  },
+];
+
+const users = [
+  { name: "Ivan", email: "", lessons: lessonsIvan },
+  { name: "Leo", email: "", lessons: lessonsLeo },
+  { name: "Papo", email: "", lessons: lessonsPapo },
+];
+
 if (!db.data.users) {
   db.data.users = [];
 }
+
 if (db.data.users.length === 0) {
   db.data.users = users;
   await db.write();
@@ -42,6 +100,7 @@ app.get("/api/users/:name", (req, res) => {
       message: "User not found",
     });
   }
+
   res.json({
     success: true,
     data: user,
