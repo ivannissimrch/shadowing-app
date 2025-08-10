@@ -1,5 +1,5 @@
 "use client";
-import { useRouter } from "next/navigation";
+// import { useRouter } from "next/navigation";
 import styles from "./RecorderPanel.module.css";
 import { useState, useRef } from "react";
 import AudioPlayer from "react-h5-audio-player";
@@ -25,7 +25,7 @@ export default function RecorderPanel({
 }: RecorderProps) {
   console.log(currentUser, selectedLesson);
   const { openSnackBar } = useAppContext();
-  const router = useRouter();
+  // const router = useRouter();
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunks = useRef<Blob[]>([]);
   const [recording, setRecording] = useState(false);
@@ -70,8 +70,6 @@ export default function RecorderPanel({
 
   function stopRecording() {
     mediaRecorderRef.current?.stop();
-    setRecording(false);
-    setPaused(false);
   }
 
   function handleSubmit() {
@@ -92,7 +90,7 @@ export default function RecorderPanel({
       }
 
       // addAudioToLesson(selectedLesson.lessonId, base64Audio);
-      fetch(
+      const response = await fetch(
         `${API_URL}/api/users/${currentUser?.name}/lessons/${selectedLesson.lessonId}`,
         {
           method: "PATCH",
@@ -104,58 +102,84 @@ export default function RecorderPanel({
           }),
         }
       );
-      // const data = await response.json();
-      // console.log(data);
-      router.push(`/${currentUser?.name}`);
+      if (!response.ok) {
+        console.error("Failed to update lesson with audio file");
+        return;
+      }
+      await response.json();
+      // setAudioURL(updatedLesson.audioFile);
+
+      //this is causing an error, need to fix it
+      // router.push(`/${currentUser?.name}`);
       openSnackBar();
     };
   }
 
-  return (
-    <div className={styles.panel}>
-      {!audioURL && (
-        <>
-          {" "}
-          <div className={styles.mic}>
-            <span className={styles.icon}>🎙️</span>
-            {!recording ? <p>Ready to record</p> : <p>Recording...</p>}
-            {!recording && (
-              <button onClick={startRecording} className={styles.recordBtn}>
-                Start Recording
-              </button>
-            )}
-            {recording && !paused && (
-              <button className={styles.recordBtn} onClick={pauseRecording}>
-                Pause
-              </button>
-            )}
-            {recording && paused && (
-              <button onClick={resumeRecording} className={styles.recordBtn}>
-                Resume
-              </button>
-            )}
-            {recording && (
-              <button onClick={stopRecording} className={styles.recordBtn}>
-                Stop
-              </button>
-            )}
+  if (selectedLesson?.status === "completed") {
+    return (
+      <div className={styles.MediaRecorder}>
+        <AudioPlayer
+          src={
+            selectedLesson?.audioFile ? selectedLesson?.audioFile : audioURL!
+          }
+          showJumpControls={false}
+        />
+      </div>
+    );
+  } else {
+    return (
+      <div className={styles.panel}>
+        {!audioURL && (
+          <>
+            {" "}
+            <div className={styles.mic}>
+              <span className={styles.icon}>🎙️</span>
+              {!recording ? <p>Ready to record</p> : <p>Recording...</p>}
+              {!recording && (
+                <button onClick={startRecording} className={styles.recordBtn}>
+                  Start Recording
+                </button>
+              )}
+              {recording && !paused && (
+                <button className={styles.recordBtn} onClick={pauseRecording}>
+                  Pause
+                </button>
+              )}
+              {recording && paused && (
+                <button onClick={resumeRecording} className={styles.recordBtn}>
+                  Resume
+                </button>
+              )}
+              {recording && (
+                <button onClick={stopRecording} className={styles.recordBtn}>
+                  Stop
+                </button>
+              )}
+            </div>
+          </>
+        )}
+        {audioURL && (
+          <div className={styles.MediaRecorder}>
+            <AudioPlayer
+              src={
+                selectedLesson?.audioFile
+                  ? selectedLesson?.audioFile
+                  : audioURL!
+              }
+              showJumpControls={false}
+            />
+            <button
+              className={styles.recordBtn}
+              onClick={() => setAudioURL(null)}
+            >
+              Delete
+            </button>
+            <button className={styles.recordBtn} onClick={handleSubmit}>
+              Submit
+            </button>
           </div>
-        </>
-      )}
-      {audioURL && (
-        <div className={styles.MediaRecorder}>
-          <AudioPlayer src={audioURL} showJumpControls={false} />
-          <button
-            className={styles.recordBtn}
-            onClick={() => setAudioURL(null)}
-          >
-            Delete
-          </button>
-          <button className={styles.recordBtn} onClick={handleSubmit}>
-            Submit
-          </button>
-        </div>
-      )}
-    </div>
-  );
+        )}
+      </div>
+    );
+  }
 }
