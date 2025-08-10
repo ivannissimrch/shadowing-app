@@ -6,9 +6,9 @@ An app to help English learners improve their spoken English by mimicking native
 
 ## Tech Stack
 
-- **Frontend:** React, Tailwind Css, Next.js
-- **Backend:** Supabase (DB, Storage)
-- **Audio Analysis:** Azure Speech API (for pronunciation scoring), Parselmouth (stretch goal for pitch/intonation)
+- **Frontend:** React, Css, Next.js
+- **Backend:** Express.js, low db
+- **Audio Analysis:** Azure Speech API (for pronunciation scoring).
 - **Media:** YouTube API for video import, `react-youtube` for playback
 
 ---
@@ -95,13 +95,13 @@ An app to help English learners improve their spoken English by mimicking native
 - [ ] Save recording (anonymously or to local/session storage)
 - [ ] Display native and user audio side-by-side
 - [ ] Get pronunciation feedback using Azure Speech API stretch goal
-- [ ] Basic UI styling with Tailwind CSS
+- [ ] Basic UI styling with CSS
 
 ---
 
 ### Phase 2 Tasks (Auth + Teacher Features)
 
-- [ ] Add Supabase Auth with role selection
+- [ ] Add Auth with role selection
 - [ ] Role-based routing (student/teacher)
 - [ ] Save recordings linked to logged-in users
 - [ ] Teacher dashboard: upload videos, view student submissions
