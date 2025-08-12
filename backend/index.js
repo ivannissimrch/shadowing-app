@@ -11,6 +11,8 @@ app.use(express.json({ limit: "50mb" }));
 app.use(express.urlencoded({ extended: true, limit: "50mb" }));
 
 // Read or create db.json
+const dbPath =
+  process.env.NODE_ENV === "production" ? "/data/db.json" : "db.json";
 const db = await JSONFilePreset("db.json", { users: [] });
 if (!db.data.users) {
   db.data.users = [];
