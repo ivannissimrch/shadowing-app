@@ -30,7 +30,9 @@ export default function RecorderPanel({
   const audioChunks = useRef<Blob[]>([]);
   const [recording, setRecording] = useState(false);
   const [paused, setPaused] = useState(false);
-  const [audioURL, setAudioURL] = useState<string | null>(null);
+  const [audioURL, setAudioURL] = useState<string | null>(
+    selectedLesson?.audioFile ? selectedLesson?.audioFile : null
+  );
   const [blob, setBlob] = useState<Blob | null>(null);
 
   async function startRecording() {
@@ -118,12 +120,7 @@ export default function RecorderPanel({
   if (selectedLesson?.status === "completed") {
     return (
       <div className={styles.MediaRecorder}>
-        <AudioPlayer
-          src={
-            selectedLesson?.audioFile ? selectedLesson?.audioFile : audioURL!
-          }
-          showJumpControls={false}
-        />
+        <AudioPlayer src={audioURL ? audioURL : ""} showJumpControls={false} />
       </div>
     );
   } else {
