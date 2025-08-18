@@ -33,6 +33,14 @@
           "image": "113",
           "videoId": "jjeLzr1JR4o",
           "lessonId": "113",
+          "status": "completed",
+          "audioFile": ""
+        },
+        {
+          "title": "Suits week 114",
+          "image": "114",
+          "videoId": "jjeLzr1JR4o",
+          "lessonId": "114",
           "status": "new",
           "audioFile": ""
         }
