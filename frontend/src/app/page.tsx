@@ -1,4 +1,5 @@
 import styles from "./page.module.css";
+import LoginForm from "./components/LoginForm";
 
 export default async function Login() {
   return (
@@ -8,27 +9,7 @@ export default async function Login() {
         <p className={styles.subtitle}>
           Master English pronunciation through shadowing practice
         </p>
-        <div className={styles.buttonsContainer}>
-          <form className={styles.form}>
-            <input
-              type="text"
-              name="username"
-              placeholder="Enter your name"
-              className={styles.input}
-              required
-            />
-            <input
-              type="text"
-              name="password"
-              placeholder="Enter your password"
-              className={styles.input}
-              required
-            />
-            <button type="submit" className={styles.button}>
-              Login
-            </button>
-          </form>
-        </div>
+        <LoginForm />
       </div>
     </main>
   );
