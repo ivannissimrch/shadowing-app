@@ -1,5 +1,9 @@
 export function setItem(key: string, value: unknown) {
   try {
+    if (value === undefined) {
+      window.localStorage.removeItem(key);
+      return;
+    }
     window.localStorage.setItem(key, JSON.stringify(value));
   } catch (error) {
     console.log(error);

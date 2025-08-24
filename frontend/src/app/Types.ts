@@ -13,6 +13,8 @@ export interface LessonsContextType {
   openSnackBar: () => void;
   closeSnackBar: () => void;
   isSnackBarOpen: boolean;
+  token: string | null;
+  updateToken: (newToken: string) => void;
 }
 
 export interface User {

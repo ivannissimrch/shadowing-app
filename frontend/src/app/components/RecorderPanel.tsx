@@ -23,8 +23,7 @@ export default function RecorderPanel({
   currentUser,
   selectedLesson,
 }: RecorderProps) {
-  console.log(currentUser, selectedLesson);
-  const { openSnackBar } = useAppContext();
+  const { openSnackBar, token } = useAppContext();
   // const router = useRouter();
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunks = useRef<Blob[]>([]);
@@ -90,6 +89,7 @@ export default function RecorderPanel({
         console.error("Invalid audio data or lesson ID");
         return;
       }
+      console.log(token);
 
       // addAudioToLesson(selectedLesson.lessonId, base64Audio);
       const response = await fetch(
@@ -97,6 +97,7 @@ export default function RecorderPanel({
         {
           method: "PATCH",
           headers: {
+            Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
@@ -108,10 +109,8 @@ export default function RecorderPanel({
         console.error("Failed to update lesson with audio file");
         return;
       }
-      await response.json();
-      // setAudioURL(updatedLesson.audioFile);
-
-      //this is causing an error, need to fix it
+      const result = await response.json();
+      console.log(result);
       // router.push(`/${currentUser?.name}`);
       openSnackBar();
     };
@@ -120,7 +119,10 @@ export default function RecorderPanel({
   if (selectedLesson?.status === "completed") {
     return (
       <div className={styles.MediaRecorder}>
-        <AudioPlayer src={audioURL ? audioURL : ""} showJumpControls={false} />
+        <AudioPlayer
+          src={audioURL ? audioURL : selectedLesson.audioFile}
+          showJumpControls={false}
+        />
       </div>
     );
   } else {

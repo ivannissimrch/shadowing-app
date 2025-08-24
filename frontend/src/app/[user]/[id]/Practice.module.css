@@ -12,6 +12,7 @@
   padding: 2rem;
   background-color: #f5f7fe;
   min-height: 100vh;
+  padding: 20px 200px;
 }
 
 .title {
@@ -27,23 +28,6 @@
   color: black;
 }
 
-.headerRow {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1.5rem;
-  flex-wrap: wrap;
-}
-
-.backBtn {
-  background: blue;
-
-  border: none;
-  padding: 1rem 1.25rem;
-  font-weight: 500;
-  cursor: pointer;
-}
-
 .h2 {
   font-size: 1.25rem;
   margin: 0;
@@ -57,6 +41,7 @@
 
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 1rem;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  justify-items: center;
 }
