@@ -11,6 +11,8 @@ export const lessonsContext = createContext<LessonsContextType>({
   openSnackBar: () => {},
   closeSnackBar: () => {},
   isSnackBarOpen: false,
+  token: null,
+  updateToken: () => {},
 });
 
 export default function StocksContextProvider({
@@ -23,6 +25,11 @@ export default function StocksContextProvider({
     "lessons",
     undefined
   );
+  const [token, setToken] = usePersistedState<string | null>("token", null);
+
+  function updateToken(newToken: string) {
+    setToken(newToken);
+  }
 
   function openSnackBar() {
     setIsSnackBarOpen(true);
@@ -51,6 +58,8 @@ export default function StocksContextProvider({
         isSnackBarOpen,
         openSnackBar,
         closeSnackBar,
+        token,
+        updateToken,
       }}
     >
       {children}

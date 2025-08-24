@@ -11,7 +11,6 @@ export default function Card({
   userName: string;
 }) {
   const { title, image, lessonId, status } = currentLesson;
-  console.log(status);
   return (
     <div className={styles.card}>
       <div className={styles.thumbnail}>

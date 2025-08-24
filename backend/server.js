@@ -3,13 +3,14 @@ import cors from "cors";
 import router from "./router.js";
 import { protect } from "./auth.js";
 import { JSONFilePreset } from "lowdb/node";
+import { signin, createNewUser } from "./handlers/user.js";
 
 const app = express();
 
 // Initialize database
 const dbPath =
   process.env.NODE_ENV === "production" ? "/data/db.json" : "db.json";
-const db = await JSONFilePreset("db.json", { users: [] });
+const db = await JSONFilePreset(dbPath, { users: [] });
 if (!db.data.users) {
   db.data.users = [];
 }
@@ -20,6 +21,7 @@ app.use(express.json({ limit: "50mb" }));
 app.use(express.urlencoded({ extended: true, limit: "50mb" }));
 
 app.use("/api", protect, router);
+app.post("/signin", signin);
 
 export default app;
 export { db };

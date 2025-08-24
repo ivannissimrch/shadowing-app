@@ -14,6 +14,7 @@ router.get("/users", (req, res) => {
 
 // Get specific user
 router.get("/users/:name", (req, res) => {
+  console.log(req);
   const { name } = req.params;
   const user = db.data.users.find(
     (user) => user.name.toLowerCase() === name.toLowerCase()
