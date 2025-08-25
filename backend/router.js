@@ -3,136 +3,160 @@ import { db } from "./server.js";
 
 const router = Router();
 
-// API Routes
-//get all users
-router.get("/users", (req, res) => {
-  res.json({
-    success: true,
-    data: db.data.users,
-  });
-});
+// Get all lessons for a user
+router.get("/lessons", (req, res) => {
+  try {
+    const userId = req.user.id;
+    const user = db.data.users.find((user) => user.id === userId);
 
-// Get specific user
-router.get("/users/:name", (req, res) => {
-  const { name } = req.params;
-  const user = db.data.users.find(
-    (user) => user.name.toLowerCase() === name.toLowerCase()
-  );
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
 
-  if (!user) {
-    return res.status(404).json({
+    res.json({
+      success: true,
+      data: user.lessons,
+    });
+  } catch (error) {
+    console.error("Error fetching lessons:", error);
+    res.status(500).json({
       success: false,
-      message: "User not found",
+      message: "Internal server error",
     });
   }
-
-  res.json({
-    success: true,
-    data: user,
-  });
 });
 
 //Get specific user lesson
-router.get("/users/:name/lessons/:lessonId", (req, res) => {
-  const { name, lessonId } = req.params;
-  const user = db.data.users.find(
-    (user) => user.name.toLowerCase() === name.toLowerCase()
-  );
+router.get("/lessons/:lessonId", (req, res) => {
+  try {
+    const { lessonId } = req.params;
+    const userId = req.user.id;
+    const user = db.data.users.find((user) => user.id === userId);
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
 
-  if (!user) {
-    return res.status(404).json({
+    const lesson = user.lessons.find((lesson) => lesson.lessonId === lessonId);
+    if (!lesson) {
+      return res.status(404).json({
+        success: false,
+        message: "Lesson not found",
+      });
+    }
+
+    res.json({
+      success: true,
+      data: lesson,
+    });
+  } catch (error) {
+    console.error("Error fetching lesson:", error);
+    res.status(500).json({
       success: false,
-      message: "User not found",
+      message: "Internal server error",
     });
   }
-  const lesson = user.lessons.find((lesson) => lesson.lessonId === lessonId);
-  if (!lesson) {
-    return res.status(404).json({
-      success: false,
-      message: "Lesson not found",
-    });
-  }
-
-  res.json({
-    success: true,
-    data: lesson,
-  });
 });
 
-//patch specific user lesson
-router.patch("/users/:name/lessons/:lessonId", async (req, res) => {
-  const { name, lessonId } = req.params;
-  const { audioFile } = req.body;
-  const user = db.data.users.find(
-    (user) => user.name.toLowerCase() === name.toLowerCase()
-  );
+//Update specific user lesson
+router.patch("/lessons/:lessonId", async (req, res) => {
+  try {
+    const { audioFile } = req.body;
+    const { lessonId } = req.params;
+    const userId = req.user.id;
 
-  if (!user) {
-    return res.status(404).json({
+    const user = db.data.users.find((user) => user.id === userId);
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    const lesson = user.lessons.find((lesson) => lesson.lessonId === lessonId);
+
+    if (!lesson) {
+      return res.status(404).json({
+        success: false,
+        message: "Lesson not found",
+      });
+    }
+
+    // Update the lesson
+    lesson.audioFile = audioFile;
+    lesson.status = "completed";
+    await db.write();
+
+    res.json({
+      success: true,
+      data: lesson,
+    });
+  } catch (error) {
+    console.error("Error updating lesson:", error);
+    res.status(500).json({
       success: false,
-      message: "User not found",
+      message: "Internal server error",
     });
   }
-
-  const lesson = user.lessons.find((lesson) => lesson.lessonId === lessonId);
-
-  if (!lesson) {
-    return res.status(404).json({
-      success: false,
-      message: "Lesson not found",
-    });
-  }
-
-  // Update the lesson
-  lesson.audioFile = audioFile;
-  lesson.status = "completed";
-  await db.write();
-
-  res.json({
-    success: true,
-    data: lesson,
-  });
 });
 
 //Add new lesson to user
-router.post("/users/:name/lessons", async (req, res) => {
-  const { name } = req.params;
-  const { lessonId, audioFile } = req.body;
-  const user = db.data.users.find(
-    (user) => user.name.toLowerCase() === name.toLowerCase()
-  );
+router.post("/lessons", async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const { lessonId, audioFile, title, image, videoId } = req.body;
 
-  if (!user) {
-    return res.status(404).json({
+    const user = db.data.users.find((u) => u.id === userId);
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    // Check if the lesson already exists
+    const existingLesson = user.lessons.find(
+      (lesson) => lesson.lessonId === lessonId
+    );
+
+    if (existingLesson) {
+      return res.status(400).json({
+        success: false,
+        message: "Lesson already exists",
+      });
+    }
+
+    // Add new lesson
+    const newLesson = {
+      lessonId,
+      title,
+      image,
+      videoId,
+      audioFile: audioFile || "",
+      status: "new",
+    };
+
+    user.lessons.push(newLesson);
+    await db.write();
+
+    res.status(201).json({
+      success: true,
+      data: newLesson,
+    });
+  } catch (error) {
+    console.error("Error adding lesson:", error);
+    res.status(500).json({
       success: false,
-      message: "User not found",
+      message: "Internal server error",
     });
   }
-
-  // Check if the lesson already exists
-  const existingLesson = user.lessons.find(
-    (lesson) => lesson.lessonId === lessonId
-  );
-  if (existingLesson) {
-    return res.status(400).json({
-      success: false,
-      message: "Lesson already exists",
-    });
-  }
-
-  // Add new lesson
-  const newLesson = {
-    lessonId,
-    audioFile,
-    status: "new",
-  };
-  user.lessons.push(newLesson);
-  await db.write();
-
-  res.status(201).json({
-    success: true,
-    data: newLesson,
-  });
 });
 
 export default router;
