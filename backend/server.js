@@ -8,10 +8,8 @@ import { signin } from "./handlers/user.js";
 const app = express();
 
 // Initialize database
-// const dbPath =
-//   process.env.NODE_ENV === "production" ? "/data/db.json" : "db.json";
-const dbPath = "db.json";
-console.log("Attempting to initialize database at:", dbPath);
+const dbPath =
+  process.env.NODE_ENV === "production" ? "/data/db.json" : "db.json";
 const db = await JSONFilePreset(dbPath, { users: [] });
 if (!db.data.users) {
   db.data.users = [];
