@@ -12,7 +12,6 @@ const app = express();
 // Initialize database
 const dbPath =
   process.env.NODE_ENV === "production" ? "/data/db.json" : "db.json";
-console.log(dbPath);
 const db = await JSONFilePreset(dbPath, { users: [] });
 if (!db.data.users) {
   db.data.users = [];
@@ -23,6 +22,13 @@ app.use(cors());
 app.use(express.json({ limit: "50mb" }));
 app.use(express.urlencoded({ extended: true, limit: "50mb" }));
 
+app.get("/", (req, res) => {
+  res.json({
+    status: "OK",
+    message: "ESL Shadowing API server is running",
+    timestamp: new Date().toISOString(),
+  });
+});
 app.use("/api", protect, router);
 app.post("/signin", signin);
 
