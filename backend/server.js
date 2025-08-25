@@ -21,7 +21,7 @@ if (!db.data.users) {
 app.use(
   cors({
     origin: [
-      "https://shadowing-app-spec.vercel.app/",
+      "https://shadowing-app-spec.vercel.app",
       "http://localhost:3000",
       "http://localhost:3001",
     ],
