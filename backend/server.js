@@ -3,13 +3,16 @@ import cors from "cors";
 import router from "./router.js";
 import { protect } from "./auth.js";
 import { JSONFilePreset } from "lowdb/node";
-import { signin, createNewUser } from "./handlers/user.js";
+import { signin } from "./handlers/user.js";
+import * as dotenv from "dotenv";
+dotenv.config();
 
 const app = express();
 
 // Initialize database
 const dbPath =
   process.env.NODE_ENV === "production" ? "/data/db.json" : "db.json";
+console.log(dbPath);
 const db = await JSONFilePreset(dbPath, { users: [] });
 if (!db.data.users) {
   db.data.users = [];
