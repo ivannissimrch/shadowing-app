@@ -38,7 +38,7 @@ app.get("/", (req, res) => {
     timestamp: new Date().toISOString(),
   });
 });
-app.use("/api", router);
+app.use("/api", protect, router);
 app.post("/signin", signin);
 
 export default app;

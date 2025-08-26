@@ -1,5 +1,4 @@
 "use client";
-// import { useRouter } from "next/navigation";
 import styles from "./RecorderPanel.module.css";
 import { useState, useRef } from "react";
 import AudioPlayer from "react-h5-audio-player";
@@ -9,22 +8,11 @@ import { Lesson } from "../Types";
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 interface RecorderProps {
-  currentUser:
-    | {
-        name: string;
-        email: string;
-        lessons: Lesson[];
-      }
-    | undefined;
   selectedLesson: Lesson | undefined;
 }
 
-export default function RecorderPanel({
-  currentUser,
-  selectedLesson,
-}: RecorderProps) {
+export default function RecorderPanel({ selectedLesson }: RecorderProps) {
   const { openSnackBar, token } = useAppContext();
-  // const router = useRouter();
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunks = useRef<Blob[]>([]);
   const [recording, setRecording] = useState(false);
@@ -93,7 +81,7 @@ export default function RecorderPanel({
 
       // addAudioToLesson(selectedLesson.lessonId, base64Audio);
       const response = await fetch(
-        `${API_URL}/api/users/${currentUser?.name}/lessons/${selectedLesson.lessonId}`,
+        `${API_URL}/api/lessons/${selectedLesson.lessonId}`,
         {
           method: "PATCH",
           headers: {
@@ -109,9 +97,6 @@ export default function RecorderPanel({
         console.error("Failed to update lesson with audio file");
         return;
       }
-      const result = await response.json();
-      console.log(result);
-      // router.push(`/${currentUser?.name}`);
       openSnackBar();
     };
   }
