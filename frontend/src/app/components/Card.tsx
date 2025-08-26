@@ -3,14 +3,8 @@ import styles from "./Card.module.css";
 import Link from "next/link";
 import { Lesson } from "../Types";
 
-export default function Card({
-  currentLesson,
-  userName,
-}: {
-  currentLesson: Lesson;
-  userName: string;
-}) {
-  const { title, image, lessonId, status } = currentLesson;
+export default function Card({ currentLesson }: { currentLesson: Lesson }) {
+  const { title, image, status, lessonId } = currentLesson;
   return (
     <div className={styles.card}>
       <div className={styles.thumbnail}>
@@ -28,7 +22,7 @@ export default function Card({
           <h3 className={styles.title}>{title}</h3>
           <h3 className={styles.status}>{status}</h3>
         </div>
-        <Link href={`/${userName}/${lessonId}`} className={styles.button}>
+        <Link href={`/lessons/${lessonId}`} className={styles.button}>
           Start Practicing
         </Link>
       </div>

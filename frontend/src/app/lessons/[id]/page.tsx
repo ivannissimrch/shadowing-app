@@ -6,7 +6,7 @@ import Image from "next/image";
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 import { useAppContext } from "../../AppContext";
 import { useEffect, useState } from "react";
-import { Lesson, User } from "@/app/Types";
+import { Lesson } from "@/app/Types";
 import Logout from "@/app/components/Logout";
 
 export default function Practice({
@@ -16,14 +16,14 @@ export default function Practice({
 }) {
   const { token } = useAppContext();
   const [selectedLesson, setSelectedLesson] = useState<Lesson | undefined>();
-  const [currentUser, setCurrentUser] = useState<User | undefined>();
+  // const [currentUser, setCurrentUser] = useState<User | undefined>();
 
   useEffect(() => {
     async function loadData() {
       if (!token) return;
       const resolvedParams = await params;
       const response = await fetch(
-        `${API_URL}/api/users/${resolvedParams.user}/lessons/${resolvedParams.id}`,
+        `${API_URL}/api/lessons/${resolvedParams.id}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -34,17 +34,17 @@ export default function Practice({
       const responseData = await response.json();
       setSelectedLesson(responseData.data);
 
-      const response2 = await fetch(
-        `${API_URL}/api/users/${resolvedParams.user}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      const response2Data = await response2.json();
-      setCurrentUser(response2Data.data);
+      // const response2 = await fetch(
+      //   `${API_URL}/api/users/${resolvedParams.user}`,
+      //   {
+      //     headers: {
+      //       Authorization: `Bearer ${token}`,
+      //       "Content-Type": "application/json",
+      //     },
+      //   }
+      // );
+      // const response2Data = await response2.json();
+      // setCurrentUser(response2Data.data);
     }
     loadData();
   }, [token, params]);
@@ -72,7 +72,7 @@ export default function Practice({
           )}
         </div>
         <RecorderPanel
-          currentUser={currentUser}
+          // currentUser={currentUser}
           selectedLesson={selectedLesson}
         />
       </div>

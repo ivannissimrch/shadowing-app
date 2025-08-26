@@ -26,7 +26,7 @@ export default function LoginForm() {
     //save token to context or state management result.token
     updateToken(result.token);
     if (response.ok) {
-      router.push(`/${userName}`);
+      router.push("/lessons");
     } else {
       alert(`Login failed: ${result.message}`);
     }
