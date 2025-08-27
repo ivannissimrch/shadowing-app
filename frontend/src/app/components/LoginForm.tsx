@@ -22,8 +22,6 @@ export default function LoginForm() {
       body: JSON.stringify({ username: userName, password }),
     });
     const result = await response.json();
-    console.log("Login response:", result);
-    //save token to context or state management result.token
     updateToken(result.token);
     if (response.ok) {
       router.push("/lessons");
