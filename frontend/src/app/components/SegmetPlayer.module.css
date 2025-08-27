@@ -2,15 +2,21 @@
   background: #fff;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
   width: 100%;
-  height: 390px;
+  height: 100%;
 }
 
 .videoBox {
   background: #0f172a;
   color: #fff;
   width: 100%;
-
+  height: 100%;
   text-align: center;
+  position: relative;
+}
+
+.videoBox iframe {
+  width: 100%;
+  height: 450px;
 }
 
 .icon {

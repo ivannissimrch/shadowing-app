@@ -16,7 +16,10 @@ export default function Practice({
 }) {
   const { token } = useAppContext();
   const [selectedLesson, setSelectedLesson] = useState<Lesson | undefined>();
-  // const [currentUser, setCurrentUser] = useState<User | undefined>();
+
+  function updateSelectedLesson(updatedLesson: Lesson) {
+    setSelectedLesson(updatedLesson);
+  }
 
   useEffect(() => {
     async function loadData() {
@@ -33,18 +36,6 @@ export default function Practice({
       );
       const responseData = await response.json();
       setSelectedLesson(responseData.data);
-
-      // const response2 = await fetch(
-      //   `${API_URL}/api/users/${resolvedParams.user}`,
-      //   {
-      //     headers: {
-      //       Authorization: `Bearer ${token}`,
-      //       "Content-Type": "application/json",
-      //     },
-      //   }
-      // );
-      // const response2Data = await response2.json();
-      // setCurrentUser(response2Data.data);
     }
     loadData();
   }, [token, params]);
@@ -68,12 +59,17 @@ export default function Practice({
               width={625}
               height={390}
               priority
+              style={{
+                width: "100%",
+                height: "auto",
+                maxWidth: "800px",
+              }}
             />
           )}
         </div>
         <RecorderPanel
-          // currentUser={currentUser}
           selectedLesson={selectedLesson}
+          updateSelectedLesson={updateSelectedLesson}
         />
       </div>
     </main>
