@@ -9,9 +9,13 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 interface RecorderProps {
   selectedLesson: Lesson | undefined;
+  updateSelectedLesson: (updatedLesson: Lesson) => void;
 }
 
-export default function RecorderPanel({ selectedLesson }: RecorderProps) {
+export default function RecorderPanel({
+  selectedLesson,
+  updateSelectedLesson,
+}: RecorderProps) {
   const { openSnackBar, token } = useAppContext();
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunks = useRef<Blob[]>([]);
@@ -20,6 +24,7 @@ export default function RecorderPanel({ selectedLesson }: RecorderProps) {
   const [audioURL, setAudioURL] = useState<string | null>(
     selectedLesson?.audioFile ? selectedLesson?.audioFile : null
   );
+
   const [blob, setBlob] = useState<Blob | null>(null);
 
   async function startRecording() {
@@ -77,7 +82,6 @@ export default function RecorderPanel({ selectedLesson }: RecorderProps) {
         console.error("Invalid audio data or lesson ID");
         return;
       }
-      console.log(token);
 
       // addAudioToLesson(selectedLesson.lessonId, base64Audio);
       const response = await fetch(
@@ -93,11 +97,18 @@ export default function RecorderPanel({ selectedLesson }: RecorderProps) {
           }),
         }
       );
+      setRecording(false);
+      setPaused(false);
       if (!response.ok) {
         console.error("Failed to update lesson with audio file");
         return;
       }
       openSnackBar();
+      updateSelectedLesson({
+        ...selectedLesson,
+        audioFile: base64Audio,
+        status: "completed",
+      });
     };
   }
 
@@ -105,7 +116,7 @@ export default function RecorderPanel({ selectedLesson }: RecorderProps) {
     return (
       <div className={styles.MediaRecorder}>
         <AudioPlayer
-          src={audioURL ? audioURL : selectedLesson.audioFile}
+          src={audioURL ? audioURL : selectedLesson?.audioFile}
           showJumpControls={false}
         />
       </div>
@@ -154,7 +165,11 @@ export default function RecorderPanel({ selectedLesson }: RecorderProps) {
             />
             <button
               className={styles.recordBtn}
-              onClick={() => setAudioURL(null)}
+              onClick={() => {
+                setAudioURL(null);
+                setRecording(false);
+                setPaused(false);
+              }}
             >
               Delete
             </button>

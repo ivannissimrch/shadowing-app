@@ -9,10 +9,11 @@
 
 .container {
   width: 100%;
-  padding: 2rem;
+  /* max-width: 1400px; */
+  padding: 20px 30px;
   background-color: #f5f7fe;
   min-height: 100vh;
-  padding: 20px 200px;
+  margin: 0 auto;
 }
 
 .title {
@@ -41,7 +42,8 @@
 
 .grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 20px;
-  justify-items: center;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px;
+  width: 100%;
+  max-width: none;
 }
