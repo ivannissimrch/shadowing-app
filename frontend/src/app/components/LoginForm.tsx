@@ -4,13 +4,15 @@ import { useEffect, useState } from "react";
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 import { useRouter } from "next/navigation";
 import { useAppContext } from "../AppContext";
+import { MdOutlineRemoveRedEye } from "react-icons/md";
 
 export default function LoginForm() {
   const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
   const { updateToken, token } = useAppContext();
-  //check if token is valid then redirect to user page check for token or make a request to validate it?
+  const [passwordType, setPasswordType] = useState("password");
+
   useEffect(() => {
     if (token) {
       router.push("/lessons");
@@ -40,27 +42,42 @@ export default function LoginForm() {
   }
 
   return (
-    <form className={styles.form} onSubmit={handleSubmit}>
-      <input
-        type="text"
-        name="username"
-        placeholder="Enter your username"
-        className={styles.input}
-        required
-        value={userName}
-        onChange={(e) => setUserName(e.target.value)}
-      />
+    <main className={styles["form-container"]}>
+      <h1>Welcome</h1>
+      <form className={styles.form} onSubmit={handleSubmit}>
+        <label htmlFor="username">Username:</label>
+        <input
+          type="text"
+          name="username"
+          placeholder="Enter your username"
+          className={styles.input}
+          required
+          value={userName}
+          onChange={(e) => setUserName(e.target.value)}
+        />
+        <label htmlFor="password">Password:</label>
+        <div className={styles.passwordContainer}>
+          <input
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            type={passwordType}
+            name="password"
+            placeholder="Enter your password"
+            className={styles.input}
+            required
+          />
+          <span
+            className={styles.eye}
+            onClick={() =>
+              setPasswordType(passwordType === "password" ? "text" : "password")
+            }
+          >
+            <MdOutlineRemoveRedEye />
+          </span>
+        </div>
 
-      <input
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        type="password"
-        name="password"
-        placeholder="Enter your password"
-        className={styles.input}
-        required
-      />
-      <button className={styles.button}>Login</button>
-    </form>
+        <button className={styles.button}>Login</button>
+      </form>
+    </main>
   );
 }
