@@ -4,7 +4,6 @@ import styles from "./page.module.css";
 import Card from "../components/Card";
 import { Lesson } from "../Types";
 import { useAppContext } from "../AppContext";
-import Logout from "../components/Logout";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -37,15 +36,8 @@ export default function Lessons({
   return (
     <main className={styles.main}>
       <div className={styles.container}>
-        <h1 className={styles.title}>ShadowSpeak</h1>
-        <p className={styles.subtitle}>
-          Master English pronunciation through shadowing practice
-          <Logout />
-        </p>
-        <h2 className={styles.heading}>Choose a Video to Practice</h2>
-        <p className={styles.description}>
-          Select a video that matches your level and interests
-        </p>
+        <h1 className={styles.title}>My Lessons</h1>
+
         <div className={styles["cards-container"]}>
           {lessons.map((currentLesson) => (
             <Card key={currentLesson.title} currentLesson={currentLesson} />

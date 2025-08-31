@@ -7,7 +7,6 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL;
 import { useAppContext } from "../../AppContext";
 import { useEffect, useState } from "react";
 import { Lesson } from "@/app/Types";
-import Logout from "@/app/components/Logout";
 
 export default function Practice({
   params,
@@ -42,7 +41,6 @@ export default function Practice({
 
   return (
     <main className={styles.main}>
-      <Logout />
       <div className={styles.container}>
         <h1 className={styles.title}>ShadowSpeak</h1>
         <p className={styles.subtitle}>
