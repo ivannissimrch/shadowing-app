@@ -1,0 +1,32 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  background-color: white;
+  border-bottom: 1px solid #e0e0e0;
+  color: blue;
+}
+.link {
+  text-decoration: none;
+  color: blue;
+}
+
+.link:hover {
+  text-decoration: underline;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.link:active {
+  background-color: blue;
+  color: white;
+}
+
+.active {
+  background-color: blue;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+}
