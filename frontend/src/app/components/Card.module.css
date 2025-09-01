@@ -1,61 +1,50 @@
 .card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   background: white;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
   overflow: hidden;
   padding: 0.5rem;
-  text-align: center;
   color: black;
   width: 100%;
+  height: 100px;
+  border-radius: 8px;
 }
 
-.thumbnail {
-  padding: 1rem;
-  background: #e9ecff;
-  position: relative;
-  width: 100%;
-  aspect-ratio: 16 / 9;
-  overflow: hidden;
-}
-
-.image {
-  object-fit: cover;
-}
-
-.content {
-  margin-top: 1rem;
+.information-container {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-}
-
-.text {
-  display: flex;
-  justify-content: space-between;
   gap: 0.5rem;
 }
 
 .title {
-  text-align: left;
-  font-size: 1rem;
+  font-size: x-large;
   font-weight: 600;
   width: 18.75rem;
 }
 
 .status {
-  text-align: right;
   font-size: 1rem;
   font-weight: 600;
-  width: 18.75rem;
+  width: 100px;
+  background-color: lightgray;
+  border-radius: 18px;
+  text-align: center;
+  padding: 5px 10px;
 }
 
 .button {
-  margin: 0.5rem 0;
   background: blue;
   color: white;
   border: none;
+  border-radius: 8px;
   padding: 1rem 1.5rem;
   font-weight: bold;
   cursor: pointer;
+  height: 40px;
+  display: flex;
+  align-items: center;
 }
 
 .button:hover {
