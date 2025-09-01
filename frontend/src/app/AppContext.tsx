@@ -8,9 +8,9 @@ import { usePersistedState } from "./hooks/usePersistedState";
 export const lessonsContext = createContext<LessonsContextType>({
   lessons: undefined,
   addAudioToLesson: () => {},
-  openSnackBar: () => {},
-  closeSnackBar: () => {},
-  isSnackBarOpen: false,
+  openAlertDialog: () => {},
+  closeAlertDialog: () => {},
+  isAlertDialogOpen: false,
   token: null,
   updateToken: () => {},
 });
@@ -20,7 +20,7 @@ export default function StocksContextProvider({
 }: {
   children: React.ReactNode;
 }) {
-  const [isSnackBarOpen, setIsSnackBarOpen] = useState(false);
+  const [isAlertDialogOpen, setIsAlertDialogOpen] = useState(false);
   const [eslLessons, setEslLessons] = usePersistedState<Lesson[] | undefined>(
     "lessons",
     undefined
@@ -31,12 +31,12 @@ export default function StocksContextProvider({
     setToken(newToken);
   }
 
-  function openSnackBar() {
-    setIsSnackBarOpen(true);
+  function openAlertDialog() {
+    setIsAlertDialogOpen(true);
   }
 
-  function closeSnackBar() {
-    setIsSnackBarOpen(false);
+  function closeAlertDialog() {
+    setIsAlertDialogOpen(false);
   }
 
   function addAudioToLesson(id: string, audioFile: string) {
@@ -55,9 +55,9 @@ export default function StocksContextProvider({
       value={{
         lessons: eslLessons,
         addAudioToLesson,
-        isSnackBarOpen,
-        openSnackBar,
-        closeSnackBar,
+        isAlertDialogOpen,
+        openAlertDialog,
+        closeAlertDialog,
         token,
         updateToken,
       }}

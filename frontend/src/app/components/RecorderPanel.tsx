@@ -6,6 +6,7 @@ import "react-h5-audio-player/lib/styles.css";
 import { useAppContext } from "../AppContext";
 import { Lesson } from "../Types";
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
+import { useRouter } from "next/navigation";
 
 interface RecorderProps {
   selectedLesson: Lesson | undefined;
@@ -16,7 +17,7 @@ export default function RecorderPanel({
   selectedLesson,
   updateSelectedLesson,
 }: RecorderProps) {
-  const { token, openSnackBar } = useAppContext();
+  const { token, openAlertDialog } = useAppContext();
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunks = useRef<Blob[]>([]);
   const [recording, setRecording] = useState(false);
@@ -25,6 +26,7 @@ export default function RecorderPanel({
     selectedLesson?.audioFile ? selectedLesson?.audioFile : null
   );
   const [blob, setBlob] = useState<Blob | null>(null);
+  const router = useRouter();
 
   async function startRecording() {
     const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -103,13 +105,14 @@ export default function RecorderPanel({
         return;
       }
 
-      openSnackBar();
+      openAlertDialog();
       updateSelectedLesson({
         ...selectedLesson,
         audioFile: base64Audio,
         status: "completed",
       });
     };
+    router.push("/progress");
   }
 
   if (selectedLesson?.status === "completed") {

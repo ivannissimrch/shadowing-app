@@ -1,22 +1,18 @@
+"use client";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
+import { useAppContext } from "../AppContext";
 
-export default function AlertDialog({
-  isDialogOpen,
-  closeDialog,
-}: {
-  isDialogOpen: boolean;
-  closeDialog: () => void;
-}) {
-  console.log(isDialogOpen);
+export default function AlertDialog() {
+  const { isAlertDialogOpen, closeAlertDialog } = useAppContext();
   return (
     <Dialog
-      open={isDialogOpen}
-      onClose={closeDialog}
+      open={isAlertDialogOpen}
+      onClose={closeAlertDialog}
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
     >
@@ -28,7 +24,7 @@ export default function AlertDialog({
         </DialogContentText>
       </DialogContent>
       <DialogActions>
-        <Button onClick={closeDialog} autoFocus>
+        <Button onClick={closeAlertDialog} autoFocus>
           Close
         </Button>
       </DialogActions>
