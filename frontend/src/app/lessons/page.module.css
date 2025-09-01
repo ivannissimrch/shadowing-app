@@ -7,8 +7,6 @@
 }
 
 .container {
-  padding: 2rem;
-  text-align: center;
   background-color: #f5f7fe;
   min-height: 100vh;
   width: 85rem;
@@ -18,30 +16,13 @@
   font-size: 2rem;
   color: black;
   font-weight: bold;
-}
-
-.subtitle {
-  margin-top: 0.25rem;
-  color: black;
-  font-size: 1rem;
-}
-
-.heading {
-  margin-top: 2rem;
-  font-size: 1.5rem;
-  font-weight: 600;
-  color: black;
-}
-
-.description {
-  color: black;
-  margin-bottom: 2rem;
+  margin: 20px 0;
 }
 
 .cards-container {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  /* grid-template-rows: repeat(5, 1fr); */
-  grid-column-gap: 20px;
-  grid-row-gap: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+  min-height: max-content;
 }
