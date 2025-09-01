@@ -16,7 +16,7 @@ export default function RecorderPanel({
   selectedLesson,
   updateSelectedLesson,
 }: RecorderProps) {
-  const { openSnackBar, token } = useAppContext();
+  const { token, openSnackBar } = useAppContext();
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunks = useRef<Blob[]>([]);
   const [recording, setRecording] = useState(false);
@@ -24,7 +24,6 @@ export default function RecorderPanel({
   const [audioURL, setAudioURL] = useState<string | null>(
     selectedLesson?.audioFile ? selectedLesson?.audioFile : null
   );
-
   const [blob, setBlob] = useState<Blob | null>(null);
 
   async function startRecording() {
@@ -103,6 +102,7 @@ export default function RecorderPanel({
         console.error("Failed to update lesson with audio file");
         return;
       }
+
       openSnackBar();
       updateSelectedLesson({
         ...selectedLesson,
