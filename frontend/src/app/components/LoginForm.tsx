@@ -31,7 +31,6 @@ export default function LoginForm() {
     const result = await response.json();
     if (response.ok) {
       updateToken(result.token);
-      // router.push("/lessons");
     } else {
       alert(`Login failed: ${result.message}`);
     }
@@ -49,6 +48,7 @@ export default function LoginForm() {
         <input
           type="text"
           name="username"
+          id="username"
           placeholder="Enter your username"
           className={styles.input}
           required
@@ -62,6 +62,7 @@ export default function LoginForm() {
             onChange={(e) => setPassword(e.target.value)}
             type={passwordType}
             name="password"
+            id="password"
             placeholder="Enter your password"
             className={styles.input}
             required
