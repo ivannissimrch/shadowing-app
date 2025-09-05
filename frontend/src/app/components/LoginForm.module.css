@@ -39,7 +39,7 @@
   border: 1px solid #ccc;
   border-radius: 4px;
   height: 40px;
-  width: 50%;
+  width: 100%;
   box-sizing: border-box;
   background-color: white;
   color: black;
@@ -47,10 +47,11 @@
 
 .eye {
   position: absolute;
-  left: 47%;
+  left: 95%;
   bottom: 24px;
   cursor: pointer;
   color: gray;
+  visibility: visible;
 }
 
 .button {
@@ -60,7 +61,7 @@
   color: white;
   text-decoration: none;
   border-radius: 8px;
-  width: 50%;
+  width: 100%;
   height: 40px;
 }
 .button:hover {
@@ -84,4 +85,10 @@
   background-color: #ccc;
   cursor: not-allowed;
   color: #666;
+}
+
+@media (max-width: 1200px) {
+  .eye {
+    left: 93%;
+  }
 }
