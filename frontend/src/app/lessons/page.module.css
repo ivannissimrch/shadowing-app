@@ -9,7 +9,9 @@
 .container {
   background-color: #f5f7fe;
   min-height: 100vh;
-  width: 85rem;
+  width: 100%;
+  max-width: 1280px;
+  padding: 10px 10px;
 }
 
 .title {
