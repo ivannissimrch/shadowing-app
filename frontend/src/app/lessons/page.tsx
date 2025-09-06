@@ -34,15 +34,13 @@ export default function Lessons({
   if (!lessons) return <div>Loading...</div>;
 
   return (
-    <main className={styles.main}>
-      <div className={styles.container}>
-        <h1 className={styles.title}>My Lessons</h1>
-        <div className={styles["cards-container"]}>
-          {lessons.map((currentLesson) => (
-            <Card key={currentLesson.title} currentLesson={currentLesson} />
-          ))}
-        </div>
+    <>
+      <h1 className={styles.title}>My Lessons</h1>
+      <div className={styles["cards-container"]}>
+        {lessons.map((currentLesson) => (
+          <Card key={currentLesson.title} currentLesson={currentLesson} />
+        ))}
       </div>
-    </main>
+    </>
   );
 }

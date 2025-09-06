@@ -40,26 +40,24 @@ export default function Practice({
   }, [token, params]);
 
   return (
-    <main className={styles.main}>
-      <div className={styles.container}>
-        <div className={styles.grid}>
-          <SegmentPlayer selectedLesson={selectedLesson} />
-          {selectedLesson?.image && (
-            <Image
-              src={`/images/${selectedLesson?.image}.png`}
-              alt="ESL lesson"
-              quality={100}
-              width={625}
-              height={390}
-              priority
-            />
-          )}
-        </div>
-        <RecorderPanel
-          selectedLesson={selectedLesson}
-          updateSelectedLesson={updateSelectedLesson}
-        />
+    <>
+      <div className={styles.grid}>
+        <SegmentPlayer selectedLesson={selectedLesson} />
+        {selectedLesson?.image && (
+          <Image
+            src={`/images/${selectedLesson?.image}.png`}
+            alt="ESL lesson"
+            quality={100}
+            width={625}
+            height={390}
+            priority
+          />
+        )}
       </div>
-    </main>
+      <RecorderPanel
+        selectedLesson={selectedLesson}
+        updateSelectedLesson={updateSelectedLesson}
+      />
+    </>
   );
 }

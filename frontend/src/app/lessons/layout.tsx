@@ -1,5 +1,6 @@
 import Header from "../components/Header";
 import Footer from "../components/Footer";
+import styles from "./layout.module.css";
 
 export default function LessonsLayout({
   children,
@@ -9,7 +10,7 @@ export default function LessonsLayout({
   return (
     <>
       <Header />
-      {children}
+      <section className={styles.container}>{children}</section>
       <Footer />
     </>
   );
