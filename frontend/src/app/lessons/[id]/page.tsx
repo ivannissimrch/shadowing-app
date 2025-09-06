@@ -42,11 +42,6 @@ export default function Practice({
   return (
     <main className={styles.main}>
       <div className={styles.container}>
-        <h1 className={styles.title}>ShadowSpeak</h1>
-        <p className={styles.subtitle}>
-          Master English pronunciation through shadowing practice
-        </p>
-
         <div className={styles.grid}>
           <SegmentPlayer selectedLesson={selectedLesson} />
           {selectedLesson?.image && (
@@ -57,11 +52,6 @@ export default function Practice({
               width={625}
               height={390}
               priority
-              style={{
-                width: "100%",
-                height: "auto",
-                maxWidth: "800px",
-              }}
             />
           )}
         </div>
