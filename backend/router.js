@@ -4,21 +4,17 @@ import { db } from "./server.js";
 const router = Router();
 
 // Get all lessons for a user
-router.get("/lessons", (req, res) => {
+router.get("/lessons", async (req, res) => {
   try {
     const userId = req.user.id;
-    const user = db.data.users.find((user) => user.id === userId);
-
-    if (!user) {
-      return res.status(404).json({
-        success: false,
-        message: "User not found",
-      });
-    }
+    const result = await db.query(
+      "SELECT * FROM lessons WHERE user_id = $1 ORDER BY created_at DESC",
+      [userId]
+    );
 
     res.json({
       success: true,
-      data: user.lessons,
+      data: result.rows,
     });
   } catch (error) {
     console.error("Error fetching lessons:", error);
@@ -29,21 +25,18 @@ router.get("/lessons", (req, res) => {
   }
 });
 
-//Get specific user lesson
-router.get("/lessons/:lessonId", (req, res) => {
+// Get specific user lesson
+router.get("/lessons/:lessonId", async (req, res) => {
   try {
     const { lessonId } = req.params;
     const userId = req.user.id;
-    const user = db.data.users.find((user) => user.id === userId);
-    if (!user) {
-      return res.status(404).json({
-        success: false,
-        message: "User not found",
-      });
-    }
 
-    const lesson = user.lessons.find((lesson) => lesson.lessonId === lessonId);
-    if (!lesson) {
+    const result = await db.query(
+      "SELECT * FROM lessons WHERE user_id = $1 AND lesson_id = $2",
+      [userId, lessonId]
+    );
+
+    if (result.rows.length === 0) {
       return res.status(404).json({
         success: false,
         message: "Lesson not found",
@@ -52,7 +45,7 @@ router.get("/lessons/:lessonId", (req, res) => {
 
     res.json({
       success: true,
-      data: lesson,
+      data: result.rows[0],
     });
   } catch (error) {
     console.error("Error fetching lesson:", error);
@@ -63,39 +56,31 @@ router.get("/lessons/:lessonId", (req, res) => {
   }
 });
 
-//Update specific user lesson
+// Update specific user lesson
 router.patch("/lessons/:lessonId", async (req, res) => {
   try {
     const { audioFile } = req.body;
     const { lessonId } = req.params;
     const userId = req.user.id;
 
-    const user = db.data.users.find((user) => user.id === userId);
+    const result = await db.query(
+      `UPDATE lessons 
+       SET audio_file = $1, status = 'completed', updated_at = CURRENT_TIMESTAMP 
+       WHERE user_id = $2 AND lesson_id = $3 
+       RETURNING *`,
+      [audioFile, userId, lessonId]
+    );
 
-    if (!user) {
-      return res.status(404).json({
-        success: false,
-        message: "User not found",
-      });
-    }
-
-    const lesson = user.lessons.find((lesson) => lesson.lessonId === lessonId);
-
-    if (!lesson) {
+    if (result.rows.length === 0) {
       return res.status(404).json({
         success: false,
         message: "Lesson not found",
       });
     }
 
-    // Update the lesson
-    lesson.audioFile = audioFile;
-    lesson.status = "completed";
-    await db.write();
-
     res.json({
       success: true,
-      data: lesson,
+      data: result.rows[0],
     });
   } catch (error) {
     console.error("Error updating lesson:", error);
@@ -106,27 +91,19 @@ router.patch("/lessons/:lessonId", async (req, res) => {
   }
 });
 
-//Add new lesson to user
+// Add new lesson to user
 router.post("/lessons", async (req, res) => {
   try {
     const userId = req.user.id;
     const { lessonId, audioFile, title, image, videoId } = req.body;
 
-    const user = db.data.users.find((u) => u.id === userId);
-
-    if (!user) {
-      return res.status(404).json({
-        success: false,
-        message: "User not found",
-      });
-    }
-
     // Check if the lesson already exists
-    const existingLesson = user.lessons.find(
-      (lesson) => lesson.lessonId === lessonId
+    const existingLesson = await db.query(
+      "SELECT id FROM lessons WHERE user_id = $1 AND lesson_id = $2",
+      [userId, lessonId]
     );
 
-    if (existingLesson) {
+    if (existingLesson.rows.length > 0) {
       return res.status(400).json({
         success: false,
         message: "Lesson already exists",
@@ -134,21 +111,16 @@ router.post("/lessons", async (req, res) => {
     }
 
     // Add new lesson
-    const newLesson = {
-      lessonId,
-      title,
-      image,
-      videoId,
-      audioFile: audioFile || "",
-      status: "new",
-    };
-
-    user.lessons.push(newLesson);
-    await db.write();
+    const result = await db.query(
+      `INSERT INTO lessons (user_id, lesson_id, title, image, video_id, audio_file, status)
+       VALUES ($1, $2, $3, $4, $5, $6, 'new')
+       RETURNING *`,
+      [userId, lessonId, title, image, videoId, audioFile || ""]
+    );
 
     res.status(201).json({
       success: true,
-      data: newLesson,
+      data: result.rows[0],
     });
   } catch (error) {
     console.error("Error adding lesson:", error);

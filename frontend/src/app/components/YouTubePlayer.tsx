@@ -20,7 +20,7 @@ export default function YouTubePlayer({
 
   return (
     <YouTube
-      videoId={selectedLesson?.videoId}
+      videoId={selectedLesson?.video_id}
       opts={opts}
       onReady={onPlayerReady}
     />

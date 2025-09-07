@@ -23,7 +23,7 @@ export default function RecorderPanel({
   const [recording, setRecording] = useState(false);
   const [paused, setPaused] = useState(false);
   const [audioURL, setAudioURL] = useState<string | null>(
-    selectedLesson?.audioFile ? selectedLesson?.audioFile : null
+    selectedLesson?.audio_file ? selectedLesson?.audio_file : null
   );
   const [blob, setBlob] = useState<Blob | null>(null);
   const router = useRouter();
@@ -78,15 +78,15 @@ export default function RecorderPanel({
 
       if (
         typeof base64Audio !== "string" ||
-        selectedLesson?.lessonId === undefined
+        selectedLesson?.lesson_id === undefined
       ) {
         console.error("Invalid audio data or lesson ID");
         return;
       }
 
-      // addAudioToLesson(selectedLesson.lessonId, base64Audio);
+      // addAudioToLesson(selectedLesson.lesson_id, base64Audio);
       const response = await fetch(
-        `${API_URL}/api/lessons/${selectedLesson.lessonId}`,
+        `${API_URL}/api/lessons/${selectedLesson.lesson_id}`,
         {
           method: "PATCH",
           headers: {
@@ -94,7 +94,7 @@ export default function RecorderPanel({
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            audioFile: base64Audio,
+            audio_file: base64Audio,
           }),
         }
       );
@@ -108,7 +108,7 @@ export default function RecorderPanel({
       openAlertDialog();
       updateSelectedLesson({
         ...selectedLesson,
-        audioFile: base64Audio,
+        audio_file: base64Audio,
         status: "completed",
       });
     };
@@ -119,7 +119,7 @@ export default function RecorderPanel({
     return (
       <div className={styles.MediaRecorder}>
         <AudioPlayer
-          src={audioURL ? audioURL : selectedLesson?.audioFile}
+          src={audioURL ? audioURL : selectedLesson?.audio_file}
           showJumpControls={false}
         />
       </div>
@@ -160,8 +160,8 @@ export default function RecorderPanel({
           <div className={styles.MediaRecorder}>
             <AudioPlayer
               src={
-                selectedLesson?.audioFile
-                  ? selectedLesson?.audioFile
+                selectedLesson?.audio_file
+                  ? selectedLesson?.audio_file
                   : audioURL!
               }
               showJumpControls={false}

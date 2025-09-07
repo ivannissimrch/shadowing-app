@@ -1,35 +1,38 @@
-import { db } from "../server.js";
+import { db } from "../server.js"; // Import the database connection from server.js
 import { comparePasswords, createJWT, hashPassword } from "../auth.js";
-import { v4 as uuidv4 } from "uuid";
 
 export const createNewUser = async (req, res) => {
   try {
     // Check if user already exists
-    const existingUser = db.data.users.find(
-      (u) => u.username === req.body.username
+    const existingUserResult = await db.query(
+      "SELECT id FROM users WHERE username = $1",
+      [req.body.username]
     );
-    if (existingUser) {
+
+    if (existingUserResult.rows.length > 0) {
       return res.status(409).json({
         success: false,
         message: "User already exists",
       });
     }
 
+    // Hash password
+    const hashedPassword = await hashPassword(req.body.password);
+
     // Create new user
-    const newUser = {
-      id: uuidv4(), // Generate unique ID
-      username: req.body.username,
-      password: await hashPassword(req.body.password),
-      name: req.body.name || req.body.username,
-      lessons: [],
-      createdAt: new Date().toISOString(),
-    };
+    const result = await db.query(
+      `INSERT INTO users (username, password, name, email)
+       VALUES ($1, $2, $3, $4)
+       RETURNING id, username, name, email, created_at`,
+      [
+        req.body.username,
+        hashedPassword,
+        req.body.name || req.body.username,
+        req.body.email || "",
+      ]
+    );
 
-    // Add user to database
-    db.data.users.push(newUser);
-
-    // Save to file
-    await db.write();
+    const newUser = result.rows[0];
 
     // Create token (exclude password from user object)
     const userForToken = {
@@ -60,14 +63,19 @@ export const createNewUser = async (req, res) => {
 export const signin = async (req, res) => {
   try {
     // Find user by username
-    const user = db.data.users.find((u) => u.username === req.body.username);
+    const result = await db.query(
+      "SELECT id, username, name, password FROM users WHERE username = $1",
+      [req.body.username]
+    );
 
-    if (!user) {
+    if (result.rows.length === 0) {
       return res.status(401).json({
         success: false,
         message: "Invalid credentials",
       });
     }
+
+    const user = result.rows[0];
 
     // Compare passwords
     const isValid = await comparePasswords(req.body.password, user.password);
