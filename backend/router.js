@@ -59,7 +59,7 @@ router.get("/lessons/:lessonId", async (req, res) => {
 // Update specific user lesson
 router.patch("/lessons/:lessonId", async (req, res) => {
   try {
-    const { audioFile } = req.body;
+    const { audio_file } = req.body;
     const { lessonId } = req.params;
     const userId = req.user.id;
 
@@ -68,7 +68,7 @@ router.patch("/lessons/:lessonId", async (req, res) => {
        SET audio_file = $1, status = 'completed', updated_at = CURRENT_TIMESTAMP 
        WHERE user_id = $2 AND lesson_id = $3 
        RETURNING *`,
-      [audioFile, userId, lessonId]
+      [audio_file, userId, lessonId]
     );
 
     if (result.rows.length === 0) {

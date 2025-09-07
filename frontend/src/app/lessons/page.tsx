@@ -14,7 +14,6 @@ export default function Lessons({
 }) {
   const [lessons, setLessons] = useState<Lesson[]>([]);
   const { token } = useAppContext();
-  console.log(`${API_URL}/api/lessons`);
 
   useEffect(() => {
     async function loadData() {

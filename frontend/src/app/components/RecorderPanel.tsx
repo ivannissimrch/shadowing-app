@@ -1,12 +1,13 @@
 "use client";
 import styles from "./RecorderPanel.module.css";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import AudioPlayer from "react-h5-audio-player";
 import "react-h5-audio-player/lib/styles.css";
 import { useAppContext } from "../AppContext";
 import { Lesson } from "../Types";
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 import { useRouter } from "next/navigation";
+import base64ToBlob from "../helpers/base64ToBlob";
 
 interface RecorderProps {
   selectedLesson: Lesson | undefined;
@@ -22,9 +23,7 @@ export default function RecorderPanel({
   const audioChunks = useRef<Blob[]>([]);
   const [recording, setRecording] = useState(false);
   const [paused, setPaused] = useState(false);
-  const [audioURL, setAudioURL] = useState<string | null>(
-    selectedLesson?.audio_file ? selectedLesson?.audio_file : null
-  );
+  const [audioURL, setAudioURL] = useState<string | null>(null); //if selectedLesson has audio_file, transform into a blod use that as initial state for audioURL, otherwise null
   const [blob, setBlob] = useState<Blob | null>(null);
   const router = useRouter();
 
@@ -32,18 +31,14 @@ export default function RecorderPanel({
     const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
     const mediaRecorder = new MediaRecorder(stream);
     mediaRecorderRef.current = mediaRecorder;
-
     audioChunks.current = [];
-
     mediaRecorder.ondataavailable = (event) => {
       audioChunks.current.push(event.data);
     };
 
     mediaRecorder.onstop = () => {
       const blob = new Blob(audioChunks.current, { type: "audio/webm" });
-      console.log("Recording stopped, blob created:", blob);
       const url = URL.createObjectURL(blob);
-      console.log("Audio URL:", url);
       setAudioURL(url);
       setBlob(blob);
     };
@@ -84,7 +79,6 @@ export default function RecorderPanel({
         return;
       }
 
-      // addAudioToLesson(selectedLesson.lesson_id, base64Audio);
       const response = await fetch(
         `${API_URL}/api/lessons/${selectedLesson.lesson_id}`,
         {
@@ -98,6 +92,7 @@ export default function RecorderPanel({
           }),
         }
       );
+
       setRecording(false);
       setPaused(false);
       if (!response.ok) {
@@ -112,16 +107,32 @@ export default function RecorderPanel({
         status: "completed",
       });
     };
-    router.push("/progress");
+    router.push("/lessons");
   }
 
-  if (selectedLesson?.status === "completed") {
+  useEffect(() => {
+    if (selectedLesson?.audio_file) {
+      try {
+        const blob = base64ToBlob(selectedLesson.audio_file);
+        const blobUrl = URL.createObjectURL(blob);
+        setAudioURL(blobUrl);
+      } catch (error) {
+        console.error("Error converting base64 to blob:", error);
+      }
+    }
+
+    return () => {
+      if (audioURL && audioURL.startsWith("blob:")) {
+        URL.revokeObjectURL(audioURL);
+      }
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedLesson?.audio_file]);
+
+  if (selectedLesson?.status === "completed" && audioURL) {
     return (
       <div className={styles.MediaRecorder}>
-        <AudioPlayer
-          src={audioURL ? audioURL : selectedLesson?.audio_file}
-          showJumpControls={false}
-        />
+        <AudioPlayer src={audioURL} showJumpControls={false} />
       </div>
     );
   } else {
@@ -158,14 +169,7 @@ export default function RecorderPanel({
         )}
         {audioURL && (
           <div className={styles.MediaRecorder}>
-            <AudioPlayer
-              src={
-                selectedLesson?.audio_file
-                  ? selectedLesson?.audio_file
-                  : audioURL!
-              }
-              showJumpControls={false}
-            />
+            <AudioPlayer src={audioURL} showJumpControls={false} />
             <button
               className={styles.recordBtn}
               onClick={() => {
