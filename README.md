@@ -13,7 +13,11 @@ An app to help English learners improve their spoken English by mimicking native
 
 ---
 
-## MVP
+![App image](./frontend/public/images/eslApp.png)
+
+---
+
+## MV
 
 ### Phase 1: Student MVP (No Login)
 
@@ -32,7 +36,7 @@ An app to help English learners improve their spoken English by mimicking native
 
 #### Authentication & Roles
 
-- Email/password signup and login (student or teacher)
+- login (student or teacher)
 - Role-based redirect to correct dashboard after login
 
 #### Student Enhancements
@@ -51,9 +55,7 @@ An app to help English learners improve their spoken English by mimicking native
 ## Stretch Goals
 
 - AI-generated feedback (Azure Speech API)
-- Display captions synced to YouTube video
 - Pitch/intonation graph (using Parselmouth)
-- Anonymous guest mode with persistent session history
 - As a student, I want to get AI feedback on my pronunciation.
 
 ---
