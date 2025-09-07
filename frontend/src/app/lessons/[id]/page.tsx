@@ -24,6 +24,7 @@ export default function Practice({
     async function loadData() {
       if (!token) return;
       const resolvedParams = await params;
+
       const response = await fetch(
         `${API_URL}/api/lessons/${resolvedParams.id}`,
         {

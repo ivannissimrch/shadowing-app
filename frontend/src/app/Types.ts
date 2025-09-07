@@ -1,10 +1,10 @@
 export interface Lesson {
   title: string;
   image: string;
-  videoId: string;
-  lessonId: string;
+  video_id: string;
+  lesson_id: string;
   status: string;
-  audioFile: string;
+  audio_file: string;
 }
 
 export interface LessonsContextType {
