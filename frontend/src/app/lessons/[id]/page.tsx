@@ -15,7 +15,6 @@ export default function Practice({
 }) {
   const { token } = useAppContext();
   const [selectedLesson, setSelectedLesson] = useState<Lesson | undefined>();
-
   function updateSelectedLesson(updatedLesson: Lesson) {
     setSelectedLesson(updatedLesson);
   }

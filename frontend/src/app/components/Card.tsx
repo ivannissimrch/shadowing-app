@@ -4,7 +4,6 @@ import { Lesson } from "../Types";
 
 export default function Card({ currentLesson }: { currentLesson: Lesson }) {
   const { title, status, lesson_id } = currentLesson;
-  console.log(currentLesson);
   return (
     <div className={styles.card}>
       <div className={styles["information-container"]}>
