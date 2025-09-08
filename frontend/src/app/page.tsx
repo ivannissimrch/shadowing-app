@@ -1,17 +1,19 @@
 import styles from "./page.module.css";
 import LoginForm from "./components/LoginForm";
 import Image from "next/image";
+import AnimatedMessage from "./components/AnimatedMessage";
 
 export default async function Login() {
   return (
     <main className={styles.main}>
       <div className={styles["login-image"]}>
+        <AnimatedMessage />
         <Image
-          src="/images/loginImage.jpg"
+          src="/images/parrot.png"
           alt="login image background"
-          fill
-          className="object-cover"
-          sizes="(max-width: 1200px) 100vw, 50vw"
+          width={250}
+          height={300}
+          sizes="(max-width: 300px) 100vw, 50vw"
           priority
         />
       </div>
