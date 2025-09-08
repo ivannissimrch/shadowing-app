@@ -12,6 +12,11 @@
   position: relative;
   grid-area: 1 / 1 / 2 / 2;
   display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: lightblue;
+  padding: 10px;
 }
 
 .login-form {
@@ -21,14 +26,17 @@
   justify-content: center;
 }
 
-@media (max-width: 1200px) {
+@media (max-width: 900px) {
   .main {
     grid-template-columns: 1fr;
-    grid-template-rows: 40vh 1fr;
+    grid-template-rows: 50vh 1fr;
   }
 
   .login-image {
     grid-area: 1 / 1 / 2 / 2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 
   .login-form {
