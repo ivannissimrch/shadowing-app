@@ -4,7 +4,7 @@
   grid-template-rows: 1fr;
   grid-column-gap: 0px;
   grid-row-gap: 0px;
-  background-color: blanchedalmond;
+  background-color: white;
   min-height: 100vh;
 }
 
@@ -15,7 +15,7 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background-color: lightblue;
+  background-color: #e0f2fe;
   padding: 10px;
 }
 

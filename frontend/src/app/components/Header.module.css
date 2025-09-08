@@ -5,11 +5,10 @@
   padding: 10px 20px;
   background-color: white;
   border-bottom: 1px solid #e0e0e0;
-  color: blue;
+  color: #2563eb;
 }
 .link {
   text-decoration: none;
-  color: blue;
 }
 
 .link:hover {
@@ -18,13 +17,9 @@
   border-radius: 5px;
   cursor: pointer;
 }
-.link:active {
-  background-color: blue;
-  color: white;
-}
 
 .active {
-  background-color: blue;
+  background-color: #2563eb;
   color: white;
   border: none;
   padding: 10px 15px;
