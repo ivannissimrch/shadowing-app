@@ -22,8 +22,3 @@ export interface User {
   email: string;
   lessons: Lesson[];
 }
-
-export interface RecorderProps {
-  selectedLesson: Lesson | undefined;
-  updateSelectedLesson: (updatedLesson: Lesson) => void;
-}

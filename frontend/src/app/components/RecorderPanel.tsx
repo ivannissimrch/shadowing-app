@@ -4,11 +4,15 @@ import { useState, useRef, useEffect } from "react";
 import AudioPlayer from "react-h5-audio-player";
 import "react-h5-audio-player/lib/styles.css";
 import { useAppContext } from "../AppContext";
-import { RecorderProps } from "../Types";
+import { Lesson } from "../Types";
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 import { useRouter } from "next/navigation";
 import base64ToBlob from "../helpers/base64ToBlob";
-import blobToBase64 from "../helpers/blobToBase64";
+
+interface RecorderProps {
+  selectedLesson: Lesson | undefined;
+  updateSelectedLesson: (updatedLesson: Lesson) => void;
+}
 
 export default function RecorderPanel({
   selectedLesson,
@@ -106,24 +110,6 @@ export default function RecorderPanel({
     router.push("/lessons");
   }
 
-  async function getAIFeedback() {
-    const base64Audio = await blobToBase64(blob as Blob);
-    console.log("Sending audio file for AI feedback:", base64Audio);
-
-    const response = await fetch(`${API_URL}/api/evaluate-pronunciation`, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        audio_file: base64Audio,
-      }),
-    });
-    const data = await response.json();
-    console.log("AI feedback response received:", data);
-  }
-
   useEffect(() => {
     if (selectedLesson?.audio_file) {
       try {
@@ -196,9 +182,6 @@ export default function RecorderPanel({
             </button>
             <button className={styles.recordBtn} onClick={handleSubmit}>
               Submit
-            </button>
-            <button className={styles.recordBtn} onClick={getAIFeedback}>
-              Evaluate Pronunciation
             </button>
           </div>
         )}
