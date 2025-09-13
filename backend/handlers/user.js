@@ -21,14 +21,15 @@ export const createNewUser = async (req, res) => {
 
     // Create new user
     const result = await db.query(
-      `INSERT INTO users (username, password, name, email)
-       VALUES ($1, $2, $3, $4)
-       RETURNING id, username, name, email, created_at`,
+      `INSERT INTO users (username, password, name, email, role)
+       VALUES ($1, $2, $3, $4, $5)
+       RETURNING id, username, name, email, role, created_at`,
       [
         req.body.username,
         hashedPassword,
         req.body.name || req.body.username,
         req.body.email || "",
+        req.body.role || "student",
       ]
     );
 
@@ -39,6 +40,7 @@ export const createNewUser = async (req, res) => {
       id: newUser.id,
       username: newUser.username,
       name: newUser.name,
+      role: newUser.role,
     };
     const token = createJWT(userForToken);
 
@@ -49,6 +51,7 @@ export const createNewUser = async (req, res) => {
         id: newUser.id,
         username: newUser.username,
         name: newUser.name,
+        role: newUser.role,
       },
     });
   } catch (error) {
@@ -64,7 +67,7 @@ export const signin = async (req, res) => {
   try {
     // Find user by username
     const result = await db.query(
-      "SELECT id, username, name, password FROM users WHERE username = $1",
+      "SELECT id, username, name, password, role FROM users WHERE username = $1",
       [req.body.username]
     );
 
@@ -92,6 +95,7 @@ export const signin = async (req, res) => {
       id: user.id,
       username: user.username,
       name: user.name,
+      role: user.role,
     };
     const token = createJWT(userForToken);
 
@@ -102,6 +106,7 @@ export const signin = async (req, res) => {
         id: user.id,
         username: user.username,
         name: user.name,
+        role: user.role,
       },
     });
   } catch (error) {
