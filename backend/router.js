@@ -131,4 +131,53 @@ router.post("/lessons", async (req, res) => {
   }
 });
 
+//Get all users
+router.get("/users", async (req, res) => {
+  if (req.user.role !== "teacher") {
+    return res.status(403).json({
+      success: false,
+      message: "Forbidden: Admins only",
+    });
+  }
+  try {
+    const result = await db.query(
+      "SELECT id, username, role FROM users WHERE role = 'student'"
+    );
+
+    res.json({
+      success: true,
+      data: result.rows,
+    });
+  } catch (error) {
+    console.error("Error fetching users:", error);
+    res.status(500).json({
+      success: false,
+      message: "Internal server error",
+    });
+  }
+});
+
+// Create new student (teacher only)
+router.post("/users", async (req, res) => {
+  if (req.user.role !== "teacher") {
+    return res.status(403).json({
+      success: false,
+      message: "Forbidden: Teachers only",
+    });
+  }
+
+  try {
+    const { createNewUser } = await import("./handlers/user.js");
+
+    req.body.role = "student";
+    await createNewUser(req, res);
+  } catch (error) {
+    console.error("Error creating student:", error);
+    res.status(500).json({
+      success: false,
+      message: "Internal server error",
+    });
+  }
+});
+
 export default router;

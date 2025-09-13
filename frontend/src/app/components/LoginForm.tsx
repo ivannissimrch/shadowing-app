@@ -15,7 +15,13 @@ export default function LoginForm() {
 
   useEffect(() => {
     if (token) {
-      router.push("/lessons");
+      // If there's already a token, redirect based on role
+      const payload = JSON.parse(atob(token.split(".")[1]));
+      if (payload.username === "teacher") {
+        router.push("/teacher");
+      } else {
+        router.push("/lessons");
+      }
     }
   }, [token, router]);
 
@@ -31,6 +37,12 @@ export default function LoginForm() {
     const result = await response.json();
     if (response.ok) {
       updateToken(result.token);
+
+      if (result.user.role === "teacher") {
+        router.push("/teacher");
+      } else {
+        router.push("/lessons");
+      }
     } else {
       alert(`Login failed: ${result.message}`);
     }
