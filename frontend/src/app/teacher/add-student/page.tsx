@@ -46,6 +46,7 @@ export default function AddStudentPage() {
         setError(result.message || "Failed to create student");
       }
     } catch (error) {
+      console.error("Error creating student:", error);
       setError("Network error. Please try again.");
     } finally {
       setLoading(false);
