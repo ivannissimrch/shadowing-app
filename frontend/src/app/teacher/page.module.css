@@ -4,23 +4,10 @@
   gap: 30px;
 }
 
-@media (max-width: 768px) {
-  .teacherDashboard {
-    gap: 20px;
-  }
-}
-
 .statsRow {
   display: flex;
   gap: 20px;
   justify-content: space-between;
-}
-
-@media (max-width: 768px) {
-  .statsRow {
-    flex-direction: column;
-    gap: 15px;
-  }
 }
 
 .statsCard {
@@ -31,6 +18,12 @@
   padding: 16px;
   text-align: center;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+}
+
+.statsCard:hover {
+  box-shadow: 0 6px 25px rgba(0, 0, 0, 0.1);
+  transform: translateY(-0.5px);
+  cursor: pointer;
 }
 
 .statsCard h3 {
@@ -45,20 +38,6 @@
   font-size: 2rem;
   font-weight: bold;
   color: #2563eb;
-}
-
-@media (max-width: 768px) {
-  .statsCard {
-    padding: 12px;
-  }
-
-  .statsCard h3 {
-    font-size: 0.9rem;
-  }
-
-  .statsNumber {
-    font-size: 1.5rem;
-  }
 }
 
 .studentsSection {
@@ -112,6 +91,27 @@
 }
 
 @media (max-width: 768px) {
+  .teacherDashboard {
+    gap: 20px;
+  }
+
+  .statsRow {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .statsCard {
+    padding: 12px;
+  }
+
+  .statsCard h3 {
+    font-size: 0.9rem;
+  }
+
+  .statsNumber {
+    font-size: 1.5rem;
+  }
+
   .studentsSection h2 {
     font-size: 1.5rem;
   }
