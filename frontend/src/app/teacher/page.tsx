@@ -30,18 +30,16 @@ export default function TeacherPage() {
   return (
     <div className={styles.teacherDashboard}>
       <section className={styles.statsRow}>
-        <div className={styles.statsCard}>
-          <h3>Total Students</h3>
-          <p className={styles.statsNumber}>{students.length}</p>
-        </div>
-        <div className={styles.statsCard}>
-          <h3>Total Submissions</h3>
-          <p className={styles.statsNumber}>24</p>
-        </div>
-        <div className={styles.statsCard}>
+        {/* on Click display modal to show lessons submitted by students needed to be review */}
+        <button className={styles.statsCard}>
           <h3>Pending Reviews</h3>
           <p className={styles.statsNumber}>5</p>
-        </div>
+        </button>
+        {/* on Click display modal to show calendar with upcoming classes */}
+        <button className={styles.statsCard}>
+          <h3>Upcoming Classes</h3>
+          <p className={styles.statsNumber}>24</p>
+        </button>
       </section>
 
       <section className={styles.studentsSection}>
