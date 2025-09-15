@@ -15,79 +15,79 @@ interface AddLessonProps {
   closeAddLessonDialog: () => void;
 }
 
-const StyledDialog = styled(Dialog)(({ theme }) => ({
-  '& .MuiDialog-paper': {
-    borderRadius: '12px',
-    minWidth: '400px',
-    maxWidth: '500px',
-    boxShadow: '0 20px 40px rgba(0, 0, 0, 0.15)',
+const StyledDialog = styled(Dialog)(() => ({
+  "& .MuiDialog-paper": {
+    borderRadius: "12px",
+    minWidth: "400px",
+    maxWidth: "500px",
+    boxShadow: "0 20px 40px rgba(0, 0, 0, 0.15)",
   },
-  '& .MuiBackdrop-root': {
-    backgroundColor: 'rgba(0, 0, 0, 0.7)',
-    backdropFilter: 'blur(4px)',
+  "& .MuiBackdrop-root": {
+    backgroundColor: "rgba(0, 0, 0, 0.7)",
+    backdropFilter: "blur(4px)",
   },
 }));
 
 const StyledDialogContent = styled(DialogContent)({
-  padding: '24px',
-  '& form': {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '20px',
+  padding: "24px",
+  "& form": {
+    display: "flex",
+    flexDirection: "column",
+    gap: "20px",
   },
-  '& > form > div': {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '8px',
+  "& > form > div": {
+    display: "flex",
+    flexDirection: "column",
+    gap: "8px",
   },
-  '& label': {
+  "& label": {
     fontWeight: 600,
-    color: '#374151',
-    fontSize: '14px',
+    color: "#374151",
+    fontSize: "14px",
   },
-  '& input': {
-    padding: '12px 16px',
-    border: '2px solid #e5e7eb',
-    borderRadius: '8px',
-    fontSize: '16px',
-    transition: 'all 0.2s ease',
-    '&:focus': {
-      outline: 'none',
-      borderColor: '#2563eb',
-      boxShadow: '0 0 0 3px rgba(37, 99, 235, 0.1)',
+  "& input": {
+    padding: "12px 16px",
+    border: "2px solid #e5e7eb",
+    borderRadius: "8px",
+    fontSize: "16px",
+    transition: "all 0.2s ease",
+    "&:focus": {
+      outline: "none",
+      borderColor: "#2563eb",
+      boxShadow: "0 0 0 3px rgba(37, 99, 235, 0.1)",
     },
-    '&::placeholder': {
-      color: '#9ca3af',
+    "&::placeholder": {
+      color: "#9ca3af",
     },
   },
 });
 
 const StyledDialogActions = styled(DialogActions)({
-  padding: '16px 24px',
-  gap: '12px',
-  justifyContent: 'flex-end',
+  padding: "16px 24px",
+  gap: "12px",
+  justifyContent: "flex-end",
 });
 
 const StyledButton = styled(Button)(({ variant }) => ({
-  borderRadius: '8px',
-  padding: '10px 24px',
+  borderRadius: "8px",
+  padding: "10px 24px",
   fontWeight: 600,
-  textTransform: 'none',
-  fontSize: '14px',
-  ...(variant === 'contained' && {
-    backgroundColor: '#2563eb',
-    boxShadow: '0 4px 12px rgba(37, 99, 235, 0.4)',
-    '&:hover': {
-      backgroundColor: '#1d4ed8',
-      boxShadow: '0 6px 16px rgba(37, 99, 235, 0.5)',
+  textTransform: "none",
+  fontSize: "14px",
+  ...(variant === "contained" && {
+    backgroundColor: "#2563eb",
+    boxShadow: "0 4px 12px rgba(37, 99, 235, 0.4)",
+    "&:hover": {
+      backgroundColor: "#1d4ed8",
+      boxShadow: "0 6px 16px rgba(37, 99, 235, 0.5)",
     },
   }),
-  ...(variant === 'outlined' && {
-    borderColor: '#d1d5db',
-    color: '#6b7280',
-    '&:hover': {
-      borderColor: '#9ca3af',
-      backgroundColor: '#f9fafb',
+  ...(variant === "outlined" && {
+    borderColor: "#d1d5db",
+    color: "#6b7280",
+    "&:hover": {
+      borderColor: "#9ca3af",
+      backgroundColor: "#f9fafb",
     },
   }),
 }));
@@ -114,9 +114,9 @@ export default function AddLesson({
     else if (id === "video-id") fieldName = "videoId";
     else if (id === "image-name") fieldName = "imageName";
 
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [fieldName]: value
+      [fieldName]: value,
     }));
   };
 
@@ -128,7 +128,12 @@ export default function AddLesson({
       return;
     }
 
-    if (!formData.title || !formData.lessonId || !formData.videoId || !formData.imageName) {
+    if (
+      !formData.title ||
+      !formData.lessonId ||
+      !formData.videoId ||
+      !formData.imageName
+    ) {
       alert("Please fill in all required fields");
       return;
     }
@@ -185,12 +190,15 @@ export default function AddLesson({
       disableRestoreFocus={true}
       disableEnforceFocus={true}
     >
-      <DialogTitle id="add-lesson-dialog-title" sx={{
-        fontWeight: 700,
-        fontSize: '20px',
-        color: '#1f2937',
-        paddingBottom: '8px'
-      }}>
+      <DialogTitle
+        id="add-lesson-dialog-title"
+        sx={{
+          fontWeight: 700,
+          fontSize: "20px",
+          color: "#1f2937",
+          paddingBottom: "8px",
+        }}
+      >
         Add New Lesson
       </DialogTitle>
       <StyledDialogContent>
