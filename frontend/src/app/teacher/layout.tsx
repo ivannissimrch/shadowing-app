@@ -37,9 +37,7 @@ export default function LessonsLayout({
           >
             Add lesson
           </button>
-          <Link href="/teacher/add-student" className={styles.sidebarButton}>
-            Add student
-          </Link>
+
           <button className={styles.sidebarButton}>Message student</button>
         </aside>
       </section>
