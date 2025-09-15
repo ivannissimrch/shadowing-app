@@ -26,9 +26,6 @@ export default function LessonsLayout({
             Dashboard
           </Link>
           <Link href="" className={styles.sidebarLink}>
-            Students
-          </Link>
-          <Link href="" className={styles.sidebarLink}>
             Lessons
           </Link>
         </aside>
