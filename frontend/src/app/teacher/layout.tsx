@@ -5,6 +5,7 @@ import Header from "../components/Header";
 import Link from "next/link";
 import { useState } from "react";
 import AddLesson from "../components/AddLesson";
+import AddStudent from "../components/AddStudent";
 
 export default function LessonsLayout({
   children,
@@ -12,7 +13,9 @@ export default function LessonsLayout({
   children: React.ReactNode;
 }>) {
   const [isAddLessonDialogOpen, setIsAddLessonDialogOpen] = useState(false);
+  const [isAddStudentDialogOpen, setIsAddStudentDialogOpen] = useState(false);
   const closeAddLessonDialog = () => setIsAddLessonDialogOpen(false);
+  const closeAddStudentDialog = () => setIsAddStudentDialogOpen(false);
 
   return (
     <>
@@ -37,9 +40,12 @@ export default function LessonsLayout({
           >
             Add lesson
           </button>
-          <Link href="/teacher/add-student" className={styles.sidebarButton}>
+          <button
+            className={styles.sidebarButton}
+            onClick={() => setIsAddStudentDialogOpen(true)}
+          >
             Add student
-          </Link>
+          </button>
         </aside>
       </section>
 
@@ -47,6 +53,10 @@ export default function LessonsLayout({
       <AddLesson
         isAddLessonDialogOpen={isAddLessonDialogOpen}
         closeAddLessonDialog={closeAddLessonDialog}
+      />
+      <AddStudent
+        isAddStudentDialogOpen={isAddStudentDialogOpen}
+        closeAddStudentDialog={closeAddStudentDialog}
       />
     </>
   );

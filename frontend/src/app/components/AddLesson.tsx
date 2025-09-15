@@ -152,7 +152,7 @@ export default function AddLesson({
           title: formData.title,
           image: formData.imageName,
           videoId: formData.videoId,
-          audioFile: "", // Empty as per backend expectation
+          audioFile: "",
         }),
       });
 
@@ -166,8 +166,6 @@ export default function AddLesson({
         });
         closeAddLessonDialog();
         alert("Lesson added successfully!");
-        // Optionally refresh the page or update the lessons list
-        window.location.reload();
       } else {
         const error = await response.json();
         alert(`Error: ${error.message || "Failed to add lesson"}`);
