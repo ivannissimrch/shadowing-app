@@ -3,12 +3,16 @@ import { db } from "./server.js";
 
 const router = Router();
 
-// Get all lessons for a user
+// Get all lessons assigned to a student (with JOIN)
 router.get("/lessons", async (req, res) => {
   try {
     const userId = req.user.id;
     const result = await db.query(
-      "SELECT * FROM lessons WHERE user_id = $1 ORDER BY created_at DESC",
+      `SELECT l.*, a.status, a.completed, a.assigned_at, a.completed_at
+       FROM lessons l
+       JOIN assignments a ON l.id = a.lesson_id
+       WHERE a.student_id = $1
+       ORDER BY a.assigned_at DESC`,
       [userId]
     );
 
@@ -25,21 +29,24 @@ router.get("/lessons", async (req, res) => {
   }
 });
 
-// Get specific user lesson
+// Get specific lesson for a student (with JOIN)
 router.get("/lessons/:lessonId", async (req, res) => {
   try {
     const { lessonId } = req.params;
     const userId = req.user.id;
 
     const result = await db.query(
-      "SELECT * FROM lessons WHERE user_id = $1 AND lesson_id = $2",
+      `SELECT l.*, a.status, a.completed, a.assigned_at, a.completed_at
+       FROM lessons l
+       JOIN assignments a ON l.id = a.lesson_id
+       WHERE a.student_id = $1 AND l.lesson_id = $2`,
       [userId, lessonId]
     );
 
     if (result.rows.length === 0) {
       return res.status(404).json({
         success: false,
-        message: "Lesson not found",
+        message: "Lesson not found or not assigned",
       });
     }
 
@@ -56,25 +63,35 @@ router.get("/lessons/:lessonId", async (req, res) => {
   }
 });
 
-// Update specific user lesson
+// Update student's lesson progress (audio file and completion)
 router.patch("/lessons/:lessonId", async (req, res) => {
   try {
     const { audio_file } = req.body;
     const { lessonId } = req.params;
     const userId = req.user.id;
 
+    // Update the lesson's audio file (if provided)
+    if (audio_file) {
+      await db.query(
+        `UPDATE lessons SET audio_file = $1, updated_at = CURRENT_TIMESTAMP
+         WHERE lesson_id = $2`,
+        [audio_file, lessonId]
+      );
+    }
+
+    // Update assignment status to completed
     const result = await db.query(
-      `UPDATE lessons 
-       SET audio_file = $1, status = 'completed', updated_at = CURRENT_TIMESTAMP 
-       WHERE user_id = $2 AND lesson_id = $3 
+      `UPDATE assignments
+       SET status = 'completed', completed = true, completed_at = CURRENT_TIMESTAMP, updated_at = CURRENT_TIMESTAMP
+       WHERE student_id = $1 AND lesson_id = (SELECT id FROM lessons WHERE lesson_id = $2)
        RETURNING *`,
-      [audio_file, userId, lessonId]
+      [userId, lessonId]
     );
 
     if (result.rows.length === 0) {
       return res.status(404).json({
         success: false,
-        message: "Lesson not found",
+        message: "Assignment not found",
       });
     }
 
@@ -91,16 +108,22 @@ router.patch("/lessons/:lessonId", async (req, res) => {
   }
 });
 
-// Add new lesson to user
+// Create new lesson content (teacher only)
 router.post("/lessons", async (req, res) => {
-  try {
-    const userId = req.user.id;
-    const { lessonId, audioFile, title, image, videoId } = req.body;
+  if (req.user.role !== "teacher") {
+    return res.status(403).json({
+      success: false,
+      message: "Forbidden: Teachers only",
+    });
+  }
 
-    // Check if the lesson already exists
+  try {
+    const { lessonId, title, image, videoId, lessonStartTime, lessonEndTime, audioFile } = req.body;
+
+    // Check if lesson already exists
     const existingLesson = await db.query(
-      "SELECT id FROM lessons WHERE user_id = $1 AND lesson_id = $2",
-      [userId, lessonId]
+      "SELECT id FROM lessons WHERE lesson_id = $1",
+      [lessonId]
     );
 
     if (existingLesson.rows.length > 0) {
@@ -110,12 +133,12 @@ router.post("/lessons", async (req, res) => {
       });
     }
 
-    // Add new lesson
+    // Create new lesson content
     const result = await db.query(
-      `INSERT INTO lessons (user_id, lesson_id, title, image, video_id, audio_file, status)
-       VALUES ($1, $2, $3, $4, $5, $6, 'new')
+      `INSERT INTO lessons (lesson_id, title, image, video_id, lesson_start_time, lesson_end_time, audio_file)
+       VALUES ($1, $2, $3, $4, $5, $6, $7)
        RETURNING *`,
-      [userId, lessonId, title, image, videoId, audioFile || ""]
+      [lessonId, title, image, videoId, lessonStartTime, lessonEndTime, audioFile || ""]
     );
 
     res.status(201).json({
@@ -123,7 +146,69 @@ router.post("/lessons", async (req, res) => {
       data: result.rows[0],
     });
   } catch (error) {
-    console.error("Error adding lesson:", error);
+    console.error("Error creating lesson:", error);
+    res.status(500).json({
+      success: false,
+      message: "Internal server error",
+    });
+  }
+});
+
+// Assign lesson to students (teacher only)
+router.post("/lessons/:lessonId/assign", async (req, res) => {
+  if (req.user.role !== "teacher") {
+    return res.status(403).json({
+      success: false,
+      message: "Forbidden: Teachers only",
+    });
+  }
+
+  try {
+    const { lessonId } = req.params;
+    const { studentIds } = req.body; // Array of student IDs
+    const teacherId = req.user.id;
+
+    // Check if lesson exists
+    const lesson = await db.query(
+      "SELECT id FROM lessons WHERE lesson_id = $1",
+      [lessonId]
+    );
+
+    if (lesson.rows.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "Lesson not found",
+      });
+    }
+
+    const lessonDbId = lesson.rows[0].id;
+    const assignments = [];
+
+    // Create assignments for each student
+    for (const studentId of studentIds) {
+      try {
+        const result = await db.query(
+          `INSERT INTO assignments (student_id, lesson_id, assigned_by)
+           VALUES ($1, $2, $3)
+           RETURNING *`,
+          [studentId, lessonDbId, teacherId]
+        );
+        assignments.push(result.rows[0]);
+      } catch (error) {
+        // Skip if assignment already exists (unique constraint)
+        if (error.code !== '23505') {
+          throw error;
+        }
+      }
+    }
+
+    res.status(201).json({
+      success: true,
+      message: `Lesson assigned to ${assignments.length} students`,
+      data: assignments,
+    });
+  } catch (error) {
+    console.error("Error assigning lesson:", error);
     res.status(500).json({
       success: false,
       message: "Internal server error",

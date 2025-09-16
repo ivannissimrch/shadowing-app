@@ -17,6 +17,7 @@ const initDatabase = async () => {
         password VARCHAR(255) NOT NULL,
         name VARCHAR(255) NOT NULL,
         email VARCHAR(255),
+        role VARCHAR(50) DEFAULT 'student',
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       );
     `);
@@ -24,18 +25,33 @@ const initDatabase = async () => {
     await pool.query(`
       CREATE TABLE IF NOT EXISTS lessons (
         id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-        user_id UUID REFERENCES users(id) ON DELETE CASCADE,
-        lesson_id VARCHAR(255) NOT NULL,
+        lesson_id VARCHAR(255) UNIQUE NOT NULL,
         title VARCHAR(255) NOT NULL,
         image VARCHAR(255),
         video_id VARCHAR(255),
+        lesson_start_time INTEGER,
+        lesson_end_time INTEGER,
         audio_file TEXT,
-        status VARCHAR(50) DEFAULT 'new',
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        UNIQUE(user_id, lesson_id)
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       );
     `);
+
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS assignments (
+        id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+        student_id UUID REFERENCES users(id) ON DELETE CASCADE,
+        lesson_id UUID REFERENCES lessons(id) ON DELETE CASCADE,
+        completed BOOLEAN DEFAULT FALSE,
+        status VARCHAR(50) DEFAULT 'new',
+        assigned_by UUID REFERENCES users(id) ON DELETE SET NULL,
+        assigned_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        completed_at TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        UNIQUE(student_id, lesson_id)
+      );
+    `);
+
 
     console.log("Database tables initialized");
   } catch (error) {
