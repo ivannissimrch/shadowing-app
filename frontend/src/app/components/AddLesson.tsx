@@ -21,9 +21,10 @@ const StyledDialog = styled(Dialog)(() => ({
     minWidth: "400px",
     maxWidth: "500px",
     boxShadow: "0 20px 40px rgba(0, 0, 0, 0.15)",
+    backgroundColor: "#fefefe",
   },
   "& .MuiBackdrop-root": {
-    backgroundColor: "rgba(0, 0, 0, 0.7)",
+    backgroundColor: "rgba(224, 242, 254, 0.8)",
     backdropFilter: "blur(4px)",
   },
 }));
@@ -47,14 +48,16 @@ const StyledDialogContent = styled(DialogContent)({
   },
   "& input": {
     padding: "12px 16px",
-    border: "2px solid #e5e7eb",
+    border: "2px solid #bae6fd",
     borderRadius: "8px",
     fontSize: "16px",
+    backgroundColor: "#ffffff",
+    color: "#374151",
     transition: "all 0.2s ease",
     "&:focus": {
       outline: "none",
-      borderColor: "#2563eb",
-      boxShadow: "0 0 0 3px rgba(37, 99, 235, 0.1)",
+      borderColor: "#0ea5e9",
+      boxShadow: "0 0 0 3px rgba(14, 165, 233, 0.1)",
     },
     "&::placeholder": {
       color: "#9ca3af",
@@ -75,19 +78,19 @@ const StyledButton = styled(Button)(({ variant }) => ({
   textTransform: "none",
   fontSize: "14px",
   ...(variant === "contained" && {
-    backgroundColor: "#2563eb",
-    boxShadow: "0 4px 12px rgba(37, 99, 235, 0.4)",
+    backgroundColor: "#0ea5e9",
+    boxShadow: "0 4px 12px rgba(14, 165, 233, 0.4)",
     "&:hover": {
-      backgroundColor: "#1d4ed8",
-      boxShadow: "0 6px 16px rgba(37, 99, 235, 0.5)",
+      backgroundColor: "#0284c7",
+      boxShadow: "0 6px 16px rgba(14, 165, 233, 0.5)",
     },
   }),
   ...(variant === "outlined" && {
-    borderColor: "#d1d5db",
+    borderColor: "#bae6fd",
     color: "#6b7280",
     "&:hover": {
-      borderColor: "#9ca3af",
-      backgroundColor: "#f9fafb",
+      borderColor: "#7dd3fc",
+      backgroundColor: "#f0f9ff",
     },
   }),
 }));
