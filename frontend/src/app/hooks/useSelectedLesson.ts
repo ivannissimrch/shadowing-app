@@ -5,9 +5,7 @@ export default function useSelectedLesson() {
   const lessonId = params.id;
   const { lessons } = useAppContext();
   if (lessons) {
-    const activeLesson = lessons.find(
-      (lesson) => lesson.lesson_id === lessonId
-    );
+    const activeLesson = lessons.find((lesson) => lesson.id === lessonId);
     return activeLesson;
   }
   return null;
