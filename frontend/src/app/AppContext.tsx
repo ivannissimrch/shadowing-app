@@ -42,7 +42,7 @@ export default function StocksContextProvider({
   function addAudioToLesson(id: string, audioFile: string) {
     setEslLessons((prevLessons) => {
       return prevLessons?.map((lesson) => {
-        if (lesson.lesson_id === id) {
+        if (lesson.id === id) {
           return { ...lesson, status: "completed", audioFile: audioFile };
         }
         return lesson;

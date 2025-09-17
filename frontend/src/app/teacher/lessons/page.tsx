@@ -1,5 +1,6 @@
 "use client";
 import { useAppContext } from "@/app/AppContext";
+import AssignLessonModal from "@/app/components/AssignLessonModal";
 import styles from "./page.module.css";
 import { useEffect, useState } from "react";
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -7,6 +8,11 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL;
 export default function LessonsPage() {
   const { token } = useAppContext();
   const [lessons, setLessons] = useState([]);
+  const [assignModalOpen, setAssignModalOpen] = useState(false);
+  const [selectedLesson, setSelectedLesson] = useState<{
+    id: number;
+    title: string;
+  } | null>(null);
 
   useEffect(() => {
     async function loadData() {
@@ -25,6 +31,16 @@ export default function LessonsPage() {
     loadData();
   }, [token]);
 
+  const handleAssignClick = (lesson: { id: number; title: string }) => {
+    setSelectedLesson(lesson);
+    setAssignModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setAssignModalOpen(false);
+    setSelectedLesson(null);
+  };
+
   return (
     <section className={styles.lessonsSection}>
       <h2>Lessons</h2>
@@ -36,11 +52,24 @@ export default function LessonsPage() {
               <div>
                 {" "}
                 {/* <button className={styles.button}>Delete</button> */}
-                <button className={styles.button}>Assign</button>
+                <button
+                  className={styles.button}
+                  onClick={() => handleAssignClick(lesson)}
+                >
+                  Assign
+                </button>
               </div>
             </div>
           ))}
       </div>
+      {selectedLesson && (
+        <AssignLessonModal
+          isOpen={assignModalOpen}
+          onClose={handleCloseModal}
+          lessonId={selectedLesson.id}
+          lessonTitle={selectedLesson.title}
+        />
+      )}
     </section>
   );
 }
