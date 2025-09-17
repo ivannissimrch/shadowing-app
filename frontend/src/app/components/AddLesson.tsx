@@ -103,17 +103,16 @@ export default function AddLesson({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
     title: "",
-    lessonId: "",
     videoId: "",
     imageName: "",
   });
+  const [selectedImage, setSelectedImage] = useState<File | null>(null);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
     let fieldName = "";
 
     if (id === "lesson-title") fieldName = "title";
-    else if (id === "lesson-id") fieldName = "lessonId";
     else if (id === "video-id") fieldName = "videoId";
     else if (id === "image-name") fieldName = "imageName";
 
@@ -121,6 +120,18 @@ export default function AddLesson({
       ...prev,
       [fieldName]: value,
     }));
+  };
+
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setSelectedImage(file);
+      const fileName = file.name.split(".")[0]; // Get name without extension
+      setFormData((prev) => ({
+        ...prev,
+        imageName: fileName,
+      }));
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -131,12 +142,7 @@ export default function AddLesson({
       return;
     }
 
-    if (
-      !formData.title ||
-      !formData.lessonId ||
-      !formData.videoId ||
-      !formData.imageName
-    ) {
+    if (!formData.title || !formData.videoId || !selectedImage) {
       alert("Please fill in all required fields");
       return;
     }
@@ -144,6 +150,29 @@ export default function AddLesson({
     setIsSubmitting(true);
 
     try {
+      // First, upload the image
+      const imageFormData = new FormData();
+      imageFormData.append("image", selectedImage);
+      imageFormData.append("imageName", formData.imageName);
+
+      const imageResponse = await fetch(`${API_URL}/api/upload-image`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        body: imageFormData,
+      });
+
+      if (!imageResponse.ok) {
+        const imageError = await imageResponse.json();
+        throw new Error(`Image upload failed: ${imageError.message}`);
+      }
+
+      const imageResult = await imageResponse.json();
+
+      // Then create the lesson with the uploaded image name
+      const videoId = formData.videoId.split("v=")[1];
+
       const response = await fetch(`${API_URL}/api/lessons`, {
         method: "POST",
         headers: {
@@ -151,10 +180,9 @@ export default function AddLesson({
           Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
-          lessonId: formData.lessonId,
           title: formData.title,
-          image: formData.imageName,
-          videoId: formData.videoId,
+          image: imageResult.imageName,
+          videoId: videoId,
           audioFile: "",
         }),
       });
@@ -163,10 +191,11 @@ export default function AddLesson({
         // Reset form
         setFormData({
           title: "",
-          lessonId: "",
+
           videoId: "",
           imageName: "",
         });
+        setSelectedImage(null);
         closeAddLessonDialog();
         alert("Lesson added successfully!");
       } else {
@@ -217,23 +246,11 @@ export default function AddLesson({
           </div>
 
           <div>
-            <label htmlFor="lesson-id">Lesson ID *</label>
-            <input
-              id="lesson-id"
-              type="text"
-              placeholder="Enter unique lesson ID (e.g., 118)"
-              required
-              value={formData.lessonId}
-              onChange={handleInputChange}
-            />
-          </div>
-
-          <div>
-            <label htmlFor="video-id">YouTube Video ID *</label>
+            <label htmlFor="video-id">YouTube Video URL *</label>
             <input
               id="video-id"
               type="text"
-              placeholder="Enter YouTube video ID (e.g., dQw4w9WgXcQ)"
+              placeholder="Enter YouTube video url "
               required
               value={formData.videoId}
               onChange={handleInputChange}
@@ -241,15 +258,40 @@ export default function AddLesson({
           </div>
 
           <div>
-            <label htmlFor="image-name">Image Name *</label>
+            <label htmlFor="image-upload">Upload Image *</label>
             <input
-              id="image-name"
-              type="text"
-              placeholder="Enter image name (e.g., 118)"
+              id="image-upload"
+              type="file"
+              accept="image/*"
               required
-              value={formData.imageName}
-              onChange={handleInputChange}
+              onChange={handleImageUpload}
+              style={{ display: "none" }}
             />
+            <label
+              htmlFor="image-upload"
+              style={{
+                display: "inline-block",
+                padding: "12px 16px",
+                border: "2px solid #bae6fd",
+                borderRadius: "8px",
+                fontSize: "16px",
+                backgroundColor: "#ffffff",
+                color: selectedImage ? "#374151" : "#9ca3af",
+                cursor: "pointer",
+                transition: "all 0.2s ease",
+                width: "100%",
+                textAlign: "center" as const,
+              }}
+            >
+              {selectedImage ? selectedImage.name : "Choose an image file..."}
+            </label>
+            {selectedImage && (
+              <div
+                style={{ marginTop: "8px", fontSize: "14px", color: "#6b7280" }}
+              >
+                Image name will be: {formData.imageName}
+              </div>
+            )}
           </div>
         </form>
       </StyledDialogContent>
