@@ -1,7 +1,63 @@
 import { Router } from "express";
+import multer from "multer";
+import path from "path";
 import { db } from "./server.js";
 
 const router = Router();
+
+// Configure multer for image uploads
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "../frontend/public/images/");
+  },
+  filename: function (req, file, cb) {
+    const ext = path.extname(file.originalname);
+    const desiredName = req.body.imageName || path.basename(file.originalname, ext);
+    cb(null, desiredName + ext);
+  }
+});
+
+const upload = multer({
+  storage: storage,
+  fileFilter: function (req, file, cb) {
+    if (file.mimetype.startsWith('image/')) {
+      cb(null, true);
+    } else {
+      cb(new Error('Only image files are allowed'), false);
+    }
+  },
+  limits: {
+    fileSize: 5 * 1024 * 1024 // 5MB limit
+  }
+});
+
+// Image upload route
+router.post("/upload-image", upload.single('image'), async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({
+        success: false,
+        message: "No image file uploaded"
+      });
+    }
+
+    const ext = path.extname(req.file.originalname);
+    const imageName = req.body.imageName || path.basename(req.file.originalname, ext);
+
+    res.json({
+      success: true,
+      imageName: imageName,
+      filename: req.file.filename,
+      message: "Image uploaded successfully"
+    });
+  } catch (error) {
+    console.error("Error uploading image:", error);
+    res.status(500).json({
+      success: false,
+      message: "Failed to upload image"
+    });
+  }
+});
 
 // Get all lessons assigned to a student (with JOIN)
 router.get("/lessons", async (req, res) => {
@@ -39,7 +95,7 @@ router.get("/lessons/:lessonId", async (req, res) => {
       `SELECT l.*, a.status, a.completed, a.assigned_at, a.completed_at
        FROM lessons l
        JOIN assignments a ON l.id = a.lesson_id
-       WHERE a.student_id = $1 AND l.lesson_id = $2`,
+       WHERE a.student_id = $1 AND l.id = $2`,
       [userId, lessonId]
     );
 
@@ -74,7 +130,7 @@ router.patch("/lessons/:lessonId", async (req, res) => {
     if (audio_file) {
       await db.query(
         `UPDATE lessons SET audio_file = $1, updated_at = CURRENT_TIMESTAMP
-         WHERE lesson_id = $2`,
+         WHERE id = $2`,
         [audio_file, lessonId]
       );
     }
@@ -83,7 +139,7 @@ router.patch("/lessons/:lessonId", async (req, res) => {
     const result = await db.query(
       `UPDATE assignments
        SET status = 'completed', completed = true, completed_at = CURRENT_TIMESTAMP, updated_at = CURRENT_TIMESTAMP
-       WHERE student_id = $1 AND lesson_id = (SELECT id FROM lessons WHERE lesson_id = $2)
+       WHERE student_id = $1 AND lesson_id = $2
        RETURNING *`,
       [userId, lessonId]
     );
@@ -118,27 +174,28 @@ router.post("/lessons", async (req, res) => {
   }
 
   try {
-    const { lessonId, title, image, videoId, lessonStartTime, lessonEndTime, audioFile } = req.body;
-
-    // Check if lesson already exists
-    const existingLesson = await db.query(
-      "SELECT id FROM lessons WHERE lesson_id = $1",
-      [lessonId]
-    );
-
-    if (existingLesson.rows.length > 0) {
-      return res.status(400).json({
-        success: false,
-        message: "Lesson already exists",
-      });
-    }
+    const {
+      title,
+      image,
+      videoId,
+      lessonStartTime,
+      lessonEndTime,
+      audioFile,
+    } = req.body;
 
     // Create new lesson content
     const result = await db.query(
-      `INSERT INTO lessons (lesson_id, title, image, video_id, lesson_start_time, lesson_end_time, audio_file)
-       VALUES ($1, $2, $3, $4, $5, $6, $7)
+      `INSERT INTO lessons (title, image, video_id, lesson_start_time, lesson_end_time, audio_file)
+       VALUES ($1, $2, $3, $4, $5, $6)
        RETURNING *`,
-      [lessonId, title, image, videoId, lessonStartTime, lessonEndTime, audioFile || ""]
+      [
+        title,
+        image,
+        videoId,
+        lessonStartTime,
+        lessonEndTime,
+        audioFile || "",
+      ]
     );
 
     res.status(201).json({
@@ -170,7 +227,7 @@ router.post("/lessons/:lessonId/assign", async (req, res) => {
 
     // Check if lesson exists
     const lesson = await db.query(
-      "SELECT id FROM lessons WHERE lesson_id = $1",
+      "SELECT id FROM lessons WHERE id = $1",
       [lessonId]
     );
 
@@ -196,7 +253,7 @@ router.post("/lessons/:lessonId/assign", async (req, res) => {
         assignments.push(result.rows[0]);
       } catch (error) {
         // Skip if assignment already exists (unique constraint)
-        if (error.code !== '23505') {
+        if (error.code !== "23505") {
           throw error;
         }
       }
@@ -258,6 +315,37 @@ router.post("/users", async (req, res) => {
     await createNewUser(req, res);
   } catch (error) {
     console.error("Error creating student:", error);
+    res.status(500).json({
+      success: false,
+      message: "Internal server error",
+    });
+  }
+});
+
+//get all lessons (for teacher dashboard)
+router.get("/all-lessons", async (req, res) => {
+  if (req.user.role !== "teacher") {
+    return res.status(403).json({
+      success: false,
+      message: "Forbidden: Teachers only",
+    });
+  }
+  try {
+    const result = await db.query(
+      `SELECT l.*, COUNT(a.id) AS assigned_count,
+              SUM(CASE WHEN a.completed THEN 1 ELSE 0 END) AS completed_count
+       FROM lessons l
+       LEFT JOIN assignments a ON l.id = a.lesson_id
+       GROUP BY l.id
+       ORDER BY l.created_at DESC`
+    );
+
+    res.json({
+      success: true,
+      data: result.rows,
+    });
+  } catch (error) {
+    console.error("Error fetching all lessons:", error);
     res.status(500).json({
       success: false,
       message: "Internal server error",
