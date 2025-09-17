@@ -211,7 +211,7 @@ router.post("/lessons", async (req, res) => {
   }
 });
 
-// Assign lesson to students (teacher only)
+// Assign lesson to student (teacher only)
 router.post("/lessons/:lessonId/assign", async (req, res) => {
   if (req.user.role !== "teacher") {
     return res.status(403).json({
@@ -222,8 +222,15 @@ router.post("/lessons/:lessonId/assign", async (req, res) => {
 
   try {
     const { lessonId } = req.params;
-    const { studentIds } = req.body; // Array of student IDs
+    const { studentId } = req.body; // Single student ID
     const teacherId = req.user.id;
+
+    if (!studentId) {
+      return res.status(400).json({
+        success: false,
+        message: "Student ID is required",
+      });
+    }
 
     // Check if lesson exists
     const lesson = await db.query(
@@ -239,31 +246,31 @@ router.post("/lessons/:lessonId/assign", async (req, res) => {
     }
 
     const lessonDbId = lesson.rows[0].id;
-    const assignments = [];
 
-    // Create assignments for each student
-    for (const studentId of studentIds) {
-      try {
-        const result = await db.query(
-          `INSERT INTO assignments (student_id, lesson_id, assigned_by)
-           VALUES ($1, $2, $3)
-           RETURNING *`,
-          [studentId, lessonDbId, teacherId]
-        );
-        assignments.push(result.rows[0]);
-      } catch (error) {
-        // Skip if assignment already exists (unique constraint)
-        if (error.code !== "23505") {
-          throw error;
-        }
+    // Create assignment for the student
+    try {
+      const result = await db.query(
+        `INSERT INTO assignments (student_id, lesson_id, assigned_by)
+         VALUES ($1, $2, $3)
+         RETURNING *`,
+        [studentId, lessonDbId, teacherId]
+      );
+
+      res.status(201).json({
+        success: true,
+        message: "Lesson assigned successfully",
+        data: result.rows[0],
+      });
+    } catch (error) {
+      // Handle if assignment already exists (unique constraint)
+      if (error.code === "23505") {
+        return res.status(409).json({
+          success: false,
+          message: "Lesson already assigned to this student",
+        });
       }
+      throw error;
     }
-
-    res.status(201).json({
-      success: true,
-      message: `Lesson assigned to ${assignments.length} students`,
-      data: assignments,
-    });
   } catch (error) {
     console.error("Error assigning lesson:", error);
     res.status(500).json({

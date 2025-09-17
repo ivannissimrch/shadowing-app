@@ -2,7 +2,7 @@ export interface Lesson {
   title: string;
   image: string;
   video_id: string;
-  lesson_id: string;
+  id: string;
   status: string;
   audio_file: string;
 }
