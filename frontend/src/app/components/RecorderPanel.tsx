@@ -71,16 +71,13 @@ export default function RecorderPanel({
     reader.onloadend = async () => {
       const base64Audio = reader.result;
 
-      if (
-        typeof base64Audio !== "string" ||
-        selectedLesson?.lesson_id === undefined
-      ) {
+      if (typeof base64Audio !== "string" || selectedLesson?.id === undefined) {
         console.error("Invalid audio data or lesson ID");
         return;
       }
 
       const response = await fetch(
-        `${API_URL}/api/lessons/${selectedLesson.lesson_id}`,
+        `${API_URL}/api/lessons/${selectedLesson.id}`,
         {
           method: "PATCH",
           headers: {

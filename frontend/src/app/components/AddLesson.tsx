@@ -7,6 +7,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 import { styled } from "@mui/material/styles";
 import { useState } from "react";
 import { useAppContext } from "../AppContext";
+import extractVideoId from "../helpers/extractVideoId";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -171,7 +172,7 @@ export default function AddLesson({
       const imageResult = await imageResponse.json();
 
       // Then create the lesson with the uploaded image name
-      const videoId = formData.videoId.split("v=")[1];
+      const videoId = extractVideoId(formData.videoId);
 
       const response = await fetch(`${API_URL}/api/lessons`, {
         method: "POST",
