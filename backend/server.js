@@ -24,8 +24,7 @@ const initDatabase = async () => {
 
     await pool.query(`
       CREATE TABLE IF NOT EXISTS lessons (
-        id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-        lesson_id VARCHAR(255) UNIQUE NOT NULL,
+        id UUID PRIMARY KEY DEFAULT gen_random_uuid(),   
         title VARCHAR(255) NOT NULL,
         image VARCHAR(255),
         video_id VARCHAR(255),
@@ -51,7 +50,6 @@ const initDatabase = async () => {
         UNIQUE(student_id, lesson_id)
       );
     `);
-
 
     console.log("Database tables initialized");
   } catch (error) {
