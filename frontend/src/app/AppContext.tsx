@@ -1,13 +1,9 @@
 "use client";
 import React, { createContext, useContext, useState } from "react";
-import { Lesson, LessonsContextType } from "./Types";
+import { AppContextType } from "./Types";
 import { usePersistedState } from "./hooks/usePersistedState";
 
-//TODO update this to get lessons from API
-
-export const lessonsContext = createContext<LessonsContextType>({
-  lessons: undefined,
-  addAudioToLesson: () => {},
+export const lessonsContext = createContext<AppContextType>({
   openAlertDialog: () => {},
   closeAlertDialog: () => {},
   isAlertDialogOpen: false,
@@ -21,10 +17,6 @@ export default function StocksContextProvider({
   children: React.ReactNode;
 }) {
   const [isAlertDialogOpen, setIsAlertDialogOpen] = useState(false);
-  const [eslLessons, setEslLessons] = usePersistedState<Lesson[] | undefined>(
-    "lessons",
-    undefined
-  );
   const [token, setToken] = usePersistedState<string | null>("token", null);
 
   function updateToken(newToken: string) {
@@ -39,22 +31,9 @@ export default function StocksContextProvider({
     setIsAlertDialogOpen(false);
   }
 
-  function addAudioToLesson(id: string, audioFile: string) {
-    setEslLessons((prevLessons) => {
-      return prevLessons?.map((lesson) => {
-        if (lesson.id === id) {
-          return { ...lesson, status: "completed", audioFile: audioFile };
-        }
-        return lesson;
-      });
-    });
-  }
-
   return (
     <lessonsContext.Provider
       value={{
-        lessons: eslLessons,
-        addAudioToLesson,
         isAlertDialogOpen,
         openAlertDialog,
         closeAlertDialog,
