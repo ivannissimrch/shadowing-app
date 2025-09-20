@@ -2,6 +2,7 @@ import { Router } from "express";
 import multer from "multer";
 import path from "path";
 import { db } from "./server.js";
+import asyncHandler from "./handlers/asyncHandler.js";
 
 const router = Router();
 
@@ -12,60 +13,59 @@ const storage = multer.diskStorage({
   },
   filename: function (req, file, cb) {
     const ext = path.extname(file.originalname);
-    const desiredName = req.body.imageName || path.basename(file.originalname, ext);
+    const desiredName =
+      req.body.imageName || path.basename(file.originalname, ext);
     cb(null, desiredName + ext);
-  }
+  },
 });
 
 const upload = multer({
   storage: storage,
   fileFilter: function (req, file, cb) {
-    if (file.mimetype.startsWith('image/')) {
+    if (file.mimetype.startsWith("image/")) {
       cb(null, true);
     } else {
-      cb(new Error('Only image files are allowed'), false);
+      cb(new Error("Only image files are allowed"), false);
     }
   },
   limits: {
-    fileSize: 5 * 1024 * 1024 // 5MB limit
-  }
+    fileSize: 5 * 1024 * 1024, // 5MB limit
+  },
 });
 
 // Image upload route
-router.post("/upload-image", upload.single('image'), async (req, res) => {
-  try {
+router.post(
+  "/upload-image",
+  upload.single("image"),
+  asyncHandler(async (req, res, next) => {
     if (!req.file) {
       return res.status(400).json({
         success: false,
-        message: "No image file uploaded"
+        message: "No image file uploaded",
       });
     }
 
     const ext = path.extname(req.file.originalname);
-    const imageName = req.body.imageName || path.basename(req.file.originalname, ext);
+    const imageName =
+      req.body.imageName || path.basename(req.file.originalname, ext);
 
     res.json({
       success: true,
       imageName: imageName,
       filename: req.file.filename,
-      message: "Image uploaded successfully"
+      message: "Image uploaded successfully",
     });
-  } catch (error) {
-    console.error("Error uploading image:", error);
-    res.status(500).json({
-      success: false,
-      message: "Failed to upload image"
-    });
-  }
-});
+  })
+);
 
 // Get all lessons assigned to a student (with JOIN)
-router.get("/lessons", async (req, res) => {
-  try {
+router.get(
+  "/lessons",
+  asyncHandler(async (req, res, next) => {
     const userId = req.user.id;
     const result = await db.query(
       `SELECT l.*, a.status, a.completed, a.assigned_at, a.completed_at
-       FROM lessons l
+     FROM lessons l
        JOIN assignments a ON l.id = a.lesson_id
        WHERE a.student_id = $1
        ORDER BY a.assigned_at DESC`,
@@ -76,18 +76,13 @@ router.get("/lessons", async (req, res) => {
       success: true,
       data: result.rows,
     });
-  } catch (error) {
-    console.error("Error fetching lessons:", error);
-    res.status(500).json({
-      success: false,
-      message: "Internal server error",
-    });
-  }
-});
+  })
+);
 
 // Get specific lesson for a student (with JOIN)
-router.get("/lessons/:lessonId", async (req, res) => {
-  try {
+router.get(
+  "/lessons/:lessonId",
+  asyncHandler(async (req, res, next) => {
     const { lessonId } = req.params;
     const userId = req.user.id;
 
@@ -110,18 +105,13 @@ router.get("/lessons/:lessonId", async (req, res) => {
       success: true,
       data: result.rows[0],
     });
-  } catch (error) {
-    console.error("Error fetching lesson:", error);
-    res.status(500).json({
-      success: false,
-      message: "Internal server error",
-    });
-  }
-});
+  })
+);
 
 // Update student's lesson progress (audio file and completion)
-router.patch("/lessons/:lessonId", async (req, res) => {
-  try {
+router.patch(
+  "/lessons/:lessonId",
+  asyncHandler(async (req, res, next) => {
     const { audio_file } = req.body;
     const { lessonId } = req.params;
     const userId = req.user.id;
@@ -155,72 +145,46 @@ router.patch("/lessons/:lessonId", async (req, res) => {
       success: true,
       data: result.rows[0],
     });
-  } catch (error) {
-    console.error("Error updating lesson:", error);
-    res.status(500).json({
-      success: false,
-      message: "Internal server error",
-    });
-  }
-});
+  })
+);
 
 // Create new lesson content (teacher only)
-router.post("/lessons", async (req, res) => {
-  if (req.user.role !== "teacher") {
-    return res.status(403).json({
-      success: false,
-      message: "Forbidden: Teachers only",
-    });
-  }
-
-  try {
-    const {
-      title,
-      image,
-      videoId,
-      lessonStartTime,
-      lessonEndTime,
-      audioFile,
-    } = req.body;
-
+router.post(
+  "/lessons",
+  asyncHandler(async (req, res, next) => {
+    if (req.user.role !== "teacher") {
+      return res.status(403).json({
+        success: false,
+        message: "Forbidden: Teachers only",
+      });
+    }
+    const { title, image, videoId, lessonStartTime, lessonEndTime, audioFile } =
+      req.body;
     // Create new lesson content
     const result = await db.query(
       `INSERT INTO lessons (title, image, video_id, lesson_start_time, lesson_end_time, audio_file)
        VALUES ($1, $2, $3, $4, $5, $6)
        RETURNING *`,
-      [
-        title,
-        image,
-        videoId,
-        lessonStartTime,
-        lessonEndTime,
-        audioFile || "",
-      ]
+      [title, image, videoId, lessonStartTime, lessonEndTime, audioFile || ""]
     );
-
     res.status(201).json({
       success: true,
       data: result.rows[0],
     });
-  } catch (error) {
-    console.error("Error creating lesson:", error);
-    res.status(500).json({
-      success: false,
-      message: "Internal server error",
-    });
-  }
-});
+  })
+);
 
 // Assign lesson to student (teacher only)
-router.post("/lessons/:lessonId/assign", async (req, res) => {
-  if (req.user.role !== "teacher") {
-    return res.status(403).json({
-      success: false,
-      message: "Forbidden: Teachers only",
-    });
-  }
+router.post(
+  "/lessons/:lessonId/assign",
+  asyncHandler(async (req, res, next) => {
+    if (req.user.role !== "teacher") {
+      return res.status(403).json({
+        success: false,
+        message: "Forbidden: Teachers only",
+      });
+    }
 
-  try {
     const { lessonId } = req.params;
     const { studentId } = req.body; // Single student ID
     const teacherId = req.user.id;
@@ -233,10 +197,9 @@ router.post("/lessons/:lessonId/assign", async (req, res) => {
     }
 
     // Check if lesson exists
-    const lesson = await db.query(
-      "SELECT id FROM lessons WHERE id = $1",
-      [lessonId]
-    );
+    const lesson = await db.query("SELECT id FROM lessons WHERE id = $1", [
+      lessonId,
+    ]);
 
     if (lesson.rows.length === 0) {
       return res.status(404).json({
@@ -244,100 +207,68 @@ router.post("/lessons/:lessonId/assign", async (req, res) => {
         message: "Lesson not found",
       });
     }
-
     const lessonDbId = lesson.rows[0].id;
-
     // Create assignment for the student
-    try {
-      const result = await db.query(
-        `INSERT INTO assignments (student_id, lesson_id, assigned_by)
+    const result = await db.query(
+      `INSERT INTO assignments (student_id, lesson_id, assigned_by)
          VALUES ($1, $2, $3)
          RETURNING *`,
-        [studentId, lessonDbId, teacherId]
-      );
-
-      res.status(201).json({
-        success: true,
-        message: "Lesson assigned successfully",
-        data: result.rows[0],
-      });
-    } catch (error) {
-      // Handle if assignment already exists (unique constraint)
-      if (error.code === "23505") {
-        return res.status(409).json({
-          success: false,
-          message: "Lesson already assigned to this student",
-        });
-      }
-      throw error;
-    }
-  } catch (error) {
-    console.error("Error assigning lesson:", error);
-    res.status(500).json({
-      success: false,
-      message: "Internal server error",
+      [studentId, lessonDbId, teacherId]
+    );
+    res.status(201).json({
+      success: true,
+      message: "Lesson assigned successfully",
+      data: result.rows[0],
     });
-  }
-});
+  })
+);
 
 //Get all users
-router.get("/users", async (req, res) => {
-  if (req.user.role !== "teacher") {
-    return res.status(403).json({
-      success: false,
-      message: "Forbidden: Admins only",
-    });
-  }
-  try {
+router.get(
+  "/users",
+  asyncHandler(async (req, res, next) => {
+    if (req.user.role !== "teacher") {
+      return res.status(403).json({
+        success: false,
+        message: "Forbidden: Admins only",
+      });
+    }
     const result = await db.query(
       "SELECT id, username, role FROM users WHERE role = 'student'"
     );
-
     res.json({
       success: true,
       data: result.rows,
     });
-  } catch (error) {
-    console.error("Error fetching users:", error);
-    res.status(500).json({
-      success: false,
-      message: "Internal server error",
-    });
-  }
-});
+  })
+);
 
 // Create new student (teacher only)
-router.post("/users", async (req, res) => {
-  if (req.user.role !== "teacher") {
-    return res.status(403).json({
-      success: false,
-      message: "Forbidden: Teachers only",
-    });
-  }
-
-  try {
+router.post(
+  "/users",
+  asyncHandler(async (req, res, next) => {
+    if (req.user.role !== "teacher") {
+      return res.status(403).json({
+        success: false,
+        message: "Forbidden: Teachers only",
+      });
+    }
     const { createNewUser } = await import("./handlers/user.js");
-
     req.body.role = "student";
     await createNewUser(req, res);
-  } catch (error) {
-    console.error("Error creating student:", error);
-    res.status(500).json({
-      success: false,
-      message: "Internal server error",
-    });
-  }
-});
+  })
+);
 
 //get all lessons (for teacher dashboard)
-router.get("/all-lessons", async (req, res) => {
-  if (req.user.role !== "teacher") {
-    return res.status(403).json({
-      success: false,
-      message: "Forbidden: Teachers only",
-    });
-  }
-  try {
+router.get(
+  "/all-lessons",
+  asyncHandler(async (req, res, next) => {
+    if (req.user.role !== "teacher") {
+      return res.status(403).json({
+        success: false,
+        message: "Forbidden: Teachers only",
+      });
+    }
     const result = await db.query(
       `SELECT l.*, COUNT(a.id) AS assigned_count,
               SUM(CASE WHEN a.completed THEN 1 ELSE 0 END) AS completed_count
@@ -346,18 +277,11 @@ router.get("/all-lessons", async (req, res) => {
        GROUP BY l.id
        ORDER BY l.created_at DESC`
     );
-
     res.json({
       success: true,
       data: result.rows,
     });
-  } catch (error) {
-    console.error("Error fetching all lessons:", error);
-    res.status(500).json({
-      success: false,
-      message: "Internal server error",
-    });
-  }
-});
+  })
+);
 
 export default router;
