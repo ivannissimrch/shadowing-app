@@ -7,7 +7,7 @@ An app to help English learners improve their spoken English by mimicking native
 ## Tech Stack
 
 - **Frontend:** React, Css, Next.js
-- **Backend:** Express.js, low db
+- **Backend:** Express.js, PostgreSQL
 - **Audio Analysis:** Azure Speech API (for pronunciation scoring).
 - **Media:** YouTube API for video import, `react-youtube` for playback
 
