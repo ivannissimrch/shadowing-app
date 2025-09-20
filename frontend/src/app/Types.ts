@@ -7,9 +7,7 @@ export interface Lesson {
   audio_file: string;
 }
 
-export interface LessonsContextType {
-  lessons: Lesson[] | undefined | null;
-  addAudioToLesson: (id: string, audioFile: string) => void;
+export interface AppContextType {
   openAlertDialog: () => void;
   closeAlertDialog: () => void;
   isAlertDialogOpen: boolean;
