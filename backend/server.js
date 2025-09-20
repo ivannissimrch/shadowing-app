@@ -4,6 +4,7 @@ import router from "./router.js";
 import { protect } from "./auth.js";
 import { signin } from "./handlers/user.js";
 import pool from "./db.js";
+import handleError from "./handlers/handleError.js";
 const app = express();
 
 // Initialize database tables if they do not already exist
@@ -84,6 +85,8 @@ app.get("/", (req, res) => {
 });
 app.use("/api", protect, router);
 app.post("/signin", signin);
+
+app.use(handleError);
 
 export default app;
 export { pool as db };
