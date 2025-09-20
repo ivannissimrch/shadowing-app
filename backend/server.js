@@ -47,7 +47,7 @@ const initDatabase = async () => {
         assigned_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         completed_at TIMESTAMP,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        UNIQUE(student_id, lesson_id)lesson_id
+        UNIQUE(student_id, lesson_id)
       );
     `);
 
@@ -57,7 +57,6 @@ const initDatabase = async () => {
   }
 };
 
-// Initialize database on startup
 initDatabase();
 
 // Middleware
