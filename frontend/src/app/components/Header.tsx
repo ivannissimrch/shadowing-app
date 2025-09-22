@@ -10,7 +10,7 @@ export default function Header() {
   const pathname = usePathname();
 
   if (!token) {
-    return <></>;
+    return null;
   }
   return (
     <header className={styles.header}>
@@ -18,7 +18,7 @@ export default function Header() {
         <h1>ShadowSpeak</h1>
       </div>
       <div>
-        {pathname === "/lessons" && (
+        {pathname.startsWith("/lessons") && (
           <Link
             href="/lessons"
             className={`${styles.link} ${

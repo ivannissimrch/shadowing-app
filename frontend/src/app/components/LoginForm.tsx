@@ -10,20 +10,25 @@ export default function LoginForm() {
   const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
-  const { updateToken, token } = useAppContext();
+  const { updateToken, token, isTokenLoading } = useAppContext();
   const [passwordType, setPasswordType] = useState("password");
 
   useEffect(() => {
-    if (token) {
+    if (!isTokenLoading && token) {
       // If there's already a token, redirect based on role
-      const payload = JSON.parse(atob(token.split(".")[1]));
-      if (payload.username === "teacher") {
-        router.push("/teacher");
-      } else {
-        router.push("/lessons");
+      try {
+        const payload = JSON.parse(atob(token.split(".")[1]));
+        if (payload.role === "teacher") {
+          router.push("/teacher");
+        } else {
+          router.push("/lessons");
+        }
+      } catch (error) {
+        console.error("Invalid token:", error);
+        updateToken("");
       }
     }
-  }, [token, router]);
+  }, [isTokenLoading, router, token, updateToken]);
 
   async function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
@@ -35,9 +40,9 @@ export default function LoginForm() {
       body: JSON.stringify({ username: userName, password }),
     });
     const result = await response.json();
+
     if (response.ok) {
       updateToken(result.token);
-
       if (result.user.role === "teacher") {
         router.push("/teacher");
       } else {
@@ -49,7 +54,7 @@ export default function LoginForm() {
   }
 
   if (token) {
-    return <div>Redirecting...</div>;
+    return <div>Loading ...</div>;
   }
 
   return (
