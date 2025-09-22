@@ -2,11 +2,11 @@ import { Lesson } from "../Types";
 import styles from "./SegmetPlayer.module.css";
 import YouTubePlayer from "./YouTubePlayer";
 
-export default function SegmentPlayer({
-  selectedLesson,
-}: {
+interface SegmentPlayerProps {
   selectedLesson: Lesson | undefined;
-}) {
+}
+
+export default function SegmentPlayer({ selectedLesson }: SegmentPlayerProps) {
   if (!selectedLesson) {
     return <div>Lesson not found</div>;
   }

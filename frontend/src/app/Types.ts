@@ -13,6 +13,7 @@ export interface AppContextType {
   isAlertDialogOpen: boolean;
   token: string | null;
   updateToken: (newToken: string) => void;
+  isTokenLoading: boolean;
 }
 
 export interface User {

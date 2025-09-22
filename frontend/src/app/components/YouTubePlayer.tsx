@@ -2,11 +2,14 @@
 import YouTube, { YouTubeProps } from "react-youtube";
 import { Lesson } from "../Types";
 
-export default function YouTubePlayer({
-  selectedLesson,
-}: {
-  selectedLesson: Lesson;
-}) {
+interface YouTubePlayerProps {
+  selectedLesson: Lesson | undefined;
+}
+
+export default function YouTubePlayer({ selectedLesson }: YouTubePlayerProps) {
+  if (!selectedLesson) {
+    return <div>Loading...</div>;
+  }
   const onPlayerReady: YouTubeProps["onReady"] = (event) => {
     event.target.pauseVideo();
   };
@@ -20,7 +23,7 @@ export default function YouTubePlayer({
 
   return (
     <YouTube
-      videoId={selectedLesson?.video_id}
+      videoId={selectedLesson.video_id}
       opts={opts}
       onReady={onPlayerReady}
     />
