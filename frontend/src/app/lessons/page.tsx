@@ -7,31 +7,31 @@ import { useAppContext } from "../AppContext";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
-export default function Lessons({
-  params,
-}: {
-  params: Promise<{ user: string }>;
-}) {
+export default function Lessons() {
   const [lessons, setLessons] = useState<Lesson[]>([]);
-  const { token } = useAppContext();
+  const { token, isTokenLoading } = useAppContext();
 
   useEffect(() => {
     async function loadData() {
-      if (!token) return;
-      const response = await fetch(`${API_URL}/api/lessons`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      });
-      const result = await response.json();
-      setLessons(result.data);
+      if (isTokenLoading || !token) return;
+      try {
+        const response = await fetch(`${API_URL}/api/lessons`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        });
+        const result = await response.json();
+        setLessons(result.data);
+      } catch (error) {
+        console.error("Error fetching lessons:", error);
+      }
     }
 
     loadData();
-  }, [params, token]);
+  }, [token, isTokenLoading]);
 
-  if (!lessons) return <div>Loading...</div>;
+  if (!lessons.length) return <div>Loading...</div>;
 
   return (
     <>

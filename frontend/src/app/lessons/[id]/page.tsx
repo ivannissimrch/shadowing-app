@@ -13,7 +13,7 @@ export default function Practice({
 }: {
   params: Promise<{ user: string; id: string }>;
 }) {
-  const { token } = useAppContext();
+  const { token, isTokenLoading } = useAppContext();
   const [selectedLesson, setSelectedLesson] = useState<Lesson | undefined>();
   function updateSelectedLesson(updatedLesson: Lesson) {
     setSelectedLesson(updatedLesson);
@@ -21,23 +21,26 @@ export default function Practice({
 
   useEffect(() => {
     async function loadData() {
-      if (!token) return;
-      const resolvedParams = await params;
-
-      const response = await fetch(
-        `${API_URL}/api/lessons/${resolvedParams.id}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      const responseData = await response.json();
-      setSelectedLesson(responseData.data);
+      if (isTokenLoading || !token) return;
+      try {
+        const resolvedParams = await params;
+        const response = await fetch(
+          `${API_URL}/api/lessons/${resolvedParams.id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        const responseData = await response.json();
+        setSelectedLesson(responseData.data);
+      } catch (error) {
+        console.error("Error fetching lesson data:", error);
+      }
     }
     loadData();
-  }, [token, params]);
+  }, [params, token, isTokenLoading]);
 
   return (
     <>
