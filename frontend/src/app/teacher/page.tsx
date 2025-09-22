@@ -8,24 +8,28 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL;
 export default function TeacherPage() {
   //get all students
   const [students, setStudents] = useState([]);
-  const { token } = useAppContext();
+  const { token, isTokenLoading } = useAppContext();
 
   useEffect(() => {
     async function loadData() {
-      if (!token) return;
-      const response = await fetch(`${API_URL}/api/users`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      });
-      const result = await response.json();
-      console.log(result);
-      setStudents(result.data);
+      if (!token || isTokenLoading) return;
+      try {
+        const response = await fetch(`${API_URL}/api/users`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        });
+        const result = await response.json();
+        console.log(result);
+        setStudents(result.data);
+      } catch (error) {
+        console.error("Error fetching students:", error);
+      }
     }
 
     loadData();
-  }, [token]);
+  }, [token, isTokenLoading]);
 
   return (
     <div className={styles.teacherDashboard}>

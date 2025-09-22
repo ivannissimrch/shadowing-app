@@ -23,29 +23,37 @@ export default function RecorderPanel({
   const audioChunks = useRef<Blob[]>([]);
   const [recording, setRecording] = useState(false);
   const [paused, setPaused] = useState(false);
-  const [audioURL, setAudioURL] = useState<string | null>(null); //if selectedLesson has audio_file, transform into a blod use that as initial state for audioURL, otherwise null
+  const [audioURL, setAudioURL] = useState<string | null>(null); // URL of the recorded audio
   const [blob, setBlob] = useState<Blob | null>(null);
   const router = useRouter();
 
   async function startRecording() {
-    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-    const mediaRecorder = new MediaRecorder(stream);
-    mediaRecorderRef.current = mediaRecorder;
-    audioChunks.current = [];
-    mediaRecorder.ondataavailable = (event) => {
-      audioChunks.current.push(event.data);
-    };
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const mediaRecorder = new MediaRecorder(stream);
+      mediaRecorderRef.current = mediaRecorder;
+      audioChunks.current = [];
+      mediaRecorder.ondataavailable = (event) => {
+        audioChunks.current.push(event.data);
+      };
 
-    mediaRecorder.onstop = () => {
-      const blob = new Blob(audioChunks.current, { type: "audio/webm" });
-      const url = URL.createObjectURL(blob);
-      setAudioURL(url);
-      setBlob(blob);
-    };
+      mediaRecorder.onstop = () => {
+        const blob = new Blob(audioChunks.current, { type: "audio/webm" });
+        const url = URL.createObjectURL(blob);
+        setAudioURL(url);
+        setBlob(blob);
+      };
 
-    mediaRecorder.start();
-    setRecording(true);
-    setPaused(false);
+      mediaRecorder.start();
+      setRecording(true);
+      setPaused(false);
+    } catch (error) {
+      console.error("Error accessing microphone:", error);
+      //TODO use  a modal instead of alert
+      alert(
+        "Could not access your microphone. Please check your permissions and try again."
+      );
+    }
   }
 
   function pauseRecording() {
@@ -63,48 +71,56 @@ export default function RecorderPanel({
   }
 
   function handleSubmit() {
-    if (!blob) {
-      return;
-    }
-    const reader = new FileReader();
-    reader.readAsDataURL(blob);
-    reader.onloadend = async () => {
-      const base64Audio = reader.result;
-
-      if (typeof base64Audio !== "string" || selectedLesson?.id === undefined) {
-        console.error("Invalid audio data or lesson ID");
+    try {
+      if (!blob) {
         return;
       }
+      const reader = new FileReader();
+      reader.readAsDataURL(blob);
+      reader.onloadend = async () => {
+        const base64Audio = reader.result;
 
-      const response = await fetch(
-        `${API_URL}/api/lessons/${selectedLesson.id}`,
-        {
-          method: "PATCH",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            audio_file: base64Audio,
-          }),
+        if (
+          typeof base64Audio !== "string" ||
+          selectedLesson?.id === undefined
+        ) {
+          console.error("Invalid audio data or lesson ID");
+          return;
         }
-      );
 
-      setRecording(false);
-      setPaused(false);
-      if (!response.ok) {
-        console.error("Failed to update lesson with audio file");
-        return;
-      }
+        const response = await fetch(
+          `${API_URL}/api/lessons/${selectedLesson.id}`,
+          {
+            method: "PATCH",
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              audio_file: base64Audio,
+            }),
+          }
+        );
 
-      openAlertDialog();
-      updateSelectedLesson({
-        ...selectedLesson,
-        audio_file: base64Audio,
-        status: "completed",
-      });
-    };
-    router.push("/lessons");
+        setRecording(false);
+        setPaused(false);
+        if (!response.ok) {
+          console.error("Failed to update lesson with audio file");
+          alert("There was an error submitting your audio. Please try again.");
+          return;
+        }
+
+        openAlertDialog();
+        updateSelectedLesson({
+          ...selectedLesson,
+          audio_file: base64Audio,
+          status: "completed",
+        });
+        router.push("/lessons");
+      };
+    } catch (error) {
+      console.error("Error submitting audio:", error);
+    }
   }
 
   useEffect(() => {
