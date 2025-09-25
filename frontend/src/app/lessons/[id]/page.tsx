@@ -3,47 +3,29 @@ import styles from "./Practice.module.css";
 import SegmentPlayer from "../../components/SegmentPlayer";
 import RecorderPanel from "../../components/RecorderPanel";
 import Image from "next/image";
-const API_URL = process.env.NEXT_PUBLIC_API_URL;
-import { useAppContext } from "../../AppContext";
-import { useEffect, useState } from "react";
-import { Lesson } from "@/app/Types";
+import useGetSelectedLesson from "../../hooks/useGetSelectedLesson";
+import { ErrorBoundary } from "react-error-boundary";
+import SkeletonLoader from "@/app/components/SkeletonLoader";
+import { useAppContext } from "@/app/AppContext";
 
-export default function Practice({
-  params,
-}: {
-  params: Promise<{ user: string; id: string }>;
-}) {
-  const { token, isTokenLoading } = useAppContext();
-  const [selectedLesson, setSelectedLesson] = useState<Lesson | undefined>();
-  function updateSelectedLesson(updatedLesson: Lesson) {
-    setSelectedLesson(updatedLesson);
+export default function Practice() {
+  const { selectedLesson, error, loading } = useGetSelectedLesson();
+  const { openAlertDialog } = useAppContext();
+
+  if (loading) {
+    return <SkeletonLoader />;
   }
 
-  useEffect(() => {
-    async function loadData() {
-      if (isTokenLoading || !token) return;
-      try {
-        const resolvedParams = await params;
-        const response = await fetch(
-          `${API_URL}/api/lessons/${resolvedParams.id}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-              "Content-Type": "application/json",
-            },
-          }
-        );
-        const responseData = await response.json();
-        setSelectedLesson(responseData.data);
-      } catch (error) {
-        console.error("Error fetching lesson data:", error);
-      }
-    }
-    loadData();
-  }, [params, token, isTokenLoading]);
+  if (error) {
+    openAlertDialog("Error", "Error");
+  }
+
+  if (!selectedLesson) {
+    return <div className={styles.grid}>No lesson found.</div>;
+  }
 
   return (
-    <>
+    <ErrorBoundary fallback={<div>Something went wrong</div>}>
       <div className={styles.grid}>
         <SegmentPlayer selectedLesson={selectedLesson} />
         {selectedLesson?.image && (
@@ -57,10 +39,7 @@ export default function Practice({
           />
         )}
       </div>
-      <RecorderPanel
-        selectedLesson={selectedLesson}
-        updateSelectedLesson={updateSelectedLesson}
-      />
-    </>
+      <RecorderPanel selectedLesson={selectedLesson} />
+    </ErrorBoundary>
   );
 }

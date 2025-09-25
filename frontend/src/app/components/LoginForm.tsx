@@ -10,11 +10,11 @@ export default function LoginForm() {
   const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
-  const { updateToken, token, isTokenLoading } = useAppContext();
+  const { updateToken, token } = useAppContext();
   const [passwordType, setPasswordType] = useState("password");
 
   useEffect(() => {
-    if (!isTokenLoading && token) {
+    if (token) {
       // If there's already a token, redirect based on role
       try {
         const payload = JSON.parse(atob(token.split(".")[1]));
@@ -28,7 +28,7 @@ export default function LoginForm() {
         updateToken("");
       }
     }
-  }, [isTokenLoading, router, token, updateToken]);
+  }, [router, token, updateToken]);
 
   async function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
