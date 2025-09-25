@@ -11,13 +11,9 @@ import base64ToBlob from "../helpers/base64ToBlob";
 
 interface RecorderProps {
   selectedLesson: Lesson | undefined;
-  updateSelectedLesson: (updatedLesson: Lesson) => void;
 }
 
-export default function RecorderPanel({
-  selectedLesson,
-  updateSelectedLesson,
-}: RecorderProps) {
+export default function RecorderPanel({ selectedLesson }: RecorderProps) {
   const { token, openAlertDialog } = useAppContext();
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunks = useRef<Blob[]>([]);
@@ -110,12 +106,15 @@ export default function RecorderPanel({
           return;
         }
 
-        openAlertDialog();
-        updateSelectedLesson({
-          ...selectedLesson,
-          audio_file: base64Audio,
-          status: "completed",
-        });
+        openAlertDialog(
+          "Submission Successful",
+          "Your recording has been successfully submitted for review."
+        );
+        // updateSelectedLesson({
+        //   ...selectedLesson,
+        //   audio_file: base64Audio,
+        //   status: "completed",
+        // });
         router.push("/lessons");
       };
     } catch (error) {
