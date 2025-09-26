@@ -26,6 +26,8 @@ export default function AssignLessonModal({
   const [students, setStudents] = useState([]);
   const [selectedStudent, setSelectedStudent] = useState<number | "">("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+
   const {
     StyledDialog,
     StyledDialogContent,
@@ -45,11 +47,14 @@ export default function AssignLessonModal({
             "Content-Type": "application/json",
           },
         });
+        if (!response.ok) {
+          throw new Error("Failed to fetch students");
+        }
         const result = await response.json();
         setStudents(result.data || []);
       } catch (error) {
         console.error("Error loading students:", error);
-        alert("Failed to load students");
+        setErrorMessage("Failed to load students");
       }
     }
 
@@ -60,12 +65,12 @@ export default function AssignLessonModal({
     e.preventDefault();
 
     if (!token) {
-      alert("Please log in first");
+      setErrorMessage("Please log in first");
       return;
     }
 
     if (!selectedStudent) {
-      alert("Please select a student");
+      setErrorMessage("Please select a student");
       return;
     }
 
@@ -89,14 +94,14 @@ export default function AssignLessonModal({
       if (response.ok) {
         setSelectedStudent("");
         onClose();
-        alert("Lesson assigned successfully!");
+        //Add success message or notification here if needed
       } else {
         const error = await response.json();
-        alert(`Error: ${error.message || "Failed to assign lesson"}`);
+        setErrorMessage(`Error: ${error.message || "Failed to assign lesson"}`);
       }
     } catch (error) {
       console.error("Error assigning lesson:", error);
-      alert("Network error. Please try again.");
+      setErrorMessage("Network error. Please try again.");
     } finally {
       setIsSubmitting(false);
     }
@@ -142,6 +147,7 @@ export default function AssignLessonModal({
               </Select>
             </StyledFormControl>
           </div>
+          {errorMessage && <p>{errorMessage}</p>}
         </form>
       </StyledDialogContent>
       <StyledDialogActions>
