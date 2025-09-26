@@ -6,26 +6,38 @@ import Image from "next/image";
 import useGetSelectedLesson from "../../hooks/useGetSelectedLesson";
 import { ErrorBoundary } from "react-error-boundary";
 import SkeletonLoader from "@/app/components/SkeletonLoader";
-import { useAppContext } from "@/app/AppContext";
 
 export default function Practice() {
   const { selectedLesson, error, loading } = useGetSelectedLesson();
-  const { openAlertDialog } = useAppContext();
 
   if (loading) {
     return <SkeletonLoader />;
   }
 
   if (error) {
-    openAlertDialog("Error", "Error");
+    return (
+      <div className={styles.grid}>
+        <h1>Error Loading Lesson</h1>
+      </div>
+    );
   }
 
   if (!selectedLesson) {
-    return <div className={styles.grid}>No lesson found.</div>;
+    return (
+      <div className={styles.grid}>
+        <h1>No lesson found.</h1>
+      </div>
+    );
   }
 
   return (
-    <ErrorBoundary fallback={<div>Something went wrong</div>}>
+    <ErrorBoundary
+      fallback={
+        <div className={styles.grid}>
+          <h1>No lesson found.</h1>
+        </div>
+      }
+    >
       <div className={styles.grid}>
         <SegmentPlayer selectedLesson={selectedLesson} />
         {selectedLesson?.image && (

@@ -106,7 +106,6 @@ export default function AddLesson({
           title: formData.title,
           image: imageResult.imageName,
           videoId: videoId,
-          audioFile: "",
         }),
       });
       if (response.ok) {

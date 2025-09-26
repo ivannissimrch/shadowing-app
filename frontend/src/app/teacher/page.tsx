@@ -2,6 +2,8 @@ import styles from "./page.module.css";
 import Students from "../components/Students";
 
 export default function TeacherPage() {
+  ///Add state here for modals and data fetching
+
   return (
     <div className={styles.teacherDashboard}>
       <section className={styles.statsRow}>

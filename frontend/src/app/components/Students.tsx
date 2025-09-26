@@ -3,18 +3,26 @@ import styles from "./Students.module.css";
 import { ErrorBoundary } from "react-error-boundary";
 import SkeletonLoader from "../components/SkeletonLoader";
 import useFetchData from "../hooks/useFetchData";
-import { useAppContext } from "../AppContext";
 
 export default function Students() {
-  const { openAlertDialog } = useAppContext();
   const { data, isLoading, error } = useFetchData("/api/users");
   const students = Array.isArray(data) ? data : [];
   if (isLoading) return <SkeletonLoader />;
   if (error) {
-    openAlertDialog("Error fetching students", "Error fetching students");
+    return (
+      <div className={styles.studentsGrid}>
+        <h1>Error loading students</h1>
+      </div>
+    );
   }
   return (
-    <ErrorBoundary fallback={<div>error</div>}>
+    <ErrorBoundary
+      fallback={
+        <div className={styles.studentsGrid}>
+          <h1>Error loading students</h1>
+        </div>
+      }
+    >
       <div className={styles.studentsGrid}>
         {students &&
           students.map((student: { id: number; username: string }) => (

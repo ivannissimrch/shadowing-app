@@ -12,7 +12,12 @@ export default function AllLessons({
   const lessons = Array.isArray(data) ? data : [];
 
   if (isLoading) return <SkeletonLoader />;
-  if (error) return <div>Error loading lessons</div>;
+  if (error)
+    return (
+      <div className={styles.lessonsGrid}>
+        <h1>Error loading lessons</h1>
+      </div>
+    );
 
   return (
     <ErrorBoundary fallback={<div>Something went wrong!</div>}>
