@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useAppContext } from "../AppContext";
 import extractVideoId from "../helpers/extractVideoId";
 import useAlertMessageStyles from "../hooks/useAlertMessageStyles";
+import { ErrorBoundary } from "react-error-boundary";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -18,6 +19,7 @@ export default function AddLesson({
 }: AddLessonProps) {
   const { token } = useAppContext();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
   const [formData, setFormData] = useState({
     title: "",
     videoId: "",
@@ -61,12 +63,12 @@ export default function AddLesson({
     e.preventDefault();
 
     if (!token) {
-      alert("Please log in first");
+      setErrorMessage("Please log in first");
       return;
     }
 
     if (!formData.title || !formData.videoId || !selectedImage) {
-      alert("Please fill in all required fields");
+      setErrorMessage("Please fill in all required fields");
       return;
     }
 
@@ -118,117 +120,124 @@ export default function AddLesson({
         });
         setSelectedImage(null);
         closeAddLessonDialog();
-        alert("Lesson added successfully!");
+        //Add success message or notification here if needed
       } else {
         const error = await response.json();
-        alert(`Error: ${error.message || "Failed to add lesson"}`);
+        setErrorMessage(`Error: ${error.message || "Failed to add lesson"}`);
       }
     } catch (error) {
       console.error("Error adding lesson:", error);
-      alert("Network error. Please try again.");
+      setErrorMessage("Network error. Please try again.");
     } finally {
       setIsSubmitting(false);
     }
   };
 
   return (
-    <StyledDialog
-      open={isAddLessonDialogOpen}
-      onClose={closeAddLessonDialog}
-      aria-labelledby="add-lesson-dialog-title"
-      disableScrollLock={true}
-      keepMounted={false}
-      disableRestoreFocus={true}
-      disableEnforceFocus={true}
-    >
-      <DialogTitle
-        id="add-lesson-dialog-title"
-        sx={{
-          fontWeight: 700,
-          fontSize: "20px",
-          color: "#1f2937",
-          paddingBottom: "8px",
-        }}
+    <ErrorBoundary fallback={<div>Something went wrong.</div>}>
+      <StyledDialog
+        open={isAddLessonDialogOpen}
+        onClose={closeAddLessonDialog}
+        aria-labelledby="add-lesson-dialog-title"
+        disableScrollLock={true}
+        keepMounted={false}
+        disableRestoreFocus={true}
+        disableEnforceFocus={true}
       >
-        Add New Lesson
-      </DialogTitle>
-      {/* create separate component for form ? */}
-      <StyledDialogContent>
-        <form onSubmit={handleSubmit}>
-          <div>
-            <label htmlFor="lesson-title">Lesson Title *</label>
-            <input
-              id="lesson-title"
-              type="text"
-              placeholder="Enter lesson title"
-              required
-              value={formData.title}
-              onChange={handleInputChange}
-            />
-          </div>
-
-          <div>
-            <label htmlFor="video-id">YouTube Video URL *</label>
-            <input
-              id="video-id"
-              type="text"
-              placeholder="Enter YouTube video url "
-              required
-              value={formData.videoId}
-              onChange={handleInputChange}
-            />
-          </div>
-
-          <div>
-            <label htmlFor="image-upload">Upload Image *</label>
-            <input
-              id="image-upload"
-              type="file"
-              accept="image/*"
-              required
-              onChange={handleImageUpload}
-              style={{ display: "none" }}
-            />
-            <label
-              htmlFor="image-upload"
-              style={{
-                display: "inline-block",
-                padding: "12px 16px",
-                border: "2px solid #bae6fd",
-                borderRadius: "8px",
-                fontSize: "16px",
-                backgroundColor: "#ffffff",
-                color: selectedImage ? "#374151" : "#9ca3af",
-                cursor: "pointer",
-                transition: "all 0.2s ease",
-                width: "100%",
-                textAlign: "center" as const,
-              }}
-            >
-              {selectedImage ? selectedImage.name : "Choose an image file..."}
-            </label>
-            {selectedImage && (
-              <div
-                style={{ marginTop: "8px", fontSize: "14px", color: "#6b7280" }}
-              >
-                Image name will be: {formData.imageName}
-              </div>
-            )}
-          </div>
-        </form>
-      </StyledDialogContent>
-      <StyledDialogActions>
-        <StyledButton variant="outlined" onClick={closeAddLessonDialog}>
-          Cancel
-        </StyledButton>
-        <StyledButton
-          variant="contained"
-          onClick={handleSubmit}
-          disabled={isSubmitting}
+        <DialogTitle
+          id="add-lesson-dialog-title"
+          sx={{
+            fontWeight: 700,
+            fontSize: "20px",
+            color: "#1f2937",
+            paddingBottom: "8px",
+          }}
         >
-          {isSubmitting ? "Adding..." : "Add Lesson"}
-        </StyledButton>
-      </StyledDialogActions>
-    </StyledDialog>
+          Add New Lesson
+        </DialogTitle>
+        {/* create separate component for form ? */}
+        <StyledDialogContent>
+          <form onSubmit={handleSubmit}>
+            <div>
+              <label htmlFor="lesson-title">Lesson Title *</label>
+              <input
+                id="lesson-title"
+                type="text"
+                placeholder="Enter lesson title"
+                required
+                value={formData.title}
+                onChange={handleInputChange}
+              />
+            </div>
+
+            <div>
+              <label htmlFor="video-id">YouTube Video URL *</label>
+              <input
+                id="video-id"
+                type="text"
+                placeholder="Enter YouTube video url "
+                required
+                value={formData.videoId}
+                onChange={handleInputChange}
+              />
+            </div>
+
+            <div>
+              <label htmlFor="image-upload">Upload Image *</label>
+              <input
+                id="image-upload"
+                type="file"
+                accept="image/*"
+                required
+                onChange={handleImageUpload}
+                style={{ display: "none" }}
+              />
+              <label
+                htmlFor="image-upload"
+                style={{
+                  display: "inline-block",
+                  padding: "12px 16px",
+                  border: "2px solid #bae6fd",
+                  borderRadius: "8px",
+                  fontSize: "16px",
+                  backgroundColor: "#ffffff",
+                  color: selectedImage ? "#374151" : "#9ca3af",
+                  cursor: "pointer",
+                  transition: "all 0.2s ease",
+                  width: "100%",
+                  textAlign: "center" as const,
+                }}
+              >
+                {selectedImage ? selectedImage.name : "Choose an image file..."}
+              </label>
+              {selectedImage && (
+                <div
+                  style={{
+                    marginTop: "8px",
+                    fontSize: "14px",
+                    color: "#6b7280",
+                  }}
+                >
+                  Image name will be: {formData.imageName}
+                </div>
+              )}
+            </div>
+            {errorMessage && <div>{errorMessage}</div>}
+          </form>
+        </StyledDialogContent>
+        <StyledDialogActions>
+          <StyledButton variant="outlined" onClick={closeAddLessonDialog}>
+            Cancel
+          </StyledButton>
+          <StyledButton
+            variant="contained"
+            onClick={handleSubmit}
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? "Adding..." : "Add Lesson"}
+          </StyledButton>
+        </StyledDialogActions>
+      </StyledDialog>
+    </ErrorBoundary>
   );
 }

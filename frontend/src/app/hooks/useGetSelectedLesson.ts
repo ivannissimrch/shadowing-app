@@ -29,7 +29,6 @@ export default function useGetSelectedLesson() {
         }
         const responseData = await response.json();
         setSelectedLesson(responseData.data);
-        setLoading(false);
       } catch (error) {
         console.error("Error fetching lesson data:", error);
         setError(error as Error);

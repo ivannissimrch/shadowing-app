@@ -17,9 +17,8 @@ export default function AddStudent({
 }: AddStudentProps) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [isError, setIsError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isInputsValid, setIsInputsValid] = useState(true);
 
   const { token } = useAppContext();
   const {
@@ -32,13 +31,14 @@ export default function AddStudent({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    if (!username || !password) {
+      setErrorMessage("Please fill in all fields");
+      return;
+    }
+
+    setIsSubmitting(true);
+
     try {
-      setIsSubmitting(true);
-      if (!username || !password) {
-        setIsInputsValid(false);
-        setIsSubmitting(false);
-        return;
-      }
       const response = await fetch(`${API_URL}/api/users`, {
         method: "POST",
         headers: {
@@ -56,15 +56,13 @@ export default function AddStudent({
         setUsername("");
         setPassword("");
         closeAddStudentDialog();
-        setIsInputsValid(true);
-        setIsSubmitting(false);
       } else {
-        setIsError(true);
-        setIsSubmitting(false);
+        setErrorMessage(result.message || "Failed to create student");
       }
     } catch (error) {
       console.error("Error creating student:", error);
-      setIsError(true);
+      setErrorMessage("An error occurred while creating the student.");
+    } finally {
       setIsSubmitting(false);
     }
   };
@@ -101,8 +99,7 @@ export default function AddStudent({
                 type="text"
                 value={username}
                 onChange={(e) => {
-                  setIsError(false);
-                  setIsInputsValid(true);
+                  setErrorMessage("");
                   setUsername(e.target.value);
                 }}
                 placeholder="Enter student username"
@@ -118,8 +115,7 @@ export default function AddStudent({
                 value={password}
                 onChange={(e) => {
                   setPassword(e.target.value);
-                  setIsError(false);
-                  setIsInputsValid(true);
+                  setErrorMessage("");
                 }}
                 placeholder="Enter student password"
                 autoComplete="new-password"
@@ -127,22 +123,17 @@ export default function AddStudent({
             </div>
           </form>
 
-          {isError && (
-            <div style={{ color: "red", marginBottom: "10px" }}>
-              An error occurred.
-            </div>
-          )}
-          {!isInputsValid && (
-            <div style={{ color: "red", marginBottom: "10px" }}>
-              Please fill in all fields.
-            </div>
-          )}
+          {errorMessage && <div>{errorMessage}</div>}
         </StyledDialogContent>
         <StyledDialogActions>
           <StyledButton variant="outlined" onClick={closeAddStudentDialog}>
             Cancel
           </StyledButton>
-          <StyledButton variant="contained" onClick={handleSubmit}>
+          <StyledButton
+            variant="contained"
+            onClick={handleSubmit}
+            disabled={isSubmitting}
+          >
             {isSubmitting ? "Adding..." : "Add Student"}
           </StyledButton>
         </StyledDialogActions>
