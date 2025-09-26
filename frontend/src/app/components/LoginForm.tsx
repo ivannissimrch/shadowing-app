@@ -70,6 +70,7 @@ export default function LoginForm() {
           className={styles.input}
           required
           value={userName}
+          autoComplete="off"
           onChange={(e) => setUserName(e.target.value)}
         />
         <label htmlFor="password">Password:</label>
