@@ -1,5 +1,5 @@
 "use client";
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 import { AppContextType } from "./Types";
 import { usePersistedState } from "./hooks/usePersistedState";
 
@@ -7,10 +7,9 @@ export const AppContext = createContext<AppContextType>({
   openAlertDialog: () => {},
   closeAlertDialog: () => {},
   isAlertDialogOpen: false,
-  alertDialogTitle: "",
-  alertDialogMessage: "",
   token: null,
   updateToken: () => {},
+  isTokenLoading: false,
 });
 
 export default function AppContextProvider({
@@ -19,17 +18,14 @@ export default function AppContextProvider({
   children: React.ReactNode;
 }) {
   const [isAlertDialogOpen, setIsAlertDialogOpen] = useState(false);
-  const [alertDialogTitle, setAlertDialogTitle] = useState("");
-  const [alertDialogMessage, setAlertDialogMessage] = useState("");
   const [token, setToken] = usePersistedState<string | null>("token", null);
+  const [isTokenLoading, setIsTokenLoading] = useState(true);
 
   function updateToken(newToken: string) {
     setToken(newToken);
   }
 
-  function openAlertDialog(title: string, message: string) {
-    setAlertDialogTitle(title);
-    setAlertDialogMessage(message);
+  function openAlertDialog() {
     setIsAlertDialogOpen(true);
   }
 
@@ -37,16 +33,19 @@ export default function AppContextProvider({
     setIsAlertDialogOpen(false);
   }
 
+  useEffect(() => {
+    setIsTokenLoading(false);
+  }, []);
+
   return (
     <AppContext.Provider
       value={{
         isAlertDialogOpen,
         openAlertDialog,
         closeAlertDialog,
-        alertDialogTitle,
-        alertDialogMessage,
         token,
         updateToken,
+        isTokenLoading,
       }}
     >
       {children}
