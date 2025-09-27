@@ -30,8 +30,7 @@ const initDatabase = async () => {
         image VARCHAR(255),
         video_id VARCHAR(255),
         lesson_start_time INTEGER,
-        lesson_end_time INTEGER,
-        audio_file TEXT,
+        lesson_end_time INTEGER,        
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       );
@@ -48,7 +47,8 @@ const initDatabase = async () => {
         assigned_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         completed_at TIMESTAMP,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        UNIQUE(student_id, lesson_id)
+        UNIQUE(student_id, lesson_id),
+        audio_file TEXT
       );
     `);
 
