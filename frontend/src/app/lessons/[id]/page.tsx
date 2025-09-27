@@ -3,41 +3,47 @@ import styles from "./Practice.module.css";
 import SegmentPlayer from "../../components/SegmentPlayer";
 import RecorderPanel from "../../components/RecorderPanel";
 import Image from "next/image";
-import useGetSelectedLesson from "../../hooks/useGetSelectedLesson";
-import { ErrorBoundary } from "react-error-boundary";
-import SkeletonLoader from "@/app/components/SkeletonLoader";
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
+import { useAppContext } from "../../AppContext";
+import { useEffect, useState } from "react";
+import { Lesson } from "@/app/Types";
 
-export default function Practice() {
-  const { selectedLesson, error, loading } = useGetSelectedLesson();
-
-  if (loading) {
-    return <SkeletonLoader />;
+export default function Practice({
+  params,
+}: {
+  params: Promise<{ user: string; id: string }>;
+}) {
+  const { token, isTokenLoading } = useAppContext();
+  const [selectedLesson, setSelectedLesson] = useState<Lesson | undefined>();
+  function updateSelectedLesson(updatedLesson: Lesson) {
+    setSelectedLesson(updatedLesson);
   }
 
-  if (error) {
-    return (
-      <div className={styles.grid}>
-        <h1>Error Loading Lesson</h1>
-      </div>
-    );
-  }
-
-  if (!selectedLesson) {
-    return (
-      <div className={styles.grid}>
-        <h1>No lesson found.</h1>
-      </div>
-    );
-  }
+  useEffect(() => {
+    async function loadData() {
+      if (isTokenLoading || !token) return;
+      try {
+        const resolvedParams = await params;
+        const response = await fetch(
+          `${API_URL}/api/lessons/${resolvedParams.id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        const responseData = await response.json();
+        setSelectedLesson(responseData.data);
+      } catch (error) {
+        console.error("Error fetching lesson data:", error);
+      }
+    }
+    loadData();
+  }, [params, token, isTokenLoading]);
 
   return (
-    <ErrorBoundary
-      fallback={
-        <div className={styles.grid}>
-          <h1>No lesson found.</h1>
-        </div>
-      }
-    >
+    <>
       <div className={styles.grid}>
         <SegmentPlayer selectedLesson={selectedLesson} />
         {selectedLesson?.image && (
@@ -51,7 +57,10 @@ export default function Practice() {
           />
         )}
       </div>
-      <RecorderPanel selectedLesson={selectedLesson} />
-    </ErrorBoundary>
+      <RecorderPanel
+        selectedLesson={selectedLesson}
+        updateSelectedLesson={updateSelectedLesson}
+      />
+    </>
   );
 }
