@@ -22,3 +22,9 @@ export interface User {
   email: string;
   lessons: Lesson[];
 }
+
+export interface Student {
+  id: string;
+  role: string;
+  username: string;
+}

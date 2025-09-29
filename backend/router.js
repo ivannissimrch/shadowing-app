@@ -84,6 +84,7 @@ router.get(
   "/lessons/:lessonId",
   asyncHandler(async (req, res, next) => {
     const { lessonId } = req.params;
+    console.log("Fetching lesson with ID:", lessonId);
     const userId = req.user.id;
 
     const result = await db.query(

@@ -1,11 +1,11 @@
 "use client";
 import DialogTitle from "@mui/material/DialogTitle";
-import InputLabel from "@mui/material/InputLabel";
-import MenuItem from "@mui/material/MenuItem";
-import Select from "@mui/material/Select";
-import { useEffect, useState } from "react";
+import { Suspense, useState } from "react";
+import { ErrorBoundary } from "react-error-boundary";
 import { useAppContext } from "../AppContext";
 import useAlertMessageStyles from "../hooks/useAlertMessageStyles";
+import StudentSelect from "./StudentSelect";
+import SkeletonLoader from "./SkeletonLoader";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -23,7 +23,6 @@ export default function AssignLessonModal({
   lessonTitle,
 }: AssignLessonModalProps) {
   const { token } = useAppContext();
-  const [students, setStudents] = useState([]);
   const [selectedStudent, setSelectedStudent] = useState<number | "">("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
@@ -36,30 +35,6 @@ export default function AssignLessonModal({
     StyledFormControl,
   } = useAlertMessageStyles();
 
-  useEffect(() => {
-    async function loadStudents() {
-      if (!token || !isOpen) return;
-
-      try {
-        const response = await fetch(`${API_URL}/api/users`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        });
-        if (!response.ok) {
-          throw new Error("Failed to fetch students");
-        }
-        const result = await response.json();
-        setStudents(result.data || []);
-      } catch (error) {
-        console.error("Error loading students:", error);
-        setErrorMessage("Failed to load students");
-      }
-    }
-
-    loadStudents();
-  }, [token, isOpen]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -131,21 +106,15 @@ export default function AssignLessonModal({
       <StyledDialogContent>
         <form onSubmit={handleSubmit}>
           <div>
-            <StyledFormControl fullWidth>
-              <InputLabel id="student-select-label">Select Student</InputLabel>
-              <Select
-                labelId="student-select-label"
-                value={selectedStudent}
-                onChange={(e) => setSelectedStudent(e.target.value as number)}
-                label="Select Student"
-              >
-                {students.map((student: { id: number; username: string }) => (
-                  <MenuItem key={student.id} value={student.id}>
-                    {student.username}
-                  </MenuItem>
-                ))}
-              </Select>
-            </StyledFormControl>
+            <ErrorBoundary fallback={<div>Error loading students</div>}>
+              <Suspense fallback={<SkeletonLoader />}>
+                <StudentSelect
+                  selectedStudent={selectedStudent}
+                  onStudentChange={setSelectedStudent}
+                  StyledFormControl={StyledFormControl}
+                />
+              </Suspense>
+            </ErrorBoundary>
           </div>
           {errorMessage && <p>{errorMessage}</p>}
         </form>
