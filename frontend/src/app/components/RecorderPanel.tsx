@@ -134,7 +134,7 @@ export default function RecorderPanel({ selectedLesson }: RecorderProps) {
       } catch (error) {
         console.error("Error parsing audio data:", error);
         openAlertDialog(
-          "Error  parsing audio data:",
+          "Error parsing audio data:",
           "Error parsing audio data"
         );
       }

@@ -23,7 +23,7 @@ export default function AssignLessonModal({
   lessonTitle,
 }: AssignLessonModalProps) {
   const { token } = useAppContext();
-  const [selectedStudent, setSelectedStudent] = useState<number | "">("");
+  const [selectedStudent, setSelectedStudent] = useState<string | "">("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
