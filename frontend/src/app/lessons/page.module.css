@@ -4,3 +4,11 @@
   font-weight: bold;
   margin: 20px 0;
 }
+
+.cards-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+  min-height: max-content;
+}

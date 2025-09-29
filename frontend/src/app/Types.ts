@@ -8,13 +8,12 @@ export interface Lesson {
 }
 
 export interface AppContextType {
-  openAlertDialog: (title: string, message: string) => void;
+  openAlertDialog: () => void;
   closeAlertDialog: () => void;
   isAlertDialogOpen: boolean;
   token: string | null;
   updateToken: (newToken: string) => void;
-  alertDialogTitle: string;
-  alertDialogMessage: string;
+  isTokenLoading: boolean;
 }
 
 export interface User {

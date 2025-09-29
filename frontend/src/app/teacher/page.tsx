@@ -1,8 +1,35 @@
+"use client";
+import { useEffect, useState } from "react";
+import { useAppContext } from "../AppContext";
 import styles from "./page.module.css";
-import Students from "../components/Students";
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export default function TeacherPage() {
-  ///Add state here for modals and data fetching
+  //get all students
+  const [students, setStudents] = useState([]);
+  const { token, isTokenLoading } = useAppContext();
+
+  useEffect(() => {
+    async function loadData() {
+      if (!token || isTokenLoading) return;
+      try {
+        const response = await fetch(`${API_URL}/api/users`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        });
+        const result = await response.json();
+        console.log(result);
+        setStudents(result.data);
+      } catch (error) {
+        console.error("Error fetching students:", error);
+      }
+    }
+
+    loadData();
+  }, [token, isTokenLoading]);
 
   return (
     <div className={styles.teacherDashboard}>
@@ -18,9 +45,18 @@ export default function TeacherPage() {
           <p className={styles.statsNumber}>24</p>
         </button>
       </section>
+
       <section className={styles.studentsSection}>
         <h2>Students</h2>
-        <Students />
+        <div className={styles.studentsGrid}>
+          {students &&
+            students.map((student: { id: number; username: string }) => (
+              <div key={student.id} className={styles.studentCard}>
+                <h3>{student.username}</h3>
+                <button className={styles.button}>See Details</button>
+              </div>
+            ))}
+        </div>
       </section>
     </div>
   );

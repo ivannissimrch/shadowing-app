@@ -35,7 +35,6 @@ export default function AssignLessonModal({
     StyledFormControl,
   } = useAlertMessageStyles();
 
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 

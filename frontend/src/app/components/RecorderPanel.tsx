@@ -5,27 +5,31 @@ import AudioPlayer from "react-h5-audio-player";
 import "react-h5-audio-player/lib/styles.css";
 import { useAppContext } from "../AppContext";
 import { Lesson } from "../Types";
+import { ErrorBoundary } from "react-error-boundary";
+import SkeletonLoader from "./SkeletonLoader";
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 import { useRouter } from "next/navigation";
 import base64ToBlob from "../helpers/base64ToBlob";
-import { ErrorBoundary } from "react-error-boundary";
-import SkeletonLoader from "./SkeletonLoader";
 
 interface RecorderProps {
   selectedLesson: Lesson | undefined;
+  updateSelectedLesson?: (updatedLesson: Lesson) => void;
 }
 
-export default function RecorderPanel({ selectedLesson }: RecorderProps) {
+export default function RecorderPanel({
+  selectedLesson,
+  updateSelectedLesson,
+}: RecorderProps) {
   const { token, openAlertDialog } = useAppContext();
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunks = useRef<Blob[]>([]);
   const [recording, setRecording] = useState(false);
   const [paused, setPaused] = useState(false);
-  const [audioURL, setAudioURL] = useState<string | null>(null); // URL of the recorded audio
+  const [audioURL, setAudioURL] = useState<string | null>(null);
   const [blob, setBlob] = useState<Blob | null>(null);
-  const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const router = useRouter();
 
   async function startRecording() {
     try {
@@ -36,9 +40,8 @@ export default function RecorderPanel({ selectedLesson }: RecorderProps) {
       mediaRecorder.ondataavailable = (event) => {
         audioChunks.current.push(event.data);
       };
-
       mediaRecorder.onstop = () => {
-        const blob = new Blob(audioChunks.current, { type: "audio/webm" });
+        const blob = new Blob(audioChunks.current, { type: "audio/wav" });
         const url = URL.createObjectURL(blob);
         setAudioURL(url);
         setBlob(blob);
@@ -68,13 +71,15 @@ export default function RecorderPanel({ selectedLesson }: RecorderProps) {
 
   function stopRecording() {
     mediaRecorderRef.current?.stop();
+    setRecording(false);
+    setPaused(false);
   }
 
-  function handleSubmit() {
+  async function handleSubmit() {
+    if (!blob || !selectedLesson?.id || !token) return;
+
+    setIsSubmitting(true);
     try {
-      if (!blob) {
-        return;
-      }
       const reader = new FileReader();
       reader.readAsDataURL(blob);
       reader.onloadend = async () => {
@@ -84,11 +89,10 @@ export default function RecorderPanel({ selectedLesson }: RecorderProps) {
           typeof base64Audio !== "string" ||
           selectedLesson?.id === undefined
         ) {
-          setErrorMessage("Invalid audio data or lesson ID");
+          console.error("Invalid audio data or lesson ID");
           return;
         }
 
-        setIsSubmitting(true);
         const response = await fetch(
           `${API_URL}/api/lessons/${selectedLesson.id}`,
           {
@@ -106,20 +110,24 @@ export default function RecorderPanel({ selectedLesson }: RecorderProps) {
         setRecording(false);
         setPaused(false);
         if (!response.ok) {
-          setErrorMessage("Failed to update lesson with audio file");
-          setIsSubmitting(false);
+          console.error("Failed to update lesson with audio file");
+          setErrorMessage("There was an error submitting your audio. Please try again.");
           return;
         }
 
-        openAlertDialog(
-          "Submission Successful",
-          "Your recording has been successfully submitted for review."
-        );
+        openAlertDialog("Success", "Audio submitted successfully!");
+        if (updateSelectedLesson) {
+          updateSelectedLesson({
+            ...selectedLesson,
+            audio_file: base64Audio,
+            status: "completed",
+          });
+        }
         router.push("/lessons");
       };
     } catch (error) {
       console.error("Error submitting audio:", error);
-      setErrorMessage("An error occurred while submitting your audio.");
+      setErrorMessage("Error submitting audio. Please try again.");
     } finally {
       setIsSubmitting(false);
     }
@@ -156,13 +164,25 @@ export default function RecorderPanel({ selectedLesson }: RecorderProps) {
           onClick={() => setErrorMessage("")}
           className={styles.recordBtn}
         >
-          Dismiss
+          Try Again
         </button>
       </div>
     );
   }
+
   if (isSubmitting) {
     return <SkeletonLoader />;
+  }
+
+  // If lesson is completed and has audio, just show the player
+  if (selectedLesson?.status === "completed" && audioURL) {
+    return (
+      <ErrorBoundary fallback={<p>Error loading recorder panel</p>}>
+        <div className={styles.MediaRecorder}>
+          <AudioPlayer src={audioURL} showJumpControls={false} />
+        </div>
+      </ErrorBoundary>
+    );
   }
 
   return (
@@ -170,28 +190,17 @@ export default function RecorderPanel({ selectedLesson }: RecorderProps) {
       <div className={styles.panel}>
         {!audioURL && (
           <>
-            {" "}
             <div className={styles.mic}>
               <span className={styles.icon}>🎙️</span>
               {!recording ? <p>Ready to record</p> : <p>Recording...</p>}
               {!recording && (
-                <button onClick={startRecording} className={styles.recordBtn}>
+                <button className={styles.recordBtn} onClick={startRecording}>
                   Start Recording
                 </button>
               )}
               {recording && !paused && (
-                <button className={styles.recordBtn} onClick={pauseRecording}>
-                  Pause
-                </button>
-              )}
-              {recording && paused && (
-                <button onClick={resumeRecording} className={styles.recordBtn}>
-                  Resume
-                </button>
-              )}
-              {recording && (
-                <button onClick={stopRecording} className={styles.recordBtn}>
-                  Stop
+                <button className={styles.recordBtn} onClick={stopRecording}>
+                  Stop Recording
                 </button>
               )}
             </div>
