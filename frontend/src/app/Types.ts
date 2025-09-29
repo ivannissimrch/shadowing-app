@@ -8,16 +8,23 @@ export interface Lesson {
 }
 
 export interface AppContextType {
-  openAlertDialog: () => void;
+  openAlertDialog: (title: string, message: string) => void;
   closeAlertDialog: () => void;
   isAlertDialogOpen: boolean;
   token: string | null;
   updateToken: (newToken: string) => void;
-  isTokenLoading: boolean;
+  alertDialogTitle: string;
+  alertDialogMessage: string;
 }
 
 export interface User {
   name: string;
   email: string;
   lessons: Lesson[];
+}
+
+export interface Student {
+  id: string;
+  role: string;
+  username: string;
 }
