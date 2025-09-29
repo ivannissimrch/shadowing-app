@@ -12,7 +12,7 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL;
 interface AssignLessonModalProps {
   isOpen: boolean;
   onClose: () => void;
-  lessonId: number;
+  lessonId: string;
   lessonTitle: string;
 }
 

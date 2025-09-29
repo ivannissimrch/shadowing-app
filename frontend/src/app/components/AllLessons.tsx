@@ -4,7 +4,7 @@ import LessonList from "./LessonList";
 import SkeletonLoader from "./SkeletonLoader";
 
 interface AllLessonsProps {
-  handleAssignClick: (lesson: { id: number; title: string }) => void;
+  handleAssignClick: (lesson: { id: string; title: string }) => void;
 }
 
 export default function AllLessons({ handleAssignClick }: AllLessonsProps) {

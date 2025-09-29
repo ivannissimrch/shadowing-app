@@ -6,7 +6,7 @@ import { useAppContext } from "../AppContext";
 import { use } from "react";
 
 interface LessonListProps {
-  handleAssignClick: (lesson: { id: number; title: string }) => void;
+  handleAssignClick: (lesson: { id: string; title: string }) => void;
 }
 
 export default function LessonList({ handleAssignClick }: LessonListProps) {
