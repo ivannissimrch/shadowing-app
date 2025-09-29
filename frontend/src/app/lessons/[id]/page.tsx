@@ -1,66 +1,22 @@
-"use client";
 import styles from "./Practice.module.css";
-import SegmentPlayer from "../../components/SegmentPlayer";
-import RecorderPanel from "../../components/RecorderPanel";
-import Image from "next/image";
-const API_URL = process.env.NEXT_PUBLIC_API_URL;
-import { useAppContext } from "../../AppContext";
-import { useEffect, useState } from "react";
-import { Lesson } from "@/app/Types";
+import { PracticeComponents } from "@/app/components/PracticeComponents";
+import { ErrorBoundary } from "react-error-boundary";
+import SkeletonLoader from "@/app/components/SkeletonLoader";
+import { Suspense } from "react";
 
-export default function Practice({
-  params,
-}: {
-  params: Promise<{ user: string; id: string }>;
-}) {
-  const { token, isTokenLoading } = useAppContext();
-  const [selectedLesson, setSelectedLesson] = useState<Lesson | undefined>();
-  function updateSelectedLesson(updatedLesson: Lesson) {
-    setSelectedLesson(updatedLesson);
-  }
-
-  useEffect(() => {
-    async function loadData() {
-      if (isTokenLoading || !token) return;
-      try {
-        const resolvedParams = await params;
-        const response = await fetch(
-          `${API_URL}/api/lessons/${resolvedParams.id}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-              "Content-Type": "application/json",
-            },
-          }
-        );
-        const responseData = await response.json();
-        setSelectedLesson(responseData.data);
-      } catch (error) {
-        console.error("Error fetching lesson data:", error);
-      }
-    }
-    loadData();
-  }, [params, token, isTokenLoading]);
-
+export default async function Practice({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
   return (
-    <>
-      <div className={styles.grid}>
-        <SegmentPlayer selectedLesson={selectedLesson} />
-        {selectedLesson?.image && (
-          <Image
-            src={`/images/${selectedLesson?.image}.png`}
-            alt="ESL lesson"
-            quality={100}
-            width={625}
-            height={390}
-            priority
-          />
-        )}
-      </div>
-      <RecorderPanel
-        selectedLesson={selectedLesson}
-        updateSelectedLesson={updateSelectedLesson}
-      />
-    </>
+    <ErrorBoundary
+      fallback={
+        <div className={styles.grid}>
+          <h1>No lesson found.</h1>
+        </div>
+      }
+    >
+      <Suspense fallback={<SkeletonLoader />}>
+        <PracticeComponents id={id} />
+      </Suspense>
+    </ErrorBoundary>
   );
 }

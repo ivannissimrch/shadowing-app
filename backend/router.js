@@ -64,7 +64,7 @@ router.get(
   asyncHandler(async (req, res, next) => {
     const userId = req.user.id;
     const result = await db.query(
-      `SELECT l.*, a.status, a.completed, a.assigned_at, a.completed_at
+      `SELECT l.*, a.status, a.completed, a.assigned_at, a.completed_at, a.audio_file
      FROM lessons l
        JOIN assignments a ON l.id = a.lesson_id
        WHERE a.student_id = $1
@@ -84,10 +84,11 @@ router.get(
   "/lessons/:lessonId",
   asyncHandler(async (req, res, next) => {
     const { lessonId } = req.params;
+    console.log("Fetching lesson with ID:", lessonId);
     const userId = req.user.id;
 
     const result = await db.query(
-      `SELECT l.*, a.status, a.completed, a.assigned_at, a.completed_at
+      `SELECT l.*, a.status, a.completed, a.assigned_at, a.completed_at, a.audio_file
        FROM lessons l
        JOIN assignments a ON l.id = a.lesson_id
        WHERE a.student_id = $1 AND l.id = $2`,
@@ -119,9 +120,9 @@ router.patch(
     // Update the lesson's audio file (if provided)
     if (audio_file) {
       await db.query(
-        `UPDATE lessons SET audio_file = $1, updated_at = CURRENT_TIMESTAMP
-         WHERE id = $2`,
-        [audio_file, lessonId]
+        `UPDATE assignments SET audio_file = $1, updated_at = CURRENT_TIMESTAMP
+     WHERE student_id = $2 AND lesson_id = $3`,
+        [audio_file, userId, lessonId]
       );
     }
 
@@ -162,10 +163,10 @@ router.post(
       req.body;
     // Create new lesson content
     const result = await db.query(
-      `INSERT INTO lessons (title, image, video_id, lesson_start_time, lesson_end_time, audio_file)
-       VALUES ($1, $2, $3, $4, $5, $6)
+      `INSERT INTO lessons (title, image, video_id, lesson_start_time, lesson_end_time)
+       VALUES ($1, $2, $3, $4, $5)
        RETURNING *`,
-      [title, image, videoId, lessonStartTime, lessonEndTime, audioFile || ""]
+      [title, image, videoId, lessonStartTime, lessonEndTime]
     );
     res.status(201).json({
       success: true,
