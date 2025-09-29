@@ -1,7 +1,6 @@
 import { Suspense } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import LessonList from "./LessonList";
-import { Lesson } from "../Types";
 import SkeletonLoader from "./SkeletonLoader";
 
 interface AllLessonsProps {

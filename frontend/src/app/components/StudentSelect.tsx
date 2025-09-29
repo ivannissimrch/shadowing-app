@@ -10,7 +10,10 @@ import { Student } from "../Types";
 interface StudentSelectProps {
   selectedStudent: number | "";
   onStudentChange: (studentId: number) => void;
-  StyledFormControl: any; // TODO: Type this properly
+  StyledFormControl: React.ComponentType<{
+    fullWidth?: boolean;
+    children: React.ReactNode;
+  }>;
 }
 
 export default function StudentSelect({
