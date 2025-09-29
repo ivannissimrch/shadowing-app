@@ -8,8 +8,8 @@ import { use } from "react";
 import { Student } from "../Types";
 
 interface StudentSelectProps {
-  selectedStudent: number | "";
-  onStudentChange: (studentId: number) => void;
+  selectedStudent: string | "";
+  onStudentChange: (studentId: string) => void;
   StyledFormControl: React.ComponentType<{
     fullWidth?: boolean;
     children: React.ReactNode;
@@ -32,7 +32,7 @@ export default function StudentSelect({
       <Select
         labelId="student-select-label"
         value={selectedStudent}
-        onChange={(e) => onStudentChange(e.target.value as number)}
+        onChange={(e) => onStudentChange(e.target.value as string)}
         label="Select Student"
       >
         {students.map((student: Student) => (

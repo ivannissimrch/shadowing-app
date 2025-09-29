@@ -11,7 +11,7 @@ interface LessonListProps {
 
 export default function LessonList({ handleAssignClick }: LessonListProps) {
   const { token } = useAppContext();
-  if (!token) return;
+  if (!token) return null;
   const lessons = use(fetchData("/api/all-lessons", token)) as Lesson[];
 
   return (

@@ -12,7 +12,7 @@ import { Lesson } from "../Types";
 export function PracticeComponents({ id }: { id: string }) {
   const { token } = useAppContext();
   if (!token) {
-    return;
+    return null;
   }
   const selectedLesson = use(fetchData(`/api/lessons/${id}`, token)) as Lesson;
 
