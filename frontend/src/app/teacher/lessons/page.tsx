@@ -7,11 +7,11 @@ import AllLessons from "@/app/components/AllLessons";
 export default function LessonsPage() {
   const [assignModalOpen, setAssignModalOpen] = useState(false);
   const [selectedLesson, setSelectedLesson] = useState<{
-    id: number;
+    id: string;
     title: string;
   } | null>(null);
 
-  const handleAssignClick = (lesson: { id: number; title: string }) => {
+  const handleAssignClick = (lesson: { id: string; title: string }) => {
     setSelectedLesson(lesson);
     setAssignModalOpen(true);
   };
