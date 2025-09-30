@@ -5,6 +5,7 @@ import { useAppContext } from "../AppContext";
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 import useAlertMessageStyles from "../hooks/useAlertMessageStyles";
 import { ErrorBoundary } from "react-error-boundary";
+import { mutate } from "swr";
 
 interface AddStudentProps {
   isAddStudentDialogOpen: boolean;
@@ -56,6 +57,7 @@ export default function AddStudent({
         setUsername("");
         setPassword("");
         closeAddStudentDialog();
+        await mutate(`${API_URL}/api/users`);
       } else {
         setErrorMessage(result.message || "Failed to create student");
       }
