@@ -6,6 +6,7 @@ import { useAppContext } from "../AppContext";
 import useAlertMessageStyles from "../hooks/useAlertMessageStyles";
 import StudentSelect from "./StudentSelect";
 import SkeletonLoader from "./SkeletonLoader";
+import { mutate } from "swr";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -34,7 +35,6 @@ export default function AssignLessonModal({
     StyledButton,
     StyledFormControl,
   } = useAlertMessageStyles();
-
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -70,6 +70,7 @@ export default function AssignLessonModal({
         setSelectedStudent("");
         onClose();
         //Add success message or notification here if needed
+        await mutate(`${API_URL}/api/lessons`);
       } else {
         const error = await response.json();
         setErrorMessage(`Error: ${error.message || "Failed to assign lesson"}`);

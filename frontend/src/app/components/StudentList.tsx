@@ -1,14 +1,10 @@
 "use client";
 import styles from "./StudentList.module.css";
-import { useAppContext } from "../AppContext";
-import fetchData from "../helpers/fetchData";
-import { use } from "react";
 import { Student } from "../Types";
+import { useFetch } from "../hooks/useFetch";
 
 export default function StudentList() {
-  const { token } = useAppContext();
-  if (!token) return;
-  const students = use(fetchData("/api/users", token)) as Student[];
+  const { data: students } = useFetch<Student[]>("/api/users");
 
   return (
     <div className={styles.studentsGrid}>
