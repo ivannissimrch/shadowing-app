@@ -5,6 +5,7 @@ import { useAppContext } from "../AppContext";
 import extractVideoId from "../helpers/extractVideoId";
 import useAlertMessageStyles from "../hooks/useAlertMessageStyles";
 import { ErrorBoundary } from "react-error-boundary";
+import { mutate } from "swr";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -120,7 +121,7 @@ export default function AddLesson({
         });
         setSelectedImage(null);
         closeAddLessonDialog();
-        //Add success message or notification here if needed
+        await mutate(`${API_URL}/api/all-lessons`);
       } else {
         const error = await response.json();
         setErrorMessage(`Error: ${error.message || "Failed to add lesson"}`);

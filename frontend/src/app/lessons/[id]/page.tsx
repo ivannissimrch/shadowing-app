@@ -1,10 +1,14 @@
-import styles from "./Practice.module.css";
+import styles from "./page.module.css";
 import { PracticeComponents } from "@/app/components/PracticeComponents";
 import { ErrorBoundary } from "react-error-boundary";
 import SkeletonLoader from "@/app/components/SkeletonLoader";
 import { Suspense } from "react";
 
-export default async function Practice({ params }: { params: Promise<{ id: string }> }) {
+export default async function Practice({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
   const { id } = await params;
   return (
     <ErrorBoundary

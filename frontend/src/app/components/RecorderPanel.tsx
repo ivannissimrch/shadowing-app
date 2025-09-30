@@ -10,6 +10,7 @@ import { useRouter } from "next/navigation";
 import base64ToBlob from "../helpers/base64ToBlob";
 import { ErrorBoundary } from "react-error-boundary";
 import SkeletonLoader from "./SkeletonLoader";
+import { mutate } from "swr";
 
 interface RecorderProps {
   selectedLesson: Lesson | undefined;
@@ -115,6 +116,7 @@ export default function RecorderPanel({ selectedLesson }: RecorderProps) {
           "Submission Successful",
           "Your recording has been successfully submitted for review."
         );
+        await mutate(`${API_URL}/api/lessons/${selectedLesson.id}`);
         router.push("/lessons");
       };
     } catch (error) {

@@ -4,17 +4,11 @@ import SegmentPlayer from "./SegmentPlayer";
 import RecorderPanel from "./RecorderPanel";
 import Image from "next/image";
 import { ErrorBoundary } from "react-error-boundary";
-import { useAppContext } from "../AppContext";
-import fetchData from "../helpers/fetchData";
-import { use } from "react";
 import { Lesson } from "../Types";
+import { useFetch } from "../hooks/useFetch";
 
 export function PracticeComponents({ id }: { id: string }) {
-  const { token } = useAppContext();
-  if (!token) {
-    return null;
-  }
-  const selectedLesson = use(fetchData(`/api/lessons/${id}`, token)) as Lesson;
+  const { data: selectedLesson } = useFetch<Lesson>(`/api/lessons/${id}`);
 
   return (
     <ErrorBoundary
@@ -24,20 +18,22 @@ export function PracticeComponents({ id }: { id: string }) {
         </div>
       }
     >
-      <div className={styles.grid}>
-        <SegmentPlayer selectedLesson={selectedLesson} />
-        {selectedLesson.image && (
-          <Image
-            src={`/images/${selectedLesson.image}.png`}
-            alt="ESL lesson"
-            quality={100}
-            width={625}
-            height={390}
-            priority
-          />
-        )}
-      </div>
-      <RecorderPanel selectedLesson={selectedLesson} />
+      {selectedLesson && (
+        <>
+          <div className={styles.grid}>
+            <SegmentPlayer selectedLesson={selectedLesson} />
+            <Image
+              src={`/images/${selectedLesson.image}.png`}
+              alt="ESL lesson"
+              quality={100}
+              width={625}
+              height={390}
+              priority
+            />
+          </div>
+          <RecorderPanel selectedLesson={selectedLesson} />
+        </>
+      )}
     </ErrorBoundary>
   );
 }
