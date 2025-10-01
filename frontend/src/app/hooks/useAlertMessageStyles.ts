@@ -5,7 +5,7 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import { styled } from "@mui/material/styles";
 
-const StyledDialog = styled(Dialog)(() => ({
+export const StyledDialog = styled(Dialog)(() => ({
   "& .MuiDialog-paper": {
     borderRadius: "12px",
     minWidth: "400px",
@@ -19,7 +19,7 @@ const StyledDialog = styled(Dialog)(() => ({
   },
 }));
 
-const StyledDialogContent = styled(DialogContent)({
+export const StyledDialogContent = styled(DialogContent)({
   padding: "24px",
   "& form": {
     display: "flex",
@@ -55,13 +55,13 @@ const StyledDialogContent = styled(DialogContent)({
   },
 });
 
-const StyledDialogActions = styled(DialogActions)({
+export const StyledDialogActions = styled(DialogActions)({
   padding: "16px 24px",
   gap: "12px",
   justifyContent: "flex-end",
 });
 
-const StyledButton = styled(Button)(({ variant }) => ({
+export const StyledButton = styled(Button)(({ variant }) => ({
   borderRadius: "8px",
   padding: "10px 24px",
   fontWeight: 600,
@@ -85,7 +85,7 @@ const StyledButton = styled(Button)(({ variant }) => ({
   }),
 }));
 
-const StyledFormControl = styled(FormControl)({
+export const StyledFormControl = styled(FormControl)({
   "& .MuiOutlinedInput-root": {
     borderRadius: "8px",
     backgroundColor: "#ffffff",

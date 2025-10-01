@@ -2,7 +2,7 @@ import { animate } from "framer-motion";
 import { useEffect, useState } from "react";
 const delimiter = "";
 
-export default function useAnimatedText(text: string) {
+export default function useAnimatedText(text: string = "") {
   const [cursor, setCursor] = useState(0);
   const [startingCursor, setStartingCursor] = useState(0);
   const [prevText, setPrevText] = useState(text);
