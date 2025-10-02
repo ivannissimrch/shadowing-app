@@ -15,4 +15,5 @@
   background-color: #f0f0f0;
   border-radius: 8px;
   animation: pulse 1.5s infinite;
+  border: 1px solid #ccc;
 }
