@@ -28,9 +28,6 @@ export default function LessonsLayout({
           <Link href="/teacher/lessons" className={styles.sidebarLink}>
             Lessons
           </Link>
-        </aside>
-        <main className={styles.mainContent}>{children}</main>
-        <aside className={styles.rightSidebar}>
           <button
             className={styles.sidebarButton}
             onClick={() => setIsAddLessonDialogOpen(true)}
@@ -44,8 +41,8 @@ export default function LessonsLayout({
             Add student
           </button>
         </aside>
+        <main className={styles.mainContent}>{children}</main>
       </section>
-
       <Footer />
       <AddLesson
         isAddLessonDialogOpen={isAddLessonDialogOpen}
