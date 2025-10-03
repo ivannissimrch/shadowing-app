@@ -32,24 +32,27 @@ export default function LoginForm() {
 
   async function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
-    const response = await fetch(`${API_URL}/signin`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ username: userName, password }),
-    });
-    const result = await response.json();
+    try {
+      const response = await fetch(`${API_URL}/signin`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ username: userName, password }),
+      });
+      const result = await response.json();
 
-    if (response.ok) {
-      updateToken(result.token);
-      if (result.user.role === "teacher") {
-        router.push("/teacher");
-      } else {
-        router.push("/lessons");
+      if (response.ok) {
+        updateToken(result.token);
+        if (result.user.role === "teacher") {
+          router.push("/teacher");
+        } else {
+          router.push("/lessons");
+        }
       }
-    } else {
-      openAlertDialog("Login failed", result.message || "Unknown error");
+    } catch (error) {
+      console.error("Login error:", error);
+      openAlertDialog("Login failed", "Error during login. Please try again.");
     }
   }
 
@@ -84,6 +87,7 @@ export default function LoginForm() {
             placeholder="Enter your password"
             className={styles.input}
             required
+            autoComplete="off"
           />
           <span
             className={styles.eye}
