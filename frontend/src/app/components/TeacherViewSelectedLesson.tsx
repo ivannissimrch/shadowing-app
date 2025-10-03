@@ -1,6 +1,5 @@
 "use client";
 import { useFetch } from "../hooks/useFetch";
-import { StudentLessonPageProps } from "../teacher/student/[studentId]/lesson/[lessonId]/page";
 import { Lesson } from "../Types";
 import styles from "./TeacherViewSelectedLesson.module.css";
 import YouTubePlayer from "./YouTubePlayer";
@@ -9,7 +8,7 @@ import AudioPlayer from "react-h5-audio-player";
 import "react-h5-audio-player/lib/styles.css";
 
 interface TeacherViewSelectedLessonProps {
-  idInfo: StudentLessonPageProps["params"];
+  idInfo: { studentId: string; lessonId: string };
 }
 
 export default function TeacherViewSelectedLesson({
