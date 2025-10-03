@@ -1,57 +1,17 @@
-"use client";
 import Footer from "../components/Footer";
+import TeacherHeader from "../components/TeacherHeader";
 import styles from "./layout.module.css";
-import Header from "../components/Header";
-import Link from "next/link";
-import { useState } from "react";
-import AddLesson from "../components/AddLesson";
-import AddStudent from "../components/AddStudent";
 
 export default function LessonsLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const [isAddLessonDialogOpen, setIsAddLessonDialogOpen] = useState(false);
-  const [isAddStudentDialogOpen, setIsAddStudentDialogOpen] = useState(false);
-  const closeAddLessonDialog = () => setIsAddLessonDialogOpen(false);
-  const closeAddStudentDialog = () => setIsAddStudentDialogOpen(false);
-
   return (
     <>
-      <Header />
-      <section className={styles.container}>
-        <aside className={styles.leftSidebar}>
-          <Link href="/teacher" className={styles.sidebarLink}>
-            Dashboard
-          </Link>
-          <Link href="/teacher/lessons" className={styles.sidebarLink}>
-            Lessons
-          </Link>
-          <button
-            className={styles.sidebarButton}
-            onClick={() => setIsAddLessonDialogOpen(true)}
-          >
-            Add lesson
-          </button>
-          <button
-            className={styles.sidebarButton}
-            onClick={() => setIsAddStudentDialogOpen(true)}
-          >
-            Add student
-          </button>
-        </aside>
-        <main className={styles.mainContent}>{children}</main>
-      </section>
+      <TeacherHeader />
+      <main className={styles.mainContent}>{children}</main>
       <Footer />
-      <AddLesson
-        isAddLessonDialogOpen={isAddLessonDialogOpen}
-        closeAddLessonDialog={closeAddLessonDialog}
-      />
-      <AddStudent
-        isAddStudentDialogOpen={isAddStudentDialogOpen}
-        closeAddStudentDialog={closeAddStudentDialog}
-      />
     </>
   );
 }
