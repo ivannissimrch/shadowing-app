@@ -84,7 +84,6 @@ router.get(
   "/lessons/:lessonId",
   asyncHandler(async (req, res, next) => {
     const { lessonId } = req.params;
-    console.log("Fetching lesson with ID:", lessonId);
     const userId = req.user.id;
 
     const result = await db.query(
@@ -134,13 +133,6 @@ router.patch(
        RETURNING *`,
       [userId, lessonId]
     );
-
-    if (result.rows.length === 0) {
-      return res.status(404).json({
-        success: false,
-        message: "Assignment not found",
-      });
-    }
 
     res.json({
       success: true,
@@ -281,6 +273,82 @@ router.get(
     res.json({
       success: true,
       data: result.rows,
+    });
+  })
+);
+
+//get student data (for teacher to view student progress)
+router.get(
+  "/teacher/student/:studentId",
+  asyncHandler(async (req, res, next) => {
+    if (req.user.role !== "teacher") {
+      return res.status(403).json({
+        success: false,
+        message: "Forbidden: Teachers only",
+      });
+    }
+    const { studentId } = req.params;
+    const result = await db.query(
+      `SELECT id, username, role, created_at
+       FROM users
+       WHERE id = $1 AND role = 'student'`,
+      [studentId]
+    );
+
+    res.json({
+      success: true,
+      data: result.rows[0],
+    });
+  })
+);
+//get student lessons (for teacher to view student progress)
+router.get(
+  "/teacher/student/:studentId/lessons",
+  asyncHandler(async (req, res, next) => {
+    if (req.user.role !== "teacher") {
+      return res.status(403).json({
+        success: false,
+        message: "Forbidden: Teachers only",
+      });
+    }
+    const { studentId } = req.params;
+    const result = await db.query(
+      `SELECT l.*, a.status, a.completed, a.assigned_at, a.completed_at, a.audio_file
+       FROM lessons l
+       JOIN assignments a ON l.id = a.lesson_id
+       WHERE a.student_id = $1
+       ORDER BY a.assigned_at DESC`,
+      [studentId]
+    );
+    res.json({
+      success: true,
+      data: result.rows,
+    });
+  })
+);
+
+//get specific student lesson (for teacher to view student progress)
+router.get(
+  "/teacher/student/:studentId/lesson/:lessonId",
+  asyncHandler(async (req, res, next) => {
+    if (req.user.role !== "teacher") {
+      return res.status(403).json({
+        success: false,
+        message: "Forbidden: Teachers only",
+      });
+    }
+    const { studentId, lessonId } = req.params;
+    const result = await db.query(
+      `SELECT l.*, a.status, a.completed, a.assigned_at, a.completed_at, a.audio_file
+       FROM lessons l
+       JOIN assignments a ON l.id = a.lesson_id
+       WHERE a.student_id = $1 AND l.id = $2`,
+      [studentId, lessonId]
+    );
+
+    res.json({
+      success: true,
+      data: result.rows[0],
     });
   })
 );
