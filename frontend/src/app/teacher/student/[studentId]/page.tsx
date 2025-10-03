@@ -4,7 +4,7 @@ import { Suspense } from "react";
 import StudentInfo from "@/app/components/StudentInfo";
 
 interface StudentPageProps {
-  params: { studentId: string };
+  params: Promise<{ studentId: string }>;
 }
 
 export default async function StudentPage({ params }: StudentPageProps) {
