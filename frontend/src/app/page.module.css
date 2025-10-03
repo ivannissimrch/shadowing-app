@@ -1,6 +1,7 @@
 .main {
   display: flex;
   justify-content: center;
+  align-items: center;
   background-color: white;
   min-height: 100vh;
 }
