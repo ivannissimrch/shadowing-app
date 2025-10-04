@@ -23,9 +23,11 @@ export default function TeacherViewSelectedLesson({
   return (
     <>
       {selectedLesson && (
-        <>
+        <div className={styles.container}>
           <div className={styles.grid}>
-            <YouTubePlayer selectedLesson={selectedLesson} />
+            <div className={styles.videoWrapper}>
+              <YouTubePlayer selectedLesson={selectedLesson} />
+            </div>
             <Image
               src={`/images/${selectedLesson.image}.png`}
               alt="Lesson Image"
@@ -41,7 +43,7 @@ export default function TeacherViewSelectedLesson({
               showJumpControls={false}
             />
           </div>
-        </>
+        </div>
       )}
     </>
   );
