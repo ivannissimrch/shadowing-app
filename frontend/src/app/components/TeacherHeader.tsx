@@ -10,6 +10,7 @@ import Logout from "./Logout";
 export default function TeacherHeader() {
   const [isAddLessonDialogOpen, setIsAddLessonDialogOpen] = useState(false);
   const [isAddStudentDialogOpen, setIsAddStudentDialogOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const closeAddLessonDialog = () => setIsAddLessonDialogOpen(false);
   const closeAddStudentDialog = () => setIsAddStudentDialogOpen(false);
   const pathname = usePathname();
@@ -17,15 +18,27 @@ export default function TeacherHeader() {
   return (
     <>
       <header className={styles.header}>
-        <div>
-          <h1>ShadowSpeak</h1>
+        <div className={styles.headerTop}>
+          <div>
+            <h1>ShadowSpeak</h1>
+          </div>
+          <button
+            className={styles.hamburger}
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          >
+            ☰
+          </button>
+          <div className={styles.desktopLogout}>
+            <Logout />
+          </div>
         </div>
-        <nav className={styles.nav}>
+        <nav className={`${styles.nav} ${isMobileMenuOpen ? styles.navOpen : ""}`}>
           <Link
             href="/teacher"
             className={`${styles.link} ${
               pathname === "/teacher" ? styles.active : ""
             }`}
+            onClick={() => setIsMobileMenuOpen(false)}
           >
             Dashboard
           </Link>
@@ -34,23 +47,32 @@ export default function TeacherHeader() {
             className={`${styles.link} ${
               pathname === "/teacher/lessons" ? styles.active : ""
             }`}
+            onClick={() => setIsMobileMenuOpen(false)}
           >
             Lessons
           </Link>
           <button
             className={styles.navButton}
-            onClick={() => setIsAddLessonDialogOpen(true)}
+            onClick={() => {
+              setIsAddLessonDialogOpen(true);
+              setIsMobileMenuOpen(false);
+            }}
           >
             Add lesson
           </button>
           <button
             className={styles.navButton}
-            onClick={() => setIsAddStudentDialogOpen(true)}
+            onClick={() => {
+              setIsAddStudentDialogOpen(true);
+              setIsMobileMenuOpen(false);
+            }}
           >
             Add student
           </button>
+          <div className={styles.mobileLogout}>
+            <Logout />
+          </div>
         </nav>
-        <Logout />
       </header>
       <AddLesson
         isAddLessonDialogOpen={isAddLessonDialogOpen}
