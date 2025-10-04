@@ -4,18 +4,20 @@
   color: #2563eb;
 }
 
-.headerTop {
+.headerContainer {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 10px 20px;
+  gap: 20px;
 }
 
 .nav {
   display: flex;
   align-items: center;
+  flex-wrap: nowrap;
   gap: 10px;
-  padding: 0 20px 10px 20px;
+  flex: 1;
 }
 
 .hamburger {
@@ -69,8 +71,13 @@
 }
 
 @media (max-width: 768px) {
+  .headerContainer {
+    flex-wrap: wrap;
+  }
+
   .hamburger {
     display: block;
+    order: 2;
   }
 
   .desktopLogout {
@@ -86,7 +93,10 @@
     display: none;
     flex-direction: column;
     gap: 8px;
-    padding: 0 20px 20px 20px;
+    width: 100%;
+    order: 3;
+    padding: 10px 0 0 0;
+    flex: none;
   }
 
   .navOpen {
