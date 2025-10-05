@@ -1,11 +1,11 @@
 "use client";
 import DialogTitle from "@mui/material/DialogTitle";
 import { useState } from "react";
-import { useAppContext } from "../AppContext";
 import extractVideoId from "../helpers/extractVideoId";
 import useAlertMessageStyles from "../hooks/useAlertMessageStyles";
 import { ErrorBoundary } from "react-error-boundary";
 import { mutate } from "swr";
+import api from "../helpers/axiosFetch";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -18,7 +18,6 @@ export default function AddLesson({
   isAddLessonDialogOpen,
   closeAddLessonDialog,
 }: AddLessonProps) {
-  const { token } = useAppContext();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [formData, setFormData] = useState({
@@ -63,16 +62,13 @@ export default function AddLesson({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!token) {
-      setErrorMessage("Please log in first");
-      return;
-    }
-
+    // Validate BEFORE setting loading state
     if (!formData.title || !formData.videoId || !selectedImage) {
       setErrorMessage("Please fill in all required fields");
       return;
     }
 
+    setErrorMessage("");
     setIsSubmitting(true);
 
     try {
@@ -81,54 +77,29 @@ export default function AddLesson({
       imageFormData.append("image", selectedImage);
       imageFormData.append("imageName", formData.imageName);
 
-      const imageResponse = await fetch(`${API_URL}/api/upload-image`, {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        body: imageFormData,
-      });
+      // Pass FormData directly as 2nd argument (not wrapped in object!)
+      const imageResponse = await api.post("/api/upload-image", imageFormData);
 
-      if (!imageResponse.ok) {
-        const imageError = await imageResponse.json();
-        throw new Error(`Image upload failed: ${imageError.message}`);
-      }
-
-      const imageResult = await imageResponse.json();
-
-      // Then create the lesson with the uploaded image name
       const videoId = extractVideoId(formData.videoId);
 
-      const response = await fetch(`${API_URL}/api/lessons`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          title: formData.title,
-          image: imageResult.imageName,
-          videoId: videoId,
-        }),
+      const response = await api.post("/api/lessons", {
+        title: formData.title,
+        image: imageResponse.data.imageName,
+        videoId: videoId,
       });
-      if (response.ok) {
-        // Reset form
+
+      if (response.data.success) {
         setFormData({
           title: "",
-
           videoId: "",
           imageName: "",
         });
         setSelectedImage(null);
         closeAddLessonDialog();
         await mutate(`${API_URL}/api/all-lessons`);
-      } else {
-        const error = await response.json();
-        setErrorMessage(`Error: ${error.message || "Failed to add lesson"}`);
       }
-    } catch (error) {
-      console.error("Error adding lesson:", error);
-      setErrorMessage("Network error. Please try again.");
+    } catch (error: unknown) {
+      setErrorMessage((error as Error).message || "Error adding lesson");
     } finally {
       setIsSubmitting(false);
     }
