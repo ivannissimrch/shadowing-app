@@ -1,28 +1,27 @@
 "use client";
 import styles from "./LoginForm.module.css";
 import { useEffect, useState } from "react";
-const API_URL = process.env.NEXT_PUBLIC_API_URL;
 import { useRouter } from "next/navigation";
 import { useAppContext } from "../AppContext";
 import { MdOutlineRemoveRedEye } from "react-icons/md";
+import api from "../helpers/axiosFetch";
+import redirectBasedOnRole from "../helpers/redirectBasedOnRole";
 
 export default function LoginForm() {
   const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
-  const { updateToken, token, openAlertDialog } = useAppContext();
+  const { updateToken, token } = useAppContext();
   const [passwordType, setPasswordType] = useState("password");
+  const [isLoading, setIsLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
     if (token) {
       // If there's already a token, redirect based on role
       try {
-        const payload = JSON.parse(atob(token.split(".")[1]));
-        if (payload.role === "teacher") {
-          router.push("/teacher");
-        } else {
-          router.push("/lessons");
-        }
+        const route = redirectBasedOnRole(token);
+        router.push(route);
       } catch (error) {
         console.error("Invalid token:", error);
         updateToken("");
@@ -32,32 +31,28 @@ export default function LoginForm() {
 
   async function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
+    setIsLoading(true);
+    setErrorMessage("");
+
     try {
-      const response = await fetch(`${API_URL}/signin`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ username: userName, password }),
+      const response = await api.post("/signin", {
+        username: userName,
+        password: password,
       });
-      const result = await response.json();
-
-      if (response.ok) {
-        updateToken(result.token);
-        if (result.user.role === "teacher") {
-          router.push("/teacher");
-        } else {
-          router.push("/lessons");
-        }
+      const { token } = response.data;
+      updateToken(token);
+      // Redirect based on role
+      const route = redirectBasedOnRole(token);
+      router.push(route);
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        setErrorMessage(error.message);
+      } else {
+        setErrorMessage("An unknown error occurred, please try again.");
       }
-    } catch (error) {
-      console.error("Login error:", error);
-      openAlertDialog("Login failed", "Error during login. Please try again.");
+    } finally {
+      setIsLoading(false);
     }
-  }
-
-  if (token) {
-    return <div>Loading ...</div>;
   }
 
   return (
@@ -74,13 +69,19 @@ export default function LoginForm() {
           required
           value={userName}
           autoComplete="off"
-          onChange={(e) => setUserName(e.target.value)}
+          onChange={(e) => {
+            setErrorMessage("");
+            setUserName(e.target.value);
+          }}
         />
         <label htmlFor="password">Password:</label>
         <div className={styles.passwordContainer}>
           <input
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={(e) => {
+              setErrorMessage("");
+              setPassword(e.target.value);
+            }}
             type={passwordType}
             name="password"
             id="password"
@@ -99,8 +100,11 @@ export default function LoginForm() {
           </span>
         </div>
 
-        <button className={styles.button}>Login</button>
+        <button className={styles.button} type="submit" disabled={isLoading}>
+          {isLoading ? "Loading..." : "Login"}
+        </button>
       </form>
+      {errorMessage && <p className={styles.error}>{errorMessage}</p>}
     </main>
   );
 }
