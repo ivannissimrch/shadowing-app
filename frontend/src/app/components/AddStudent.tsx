@@ -1,11 +1,11 @@
 "use client";
 import DialogTitle from "@mui/material/DialogTitle";
 import { useState } from "react";
-import { useAppContext } from "../AppContext";
-const API_URL = process.env.NEXT_PUBLIC_API_URL;
 import useAlertMessageStyles from "../hooks/useAlertMessageStyles";
 import { ErrorBoundary } from "react-error-boundary";
 import { mutate } from "swr";
+import api from "../helpers/axiosFetch";
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 interface AddStudentProps {
   isAddStudentDialogOpen: boolean;
@@ -21,7 +21,6 @@ export default function AddStudent({
   const [errorMessage, setErrorMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const { token } = useAppContext();
   const {
     StyledDialog,
     StyledDialogContent,
@@ -38,39 +37,35 @@ export default function AddStudent({
     }
 
     setIsSubmitting(true);
+    setErrorMessage("");
 
     try {
-      const response = await fetch(`${API_URL}/api/users`, {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          username,
-          password,
-        }),
+      const response = await api.post("/api/users", {
+        username,
+        password,
       });
-      const result = await response.json();
 
-      if (result.success) {
+      if (response.data.success) {
         setUsername("");
         setPassword("");
         closeAddStudentDialog();
         await mutate(`${API_URL}/api/users`);
-      } else {
-        setErrorMessage(result.message || "Failed to create student");
       }
-    } catch (error) {
-      console.error("Error creating student:", error);
-      setErrorMessage("An error occurred while creating the student.");
+    } catch (error: unknown) {
+      setErrorMessage((error as Error).message || "Error adding student");
     } finally {
       setIsSubmitting(false);
     }
   };
 
   return (
-    <ErrorBoundary fallback={<div>Something went wrong.</div>}>
+    <ErrorBoundary
+      fallback={
+        <>
+          <div>Something went wrong.</div>
+        </>
+      }
+    >
       {" "}
       <StyledDialog
         open={isAddStudentDialogOpen}
@@ -133,6 +128,7 @@ export default function AddStudent({
           </StyledButton>
           <StyledButton
             variant="contained"
+            type="submit"
             onClick={handleSubmit}
             disabled={isSubmitting}
           >
