@@ -7,7 +7,7 @@ import useAlertMessageStyles from "../hooks/useAlertMessageStyles";
 import StudentSelect from "./StudentSelect";
 import SkeletonLoader from "./SkeletonLoader";
 import { mutate } from "swr";
-
+import api from "../helpers/axiosFetch";
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 interface AssignLessonModalProps {
@@ -51,33 +51,20 @@ export default function AssignLessonModal({
 
     setIsSubmitting(true);
 
-    try {
-      const response = await fetch(
-        `${API_URL}/api/lessons/${lessonId}/assign`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({
-            studentId: selectedStudent,
-          }),
-        }
-      );
+    setErrorMessage("");
 
-      if (response.ok) {
+    try {
+      const response = await api.post(`/api/lessons/${lessonId}/assign`, {
+        studentId: selectedStudent,
+      });
+
+      if (response.data.success) {
         setSelectedStudent("");
         onClose();
-        //Add success message or notification here if needed
         await mutate(`${API_URL}/api/lessons`);
-      } else {
-        const error = await response.json();
-        setErrorMessage(`Error: ${error.message || "Failed to assign lesson"}`);
       }
-    } catch (error) {
-      console.error("Error assigning lesson:", error);
-      setErrorMessage("Network error. Please try again.");
+    } catch (error: unknown) {
+      setErrorMessage((error as Error).message || "Error assigning lesson");
     } finally {
       setIsSubmitting(false);
     }
