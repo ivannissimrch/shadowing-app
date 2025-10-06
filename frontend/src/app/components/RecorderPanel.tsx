@@ -11,13 +11,14 @@ import base64ToBlob from "../helpers/base64ToBlob";
 import { ErrorBoundary } from "react-error-boundary";
 import SkeletonLoader from "./SkeletonLoader";
 import { mutate } from "swr";
+import api from "../helpers/axiosFetch";
 
 interface RecorderProps {
   selectedLesson: Lesson | undefined;
 }
 
 export default function RecorderPanel({ selectedLesson }: RecorderProps) {
-  const { token, openAlertDialog } = useAppContext();
+  const { openAlertDialog } = useAppContext();
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunks = useRef<Blob[]>([]);
   const [recording, setRecording] = useState(false);
@@ -71,9 +72,12 @@ export default function RecorderPanel({ selectedLesson }: RecorderProps) {
     mediaRecorderRef.current?.stop();
   }
 
-  function handleSubmit() {
+  async function handleSubmit() {
     try {
       if (!blob) {
+        setErrorMessage(
+          "Error: No audio recorded. Please record audio before submitting."
+        );
         return;
       }
       const reader = new FileReader();
@@ -85,45 +89,43 @@ export default function RecorderPanel({ selectedLesson }: RecorderProps) {
           typeof base64Audio !== "string" ||
           selectedLesson?.id === undefined
         ) {
-          setErrorMessage("Invalid audio data or lesson ID");
+          setErrorMessage("Invalid audio data");
           return;
         }
 
         setIsSubmitting(true);
-        const response = await fetch(
-          `${API_URL}/api/lessons/${selectedLesson.id}`,
-          {
-            method: "PATCH",
-            headers: {
-              Authorization: `Bearer ${token}`,
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
+        setErrorMessage("");
+        try {
+          const response = await api.patch(
+            `/api/lessons/${selectedLesson.id}`,
+            {
               audio_file: base64Audio,
-            }),
+            }
+          );
+
+          setRecording(false);
+          setPaused(false);
+          if (response.data.success) {
+            openAlertDialog(
+              "Submission Successful",
+              "Your recording has been successfully submitted for review."
+            );
           }
-        );
-
-        setRecording(false);
-        setPaused(false);
-        if (!response.ok) {
-          setErrorMessage("Failed to update lesson with audio file");
+          await mutate(`${API_URL}/api/lessons/${selectedLesson.id}`);
+          router.push("/lessons");
+        } catch (error) {
+          console.error("Error submitting audio:", error);
+          setErrorMessage("An error occurred while submitting your audio.");
+        } finally {
           setIsSubmitting(false);
-          return;
+          setBlob(null);
+          setAudioURL(null);
+          setRecording(false);
         }
-
-        openAlertDialog(
-          "Submission Successful",
-          "Your recording has been successfully submitted for review."
-        );
-        await mutate(`${API_URL}/api/lessons/${selectedLesson.id}`);
-        router.push("/lessons");
       };
     } catch (error) {
       console.error("Error submitting audio:", error);
       setErrorMessage("An error occurred while submitting your audio.");
-    } finally {
-      setIsSubmitting(false);
     }
   }
 
@@ -135,10 +137,7 @@ export default function RecorderPanel({ selectedLesson }: RecorderProps) {
         setAudioURL(blobUrl);
       } catch (error) {
         console.error("Error parsing audio data:", error);
-        openAlertDialog(
-          "Error parsing audio data:",
-          "Error parsing audio data"
-        );
+        setErrorMessage("Error loading existing audio recording.");
       }
     }
 
