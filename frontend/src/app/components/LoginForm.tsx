@@ -8,7 +8,7 @@ import api from "../helpers/axiosFetch";
 import redirectBasedOnRole from "../helpers/redirectBasedOnRole";
 
 export default function LoginForm() {
-  const [userName, setUserName] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
   const { updateToken, token } = useAppContext();
@@ -36,7 +36,7 @@ export default function LoginForm() {
 
     try {
       const response = await api.post("/signin", {
-        username: userName,
+        username: username,
         password: password,
       });
       const { token } = response.data;
@@ -67,11 +67,11 @@ export default function LoginForm() {
           placeholder="Enter your username"
           className={styles.input}
           required
-          value={userName}
+          value={username}
           autoComplete="off"
           onChange={(e) => {
             setErrorMessage("");
-            setUserName(e.target.value);
+            setUsername(e.target.value);
           }}
         />
         <label htmlFor="password">Password:</label>

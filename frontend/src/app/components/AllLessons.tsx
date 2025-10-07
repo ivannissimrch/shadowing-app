@@ -5,10 +5,10 @@ import SkeletonLoader from "./SkeletonLoader";
 import ErrorFallback from "./ErrorFallback";
 
 interface AllLessonsProps {
-  handleAssignClick: (lesson: { id: string; title: string }) => void;
+  onAssignLesson: (lesson: { id: string; title: string }) => void;
 }
 
-export default function AllLessons({ handleAssignClick }: AllLessonsProps) {
+export default function AllLessons({ onAssignLesson }: AllLessonsProps) {
   return (
     <ErrorBoundary
       fallbackRender={(props) => (
@@ -16,7 +16,7 @@ export default function AllLessons({ handleAssignClick }: AllLessonsProps) {
       )}
     >
       <Suspense fallback={<SkeletonLoader />}>
-        <LessonList handleAssignClick={handleAssignClick} />
+        <LessonList onAssignLesson={onAssignLesson} />
       </Suspense>
     </ErrorBoundary>
   );

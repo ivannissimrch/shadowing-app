@@ -3,15 +3,15 @@ import Link from "next/link";
 import { Lesson } from "../Types";
 
 interface TeacherViewCardProps {
-  currentLesson: Lesson;
+  lesson: Lesson;
   studentId: string;
 }
 
 export default function TeacherViewCard({
-  currentLesson,
+  lesson,
   studentId,
 }: TeacherViewCardProps) {
-  const { title, status, id } = currentLesson;
+  const { title, status, id } = lesson;
   return (
     <div className={styles.card}>
       <div className={styles["information-container"]}>
