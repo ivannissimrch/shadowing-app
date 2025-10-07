@@ -11,8 +11,8 @@ export default function StudentLessons() {
   return (
     <div className={styles["cards-container"]}>
       {lessons &&
-        lessons.map((currentLesson) => (
-          <Card key={currentLesson.title} currentLesson={currentLesson} />
+        lessons.map((lesson) => (
+          <Card key={lesson.title} lesson={lesson} />
         ))}
     </div>
   );

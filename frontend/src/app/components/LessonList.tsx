@@ -5,10 +5,10 @@ import { useSWRAxios } from "../hooks/useSWRAxios";
 import { API_PATHS } from "../constants/apiKeys";
 
 interface LessonListProps {
-  handleAssignClick: (lesson: { id: string; title: string }) => void;
+  onAssignLesson: (lesson: { id: string; title: string }) => void;
 }
 
-export default function LessonList({ handleAssignClick }: LessonListProps) {
+export default function LessonList({ onAssignLesson }: LessonListProps) {
   const { data: lessons } = useSWRAxios<Lesson[]>(API_PATHS.ALL_LESSONS);
 
   return (
@@ -22,7 +22,7 @@ export default function LessonList({ handleAssignClick }: LessonListProps) {
               {/* <button className={styles.button}>Delete</button> */}
               <button
                 className={styles.button}
-                onClick={() => handleAssignClick(lesson)}
+                onClick={() => onAssignLesson(lesson)}
               >
                 Assign
               </button>
