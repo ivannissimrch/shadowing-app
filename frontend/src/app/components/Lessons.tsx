@@ -4,11 +4,11 @@ import LessonList from "./LessonList";
 import SkeletonLoader from "./SkeletonLoader";
 import ErrorFallback from "./ErrorFallback";
 
-interface AllLessonsProps {
+interface LessonsProps {
   onAssignLesson: (lesson: { id: string; title: string }) => void;
 }
 
-export default function AllLessons({ onAssignLesson }: AllLessonsProps) {
+export default function Lessons({ onAssignLesson }: LessonsProps) {
   return (
     <ErrorBoundary
       fallbackRender={(props) => (

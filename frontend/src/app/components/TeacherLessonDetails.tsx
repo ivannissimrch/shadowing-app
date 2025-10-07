@@ -1,20 +1,20 @@
 "use client";
 import { useSWRAxios } from "../hooks/useSWRAxios";
 import { Lesson } from "../Types";
-import styles from "./TeacherViewSelectedLesson.module.css";
+import styles from "./TeacherLessonDetails.module.css";
 import YouTubePlayer from "./YouTubePlayer";
 import Image from "next/image";
 import AudioPlayer from "react-h5-audio-player";
 import "react-h5-audio-player/lib/styles.css";
 import { API_PATHS } from "../constants/apiKeys";
 
-interface TeacherViewSelectedLessonProps {
+interface TeacherLessonDetailsProps {
   idInfo: { studentId: string; lessonId: string };
 }
 
-export default function TeacherViewSelectedLesson({
+export default function TeacherLessonDetails({
   idInfo,
-}: TeacherViewSelectedLessonProps) {
+}: TeacherLessonDetailsProps) {
   const { data } = useSWRAxios<Lesson>(
     API_PATHS.TEACHER_STUDENT_LESSON(idInfo.studentId, idInfo.lessonId)
   );

@@ -1,5 +1,5 @@
 "use client";
-import styles from "./PracticeComponents.module.css";
+import styles from "./LessonPracticeView.module.css";
 import SegmentPlayer from "./SegmentPlayer";
 import RecorderPanel from "./RecorderPanel";
 import Image from "next/image";
@@ -8,7 +8,7 @@ import { Lesson } from "../Types";
 import { useSWRAxios } from "../hooks/useSWRAxios";
 import { API_PATHS } from "../constants/apiKeys";
 
-export function PracticeComponents({ id }: { id: string }) {
+export function LessonPracticeView({ id }: { id: string }) {
   const { data: selectedLesson } = useSWRAxios<Lesson>(API_PATHS.LESSON(id));
 
   return (
