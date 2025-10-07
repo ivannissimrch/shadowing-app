@@ -11,7 +11,7 @@ export default function LessonsPage() {
     title: string;
   } | null>(null);
 
-  const handleAssignClick = (lesson: { id: string; title: string }) => {
+  const handleAssignLesson = (lesson: { id: string; title: string }) => {
     setSelectedLesson(lesson);
     setAssignModalOpen(true);
   };
@@ -24,7 +24,7 @@ export default function LessonsPage() {
   return (
     <section className={styles.lessonsSection}>
       <h2>Lessons</h2>
-      <AllLessons handleAssignClick={handleAssignClick} />
+      <AllLessons onAssignLesson={handleAssignLesson} />
       {selectedLesson && (
         <AssignLessonModal
           isOpen={assignModalOpen}

@@ -2,8 +2,8 @@ import styles from "./Card.module.css";
 import Link from "next/link";
 import { Lesson } from "../Types";
 
-export default function Card({ currentLesson }: { currentLesson: Lesson }) {
-  const { title, status, id } = currentLesson;
+export default function Card({ lesson }: { lesson: Lesson }) {
+  const { title, status, id } = lesson;
   return (
     <div className={styles.card}>
       <div className={styles["information-container"]}>
