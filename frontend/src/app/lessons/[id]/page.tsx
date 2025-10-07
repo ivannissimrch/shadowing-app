@@ -1,5 +1,5 @@
 "use client";
-import { PracticeComponents } from "@/app/components/PracticeComponents";
+import { LessonPracticeView } from "@/app/components/LessonPracticeView";
 import { ErrorBoundary } from "react-error-boundary";
 import SkeletonLoader from "@/app/components/SkeletonLoader";
 import { Suspense, use } from "react";
@@ -16,7 +16,7 @@ export default function Practice({
       fallbackRender={(props) => <ErrorFallback {...props} />}
     >
       <Suspense fallback={<SkeletonLoader />}>
-        <PracticeComponents id={id} />
+        <LessonPracticeView id={id} />
       </Suspense>
     </ErrorBoundary>
   );

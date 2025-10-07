@@ -1,5 +1,5 @@
 "use client";
-import TeacherViewSelectedLesson from "@/app/components/TeacherViewSelectedLesson";
+import TeacherLessonDetails from "@/app/components/TeacherLessonDetails";
 import { Suspense } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { use } from "react";
@@ -18,7 +18,7 @@ export default function StudentLessonPage({ params }: StudentLessonPageProps) {
       )}
     >
       <Suspense fallback={<div>Loading lesson...</div>}>
-        <TeacherViewSelectedLesson idInfo={data} />
+        <TeacherLessonDetails idInfo={data} />
       </Suspense>
     </ErrorBoundary>
   );
