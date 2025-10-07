@@ -6,8 +6,7 @@ import useAlertMessageStyles from "../hooks/useAlertMessageStyles";
 import { ErrorBoundary } from "react-error-boundary";
 import { mutate } from "swr";
 import api from "../helpers/axiosFetch";
-
-const API_URL = process.env.NEXT_PUBLIC_API_URL;
+import { API_PATHS, API_KEYS } from "../constants/apiKeys";
 
 interface AddLessonProps {
   isAddLessonDialogOpen: boolean;
@@ -78,11 +77,11 @@ export default function AddLesson({
       imageFormData.append("imageName", formData.imageName);
 
       // Pass FormData directly as 2nd argument (not wrapped in object!)
-      const imageResponse = await api.post("/api/upload-image", imageFormData);
+      const imageResponse = await api.post(API_PATHS.UPLOAD_IMAGE, imageFormData);
 
       const videoId = extractVideoId(formData.videoId);
 
-      const response = await api.post("/api/lessons", {
+      const response = await api.post(API_PATHS.LESSONS, {
         title: formData.title,
         image: imageResponse.data.imageName,
         videoId: videoId,
@@ -96,7 +95,7 @@ export default function AddLesson({
         });
         setSelectedImage(null);
         closeAddLessonDialog();
-        await mutate(`${API_URL}/api/all-lessons`);
+        await mutate(API_KEYS.ALL_LESSONS);
       }
     } catch (error: unknown) {
       setErrorMessage((error as Error).message || "Error adding lesson");

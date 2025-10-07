@@ -1,14 +1,15 @@
 "use client";
 import styles from "./LessonList.module.css";
 import { Lesson } from "../Types";
-import { useFetch } from "../hooks/useFetch";
+import { useSWRAxios } from "../hooks/useSWRAxios";
+import { API_PATHS } from "../constants/apiKeys";
 
 interface LessonListProps {
   handleAssignClick: (lesson: { id: string; title: string }) => void;
 }
 
 export default function LessonList({ handleAssignClick }: LessonListProps) {
-  const { data: lessons } = useFetch<Lesson[]>("/api/all-lessons");
+  const { data: lessons } = useSWRAxios<Lesson[]>(API_PATHS.ALL_LESSONS);
 
   return (
     <div className={styles.lessonsGrid}>

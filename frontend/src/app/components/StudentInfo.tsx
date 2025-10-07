@@ -1,10 +1,11 @@
 "use client";
-import { useFetch } from "../hooks/useFetch";
+import { useSWRAxios } from "../hooks/useSWRAxios";
 import { Student } from "../Types";
 import styles from "./StudentInfo.module.css";
+import { API_PATHS } from "../constants/apiKeys";
 
 export default function StudentInfo({ id }: { id: string }) {
-  const { data: student } = useFetch<Student>(`/api/teacher/student/${id}`);
+  const { data: student } = useSWRAxios<Student>(API_PATHS.TEACHER_STUDENT(id));
 
   if (!student) return <div>Loading student info...</div>;
 

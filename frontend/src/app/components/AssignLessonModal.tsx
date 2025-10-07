@@ -2,13 +2,12 @@
 import DialogTitle from "@mui/material/DialogTitle";
 import { Suspense, useState } from "react";
 import { ErrorBoundary } from "react-error-boundary";
-import { useAppContext } from "../AppContext";
 import useAlertMessageStyles from "../hooks/useAlertMessageStyles";
 import StudentSelect from "./StudentSelect";
 import SkeletonLoader from "./SkeletonLoader";
 import { mutate } from "swr";
 import api from "../helpers/axiosFetch";
-const API_URL = process.env.NEXT_PUBLIC_API_URL;
+import { API_PATHS, API_KEYS } from "../constants/apiKeys";
 
 interface AssignLessonModalProps {
   isOpen: boolean;
@@ -23,7 +22,6 @@ export default function AssignLessonModal({
   lessonId,
   lessonTitle,
 }: AssignLessonModalProps) {
-  const { token } = useAppContext();
   const [selectedStudent, setSelectedStudent] = useState<string | "">("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
@@ -39,29 +37,19 @@ export default function AssignLessonModal({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!token) {
-      setErrorMessage("Please log in first");
-      return;
-    }
-
-    if (!selectedStudent) {
-      setErrorMessage("Please select a student");
-      return;
-    }
-
     setIsSubmitting(true);
-
     setErrorMessage("");
 
     try {
-      const response = await api.post(`/api/lessons/${lessonId}/assign`, {
+      const response = await api.post(API_PATHS.ASSIGN_LESSON(lessonId), {
         studentId: selectedStudent,
       });
 
       if (response.data.success) {
         setSelectedStudent("");
         onClose();
-        await mutate(`${API_URL}/api/lessons`);
+        await mutate(API_KEYS.LESSONS);
+        //latter on add a success message with a toast
       }
     } catch (error: unknown) {
       setErrorMessage((error as Error).message || "Error assigning lesson");
