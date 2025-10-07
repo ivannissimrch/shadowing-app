@@ -5,10 +5,11 @@ import RecorderPanel from "./RecorderPanel";
 import Image from "next/image";
 import { ErrorBoundary } from "react-error-boundary";
 import { Lesson } from "../Types";
-import { useFetch } from "../hooks/useFetch";
+import { useSWRAxios } from "../hooks/useSWRAxios";
+import { API_PATHS } from "../constants/apiKeys";
 
 export function PracticeComponents({ id }: { id: string }) {
-  const { data: selectedLesson } = useFetch<Lesson>(`/api/lessons/${id}`);
+  const { data: selectedLesson } = useSWRAxios<Lesson>(API_PATHS.LESSON(id));
 
   return (
     <ErrorBoundary
