@@ -15,7 +15,7 @@ export default function TeacherViewLessons({ id }: { id: string }) {
         lessons.map((lesson: Lesson) => (
           <TeacherViewCard
             key={lesson.id}
-            currentLesson={lesson}
+            lesson={lesson}
             studentId={id}
           />
         ))}
