@@ -2,10 +2,11 @@
 import styles from "./StudentLessons.module.css";
 import Card from "../components/Card";
 import { Lesson } from "../Types";
-import { useFetch } from "../hooks/useFetch";
+import { useSWRAxios } from "../hooks/useSWRAxios";
+import { API_PATHS } from "../constants/apiKeys";
 
 export default function StudentLessons() {
-  const { data: lessons } = useFetch<Lesson[]>("/api/lessons");
+  const { data: lessons } = useSWRAxios<Lesson[]>(API_PATHS.LESSONS);
 
   return (
     <div className={styles["cards-container"]}>
