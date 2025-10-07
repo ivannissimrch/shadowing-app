@@ -1,22 +1,19 @@
-import styles from "./page.module.css";
+"use client";
 import { PracticeComponents } from "@/app/components/PracticeComponents";
 import { ErrorBoundary } from "react-error-boundary";
 import SkeletonLoader from "@/app/components/SkeletonLoader";
-import { Suspense } from "react";
+import { Suspense, use } from "react";
+import ErrorFallback from "@/app/components/ErrorFallback";
 
-export default async function Practice({
+export default function Practice({
   params,
 }: {
   params: Promise<{ id: string }>;
 }) {
-  const { id } = await params;
+  const { id } = use(params);
   return (
     <ErrorBoundary
-      fallback={
-        <div className={styles.grid}>
-          <h1>No lesson found.</h1>
-        </div>
-      }
+      fallbackRender={(props) => <ErrorFallback {...props} />}
     >
       <Suspense fallback={<SkeletonLoader />}>
         <PracticeComponents id={id} />

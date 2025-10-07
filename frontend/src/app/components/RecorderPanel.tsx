@@ -5,13 +5,13 @@ import AudioPlayer from "react-h5-audio-player";
 import "react-h5-audio-player/lib/styles.css";
 import { useAppContext } from "../AppContext";
 import { Lesson } from "../Types";
-const API_URL = process.env.NEXT_PUBLIC_API_URL;
 import { useRouter } from "next/navigation";
 import base64ToBlob from "../helpers/base64ToBlob";
 import { ErrorBoundary } from "react-error-boundary";
 import SkeletonLoader from "./SkeletonLoader";
 import { mutate } from "swr";
 import api from "../helpers/axiosFetch";
+import { API_PATHS, API_KEYS } from "../constants/apiKeys";
 
 interface RecorderProps {
   selectedLesson: Lesson | undefined;
@@ -97,7 +97,7 @@ export default function RecorderPanel({ selectedLesson }: RecorderProps) {
         setErrorMessage("");
         try {
           const response = await api.patch(
-            `/api/lessons/${selectedLesson.id}`,
+            API_PATHS.LESSON(selectedLesson.id),
             {
               audio_file: base64Audio,
             }
@@ -111,7 +111,7 @@ export default function RecorderPanel({ selectedLesson }: RecorderProps) {
               "Your recording has been successfully submitted for review."
             );
           }
-          await mutate(`${API_URL}/api/lessons/${selectedLesson.id}`);
+          await mutate(API_KEYS.LESSON(selectedLesson.id));
           router.push("/lessons");
         } catch (error) {
           console.error("Error submitting audio:", error);

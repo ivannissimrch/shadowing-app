@@ -3,7 +3,8 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 import { Student } from "../Types";
-import { useFetch } from "../hooks/useFetch";
+import { useSWRAxios } from "../hooks/useSWRAxios";
+import { API_PATHS } from "../constants/apiKeys";
 
 interface StudentSelectProps {
   selectedStudent: string | "";
@@ -19,7 +20,7 @@ export default function StudentSelect({
   onStudentChange,
   StyledFormControl,
 }: StudentSelectProps) {
-  const { data: students } = useFetch<Student[]>("/api/users");
+  const { data: students } = useSWRAxios<Student[]>(API_PATHS.USERS);
 
   return (
     <StyledFormControl fullWidth>
