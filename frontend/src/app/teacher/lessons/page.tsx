@@ -2,7 +2,7 @@
 import AssignLessonModal from "@/app/components/AssignLessonModal";
 import styles from "./page.module.css";
 import { useState } from "react";
-import AllLessons from "@/app/components/AllLessons";
+import Lessons from "@/app/components/Lessons";
 
 export default function LessonsPage() {
   const [assignModalOpen, setAssignModalOpen] = useState(false);
@@ -24,7 +24,7 @@ export default function LessonsPage() {
   return (
     <section className={styles.lessonsSection}>
       <h2>Lessons</h2>
-      <AllLessons onAssignLesson={handleAssignLesson} />
+      <Lessons onAssignLesson={handleAssignLesson} />
       {selectedLesson && (
         <AssignLessonModal
           isOpen={assignModalOpen}
