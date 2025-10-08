@@ -1,5 +1,5 @@
 import styles from "./page.module.css";
-import Students from "../components/Students";
+import Students from "../components/student/Students";
 
 export default function TeacherPage() {
   return (

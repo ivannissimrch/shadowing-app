@@ -1,9 +1,9 @@
 "use client";
-import TeacherLessonDetails from "@/app/components/TeacherLessonDetails";
+import TeacherLessonDetails from "@/app/components/teacher/TeacherLessonDetails";
 import { Suspense } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { use } from "react";
-import ErrorFallback from "@/app/components/ErrorFallback";
+import ErrorFallback from "@/app/components/ui/ErrorFallback";
 
 export interface StudentLessonPageProps {
   params: Promise<{ studentId: string; lessonId: string }>;

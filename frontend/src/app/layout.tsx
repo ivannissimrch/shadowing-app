@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import AppContext from "./AppContext";
-import AlertDialog from "./components/AlertDialog";
+import AlertDialog from "./components/ui/AlertDialog";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",

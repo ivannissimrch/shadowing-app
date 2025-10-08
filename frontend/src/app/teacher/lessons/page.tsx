@@ -1,8 +1,8 @@
 "use client";
-import AssignLessonModal from "@/app/components/AssignLessonModal";
+import AssignLessonModal from "@/app/components/teacher/AssignLessonModal";
 import styles from "./page.module.css";
 import { useState } from "react";
-import Lessons from "@/app/components/Lessons";
+import Lessons from "@/app/components/lesson/Lessons";
 
 export default function LessonsPage() {
   const [assignModalOpen, setAssignModalOpen] = useState(false);
