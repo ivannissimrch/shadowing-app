@@ -1,0 +1,68 @@
+@import '../../shared.css';
+
+.buttonsContainer {
+  display: flex;
+  gap: var(--spacing-xl);
+  justify-content: center;
+  margin-top: var(--spacing-xl);
+}
+
+.form-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  background-color: var(--color-white);
+  color: var(--color-text-primary);
+  width: 100%;
+  height: 100%;
+  padding: 50px;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: var(--spacing-md);
+  margin-top: var(--spacing-md);
+}
+
+.passwordContainer {
+  margin: 0;
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.input {
+  padding: var(--input-padding);
+  margin-bottom: var(--spacing-md);
+  border: var(--input-border);
+  border-radius: var(--input-border-radius);
+  height: var(--input-height);
+  width: 100%;
+  box-sizing: border-box;
+  background-color: var(--color-white);
+  color: var(--color-black);
+}
+
+.eye {
+  position: absolute;
+  left: 95%;
+  bottom: 24px;
+  cursor: pointer;
+  color: gray;
+  visibility: visible;
+}
+
+.button {
+  composes: btn from '../../shared.css';
+  width: 100%;
+}
+
+@media (max-width: 1200px) {
+  .eye {
+    left: 93%;
+  }
+}

@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import styles from "../components/ErrorFallback.module.css";
+import styles from "@/styles/components/ui/ErrorFallback.module.css";
 
 export default function Error({
   error,
