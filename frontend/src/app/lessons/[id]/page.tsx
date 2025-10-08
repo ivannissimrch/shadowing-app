@@ -1,9 +1,9 @@
 "use client";
-import { LessonPracticeView } from "@/app/components/LessonPracticeView";
+import { LessonPracticeView } from "@/app/components/lesson/LessonPracticeView";
 import { ErrorBoundary } from "react-error-boundary";
-import SkeletonLoader from "@/app/components/SkeletonLoader";
+import SkeletonLoader from "@/app/components/ui/SkeletonLoader";
 import { Suspense, use } from "react";
-import ErrorFallback from "@/app/components/ErrorFallback";
+import ErrorFallback from "@/app/components/ui/ErrorFallback";
 
 export default function Practice({
   params,

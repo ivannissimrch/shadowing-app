@@ -1,0 +1,13 @@
+.student-info {
+  padding: var(--spacing-md);
+  margin-bottom: var(--spacing-md);
+  color: var(--color-black);
+}
+
+.student-info h2 {
+  margin-top: 0;
+}
+
+.student-info p {
+  margin: var(--spacing-sm) 0;
+}

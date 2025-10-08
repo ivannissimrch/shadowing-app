@@ -1,0 +1,32 @@
+@import '../../shared.css';
+
+.card {
+  composes: card-horizontal from '../../shared.css';
+  margin-bottom: var(--spacing-md);
+}
+
+.information-container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+  flex: 1;
+}
+
+.title {
+  composes: card-title from '../../shared.css';
+  font-size: x-large;
+  max-width: 600px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.status {
+  composes: badge from '../../shared.css';
+  width: fit-content;
+}
+
+.button {
+  composes: btn from '../../shared.css';
+  padding: var(--button-padding-lg);
+}
