@@ -87,11 +87,6 @@ api.interceptors.response.use(
           return Promise.reject(
             new Error(serverMessage || "Server error. Please try again later.")
           );
-
-        default:
-          return Promise.reject(
-            new Error(serverMessage || "An error occurred. Please try again.")
-          );
       }
     }
 

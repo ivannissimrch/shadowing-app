@@ -46,6 +46,7 @@ export default function LoginForm() {
       router.push(route);
     } catch (error: unknown) {
       if (error instanceof Error) {
+        console.error("Login error:", error.message);
         setErrorMessage(error.message);
       } else {
         setErrorMessage("An unknown error occurred, please try again.");
