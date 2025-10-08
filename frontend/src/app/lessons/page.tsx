@@ -1,10 +1,10 @@
 "use client";
 import styles from "./page.module.css";
-import StudentLessons from "../components/StudentLessons";
+import StudentLessons from "../components/student/StudentLessons";
 import { ErrorBoundary } from "react-error-boundary";
-import SkeletonLoader from "../components/SkeletonLoader";
+import SkeletonLoader from "../components/ui/SkeletonLoader";
 import { Suspense } from "react";
-import ErrorFallback from "../components/ErrorFallback";
+import ErrorFallback from "../components/ui/ErrorFallback";
 
 export default function Lessons() {
   return (

@@ -1,5 +1,5 @@
-import Footer from "../components/Footer";
-import TeacherHeader from "../components/TeacherHeader";
+import Footer from "../components/layout/Footer";
+import TeacherHeader from "../components/layout/TeacherHeader";
 import styles from "./layout.module.css";
 
 export default function LessonsLayout({
