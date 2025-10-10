@@ -7,7 +7,7 @@ import StudentSelect from "../student/StudentSelect";
 import SkeletonLoader from "../ui/SkeletonLoader";
 import { mutate } from "swr";
 import api from "../../helpers/axiosFetch";
-import { API_PATHS, API_KEYS } from "../../constants/apiKeys";
+import { API_PATHS } from "../../constants/apiKeys";
 
 interface AssignLessonModalProps {
   isOpen: boolean;
@@ -48,7 +48,7 @@ export default function AssignLessonModal({
       if (response.data.success) {
         setSelectedStudent("");
         onClose();
-        await mutate(API_KEYS.LESSONS);
+        await mutate(API_PATHS.LESSONS);
         //latter on add a success message with a toast
       }
     } catch (error: unknown) {

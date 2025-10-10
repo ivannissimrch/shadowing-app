@@ -6,12 +6,11 @@ import "react-h5-audio-player/lib/styles.css";
 import { useAppContext } from "../../AppContext";
 import { Lesson } from "../../Types";
 import { useRouter } from "next/navigation";
-import base64ToBlob from "../../helpers/base64ToBlob";
 import { ErrorBoundary } from "react-error-boundary";
 import SkeletonLoader from "../ui/SkeletonLoader";
 import { mutate } from "swr";
 import api from "../../helpers/axiosFetch";
-import { API_PATHS, API_KEYS } from "../../constants/apiKeys";
+import { API_PATHS } from "../../constants/apiKeys";
 
 interface RecorderProps {
   selectedLesson: Lesson | undefined;
@@ -92,14 +91,20 @@ export default function RecorderPanel({ selectedLesson }: RecorderProps) {
           setErrorMessage("Invalid audio data");
           return;
         }
-
         setIsSubmitting(true);
         setErrorMessage("");
         try {
+          // First, upload audio to Azure
+          const uploadResponse = await api.post(API_PATHS.UPLOAD_AUDIO, {
+            audioData: base64Audio,
+            lessonId: selectedLesson.id,
+          });
+
+          // Then save the Azure URL to database
           const response = await api.patch(
             API_PATHS.LESSON(selectedLesson.id),
             {
-              audio_file: base64Audio,
+              audio_file: uploadResponse.data.audioUrl,
             }
           );
 
@@ -111,7 +116,7 @@ export default function RecorderPanel({ selectedLesson }: RecorderProps) {
               "Your recording has been successfully submitted for review."
             );
           }
-          await mutate(API_KEYS.LESSON(selectedLesson.id));
+          await mutate(API_PATHS.LESSON(selectedLesson.id));
           router.push("/lessons");
         } catch (error) {
           console.error("Error submitting audio:", error);
@@ -132,9 +137,8 @@ export default function RecorderPanel({ selectedLesson }: RecorderProps) {
   useEffect(() => {
     if (selectedLesson?.audio_file) {
       try {
-        const blob = base64ToBlob(selectedLesson.audio_file);
-        const blobUrl = URL.createObjectURL(blob);
-        setAudioURL(blobUrl);
+        // It's an Azure URL - use directly
+        setAudioURL(selectedLesson.audio_file);
       } catch (error) {
         console.error("Error parsing audio data:", error);
         setErrorMessage("Error loading existing audio recording.");
