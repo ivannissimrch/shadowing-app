@@ -5,7 +5,7 @@ import useAlertMessageStyles from "../../hooks/useAlertMessageStyles";
 import { ErrorBoundary } from "react-error-boundary";
 import { mutate } from "swr";
 import api from "../../helpers/axiosFetch";
-import { API_PATHS, API_KEYS } from "../../constants/apiKeys";
+import { API_PATHS } from "../../constants/apiKeys";
 
 interface AddStudentProps {
   isAddStudentDialogOpen: boolean;
@@ -49,7 +49,7 @@ export default function AddStudent({
         setUsername("");
         setPassword("");
         closeAddStudentDialog();
-        await mutate(API_KEYS.USERS);
+        await mutate(API_PATHS.USERS);
       }
     } catch (error: unknown) {
       setErrorMessage((error as Error).message || "Error adding student");

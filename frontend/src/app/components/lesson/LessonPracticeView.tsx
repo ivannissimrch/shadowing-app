@@ -24,7 +24,7 @@ export function LessonPracticeView({ id }: { id: string }) {
           <div className={styles.grid}>
             <SegmentPlayer selectedLesson={selectedLesson} />
             <Image
-              src={`/images/${selectedLesson.image}.png`}
+              src={selectedLesson.image}
               alt="ESL lesson"
               quality={100}
               width={625}

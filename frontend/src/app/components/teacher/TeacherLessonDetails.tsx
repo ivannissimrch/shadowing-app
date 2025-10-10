@@ -30,7 +30,7 @@ export default function TeacherLessonDetails({
               <YouTubePlayer selectedLesson={selectedLesson} />
             </div>
             <Image
-              src={`/images/${selectedLesson.image}.png`}
+              src={selectedLesson.image}
               alt="Lesson Image"
               quality={100}
               width={625}
