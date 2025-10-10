@@ -10,7 +10,7 @@ import { ErrorBoundary } from "react-error-boundary";
 import SkeletonLoader from "../ui/SkeletonLoader";
 import { mutate } from "swr";
 import api from "../../helpers/axiosFetch";
-import { API_PATHS, API_KEYS } from "../../constants/apiKeys";
+import { API_PATHS } from "../../constants/apiKeys";
 
 interface RecorderProps {
   selectedLesson: Lesson | undefined;

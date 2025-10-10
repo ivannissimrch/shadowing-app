@@ -6,7 +6,7 @@ import useAlertMessageStyles from "../../hooks/useAlertMessageStyles";
 import { ErrorBoundary } from "react-error-boundary";
 import { mutate } from "swr";
 import api from "../../helpers/axiosFetch";
-import { API_PATHS, API_KEYS } from "../../constants/apiKeys";
+import { API_PATHS } from "../../constants/apiKeys";
 
 interface AddLessonProps {
   isAddLessonDialogOpen: boolean;
