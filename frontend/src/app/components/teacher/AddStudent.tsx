@@ -49,7 +49,7 @@ export default function AddStudent({
         setUsername("");
         setPassword("");
         closeAddStudentDialog();
-        await mutate(API_KEYS.USERS);
+        await mutate(API_PATHS.USERS);
       }
     } catch (error: unknown) {
       setErrorMessage((error as Error).message || "Error adding student");

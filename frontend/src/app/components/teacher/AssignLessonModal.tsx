@@ -48,7 +48,7 @@ export default function AssignLessonModal({
       if (response.data.success) {
         setSelectedStudent("");
         onClose();
-        await mutate(API_KEYS.LESSONS);
+        await mutate(API_PATHS.LESSONS);
         //latter on add a success message with a toast
       }
     } catch (error: unknown) {
