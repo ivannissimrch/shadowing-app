@@ -77,13 +77,16 @@ export default function AddLesson({
       imageFormData.append("imageName", formData.imageName);
 
       // Pass FormData directly as 2nd argument (not wrapped in object!)
-      const imageResponse = await api.post(API_PATHS.UPLOAD_IMAGE, imageFormData);
+      const imageResponse = await api.post(
+        API_PATHS.UPLOAD_IMAGE,
+        imageFormData
+      );
 
       const videoId = extractVideoId(formData.videoId);
 
       const response = await api.post(API_PATHS.LESSONS, {
         title: formData.title,
-        image: imageResponse.data.imageName,
+        image: imageResponse.data.imageUrl,
         videoId: videoId,
       });
 
@@ -95,7 +98,7 @@ export default function AddLesson({
         });
         setSelectedImage(null);
         closeAddLessonDialog();
-        await mutate(API_KEYS.ALL_LESSONS);
+        await mutate(API_PATHS.ALL_LESSONS);
       }
     } catch (error: unknown) {
       setErrorMessage((error as Error).message || "Error adding lesson");

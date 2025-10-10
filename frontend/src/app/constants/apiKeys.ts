@@ -55,6 +55,7 @@ export const API_PATHS = {
 
   // Uploads
   UPLOAD_IMAGE: "/api/upload-image",
+  UPLOAD_AUDIO: "/api/upload-audio",
 } as const;
 
 export default API_KEYS;
