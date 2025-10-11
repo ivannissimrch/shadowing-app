@@ -1,3 +1,5 @@
+import logger from "./logger";
+
 export function setItem(key: string, value: unknown) {
   try {
     if (value === undefined) {
@@ -6,7 +8,7 @@ export function setItem(key: string, value: unknown) {
     }
     window.localStorage.setItem(key, JSON.stringify(value));
   } catch (error) {
-    console.log(error);
+    logger.error(error);
   }
 }
 
@@ -15,6 +17,6 @@ export function getItem(key: string) {
     const item = window.localStorage.getItem(key);
     return item ? JSON.parse(item) : undefined;
   } catch (error) {
-    console.log(error);
+    logger.error(error);
   }
 }

@@ -6,6 +6,7 @@ import { useAppContext } from "../../AppContext";
 import { MdOutlineRemoveRedEye } from "react-icons/md";
 import api from "../../helpers/axiosFetch";
 import redirectBasedOnRole from "../../helpers/redirectBasedOnRole";
+import logger from "../../helpers/logger";
 
 export default function LoginForm() {
   const [username, setUsername] = useState("");
@@ -23,7 +24,7 @@ export default function LoginForm() {
         const route = redirectBasedOnRole(token);
         router.push(route);
       } catch (error) {
-        console.error("Invalid token:", error);
+        logger.error("Invalid token:", error);
         updateToken("");
       }
     }
@@ -46,7 +47,7 @@ export default function LoginForm() {
       router.push(route);
     } catch (error: unknown) {
       if (error instanceof Error) {
-        console.error("Login error:", error.message);
+        logger.error("Login error:", error.message);
         setErrorMessage(error.message);
       } else {
         setErrorMessage("An unknown error occurred, please try again.");
