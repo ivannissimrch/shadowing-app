@@ -1,5 +1,5 @@
 .panel {
-  background: #f5f7fe;
+  background: var(--color-bg-lighter);
   padding-top: var(--spacing-xl);
   text-align: center;
   box-shadow: var(--shadow-lg);
@@ -10,7 +10,7 @@
 .mic {
   padding: var(--spacing-xl);
   background: var(--color-bg-white);
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--color-border-gray);
   color: var(--color-black);
 }
 
@@ -18,17 +18,23 @@
   font-size: var(--spacing-3xl);
   display: block;
   margin-bottom: var(--spacing-md);
-  color: #ec4899;
+  color: var(--color-accent-pink);
 }
 
 .recordBtn {
-  background-color: #ef4444;
+  background-color: var(--color-accent-red);
   color: var(--color-white);
   padding: var(--button-padding);
   font-weight: var(--font-weight-bold);
   border: none;
+  border-radius: var(--radius-sm);
   margin: var(--spacing-sm);
   cursor: pointer;
+  transition: opacity var(--transition-base);
+}
+
+.recordBtn:hover {
+  opacity: 0.9;
 }
 
 .MediaRecorder {

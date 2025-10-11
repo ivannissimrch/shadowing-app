@@ -1,5 +1,6 @@
 @import '../../shared.css';
 
+/* Mobile-first styles */
 .studentsGrid {
   display: flex;
   flex-direction: column;
@@ -9,34 +10,38 @@
 .studentCard {
   composes: card-horizontal card-clickable from '../../shared.css';
   text-decoration: none;
+  padding: var(--spacing-sm);
+  min-height: 70px;
 }
 
 .studentTitle {
   margin: 0;
-  font-size: var(--font-size-xl);
+  font-size: var(--font-size-lg);
   font-weight: var(--font-weight-semibold);
   color: var(--color-text-primary);
 }
 
 .button {
   composes: btn from '../../shared.css';
-  width: 100px;
-  padding: var(--spacing-sm) 12px;
+  width: 80px;
+  padding: var(--spacing-6) var(--spacing-10);
+  font-size: var(--font-size-sm);
 }
 
-@media (max-width: 768px) {
+/* Tablet and up */
+@media (min-width: 769px) {
   .studentCard {
-    padding: var(--spacing-sm);
-    min-height: 70px;
+    padding: var(--card-padding);
+    min-height: 100px;
   }
 
   .studentTitle {
-    font-size: large;
+    font-size: var(--font-size-xl);
   }
 
   .button {
-    font-size: var(--font-size-sm);
-    padding: 6px 10px;
-    width: 80px;
+    font-size: var(--font-size-base);
+    padding: var(--spacing-sm) var(--spacing-12);
+    width: 100px;
   }
 }
