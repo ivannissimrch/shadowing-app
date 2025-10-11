@@ -1,13 +1,3 @@
-/**
- * Shared Component Styles
- * Standardized, reusable classes for buttons, cards, and common UI patterns
- * Import this file in components that need standardized styling
- */
-
-/* ========================================
-   BUTTONS
-   ======================================== */
-
 /* Base button - default primary button */
 .btn {
   display: inline-flex;
@@ -273,9 +263,23 @@
    LAYOUT HELPERS
    ======================================== */
 
+/* Container variants */
 .container {
   width: 100%;
   max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 var(--spacing-md);
+}
+
+.container-wide {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 var(--spacing-md);
+}
+
+.container-full {
+  width: 100%;
   margin: 0 auto;
   padding: 0 var(--spacing-md);
 }

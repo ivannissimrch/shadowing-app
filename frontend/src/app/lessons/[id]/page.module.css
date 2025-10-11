@@ -1,29 +1,30 @@
+/* Mobile-first styles */
 .main {
   display: flex;
   align-items: center;
   width: 100%;
   flex-direction: column;
-  background-color: #f5f7fe;
+  background-color: var(--color-bg-lighter);
   min-height: 100vh;
 }
 
 .container {
   width: 100%;
   max-width: 1400px;
-  padding: 20px 30px;
-  background-color: #f5f7fe;
+  padding: var(--spacing-15);
+  background-color: var(--color-bg-lighter);
   min-height: 100vh;
   margin: 0 auto;
 }
 
 .grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
+  grid-template-columns: 1fr;
+  gap: var(--spacing-15);
   width: 100%;
   max-width: 1400px;
-  margin: 0 auto 2rem auto;
-  color: black;
+  margin: 0 auto var(--spacing-xl) auto;
+  color: var(--color-black);
 }
 
 .grid > * {
@@ -36,30 +37,32 @@
   height: 100%;
 }
 
-@media (max-width: 1024px) {
+/* Larger than mobile */
+@media (min-width: 481px) {
+  .container {
+    padding: var(--spacing-15) var(--spacing-20);
+  }
+
   .grid {
-    gap: 25px;
-    max-width: 900px;
+    gap: var(--spacing-20);
   }
 }
 
-@media (max-width: 768px) {
+/* Tablet and up */
+@media (min-width: 769px) {
   .grid {
-    grid-template-columns: 1fr;
-    gap: 20px;
+    grid-template-columns: 1fr 1fr;
   }
 
   .container {
-    padding: 15px 20px;
+    padding: var(--spacing-20) var(--spacing-30);
   }
 }
 
-@media (max-width: 480px) {
-  .container {
-    padding: 15px;
-  }
-
+/* Desktop and up */
+@media (min-width: 1025px) {
   .grid {
-    gap: 15px;
+    gap: var(--spacing-10);
+    max-width: 1200px;
   }
 }

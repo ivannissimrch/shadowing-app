@@ -2,18 +2,20 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px 20px;
+  padding: var(--spacing-10) var(--spacing-20);
   background-color: var(--color-bg-white);
-  border-bottom: 1px solid #e0e0e0;
+  border-bottom: 1px solid var(--color-border-light);
   color: var(--color-primary);
 }
+
 .link {
   text-decoration: none;
+  transition: all var(--transition-base);
 }
 
 .link:hover {
   text-decoration: underline;
-  padding: 10px 15px;
+  padding: var(--spacing-10) var(--spacing-15);
   border-radius: var(--radius-sm);
   cursor: pointer;
 }
@@ -22,6 +24,6 @@
   background-color: var(--color-primary);
   color: var(--color-white);
   border: none;
-  padding: 10px 15px;
+  padding: var(--spacing-10) var(--spacing-15);
   border-radius: var(--radius-sm);
 }

@@ -20,7 +20,7 @@ export function LessonPracticeView({ id }: { id: string }) {
       }
     >
       {selectedLesson && (
-        <>
+        <div className={styles.container}>
           <div className={styles.grid}>
             <SegmentPlayer selectedLesson={selectedLesson} />
             <Image
@@ -33,7 +33,7 @@ export function LessonPracticeView({ id }: { id: string }) {
             />
           </div>
           <RecorderPanel selectedLesson={selectedLesson} />
-        </>
+        </div>
       )}
     </ErrorBoundary>
   );
