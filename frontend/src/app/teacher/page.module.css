@@ -1,78 +1,82 @@
+/* Mobile-first styles */
 .teacherDashboard {
   display: flex;
   flex-direction: column;
-  gap: 30px;
+  gap: var(--spacing-20);
 }
 
 .statsRow {
   display: flex;
-  gap: 20px;
+  flex-direction: column;
+  gap: var(--spacing-15);
   justify-content: space-between;
 }
 
 .statsCard {
   flex: 1;
-  background: white;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  padding: 16px;
+  background: var(--color-bg-white);
+  border: 1px solid var(--color-gray-light);
+  border-radius: var(--radius-sm);
+  padding: var(--spacing-12);
   text-align: center;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  box-shadow: var(--shadow-lg);
+  transition: all var(--transition-base);
 }
 
 .statsCard:hover {
-  box-shadow: 0 6px 25px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow-md);
   transform: translateY(-0.5px);
   cursor: pointer;
 }
 
 .statsCard h3 {
-  margin: 0 0 8px 0;
-  font-size: 1rem;
-  color: black;
-  font-weight: 600;
+  margin: 0 0 var(--spacing-sm) 0;
+  font-size: 0.9rem;
+  color: var(--color-black);
+  font-weight: var(--font-weight-semibold);
 }
 
 .statsNumber {
   margin: 0;
-  font-size: 2rem;
-  font-weight: bold;
-  color: #2563eb;
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-primary);
 }
 
 .studentsSection {
-  margin-top: 20px;
+  margin-top: var(--spacing-20);
 }
 
 .studentsSection h2 {
-  margin: 0 0 20px 0;
-  font-size: 1.8em;
-  color: #333;
+  margin: 0 0 var(--spacing-20) 0;
+  font-size: var(--font-size-xl);
+  color: var(--color-text-tertiary);
 }
 
-@media (max-width: 768px) {
+/* Tablet and up */
+@media (min-width: 769px) {
   .teacherDashboard {
-    gap: 20px;
+    gap: var(--spacing-30);
   }
 
   .statsRow {
-    flex-direction: column;
-    gap: 15px;
+    flex-direction: row;
+    gap: var(--spacing-20);
   }
 
   .statsCard {
-    padding: 12px;
+    padding: var(--spacing-md);
   }
 
   .statsCard h3 {
-    font-size: 0.9rem;
+    font-size: var(--font-size-base);
   }
 
   .statsNumber {
-    font-size: 1.5rem;
+    font-size: var(--font-size-2rem);
   }
 
   .studentsSection h2 {
-    font-size: 1.5rem;
+    font-size: var(--font-size-1-8);
   }
 }

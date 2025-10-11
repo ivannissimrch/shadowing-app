@@ -1,7 +1,7 @@
 .lessonsGrid {
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: var(--spacing-15);
 }
 
 .lessonsCard {
@@ -17,11 +17,17 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  transition: all var(--transition-base);
+}
+
+.lessonsCard:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
 }
 
 .lessonsCard h3 {
   margin: 0;
-  font-size: x-large;
+  font-size: var(--font-size-xl);
   font-weight: var(--font-weight-semibold);
   color: var(--color-black);
 }
@@ -34,6 +40,13 @@
   background-color: var(--color-primary);
   border-radius: var(--radius-sm);
   text-align: center;
-  padding: var(--spacing-sm) 12px;
+  padding: var(--spacing-sm) var(--spacing-12);
   width: 100px;
+  border: none;
+  cursor: pointer;
+  transition: background-color var(--transition-base);
+}
+
+.button:hover {
+  background-color: var(--color-primary-hover);
 }

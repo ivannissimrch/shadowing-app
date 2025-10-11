@@ -1,5 +1,6 @@
-@import '../../shared.css';
+@import "../../shared.css";
 
+/* Mobile-first styles */
 .buttonsContainer {
   display: flex;
   gap: var(--spacing-xl);
@@ -16,7 +17,7 @@
   color: var(--color-text-primary);
   width: 100%;
   height: 100%;
-  padding: 50px;
+  padding: var(--spacing-50);
 }
 
 .form {
@@ -49,20 +50,21 @@
 
 .eye {
   position: absolute;
-  left: 95%;
-  bottom: 24px;
+  left: 93%;
+  bottom: var(--spacing-lg);
   cursor: pointer;
-  color: gray;
+  color: var(--color-gray);
   visibility: visible;
 }
 
 .button {
-  composes: btn from '../../shared.css';
+  composes: btn from "../../shared.css";
   width: 100%;
 }
 
-@media (max-width: 1200px) {
+/* Desktop and up */
+@media (min-width: 1201px) {
   .eye {
-    left: 93%;
+    left: 95%;
   }
 }
