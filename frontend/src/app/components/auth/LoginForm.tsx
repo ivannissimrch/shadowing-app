@@ -7,6 +7,7 @@ import { MdOutlineRemoveRedEye } from "react-icons/md";
 import api from "../../helpers/axiosFetch";
 import redirectBasedOnRole from "../../helpers/redirectBasedOnRole";
 import logger from "../../helpers/logger";
+import { AuthResponse } from "@/app/Types";
 
 export default function LoginForm() {
   const [username, setUsername] = useState("");
@@ -36,16 +37,16 @@ export default function LoginForm() {
     setErrorMessage("");
 
     try {
-      const response = await api.post("/signin", {
+      const response = await api.post<AuthResponse>("/signin", {
         username: username,
         password: password,
       });
-      const { token } = response.data;
+      const { token } = response.data.data;
       updateToken(token);
       // Redirect based on role
       const route = redirectBasedOnRole(token);
       router.push(route);
-    } catch (error: unknown) {
+    } catch (error) {
       if (error instanceof Error) {
         logger.error("Login error:", error.message);
         setErrorMessage(error.message);

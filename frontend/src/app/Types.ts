@@ -43,7 +43,32 @@ export interface ApiResponse<T> {
   message?: string | null;
 }
 
+export interface SignInResponse {
+  data: {
+    token: string;
+  };
+}
+
+export interface Assignment {
+  id: string;
+  student_id: string;
+  lesson_id: string;
+  completed: boolean;
+  status: string;
+  assigned_by: string | null;
+  assigned_at: string;
+  completed_at: string | null;
+  updated_at: string;
+  audio_file: string | null;
+}
+
+export type AssignmentResponse = ApiResponse<Assignment>;
+export type AudioUploadResponse = ApiResponse<{ audioUrl: string }>;
 export type LessonResponse = ApiResponse<Lesson>;
 export type LessonsResponse = ApiResponse<Lesson[]>;
 export type UserResponse = ApiResponse<User>;
 export type AuthResponse = ApiResponse<{ token: string; user: User }>;
+export type ImageResponse = ApiResponse<{
+  imageName: string;
+  imageUrl: string;
+}>;

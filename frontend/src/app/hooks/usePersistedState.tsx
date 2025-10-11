@@ -1,5 +1,4 @@
-import { useEffect } from "react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { getItem, setItem } from "../helpers/localStorage";
 
 export function usePersistedState<T>(key: string, initialValue: T) {
