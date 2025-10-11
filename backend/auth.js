@@ -1,5 +1,6 @@
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
+import logger from "./helpers/logger.js";
 
 export const comparePasswords = (password, hash) => {
   return bcrypt.compare(password, hash);
@@ -43,7 +44,7 @@ export const protect = (req, res, next) => {
     req.user = user;
     next();
   } catch (e) {
-    console.error(e);
+    logger.error(e);
     res.status(401);
     res.json({ message: "not valid token" });
     return;

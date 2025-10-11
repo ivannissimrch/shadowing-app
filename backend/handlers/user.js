@@ -1,5 +1,6 @@
 import { db } from "../server.js"; // Import the database connection from server.js
 import { comparePasswords, createJWT, hashPassword } from "../auth.js";
+import logger from "../helpers/logger.js";
 
 export const createNewUser = async (req, res) => {
   try {
@@ -55,7 +56,7 @@ export const createNewUser = async (req, res) => {
       },
     });
   } catch (error) {
-    console.error("Error creating user:", error);
+    logger.error("Error creating user:", error);
     res.status(500).json({
       success: false,
       message: "Internal server error",
@@ -110,7 +111,7 @@ export const signin = async (req, res) => {
       },
     });
   } catch (error) {
-    console.error("Error during signin:", error);
+    logger.error("Error during signin:", error);
     res.status(500).json({
       success: false,
       message: "Internal server error",

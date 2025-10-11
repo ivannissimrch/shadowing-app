@@ -11,6 +11,7 @@ import SkeletonLoader from "../ui/SkeletonLoader";
 import { mutate } from "swr";
 import api from "../../helpers/axiosFetch";
 import { API_PATHS } from "../../constants/apiKeys";
+import logger from "@/app/helpers/logger";
 
 interface RecorderProps {
   selectedLesson: Lesson | undefined;
@@ -48,8 +49,8 @@ export default function RecorderPanel({ selectedLesson }: RecorderProps) {
       mediaRecorder.start();
       setRecording(true);
       setPaused(false);
-    } catch (error) {
-      console.error("Error accessing microphone:", error);
+    } catch (error: unknown) {
+      logger.error("Error accessing microphone:", error);
       openAlertDialog(
         "Microphone Access Error",
         "Could not access your microphone. Please check your permissions and try again."
@@ -119,7 +120,7 @@ export default function RecorderPanel({ selectedLesson }: RecorderProps) {
           await mutate(API_PATHS.LESSON(selectedLesson.id));
           router.push("/lessons");
         } catch (error) {
-          console.error("Error submitting audio:", error);
+          logger.error("Error submitting audio:", error);
           setErrorMessage("An error occurred while submitting your audio.");
         } finally {
           setIsSubmitting(false);
@@ -129,7 +130,7 @@ export default function RecorderPanel({ selectedLesson }: RecorderProps) {
         }
       };
     } catch (error) {
-      console.error("Error submitting audio:", error);
+      logger.error("Error submitting audio:", error);
       setErrorMessage("An error occurred while submitting your audio.");
     }
   }
@@ -140,7 +141,7 @@ export default function RecorderPanel({ selectedLesson }: RecorderProps) {
         // It's an Azure URL - use directly
         setAudioURL(selectedLesson.audio_file);
       } catch (error) {
-        console.error("Error parsing audio data:", error);
+        logger.error("Error parsing audio data:", error);
         setErrorMessage("Error loading existing audio recording.");
       }
     }

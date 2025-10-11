@@ -1,5 +1,7 @@
+import logger from "../helpers/logger.js";
+
 export default function handleError(err, req, res, next) {
-  console.error(err.stack);
+  logger.error(err.stack);
   if (err.status) {
     res.status(err.status).json({ error: err.message });
   } else {
