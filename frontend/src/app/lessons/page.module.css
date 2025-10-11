@@ -1,6 +1,6 @@
 .title {
-  font-size: 2rem;
-  color: black;
-  font-weight: bold;
-  margin: 20px 0;
+  font-size: var(--font-size-2rem);
+  color: var(--color-black);
+  font-weight: var(--font-weight-bold);
+  margin: var(--spacing-20) 0;
 }
