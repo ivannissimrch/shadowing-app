@@ -5,6 +5,7 @@ import { protect } from "./auth.js";
 import { signin } from "./handlers/user.js";
 import pool from "./db.js";
 import handleError from "./handlers/handleError.js";
+import logger from "./helpers/logger.js";
 const app = express();
 
 // Initialize database tables if they do not already exist
@@ -52,9 +53,9 @@ const initDatabase = async () => {
       );
     `);
 
-    console.log("Database tables initialized");
+    logger.info("Database tables initialized");
   } catch (error) {
-    console.error("Error initializing database:", error);
+    logger.error("Error initializing database:", error);
   }
 };
 

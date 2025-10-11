@@ -1,3 +1,5 @@
+import logger from "./logger";
+
 export default function base64ToBlob(
   base64Data: string,
   contentType = "audio/webm"
@@ -16,7 +18,7 @@ export default function base64ToBlob(
     const byteArray = new Uint8Array(byteNumbers);
     return new Blob([byteArray], { type: contentType });
   } catch (error) {
-    console.error("Error converting base64 to Blob:", error);
+    logger.error("Error converting base64 to Blob:", error);
     throw new Error("Invalid base64 string");
   }
 }
