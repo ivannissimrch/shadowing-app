@@ -6,6 +6,7 @@ import { ErrorBoundary } from "react-error-boundary";
 import { mutate } from "swr";
 import api from "../../helpers/axiosFetch";
 import { API_PATHS } from "../../constants/apiKeys";
+import { AuthResponse } from "@/app/Types";
 
 interface AddStudentProps {
   isAddStudentDialogOpen: boolean;
@@ -40,7 +41,7 @@ export default function AddStudent({
     setErrorMessage("");
 
     try {
-      const response = await api.post(API_PATHS.USERS, {
+      const response = await api.post<AuthResponse>(API_PATHS.USERS, {
         username,
         password,
       });
@@ -51,7 +52,7 @@ export default function AddStudent({
         closeAddStudentDialog();
         await mutate(API_PATHS.USERS);
       }
-    } catch (error: unknown) {
+    } catch (error) {
       setErrorMessage((error as Error).message || "Error adding student");
     } finally {
       setIsSubmitting(false);
