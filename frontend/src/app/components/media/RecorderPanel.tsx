@@ -12,6 +12,7 @@ import { mutate } from "swr";
 import api from "../../helpers/axiosFetch";
 import { API_PATHS } from "../../constants/apiKeys";
 import logger from "@/app/helpers/logger";
+import { AudioUploadResponse, LessonResponse } from "../../Types";
 
 interface RecorderProps {
   selectedLesson: Lesson | undefined;
@@ -49,7 +50,7 @@ export default function RecorderPanel({ selectedLesson }: RecorderProps) {
       mediaRecorder.start();
       setRecording(true);
       setPaused(false);
-    } catch (error: unknown) {
+    } catch (error) {
       logger.error("Error accessing microphone:", error);
       openAlertDialog(
         "Microphone Access Error",
@@ -96,16 +97,19 @@ export default function RecorderPanel({ selectedLesson }: RecorderProps) {
         setErrorMessage("");
         try {
           // First, upload audio to Azure
-          const uploadResponse = await api.post(API_PATHS.UPLOAD_AUDIO, {
-            audioData: base64Audio,
-            lessonId: selectedLesson.id,
-          });
+          const uploadResponse = await api.post<AudioUploadResponse>(
+            API_PATHS.UPLOAD_AUDIO,
+            {
+              audioData: base64Audio,
+              lessonId: selectedLesson.id,
+            }
+          );
 
           // Then save the Azure URL to database
-          const response = await api.patch(
+          const response = await api.patch<LessonResponse>(
             API_PATHS.LESSON(selectedLesson.id),
             {
-              audio_file: uploadResponse.data.audioUrl,
+              audio_file: uploadResponse.data.data.audioUrl,
             }
           );
 

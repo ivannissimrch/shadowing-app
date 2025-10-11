@@ -8,6 +8,7 @@ import SkeletonLoader from "../ui/SkeletonLoader";
 import { mutate } from "swr";
 import api from "../../helpers/axiosFetch";
 import { API_PATHS } from "../../constants/apiKeys";
+import { AssignmentResponse } from "@/app/Types";
 
 interface AssignLessonModalProps {
   isOpen: boolean;
@@ -41,17 +42,20 @@ export default function AssignLessonModal({
     setErrorMessage("");
 
     try {
-      const response = await api.post(API_PATHS.ASSIGN_LESSON(lessonId), {
-        studentId: selectedStudent,
-      });
+      const response = await api.post<AssignmentResponse>(
+        API_PATHS.ASSIGN_LESSON(lessonId),
+        {
+          studentId: selectedStudent,
+        }
+      );
 
       if (response.data.success) {
         setSelectedStudent("");
         onClose();
         await mutate(API_PATHS.LESSONS);
-        //latter on add a success message with a toast
+        //later on add a success message with a toast
       }
-    } catch (error: unknown) {
+    } catch (error) {
       setErrorMessage((error as Error).message || "Error assigning lesson");
     } finally {
       setIsSubmitting(false);

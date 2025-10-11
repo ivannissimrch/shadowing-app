@@ -47,12 +47,14 @@ export const createNewUser = async (req, res) => {
 
     res.json({
       success: true,
-      token,
-      user: {
-        id: newUser.id,
-        username: newUser.username,
-        name: newUser.name,
-        role: newUser.role,
+      data: {
+        token,
+        user: {
+          id: newUser.id,
+          username: newUser.username,
+          name: newUser.name,
+          role: newUser.role,
+        },
       },
     });
   } catch (error) {
@@ -102,12 +104,14 @@ export const signin = async (req, res) => {
 
     res.json({
       success: true,
-      token,
-      user: {
-        id: user.id,
-        username: user.username,
-        name: user.name,
-        role: user.role,
+      data: {
+        token,
+        user: {
+          id: user.id,
+          username: user.username,
+          name: user.name,
+          role: user.role,
+        },
       },
     });
   } catch (error) {
