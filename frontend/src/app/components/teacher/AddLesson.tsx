@@ -7,6 +7,7 @@ import { ErrorBoundary } from "react-error-boundary";
 import { mutate } from "swr";
 import api from "../../helpers/axiosFetch";
 import { API_PATHS } from "../../constants/apiKeys";
+import { LessonResponse, ImageResponse } from "@/app/Types";
 
 interface AddLessonProps {
   isAddLessonDialogOpen: boolean;
@@ -77,16 +78,16 @@ export default function AddLesson({
       imageFormData.append("imageName", formData.imageName);
 
       // Pass FormData directly as 2nd argument (not wrapped in object!)
-      const imageResponse = await api.post(
+      const imageResponse = await api.post<ImageResponse>(
         API_PATHS.UPLOAD_IMAGE,
         imageFormData
       );
 
       const videoId = extractVideoId(formData.videoId);
 
-      const response = await api.post(API_PATHS.LESSONS, {
+      const response = await api.post<LessonResponse>(API_PATHS.LESSONS, {
         title: formData.title,
-        image: imageResponse.data.imageUrl,
+        image: imageResponse.data.data.imageUrl,
         videoId: videoId,
       });
 
@@ -100,7 +101,7 @@ export default function AddLesson({
         closeAddLessonDialog();
         await mutate(API_PATHS.ALL_LESSONS);
       }
-    } catch (error: unknown) {
+    } catch (error) {
       setErrorMessage((error as Error).message || "Error adding lesson");
     } finally {
       setIsSubmitting(false);

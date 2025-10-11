@@ -46,8 +46,10 @@ router.post(
 
     res.json({
       success: true,
-      imageName: fileName,
-      imageUrl: imageUrl, // Return the Azure blob URL
+      data: {
+        imageName: fileName,
+        imageUrl: imageUrl, // Return the Azure blob URL
+      },
       message: "Image uploaded successfully",
     });
   })
@@ -72,7 +74,9 @@ router.post(
 
     res.json({
       success: true,
-      audioUrl: audioUrl,
+      data: {
+        audioUrl: audioUrl,
+      },
     });
   })
 );
