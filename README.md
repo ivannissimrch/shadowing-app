@@ -13,6 +13,8 @@ An app to help English learners improve their spoken English by mimicking native
 
 ---
 
+## Live Site: [ESL-APP](shadowing-app-spec.vercel.app)
+
 ![App image](./frontend/public/images/eslApp.png)
 
 ---
@@ -51,13 +53,6 @@ An app to help English learners improve their spoken English by mimicking native
 
 ---
 
-## Stretch Goals
-
-- AI-generated feedback (Azure Speech API)
-- Video playback in 10–15 second looped segments
-
----
-
 ## Student User Stories
 
 - As a student, I want to choose a video and shadow it by repeating.
@@ -82,8 +77,6 @@ An app to help English learners improve their spoken English by mimicking native
 - [x] Audio recording component (mic access + playback)
 - [x] Display native and user audio side-by-side
 - [x] Basic UI styling with CSS
-- [ ] Get pronunciation feedback using Azure Speech API stretch goal
-- [ ] Video segment playback (looping 10–15s)
 
 ---
 
@@ -93,5 +86,11 @@ An app to help English learners improve their spoken English by mimicking native
 - [x] Role-based routing (student/teacher)
 - [x] Save recordings linked to logged-in users
 - [x] Teacher dashboard: upload videos
-- [ ] view student submissions
-- [ ] Feedback text input & save per recording
+- [x] view student submissions
+
+## Stretch Goals
+
+- AI-generated feedback (Azure Speech API)
+- Video playback in 10–15 second looped segments
+- Video segment playback (looping 10–15s)
+- Get pronunciation feedback using Azure Speech API stretch goal
