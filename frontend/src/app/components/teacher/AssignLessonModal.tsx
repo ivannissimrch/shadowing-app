@@ -6,9 +6,9 @@ import useAlertMessageStyles from "../../hooks/useAlertMessageStyles";
 import StudentSelect from "../student/StudentSelect";
 import SkeletonLoader from "../ui/SkeletonLoader";
 import { mutate } from "swr";
-import api from "../../helpers/axiosFetch";
 import { API_PATHS } from "../../constants/apiKeys";
 import { AssignmentResponse } from "@/app/Types";
+import { useSWRMutationHook } from "@/app/hooks/useSWRMutation";
 
 interface AssignLessonModalProps {
   isOpen: boolean;
@@ -24,9 +24,7 @@ export default function AssignLessonModal({
   lessonTitle,
 }: AssignLessonModalProps) {
   const [selectedStudent, setSelectedStudent] = useState<string | "">("");
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-
   const {
     StyledDialog,
     StyledDialogContent,
@@ -34,32 +32,37 @@ export default function AssignLessonModal({
     StyledButton,
     StyledFormControl,
   } = useAlertMessageStyles();
+  const { trigger, isMutating, error } = useSWRMutationHook<
+    AssignmentResponse,
+    { studentId: string }
+  >(
+    API_PATHS.ASSIGN_LESSON(lessonId),
+    { method: "POST" },
+    {
+      onSuccess: () => {
+        mutate(API_PATHS.LESSONS);
+      },
+    }
+  );
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    setIsSubmitting(true);
     setErrorMessage("");
 
-    try {
-      const response = await api.post<AssignmentResponse>(
-        API_PATHS.ASSIGN_LESSON(lessonId),
-        {
-          studentId: selectedStudent,
-        }
-      );
+    const response = await trigger({
+      studentId: selectedStudent,
+    });
 
-      if (response.data.success) {
-        setSelectedStudent("");
-        onClose();
-        await mutate(API_PATHS.LESSONS);
-        //later on add a success message with a toast
-      }
-    } catch (error) {
-      setErrorMessage((error as Error).message || "Error assigning lesson");
-    } finally {
-      setIsSubmitting(false);
+    if (!response || error) {
+      setErrorMessage(
+        error instanceof Error ? error.message : "Error assigning lesson"
+      );
+      return;
     }
+
+    setSelectedStudent("");
+    onClose();
   };
 
   return (
@@ -106,9 +109,9 @@ export default function AssignLessonModal({
         <StyledButton
           variant="contained"
           onClick={handleSubmit}
-          disabled={isSubmitting || !selectedStudent}
+          disabled={isMutating || !selectedStudent}
         >
-          {isSubmitting ? "Assigning..." : "Assign Lesson"}
+          {isMutating ? "Assigning..." : "Assign Lesson"}
         </StyledButton>
       </StyledDialogActions>
     </StyledDialog>

@@ -17,7 +17,6 @@ api.interceptors.request.use(
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
-
     // Only set Content-Type to application/json if we're not sending FormData
     // For FormData, axios will automatically set the correct multipart/form-data header
     if (!(config.data instanceof FormData)) {
