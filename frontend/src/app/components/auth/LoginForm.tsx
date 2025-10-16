@@ -4,10 +4,10 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAppContext } from "../../AppContext";
 import { MdOutlineRemoveRedEye } from "react-icons/md";
-import api from "../../helpers/axiosFetch";
 import redirectBasedOnRole from "../../helpers/redirectBasedOnRole";
 import logger from "../../helpers/logger";
 import { AuthResponse } from "@/app/Types";
+import { useSWRMutationHook } from "@/app/hooks/useSWRMutation";
 
 export default function LoginForm() {
   const [username, setUsername] = useState("");
@@ -15,8 +15,12 @@ export default function LoginForm() {
   const router = useRouter();
   const { updateToken, token } = useAppContext();
   const [passwordType, setPasswordType] = useState("password");
-  const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+
+  const { isMutating, trigger, error } = useSWRMutationHook<
+    AuthResponse,
+    { username: string; password: string }
+  >("/signin", { method: "POST" });
 
   useEffect(() => {
     if (token) {
@@ -33,29 +37,24 @@ export default function LoginForm() {
 
   async function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
-    setIsLoading(true);
     setErrorMessage("");
 
-    try {
-      const response = await api.post<AuthResponse>("/signin", {
-        username: username,
-        password: password,
-      });
-      const { token } = response.data.data;
-      updateToken(token);
-      // Redirect based on role
-      const route = redirectBasedOnRole(token);
-      router.push(route);
-    } catch (error) {
-      if (error instanceof Error) {
-        logger.error("Login error:", error.message);
-        setErrorMessage(error.message);
-      } else {
-        setErrorMessage("An unknown error occurred, please try again.");
-      }
-    } finally {
-      setIsLoading(false);
+    const response = await trigger({
+      username: username,
+      password: password,
+    });
+
+    if (!response?.data) {
+      setErrorMessage(error instanceof Error ? error.message : "Login error");
+      logger.error("Login error:", error);
+      return;
     }
+
+    const { token } = response.data;
+    updateToken(token);
+
+    const route = redirectBasedOnRole(token);
+    router.push(route);
   }
 
   return (
@@ -103,8 +102,8 @@ export default function LoginForm() {
           </span>
         </div>
 
-        <button className={styles.button} type="submit" disabled={isLoading}>
-          {isLoading ? "Loading..." : "Login"}
+        <button className={styles.button} type="submit" disabled={isMutating}>
+          {isMutating ? "Logging in..." : "Login"}
         </button>
       </form>
       {errorMessage && <p className={styles.error}>{errorMessage}</p>}

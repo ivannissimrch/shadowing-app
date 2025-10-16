@@ -9,10 +9,10 @@ import { useRouter } from "next/navigation";
 import { ErrorBoundary } from "react-error-boundary";
 import SkeletonLoader from "../ui/SkeletonLoader";
 import { mutate } from "swr";
-import api from "../../helpers/axiosFetch";
 import { API_PATHS } from "../../constants/apiKeys";
 import logger from "@/app/helpers/logger";
 import { AudioUploadResponse, LessonResponse } from "../../Types";
+import { useSWRMutationHook } from "@/app/hooks/useSWRMutation";
 
 interface RecorderProps {
   selectedLesson: Lesson | undefined;
@@ -27,8 +27,18 @@ export default function RecorderPanel({ selectedLesson }: RecorderProps) {
   const [audioURL, setAudioURL] = useState<string | null>(null); // URL of the recorded audio
   const [blob, setBlob] = useState<Blob | null>(null);
   const router = useRouter();
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const { trigger: triggerUploadAudio, isMutating: isAudioMutating } =
+    useSWRMutationHook<
+      AudioUploadResponse,
+      { audioData: string; lessonId: string }
+    >(API_PATHS.UPLOAD_AUDIO, { method: "POST" });
+
+  const { trigger: triggerUpdateLesson, isMutating: isLessonMutating } =
+    useSWRMutationHook<LessonResponse, { audio_file: string | null }>(
+      selectedLesson?.id ? API_PATHS.LESSON(selectedLesson.id) : null,
+      { method: "PATCH" }
+    );
 
   async function startRecording() {
     try {
@@ -93,29 +103,27 @@ export default function RecorderPanel({ selectedLesson }: RecorderProps) {
           setErrorMessage("Invalid audio data");
           return;
         }
-        setIsSubmitting(true);
         setErrorMessage("");
         try {
           // First, upload audio to Azure
-          const uploadResponse = await api.post<AudioUploadResponse>(
-            API_PATHS.UPLOAD_AUDIO,
-            {
-              audioData: base64Audio,
-              lessonId: selectedLesson.id,
-            }
-          );
+          const uploadResponse = await triggerUploadAudio({
+            audioData: base64Audio,
+            lessonId: selectedLesson.id,
+          });
+
+          if (!uploadResponse) {
+            setErrorMessage("Error uploading audio");
+            return;
+          }
 
           // Then save the Azure URL to database
-          const response = await api.patch<LessonResponse>(
-            API_PATHS.LESSON(selectedLesson.id),
-            {
-              audio_file: uploadResponse.data.data.audioUrl,
-            }
-          );
+          const response = await triggerUpdateLesson({
+            audio_file: uploadResponse.data.audioUrl,
+          });
 
           setRecording(false);
           setPaused(false);
-          if (response.data.success) {
+          if (response) {
             openAlertDialog(
               "Submission Successful",
               "Your recording has been successfully submitted for review."
@@ -127,7 +135,6 @@ export default function RecorderPanel({ selectedLesson }: RecorderProps) {
           logger.error("Error submitting audio:", error);
           setErrorMessage("An error occurred while submitting your audio.");
         } finally {
-          setIsSubmitting(false);
           setBlob(null);
           setAudioURL(null);
           setRecording(false);
@@ -157,6 +164,8 @@ export default function RecorderPanel({ selectedLesson }: RecorderProps) {
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedLesson?.audio_file]);
+
+  const isSubmitting = isAudioMutating || isLessonMutating;
 
   if (errorMessage) {
     return (
