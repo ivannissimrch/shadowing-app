@@ -4,7 +4,7 @@ import { useState } from "react";
 import useAlertMessageStyles from "../../hooks/useAlertMessageStyles";
 import { ErrorBoundary } from "react-error-boundary";
 import { mutate } from "swr";
-import api from "../../helpers/axiosFetch";
+import { useSWRMutationHook } from "../../hooks/useSWRMutation";
 import { API_PATHS } from "../../constants/apiKeys";
 import { AuthResponse } from "@/app/Types";
 
@@ -20,7 +20,6 @@ export default function AddStudent({
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const {
     StyledDialog,
@@ -29,6 +28,19 @@ export default function AddStudent({
     StyledButton,
   } = useAlertMessageStyles();
 
+  const { trigger, isMutating, error } = useSWRMutationHook<
+    AuthResponse,
+    { username: string; password: string }
+  >(
+    API_PATHS.USERS,
+    { method: "POST" },
+    {
+      onSuccess: () => {
+        mutate(API_PATHS.USERS);
+      },
+    }
+  );
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -36,27 +48,22 @@ export default function AddStudent({
       setErrorMessage("Please fill in all fields");
       return;
     }
-
-    setIsSubmitting(true);
     setErrorMessage("");
+    const result = await trigger({
+      username,
+      password,
+    });
 
-    try {
-      const response = await api.post<AuthResponse>(API_PATHS.USERS, {
-        username,
-        password,
-      });
-
-      if (response.data.success) {
-        setUsername("");
-        setPassword("");
-        closeAddStudentDialog();
-        await mutate(API_PATHS.USERS);
-      }
-    } catch (error) {
-      setErrorMessage((error as Error).message || "Error adding student");
-    } finally {
-      setIsSubmitting(false);
+    if (!result || error) {
+      setErrorMessage(
+        error instanceof Error ? error.message : "Error adding student"
+      );
+      return;
     }
+
+    setUsername("");
+    setPassword("");
+    closeAddStudentDialog();
   };
 
   return (
@@ -131,9 +138,9 @@ export default function AddStudent({
             variant="contained"
             type="submit"
             onClick={handleSubmit}
-            disabled={isSubmitting}
+            disabled={isMutating}
           >
-            {isSubmitting ? "Adding..." : "Add Student"}
+            {isMutating ? "Adding..." : "Add Student"}
           </StyledButton>
         </StyledDialogActions>
       </StyledDialog>

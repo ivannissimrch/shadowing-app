@@ -5,9 +5,9 @@ import extractVideoId from "../../helpers/extractVideoId";
 import useAlertMessageStyles from "../../hooks/useAlertMessageStyles";
 import { ErrorBoundary } from "react-error-boundary";
 import { mutate } from "swr";
-import api from "../../helpers/axiosFetch";
 import { API_PATHS } from "../../constants/apiKeys";
 import { LessonResponse, ImageResponse } from "@/app/Types";
+import { useSWRMutationHook } from "@/app/hooks/useSWRMutation";
 
 interface AddLessonProps {
   isAddLessonDialogOpen: boolean;
@@ -18,7 +18,6 @@ export default function AddLesson({
   isAddLessonDialogOpen,
   closeAddLessonDialog,
 }: AddLessonProps) {
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [formData, setFormData] = useState({
     title: "",
@@ -32,6 +31,35 @@ export default function AddLesson({
     StyledDialogActions,
     StyledButton,
   } = useAlertMessageStyles();
+  const {
+    trigger: triggerLesson,
+    isMutating: isMutatingLesson,
+    error: lessonError,
+  } = useSWRMutationHook<
+    LessonResponse,
+    {
+      title: string;
+      image: string;
+      videoId: string;
+    }
+  >(
+    API_PATHS.LESSONS,
+    {
+      method: "POST",
+    },
+    {
+      onSuccess: () => {
+        mutate(API_PATHS.ALL_LESSONS);
+      },
+    }
+  );
+
+  const { trigger: triggerImageUpload, error: imageError } = useSWRMutationHook<
+    ImageResponse,
+    FormData
+  >(API_PATHS.UPLOAD_IMAGE, {
+    method: "POST",
+  });
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
@@ -51,7 +79,7 @@ export default function AddLesson({
     const file = e.target.files?.[0];
     if (file) {
       setSelectedImage(file);
-      const fileName = file.name.split(".")[0]; // Get name without extension
+      const fileName = file.name.split(".")[0]; // Get name without extension but what if two files with same name ? or extension is not png?
       setFormData((prev) => ({
         ...prev,
         imageName: fileName,
@@ -62,50 +90,52 @@ export default function AddLesson({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Validate BEFORE setting loading state
     if (!formData.title || !formData.videoId || !selectedImage) {
       setErrorMessage("Please fill in all required fields");
       return;
     }
 
     setErrorMessage("");
-    setIsSubmitting(true);
 
-    try {
-      // First, upload the image
-      const imageFormData = new FormData();
-      imageFormData.append("image", selectedImage);
-      imageFormData.append("imageName", formData.imageName);
+    // First, upload the image
+    const imageFormData = new FormData();
+    imageFormData.append("image", selectedImage);
+    imageFormData.append("imageName", formData.imageName);
 
-      // Pass FormData directly as 2nd argument (not wrapped in object!)
-      const imageResponse = await api.post<ImageResponse>(
-        API_PATHS.UPLOAD_IMAGE,
-        imageFormData
+    const imageUrl = await triggerImageUpload(imageFormData);
+    // Check if image upload failed
+    if (!imageUrl || imageError) {
+      setErrorMessage(
+        (imageError as Error)?.message || "Error uploading image"
       );
-
-      const videoId = extractVideoId(formData.videoId);
-
-      const response = await api.post<LessonResponse>(API_PATHS.LESSONS, {
-        title: formData.title,
-        image: imageResponse.data.data.imageUrl,
-        videoId: videoId,
-      });
-
-      if (response.data.success) {
-        setFormData({
-          title: "",
-          videoId: "",
-          imageName: "",
-        });
-        setSelectedImage(null);
-        closeAddLessonDialog();
-        await mutate(API_PATHS.ALL_LESSONS);
-      }
-    } catch (error) {
-      setErrorMessage((error as Error).message || "Error adding lesson");
-    } finally {
-      setIsSubmitting(false);
+      return;
     }
+
+    const videoId = extractVideoId(formData.videoId);
+    const lessonResult = await triggerLesson({
+      title: formData.title,
+      image: imageUrl.data.imageUrl,
+      videoId: videoId || "",
+    });
+
+    // Check if lesson creation failed
+    if (!lessonResult || lessonError) {
+      setErrorMessage(
+        lessonError instanceof Error
+          ? lessonError.message
+          : "Error adding lesson"
+      );
+      return;
+    }
+
+    // Success - Reset form and close dialog
+    setFormData({
+      title: "",
+      videoId: "",
+      imageName: "",
+    });
+    setSelectedImage(null);
+    closeAddLessonDialog();
   };
 
   return (
@@ -207,9 +237,9 @@ export default function AddLesson({
           <StyledButton
             variant="contained"
             onClick={handleSubmit}
-            disabled={isSubmitting}
+            disabled={isMutatingLesson}
           >
-            {isSubmitting ? "Adding..." : "Add Lesson"}
+            {isMutatingLesson ? "Adding..." : "Add Lesson"}
           </StyledButton>
         </StyledDialogActions>
       </StyledDialog>
