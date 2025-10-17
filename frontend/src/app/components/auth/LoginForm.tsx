@@ -44,13 +44,13 @@ export default function LoginForm() {
       password: password,
     });
 
-    if (!response?.data) {
+    if (!response.token) {
       setErrorMessage(error instanceof Error ? error.message : "Login error");
       logger.error("Login error:", error);
       return;
     }
 
-    const { token } = response.data;
+    const { token } = response;
     updateToken(token);
 
     const route = redirectBasedOnRole(token);
