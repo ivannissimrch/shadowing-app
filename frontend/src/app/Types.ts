@@ -67,7 +67,7 @@ export type AudioUploadResponse = ApiResponse<{ audioUrl: string }>;
 export type LessonResponse = ApiResponse<Lesson>;
 export type LessonsResponse = ApiResponse<Lesson[]>;
 export type UserResponse = ApiResponse<User>;
-export type AuthResponse = ApiResponse<{ token: string; user: User }>;
+export type AuthResponse = { token: string; user: User };
 export type ImageResponse = ApiResponse<{
   imageName: string;
   imageUrl: string;
