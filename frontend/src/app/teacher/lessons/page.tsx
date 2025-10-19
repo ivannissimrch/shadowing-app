@@ -1,11 +1,13 @@
 "use client";
 import AssignLessonModal from "@/app/components/teacher/AssignLessonModal";
+import AddLesson from "@/app/components/teacher/AddLesson";
 import styles from "./page.module.css";
 import { useState } from "react";
 import Lessons from "@/app/components/lesson/Lessons";
 
 export default function LessonsPage() {
   const [assignModalOpen, setAssignModalOpen] = useState(false);
+  const [isAddLessonDialogOpen, setIsAddLessonDialogOpen] = useState(false);
   const [selectedLesson, setSelectedLesson] = useState<{
     id: string;
     title: string;
@@ -23,7 +25,15 @@ export default function LessonsPage() {
 
   return (
     <section className={styles.lessonsSection}>
-      <h2>Lessons</h2>
+      <div className={styles.sectionHeader}>
+        <h2>Lessons</h2>
+        <button
+          className={styles.addButton}
+          onClick={() => setIsAddLessonDialogOpen(true)}
+        >
+          + Add Lesson
+        </button>
+      </div>
       <Lessons onAssignLesson={handleAssignLesson} />
       {selectedLesson && (
         <AssignLessonModal
@@ -33,6 +43,10 @@ export default function LessonsPage() {
           lessonTitle={selectedLesson.title}
         />
       )}
+      <AddLesson
+        isAddLessonDialogOpen={isAddLessonDialogOpen}
+        closeAddLessonDialog={() => setIsAddLessonDialogOpen(false)}
+      />
     </section>
   );
 }

@@ -9,9 +9,11 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: var(--spacing-10) var(--spacing-20);
+  padding: var(--spacing-md) var(--spacing-20);
   gap: var(--spacing-20);
   flex-wrap: wrap;
+  max-width: 1400px;
+  margin: 0 auto;
 }
 
 .nav {
@@ -66,24 +68,6 @@
   color: var(--color-white);
 }
 
-.navButton {
-  padding: var(--spacing-12);
-  background-color: transparent;
-  color: var(--color-primary);
-  border: 1px solid var(--color-primary);
-  border-radius: var(--radius-sm);
-  cursor: pointer;
-  font-weight: var(--font-weight-medium);
-  transition: all var(--transition-base);
-  width: 100%;
-  text-align: center;
-}
-
-.navButton:hover {
-  background-color: var(--color-primary);
-  color: var(--color-white);
-}
-
 /* Tablet and up */
 @media (min-width: 769px) {
   .headerContainer {
@@ -107,22 +91,19 @@
     flex-direction: row;
     align-items: center;
     flex-wrap: nowrap;
-    gap: var(--spacing-10);
+    gap: var(--spacing-md);
     width: auto;
     flex: 1;
     order: initial;
     padding: 0;
+    margin-left: var(--spacing-3xl);
   }
 
   .link {
-    padding: var(--spacing-10) var(--spacing-15);
+    padding: var(--spacing-10) var(--spacing-md);
     width: auto;
     text-align: left;
-  }
-
-  .navButton {
-    padding: var(--spacing-10) var(--spacing-15);
-    width: auto;
-    text-align: center;
+    font-weight: var(--font-weight-medium);
+    font-size: var(--font-size-base);
   }
 }
