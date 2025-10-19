@@ -455,4 +455,39 @@ router.patch(
   })
 );
 
+// Delete lesson (teacher only)
+router.delete(
+  "/lessons/:lessonId",
+  asyncHandler(async (req, res, next) => {
+    if (req.user.role !== "teacher") {
+      return res.status(403).json({
+        success: false,
+        message: "Forbidden: Teachers only",
+      });
+    }
+
+    const { lessonId } = req.params;
+
+    // Check if lesson exists
+    const lessonCheck = await db.query("SELECT id FROM lessons WHERE id = $1", [
+      lessonId,
+    ]);
+
+    if (lessonCheck.rows.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "Lesson not found",
+      });
+    }
+
+    // Delete the lesson (CASCADE will delete related assignments)
+    await db.query("DELETE FROM lessons WHERE id = $1", [lessonId]);
+
+    res.json({
+      success: true,
+      message: "Lesson deleted successfully",
+    });
+  })
+);
+
 export default router;
