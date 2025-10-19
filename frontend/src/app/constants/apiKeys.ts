@@ -21,6 +21,8 @@ export const API_PATHS = {
     `/api/teacher/student/${studentId}/lessons`,
   TEACHER_STUDENT_LESSON: (studentId: string, lessonId: string) =>
     `/api/teacher/student/${studentId}/lesson/${lessonId}`,
+  TEACHER_STUDENT_LESSON_FEEDBACK: (studentId: string, lessonId: string) =>
+    `/api/teacher/student/${studentId}/lesson/${lessonId}/feedback`,
 
   // Uploads
   UPLOAD_IMAGE: "/api/upload-image",

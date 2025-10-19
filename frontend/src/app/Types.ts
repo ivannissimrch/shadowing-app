@@ -22,6 +22,7 @@ export interface Lesson {
   lesson_end_time: string | null;
   created_at: string;
   updated_at: string;
+  feedback: string | null;
 }
 
 //User can be either a student or an admin

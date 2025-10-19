@@ -7,6 +7,7 @@ import Image from "next/image";
 import AudioPlayer from "react-h5-audio-player";
 import "react-h5-audio-player/lib/styles.css";
 import { API_PATHS } from "../../constants/apiKeys";
+import FeedBack from "./FeedBack";
 
 interface TeacherLessonDetailsProps {
   idInfo: { studentId: string; lessonId: string };
@@ -24,7 +25,7 @@ export default function TeacherLessonDetails({
   return (
     <>
       {selectedLesson && (
-        <div className={styles.container}>
+        <section className={styles.container}>
           <div className={styles.grid}>
             <div className={styles.videoWrapper}>
               <YouTubePlayer selectedLesson={selectedLesson} />
@@ -44,7 +45,8 @@ export default function TeacherLessonDetails({
               showJumpControls={false}
             />
           </div>
-        </div>
+          <FeedBack idsInfo={idInfo} selectedLesson={selectedLesson} />
+        </section>
       )}
     </>
   );
