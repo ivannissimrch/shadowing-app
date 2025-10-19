@@ -275,6 +275,49 @@ router.post(
   })
 );
 
+// Delete student (teacher only)
+router.delete(
+  "/users/:userId",
+  asyncHandler(async (req, res, next) => {
+    if (req.user.role !== "teacher") {
+      return res.status(403).json({
+        success: false,
+        message: "Forbidden: Teachers only",
+      });
+    }
+
+    const { userId } = req.params;
+
+    // Check if user exists and is a student
+    const userCheck = await db.query(
+      "SELECT id, role FROM users WHERE id = $1",
+      [userId]
+    );
+
+    if (userCheck.rows.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    if (userCheck.rows[0].role !== "student") {
+      return res.status(403).json({
+        success: false,
+        message: "Cannot delete non-student users",
+      });
+    }
+
+    // Delete the user (CASCADE will delete related assignments)
+    await db.query("DELETE FROM users WHERE id = $1", [userId]);
+
+    res.json({
+      success: true,
+      message: "Student deleted successfully",
+    });
+  })
+);
+
 //get all lessons (for teacher dashboard)
 router.get(
   "/all-lessons",
