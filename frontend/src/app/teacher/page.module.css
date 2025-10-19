@@ -47,10 +47,37 @@
   margin-top: var(--spacing-20);
 }
 
+.sectionHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-20);
+  gap: var(--spacing-md);
+  flex-wrap: wrap;
+}
+
 .studentsSection h2 {
-  margin: 0 0 var(--spacing-20) 0;
+  margin: 0;
   font-size: var(--font-size-xl);
   color: var(--color-text-tertiary);
+}
+
+.addButton {
+  padding: var(--spacing-10) var(--spacing-md);
+  background-color: var(--color-primary);
+  color: var(--color-white);
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-weight: var(--font-weight-medium);
+  font-size: var(--font-size-sm);
+  transition: all var(--transition-base);
+  white-space: nowrap;
+}
+
+.addButton:hover {
+  background-color: var(--color-primary-hover);
+  transform: translateY(-1px);
 }
 
 /* Tablet and up */
