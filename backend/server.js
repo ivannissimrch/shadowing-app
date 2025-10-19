@@ -49,7 +49,8 @@ const initDatabase = async () => {
         completed_at TIMESTAMP,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         UNIQUE(student_id, lesson_id),
-        audio_file TEXT
+        audio_file TEXT,
+        feedback TEXT
       );
     `);
 

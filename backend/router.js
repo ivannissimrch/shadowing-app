@@ -110,7 +110,7 @@ router.get(
     const userId = req.user.id;
 
     const result = await db.query(
-      `SELECT l.*, a.status, a.completed, a.assigned_at, a.completed_at, a.audio_file
+      `SELECT l.*, a.status, a.completed, a.assigned_at, a.completed_at, a.audio_file, a.feedback
        FROM lessons l
        JOIN assignments a ON l.id = a.lesson_id
        WHERE a.student_id = $1 AND l.id = $2`,
@@ -362,12 +362,48 @@ router.get(
     }
     const { studentId, lessonId } = req.params;
     const result = await db.query(
-      `SELECT l.*, a.status, a.completed, a.assigned_at, a.completed_at, a.audio_file
+      `SELECT l.*, a.status, a.completed, a.assigned_at, a.completed_at, a.audio_file, a.feedback
        FROM lessons l
        JOIN assignments a ON l.id = a.lesson_id
        WHERE a.student_id = $1 AND l.id = $2`,
       [studentId, lessonId]
     );
+
+    res.json({
+      success: true,
+      data: result.rows[0],
+    });
+  })
+);
+
+// Update feedback for student assignment (teacher only)
+router.patch(
+  "/teacher/student/:studentId/lesson/:lessonId/feedback",
+  asyncHandler(async (req, res, next) => {
+    if (req.user.role !== "teacher") {
+      return res.status(403).json({
+        success: false,
+        message: "Forbidden: Teachers only",
+      });
+    }
+
+    const { studentId, lessonId } = req.params;
+    const { feedback } = req.body;
+
+    const result = await db.query(
+      `UPDATE assignments
+       SET feedback = $1, updated_at = CURRENT_TIMESTAMP
+       WHERE student_id = $2 AND lesson_id = $3
+       RETURNING *`,
+      [feedback, studentId, lessonId]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "Assignment not found",
+      });
+    }
 
     res.json({
       success: true,
