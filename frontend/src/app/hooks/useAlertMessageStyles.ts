@@ -7,15 +7,15 @@ import { styled } from "@mui/material/styles";
 
 export const StyledDialog = styled(Dialog)(() => ({
   "& .MuiDialog-paper": {
-    borderRadius: "12px",
+    borderRadius: "16px",
     minWidth: "400px",
     maxWidth: "500px",
-    boxShadow: "0 20px 40px rgba(0, 0, 0, 0.15)",
-    backgroundColor: "#fefefe",
+    boxShadow: "0 20px 50px rgba(0, 0, 0, 0.2)",
+    backgroundColor: "#ffffff",
   },
   "& .MuiBackdrop-root": {
-    backgroundColor: "rgba(224, 242, 254, 0.8)",
-    backdropFilter: "blur(4px)",
+    backgroundColor: "rgba(15, 23, 42, 0.6)",
+    backdropFilter: "blur(8px)",
   },
 }));
 
@@ -33,24 +33,24 @@ export const StyledDialogContent = styled(DialogContent)({
   },
   "& label": {
     fontWeight: 600,
-    color: "#374151",
+    color: "#1e293b",
     fontSize: "14px",
   },
   "& input": {
     padding: "12px 16px",
-    border: "2px solid #bae6fd",
-    borderRadius: "8px",
+    border: "2px solid #e2e8f0",
+    borderRadius: "10px",
     fontSize: "16px",
     backgroundColor: "#ffffff",
-    color: "#374151",
+    color: "#1e293b",
     transition: "all 0.2s ease",
     "&:focus": {
       outline: "none",
-      borderColor: "#0ea5e9",
-      boxShadow: "0 0 0 3px rgba(14, 165, 233, 0.1)",
+      borderColor: "#2563eb",
+      boxShadow: "0 0 0 3px rgba(37, 99, 235, 0.1)",
     },
     "&::placeholder": {
-      color: "#9ca3af",
+      color: "#94a3b8",
     },
   },
 });
@@ -62,50 +62,56 @@ export const StyledDialogActions = styled(DialogActions)({
 });
 
 export const StyledButton = styled(Button)(({ variant }) => ({
-  borderRadius: "8px",
-  padding: "10px 24px",
+  borderRadius: "10px",
+  padding: "12px 24px",
   fontWeight: 600,
   textTransform: "none",
-  fontSize: "14px",
+  fontSize: "15px",
+  transition: "all 0.2s ease",
   ...(variant === "contained" && {
-    backgroundColor: "#0ea5e9",
-    boxShadow: "0 4px 12px rgba(14, 165, 233, 0.4)",
+    background: "linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%)",
+    boxShadow: "0 4px 14px rgba(37, 99, 235, 0.4)",
     "&:hover": {
-      backgroundColor: "#0284c7",
-      boxShadow: "0 6px 16px rgba(14, 165, 233, 0.5)",
+      transform: "translateY(-2px)",
+      boxShadow: "0 6px 20px rgba(37, 99, 235, 0.5)",
+    },
+    "&:active": {
+      transform: "translateY(0)",
     },
   }),
   ...(variant === "outlined" && {
-    borderColor: "#bae6fd",
-    color: "#6b7280",
+    borderColor: "#cbd5e1",
+    borderWidth: "2px",
+    color: "#475569",
     "&:hover": {
-      borderColor: "#7dd3fc",
-      backgroundColor: "#f0f9ff",
+      borderColor: "#94a3b8",
+      backgroundColor: "#f8fafc",
+      borderWidth: "2px",
     },
   }),
 }));
 
 export const StyledFormControl = styled(FormControl)({
   "& .MuiOutlinedInput-root": {
-    borderRadius: "8px",
+    borderRadius: "10px",
     backgroundColor: "#ffffff",
     "& fieldset": {
-      borderColor: "#bae6fd",
+      borderColor: "#e2e8f0",
       borderWidth: "2px",
     },
     "&:hover fieldset": {
-      borderColor: "#7dd3fc",
+      borderColor: "#cbd5e1",
     },
     "&.Mui-focused fieldset": {
-      borderColor: "#0ea5e9",
-      boxShadow: "0 0 0 3px rgba(14, 165, 233, 0.1)",
+      borderColor: "#2563eb",
+      boxShadow: "0 0 0 3px rgba(37, 99, 235, 0.1)",
     },
   },
   "& .MuiInputLabel-root": {
-    color: "#374151",
+    color: "#1e293b",
     fontWeight: 600,
     "&.Mui-focused": {
-      color: "#0ea5e9",
+      color: "#2563eb",
     },
   },
 });

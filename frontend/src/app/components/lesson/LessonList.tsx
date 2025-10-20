@@ -5,6 +5,7 @@ import { useSWRAxios } from "../../hooks/useSWRAxios";
 import { API_PATHS } from "../../constants/apiKeys";
 import { useState } from "react";
 import DeleteLessonModal from "../teacher/DeleteLessonModal";
+import { FaBook, FaTrash, FaUserPlus } from "react-icons/fa";
 
 interface LessonListProps {
   onAssignLesson: (lesson: { id: string; title: string }) => void;
@@ -34,19 +35,27 @@ export default function LessonList({ onAssignLesson }: LessonListProps) {
         {lessons &&
           lessons.map((lesson: Lesson) => (
             <div key={lesson.id} className={styles.lessonsCard}>
-              <h3>{lesson.title}</h3>
-              <div>
+              <div className={styles.cardHeader}>
+                <div className={styles.iconWrapper}>
+                  <FaBook />
+                </div>
+              </div>
+              <div className={styles.cardBody}>
+                <h3 className={styles.lessonTitle}>{lesson.title}</h3>
+              </div>
+              <div className={styles.buttonGroup}>
+                <button
+                  className={styles.assignButton}
+                  onClick={() => onAssignLesson(lesson)}
+                >
+                  <FaUserPlus /> Assign
+                </button>
                 <button
                   className={styles.deleteButton}
                   onClick={() => handleDeleteLesson(lesson)}
+                  title="Delete lesson"
                 >
-                  Delete
-                </button>
-                <button
-                  className={styles.button}
-                  onClick={() => onAssignLesson(lesson)}
-                >
-                  Assign
+                  <FaTrash />
                 </button>
               </div>
             </div>

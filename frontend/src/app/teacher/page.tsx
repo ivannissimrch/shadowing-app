@@ -3,6 +3,7 @@ import styles from "./page.module.css";
 import Students from "../components/student/Students";
 import AddStudent from "../components/teacher/AddStudent";
 import { useState } from "react";
+import { FaUserPlus } from "react-icons/fa";
 
 export default function TeacherPage() {
   const [isAddStudentDialogOpen, setIsAddStudentDialogOpen] = useState(false);
@@ -17,7 +18,7 @@ export default function TeacherPage() {
             className={styles.addButton}
             onClick={() => setIsAddStudentDialogOpen(true)}
           >
-            + Add Student
+            <FaUserPlus /> Add Student
           </button>
         </div>
         <Students />

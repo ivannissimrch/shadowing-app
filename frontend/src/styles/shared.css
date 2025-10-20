@@ -100,7 +100,7 @@
   background: var(--color-bg-white);
   border-radius: var(--card-border-radius);
   box-shadow: var(--card-shadow);
-  padding: var(--spacing-md);
+  padding: 0;
   width: 100%;
   color: var(--color-black);
   transition: box-shadow var(--transition-base);
