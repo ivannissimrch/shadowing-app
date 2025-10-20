@@ -6,6 +6,7 @@ import { useSWRAxios } from "../../hooks/useSWRAxios";
 import { API_PATHS } from "../../constants/apiKeys";
 import { useState } from "react";
 import DeleteStudentModal from "../teacher/DeleteStudentModal";
+import { FaUserGraduate, FaEye, FaTrash } from "react-icons/fa";
 
 export default function StudentList() {
   const { data: students } = useSWRAxios<Student[]>(API_PATHS.USERS);
@@ -31,19 +32,28 @@ export default function StudentList() {
         {students &&
           students.map((student: Student) => (
             <div key={student.id} className={styles.studentCard}>
-              <h3 className={styles.studentTitle}>{student.username}</h3>
+              <div className={styles.cardHeader}>
+                <div className={styles.iconWrapper}>
+                  <FaUserGraduate />
+                </div>
+              </div>
+              <div className={styles.cardBody}>
+                <h3 className={styles.studentTitle}>{student.username}</h3>
+                <p className={styles.studentSubtitle}>Student</p>
+              </div>
               <div className={styles.buttonGroup}>
                 <Link
                   href={`/teacher/student/${student.id}`}
-                  className={styles.button}
+                  className={styles.viewButton}
                 >
-                  Details
+                  <FaEye /> View Details
                 </Link>
                 <button
                   onClick={() => handleDeleteStudent(student)}
                   className={styles.deleteButton}
+                  title="Delete student"
                 >
-                  Delete
+                  <FaTrash />
                 </button>
               </div>
             </div>

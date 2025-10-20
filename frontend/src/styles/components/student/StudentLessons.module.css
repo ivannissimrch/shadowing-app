@@ -1,9 +1,32 @@
+/* Mobile-first styles */
 .cards-container {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-20);
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--spacing-md);
   width: 100%;
   min-height: max-content;
+}
+
+/* Tablet */
+@media (min-width: 769px) {
+  .cards-container {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Desktop */
+@media (min-width: 1024px) {
+  .cards-container {
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--spacing-lg);
+  }
+}
+
+/* Large desktop */
+@media (min-width: 1440px) {
+  .cards-container {
+    grid-template-columns: repeat(4, 1fr);
+  }
 }
 
 .skeleton-card {
