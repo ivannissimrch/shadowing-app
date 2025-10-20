@@ -1,0 +1,70 @@
+.controlsContainer {
+  margin-top: 15px;
+  padding: 15px;
+  background-color: #f3f4f6;
+  border-radius: 8px;
+}
+
+.currentTime {
+  margin-bottom: 10px;
+  font-size: 14px;
+  color: #6b7280;
+}
+
+.buttonsContainer {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+}
+
+.button {
+  padding: 8px 16px;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.setStartButton {
+  background-color: #10b981;
+}
+
+.setStartButton:hover {
+  background-color: #059669;
+}
+
+.setEndButton {
+  background-color: #ef4444;
+}
+
+.setEndButton:hover {
+  background-color: #dc2626;
+}
+
+.loopButton {
+  background-color: #6b7280;
+}
+
+.loopButton.active {
+  background-color: #3b82f6;
+}
+
+.loopButton:hover {
+  opacity: 0.9;
+}
+
+.clearButton {
+  background-color: #9ca3af;
+}
+
+.clearButton:hover {
+  background-color: #6b7280;
+}
+
+.segmentInfo {
+  font-size: 13px;
+  color: #374151;
+}
