@@ -4,6 +4,7 @@ import AddLesson from "@/app/components/teacher/AddLesson";
 import styles from "./page.module.css";
 import { useState } from "react";
 import Lessons from "@/app/components/lesson/Lessons";
+import { FaPlus } from "react-icons/fa";
 
 export default function LessonsPage() {
   const [assignModalOpen, setAssignModalOpen] = useState(false);
@@ -31,7 +32,7 @@ export default function LessonsPage() {
           className={styles.addButton}
           onClick={() => setIsAddLessonDialogOpen(true)}
         >
-          + Add Lesson
+          <FaPlus /> Add Lesson
         </button>
       </div>
       <Lessons onAssignLesson={handleAssignLesson} />
