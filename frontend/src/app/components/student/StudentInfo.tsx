@@ -1,7 +1,7 @@
 "use client";
 import { useSWRAxios } from "../../hooks/useSWRAxios";
 import { Student } from "../../Types";
-import styles from "@/styles/components/student/StudentInfo.module.css";
+import styles from "./StudentInfo.module.css";
 import { API_PATHS } from "../../constants/apiKeys";
 
 export default function StudentInfo({ id }: { id: string }) {

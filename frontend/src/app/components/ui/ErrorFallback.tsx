@@ -1,4 +1,4 @@
-import styles from "@/styles/components/ui/ErrorFallback.module.css";
+import styles from "./ErrorFallback.module.css";
 
 interface ErrorFallbackProps {
   error: Error;

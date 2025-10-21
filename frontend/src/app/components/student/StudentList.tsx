@@ -1,5 +1,5 @@
 "use client";
-import styles from "@/styles/components/student/StudentList.module.css";
+import styles from "./StudentList.module.css";
 import { Student } from "../../Types";
 import Link from "next/link";
 import { useSWRAxios } from "../../hooks/useSWRAxios";

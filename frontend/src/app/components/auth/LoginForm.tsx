@@ -1,5 +1,5 @@
 "use client";
-import styles from "@/styles/components/auth/LoginForm.module.css";
+import styles from "./LoginForm.module.css";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAppContext } from "../../AppContext";

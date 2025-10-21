@@ -2,7 +2,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import { usePathname } from "next/navigation";
-import styles from "@/styles/components/layout/TeacherHeader.module.css";
+import styles from "./TeacherHeader.module.css";
 import Logout from "../auth/Logout";
 
 export default function TeacherHeader() {

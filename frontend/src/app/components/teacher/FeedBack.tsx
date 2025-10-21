@@ -1,4 +1,4 @@
-import styles from "@/styles/components/teacher/FeedBak.module.css";
+import styles from "./FeedBack.module.css";
 import { useState } from "react";
 import { useSWRMutationHook } from "@/app/hooks/useSWRMutation";
 import { API_PATHS } from "@/app/constants/apiKeys";
