@@ -1,5 +1,5 @@
 import { Lesson } from "../../Types";
-import styles from "@/styles/components/media/SegmentPlayer.module.css";
+import styles from "./SegmentPlayer.module.css";
 import YouTubePlayer from "./YouTubePlayer";
 
 interface SegmentPlayerProps {

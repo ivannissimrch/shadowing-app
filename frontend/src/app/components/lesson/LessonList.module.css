@@ -1,26 +1,25 @@
-@import '../../shared.css';
+@import '../../../styles/shared.css';
 
 /* Mobile-first styles */
-.studentsGrid {
+.lessonsGrid {
   display: grid;
   grid-template-columns: 1fr;
   gap: var(--spacing-lg);
 }
 
-.studentCard {
-  composes: card from '../../shared.css';
-  text-decoration: none;
-  padding: 0;
+.lessonsCard {
+  composes: card from '../../../styles/shared.css';
   min-height: 280px;
   display: flex;
   flex-direction: column;
+  padding: 0;
   overflow: hidden;
   transition: all 0.3s ease;
   border: 1px solid var(--color-gray-light);
   position: relative;
 }
 
-.studentCard::before {
+.lessonsCard::before {
   content: '';
   position: absolute;
   top: 0;
@@ -28,35 +27,32 @@
   right: 0;
   bottom: 0;
   border-radius: var(--card-border-radius);
-  box-shadow: 0 0 0 0 rgba(59, 130, 246, 0);
+  box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
   transition: box-shadow 0.3s ease;
   pointer-events: none;
   z-index: -1;
 }
 
-.studentCard:hover::before {
-  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1), 0 8px 24px rgba(0, 0, 0, 0.12);
+.lessonsCard:hover::before {
+  box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1), 0 8px 24px rgba(0, 0, 0, 0.12);
 }
 
-.studentCard:hover {
-  border-color: var(--color-primary);
+.lessonsCard:hover {
+  border-color: #10b981;
 }
 
 .cardHeader {
   background: var(--color-primary);
   padding: var(--spacing-xl);
   display: flex;
-  flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: var(--spacing-md);
-  min-height: 140px;
-  position: relative;
+  min-height: 100px;
 }
 
 .iconWrapper {
-  width: 80px;
-  height: 80px;
+  width: 60px;
+  height: 60px;
   border-radius: 50%;
   background-color: rgba(255, 255, 255, 0.2);
   display: flex;
@@ -65,52 +61,28 @@
   font-size: var(--font-size-2xl);
   color: white;
   border: 3px solid rgba(255, 255, 255, 0.3);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 .cardBody {
-  padding: var(--spacing-lg);
-  text-align: center;
   flex: 1;
   display: flex;
-  flex-direction: column;
+  align-items: center;
   justify-content: center;
-  gap: var(--spacing-xs);
+  padding: var(--spacing-lg);
 }
 
-.studentTitle {
+.lessonTitle {
   margin: 0;
-  font-size: var(--font-size-xl);
+  font-size: var(--font-size-lg);
   font-weight: var(--font-weight-bold);
   color: var(--color-text-primary);
-}
-
-.studentSubtitle {
-  margin: 0;
-  font-size: var(--font-size-sm);
-  color: var(--color-text-secondary);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  font-weight: var(--font-weight-semibold);
-}
-
-.statusBadge {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-xs);
-  padding: var(--spacing-xs) var(--spacing-sm);
-  background-color: rgba(16, 185, 129, 0.2);
-  color: white;
-  border-radius: var(--radius-pill);
-  font-size: var(--font-size-xs);
-  font-weight: var(--font-weight-semibold);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-}
-
-.badgeIcon {
-  font-size: var(--font-size-xs);
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  line-height: 1.4;
 }
 
 .buttonGroup {
@@ -120,7 +92,7 @@
   background-color: #f9fafb;
 }
 
-.viewButton {
+.assignButton {
   flex: 1;
   display: flex;
   align-items: center;
@@ -130,18 +102,17 @@
   font-weight: var(--font-weight-semibold);
   padding: var(--spacing-sm) var(--spacing-md);
   border-radius: var(--radius-md);
-  background: var(--color-primary);
+  background: var(--color-primary-light);
   color: white;
   border: none;
   cursor: pointer;
   transition: all 0.2s ease;
-  text-decoration: none;
 }
 
-.viewButton:hover {
+.assignButton:hover {
   transform: translateY(-1px);
-  background: var(--color-primary-hover);
-  box-shadow: 0 4px 16px rgba(8, 145, 178, 0.4);
+  background: var(--color-primary);
+  box-shadow: 0 4px 16px rgba(30, 64, 175, 0.4);
 }
 
 .deleteButton {
@@ -169,39 +140,39 @@
 
 /* Tablet */
 @media (min-width: 769px) {
-  .studentsGrid {
+  .lessonsGrid {
     grid-template-columns: repeat(2, 1fr);
   }
 
-  .studentCard {
+  .lessonsCard {
     min-height: 300px;
   }
 }
 
 /* Desktop */
 @media (min-width: 1024px) {
-  .studentsGrid {
+  .lessonsGrid {
     grid-template-columns: repeat(3, 1fr);
     gap: var(--spacing-xl);
   }
 
-  .studentCard {
+  .lessonsCard {
     min-height: 320px;
   }
 
-  .studentTitle {
-    font-size: var(--font-size-2xl);
+  .lessonTitle {
+    font-size: var(--font-size-xl);
   }
 
   .iconWrapper {
-    width: 90px;
-    height: 90px;
+    width: 70px;
+    height: 70px;
   }
 }
 
 /* Large desktop */
 @media (min-width: 1440px) {
-  .studentsGrid {
+  .lessonsGrid {
     grid-template-columns: repeat(4, 1fr);
   }
 }

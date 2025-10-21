@@ -1,7 +1,7 @@
 "use client";
 import { useAppContext } from "../../AppContext";
 import Logout from "../auth/Logout";
-import styles from "@/styles/components/layout/Header.module.css";
+import styles from "./Header.module.css";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 

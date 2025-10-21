@@ -1,6 +1,6 @@
 "use client";
 import { useAppContext } from "../../AppContext";
-import styles from "@/styles/components/layout/Footer.module.css";
+import styles from "./Footer.module.css";
 
 export default function Footer() {
   const { token } = useAppContext();

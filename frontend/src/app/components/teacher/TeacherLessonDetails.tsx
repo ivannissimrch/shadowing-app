@@ -1,7 +1,7 @@
 "use client";
 import { useSWRAxios } from "../../hooks/useSWRAxios";
 import { Lesson } from "../../Types";
-import styles from "@/styles/components/teacher/TeacherLessonDetails.module.css";
+import styles from "./TeacherLessonDetails.module.css";
 import YouTubePlayer from "../media/YouTubePlayer";
 import Image from "next/image";
 import AudioPlayer from "react-h5-audio-player";
