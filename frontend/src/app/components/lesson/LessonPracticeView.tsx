@@ -1,5 +1,5 @@
 "use client";
-import styles from "@/styles/components/lesson/LessonPracticeView.module.css";
+import styles from "./LessonPracticeView.module.css";
 import SegmentPlayer from "../media/SegmentPlayer";
 import RecorderPanel from "../media/RecorderPanel";
 import Image from "next/image";

@@ -1,5 +1,5 @@
 "use client";
-import styles from "@/styles/components/media/RecorderPanel.module.css";
+import styles from "./RecorderPanel.module.css";
 import { useState, useRef, useEffect } from "react";
 import AudioPlayer from "react-h5-audio-player";
 import "react-h5-audio-player/lib/styles.css";
