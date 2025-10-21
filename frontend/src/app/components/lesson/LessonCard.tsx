@@ -1,4 +1,4 @@
-import styles from "@/styles/components/lesson/LessonCard.module.css";
+import styles from "./LessonCard.module.css";
 import Link from "next/link";
 import { Lesson } from "../../Types";
 import { FaBook, FaCheckCircle, FaHourglassHalf, FaPlayCircle, FaArrowRight } from "react-icons/fa";

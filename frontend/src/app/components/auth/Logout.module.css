@@ -1,0 +1,10 @@
+@import "../../../styles/shared.css";
+
+.logoutButton {
+  composes: btn btn-error from "../../../styles/shared.css";
+  padding: 10px 15px;
+}
+
+.logoutButton:hover {
+  text-decoration: underline;
+}

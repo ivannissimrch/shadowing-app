@@ -2,7 +2,7 @@
 import { useSWRAxios } from "../../hooks/useSWRAxios";
 import { Lesson } from "../../Types";
 import TeacherLessonCard from "./TeacherLessonCard";
-import styles from "@/styles/components/teacher/TeacherLessonsList.module.css";
+import styles from "./TeacherLessonsList.module.css";
 import { API_PATHS } from "../../constants/apiKeys";
 
 export default function TeacherLessonsList({ id }: { id: string }) {

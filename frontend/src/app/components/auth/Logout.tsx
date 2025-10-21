@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { useAppContext } from "../../AppContext";
-import styles from "@/styles/components/auth/Logout.module.css";
+import styles from "./Logout.module.css";
 
 export default function Logout() {
   const { updateToken } = useAppContext();

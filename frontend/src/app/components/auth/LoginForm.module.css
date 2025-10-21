@@ -1,4 +1,4 @@
-@import "../../shared.css";
+@import "../../../styles/shared.css";
 
 /* Mobile-first styles */
 .buttonsContainer {
@@ -58,7 +58,7 @@
 }
 
 .button {
-  composes: btn from "../../shared.css";
+  composes: btn from "../../../styles/shared.css";
   width: 100%;
 }
 

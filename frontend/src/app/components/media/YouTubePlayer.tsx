@@ -2,7 +2,7 @@
 import YouTube, { YouTubeProps, YouTubePlayer as YTPlayer } from "react-youtube";
 import { Lesson } from "../../Types";
 import { useRef, useState, useEffect } from "react";
-import styles from "@/styles/components/media/YouTubePlayer.module.css";
+import styles from "./YouTubePlayer.module.css";
 
 interface YouTubePlayerProps {
   selectedLesson: Lesson | undefined;

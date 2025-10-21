@@ -1,7 +1,7 @@
-@import '../../shared.css';
+@import '../../../styles/shared.css';
 
 .card {
-  composes: card from '../../shared.css';
+  composes: card from '../../../styles/shared.css';
   min-height: 280px;
   display: flex;
   flex-direction: column;
@@ -67,7 +67,7 @@
 }
 
 .title {
-  composes: card-title from '../../shared.css';
+  composes: card-title from '../../../styles/shared.css';
   font-size: var(--font-size-lg);
   font-weight: var(--font-weight-bold);
   text-align: center;
@@ -81,7 +81,7 @@
 }
 
 .status {
-  composes: badge from '../../shared.css';
+  composes: badge from '../../../styles/shared.css';
   display: flex;
   align-items: center;
   gap: var(--spacing-xs);
