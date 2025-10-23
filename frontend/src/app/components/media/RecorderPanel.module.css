@@ -1,6 +1,5 @@
 .panel {
   background: var(--color-bg-lighter);
-  padding-top: var(--spacing-xl);
   text-align: center;
   box-shadow: var(--shadow-lg);
   height: 100%;
@@ -8,29 +7,39 @@
 }
 
 .mic {
-  padding: var(--spacing-xl);
+  padding: var(--spacing-sm);
   background: var(--color-bg-white);
   border: 1px solid var(--color-border-gray);
   color: var(--color-black);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 .icon {
   font-size: var(--spacing-3xl);
-  display: block;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   margin-bottom: var(--spacing-md);
-  color: var(--color-accent-pink);
+  border-radius: 38px;
+  background-color: var(--color-primary-dark);
+  width: 60px;
+  height: 60px;
+  color: var(--color-white);
 }
 
 .recordBtn {
-  background-color: var(--color-accent-red);
+  background-color: var(--color-primary-dark);
   color: var(--color-white);
   padding: var(--button-padding);
   font-weight: var(--font-weight-bold);
   border: none;
   border-radius: var(--radius-sm);
-  margin: var(--spacing-sm);
   cursor: pointer;
   transition: opacity var(--transition-base);
+  margin: var(--spacing-sm);
 }
 
 .recordBtn:hover {
