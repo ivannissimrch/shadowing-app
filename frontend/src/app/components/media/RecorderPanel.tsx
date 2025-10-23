@@ -13,6 +13,7 @@ import { API_PATHS } from "../../constants/apiKeys";
 import logger from "@/app/helpers/logger";
 import { AudioUploadResponse, LessonResponse } from "../../Types";
 import { useSWRMutationHook } from "@/app/hooks/useSWRMutation";
+import { FaMicrophone } from "react-icons/fa";
 
 interface RecorderProps {
   selectedLesson: Lesson | undefined;
@@ -191,28 +192,35 @@ export default function RecorderPanel({ selectedLesson }: RecorderProps) {
           <>
             {" "}
             <div className={styles.mic}>
-              <span className={styles.icon}>🎙️</span>
-              {!recording ? <p>Ready to record</p> : <p>Recording...</p>}
-              {!recording && (
-                <button onClick={startRecording} className={styles.recordBtn}>
-                  Start Recording
-                </button>
-              )}
-              {recording && !paused && (
-                <button className={styles.recordBtn} onClick={pauseRecording}>
-                  Pause
-                </button>
-              )}
-              {recording && paused && (
-                <button onClick={resumeRecording} className={styles.recordBtn}>
-                  Resume
-                </button>
-              )}
-              {recording && (
-                <button onClick={stopRecording} className={styles.recordBtn}>
-                  Stop
-                </button>
-              )}
+              <div className={styles.icon}>
+                <FaMicrophone />
+              </div>
+              {!recording ? <p>Tap to record</p> : <p>Recording...</p>}
+              <div>
+                {!recording && (
+                  <button onClick={startRecording} className={styles.recordBtn}>
+                    Start Recording
+                  </button>
+                )}
+                {recording && !paused && (
+                  <button className={styles.recordBtn} onClick={pauseRecording}>
+                    Pause
+                  </button>
+                )}
+                {recording && paused && (
+                  <button
+                    onClick={resumeRecording}
+                    className={styles.recordBtn}
+                  >
+                    Resume
+                  </button>
+                )}
+                {recording && (
+                  <button onClick={stopRecording} className={styles.recordBtn}>
+                    Stop
+                  </button>
+                )}
+              </div>
             </div>
           </>
         )}
