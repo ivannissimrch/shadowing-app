@@ -3,7 +3,6 @@
   width: 100%;
   max-width: 100%;
   margin: 0 auto;
-  padding: var(--spacing-15);
 }
 
 .grid {
@@ -11,7 +10,7 @@
   grid-template-columns: 1fr;
   gap: var(--spacing-15);
   width: 100%;
-  margin: 0 auto var(--spacing-xl) auto;
+  margin: 0 auto var(--spacing-15) auto;
 }
 
 .grid > * {
@@ -26,10 +25,6 @@
 
 /* Larger than mobile */
 @media (min-width: 481px) {
-  .container {
-    padding: var(--spacing-15) var(--spacing-20);
-  }
-
   .grid {
     gap: var(--spacing-20);
   }
