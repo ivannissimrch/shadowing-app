@@ -1,5 +1,8 @@
 "use client";
-import YouTube, { YouTubeProps, YouTubePlayer as YTPlayer } from "react-youtube";
+import YouTube, {
+  YouTubeProps,
+  YouTubePlayer as YTPlayer,
+} from "react-youtube";
 import { Lesson } from "../../Types";
 import { useRef, useState, useEffect } from "react";
 import styles from "./YouTubePlayer.module.css";

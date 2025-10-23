@@ -39,13 +39,18 @@ export default function TeacherLessonDetails({
               priority
             />
           </div>
-          <div className={styles.audioContainer}>
-            <AudioPlayer
-              src={selectedLesson.audio_file}
-              showJumpControls={false}
-            />
-          </div>
-          <FeedBack idsInfo={idInfo} selectedLesson={selectedLesson} />
+          {selectedLesson.status === "completed" && (
+            <>
+              <div className={styles.audioContainer}>
+                <AudioPlayer
+                  src={selectedLesson.audio_file}
+                  showJumpControls={false}
+                />
+              </div>
+
+              <FeedBack idsInfo={idInfo} selectedLesson={selectedLesson} />
+            </>
+          )}
         </section>
       )}
     </>
