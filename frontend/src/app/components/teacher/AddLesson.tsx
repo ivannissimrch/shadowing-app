@@ -114,7 +114,7 @@ export default function AddLesson({
     const videoId = extractVideoId(formData.videoId);
     const lessonResult = await triggerLesson({
       title: formData.title,
-      image: imageUrl.data.imageUrl,
+      image: imageUrl.imageUrl,
       videoId: videoId || "",
     });
 
