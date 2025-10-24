@@ -69,7 +69,7 @@ export type LessonResponse = ApiResponse<Lesson>;
 export type LessonsResponse = ApiResponse<Lesson[]>;
 export type UserResponse = ApiResponse<User>;
 export type AuthResponse = { token: string; user: User };
-export type ImageResponse = ApiResponse<{
+export type ImageResponse = {
   imageName: string;
   imageUrl: string;
-}>;
+};
