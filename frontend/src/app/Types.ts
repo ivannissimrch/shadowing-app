@@ -3,7 +3,7 @@ export interface AppContextType {
   closeAlertDialog: () => void;
   isAlertDialogOpen: boolean;
   token: string | null;
-  updateToken: (newToken: string) => void;
+  updateToken: (newToken: string | null) => void;
   alertDialogTitle: string;
   alertDialogMessage: string;
 }
