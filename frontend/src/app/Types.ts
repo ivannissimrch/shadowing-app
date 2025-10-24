@@ -64,7 +64,6 @@ export interface Assignment {
 }
 
 export type AssignmentResponse = ApiResponse<Assignment>;
-export type AudioUploadResponse = ApiResponse<{ audioUrl: string }>;
 export type LessonResponse = ApiResponse<Lesson>;
 export type LessonsResponse = ApiResponse<Lesson[]>;
 export type UserResponse = ApiResponse<User>;
@@ -73,3 +72,4 @@ export type ImageResponse = {
   imageName: string;
   imageUrl: string;
 };
+export type AudioUploadResponse = { audioUrl: string };
