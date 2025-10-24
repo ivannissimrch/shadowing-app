@@ -58,7 +58,7 @@ export function useSWRMutationHook<TData, TVariables = unknown>(
       return response.data.data;
     },
     {
-      throwOnError: false,
+      throwOnError: true,
       ...config,
     }
   );
