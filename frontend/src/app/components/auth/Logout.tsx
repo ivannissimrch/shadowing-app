@@ -7,8 +7,9 @@ export default function Logout() {
   const { updateToken } = useAppContext();
 
   function handleLogout() {
-    updateToken("");
+    updateToken(null);
   }
+
   return (
     <Link onClick={handleLogout} href="/" className={styles.logoutButton}>
       Logout

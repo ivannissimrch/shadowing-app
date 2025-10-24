@@ -23,7 +23,7 @@ export default function AppContextProvider({
   const [alertDialogMessage, setAlertDialogMessage] = useState("");
   const [token, setToken] = usePersistedState<string | null>("token", null);
 
-  function updateToken(newToken: string) {
+  function updateToken(newToken: string | null) {
     setToken(newToken);
   }
 
