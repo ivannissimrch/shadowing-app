@@ -15,7 +15,6 @@ export default function LoginForm() {
   const router = useRouter();
   const { updateToken, token } = useAppContext();
   const [passwordType, setPasswordType] = useState("password");
-  const [errorMessage, setErrorMessage] = useState("");
 
   const { isMutating, trigger, error } = useSWRMutationHook<
     AuthResponse,
@@ -30,32 +29,29 @@ export default function LoginForm() {
         router.push(route);
       } catch (error) {
         logger.error("Invalid token:", error);
-        updateToken("");
+        updateToken(null);
       }
     }
   }, [router, token, updateToken]);
 
   async function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
-    setErrorMessage("");
 
     const response = await trigger({
       username: username,
       password: password,
     });
 
-    if (!response.token) {
-      setErrorMessage(error instanceof Error ? error.message : "Login error");
-      logger.error("Login error:", error);
-      return;
+    if (response) {
+      const { token } = response;
+      updateToken(token);
+
+      const route = redirectBasedOnRole(token);
+      router.push(route);
     }
-
-    const { token } = response;
-    updateToken(token);
-
-    const route = redirectBasedOnRole(token);
-    router.push(route);
   }
+
+  const errorMsg = error instanceof Error ? error.message : null;
 
   return (
     <main className={styles["form-container"]}>
@@ -72,7 +68,6 @@ export default function LoginForm() {
           value={username}
           autoComplete="off"
           onChange={(e) => {
-            setErrorMessage("");
             setUsername(e.target.value);
           }}
         />
@@ -81,7 +76,6 @@ export default function LoginForm() {
           <input
             value={password}
             onChange={(e) => {
-              setErrorMessage("");
               setPassword(e.target.value);
             }}
             type={passwordType}
@@ -106,7 +100,7 @@ export default function LoginForm() {
           {isMutating ? "Logging in..." : "Login"}
         </button>
       </form>
-      {errorMessage && <p className={styles.error}>{errorMessage}</p>}
+      {errorMsg && <p className={styles.error}>{errorMsg}</p>}
     </main>
   );
 }
