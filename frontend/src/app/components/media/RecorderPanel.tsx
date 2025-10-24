@@ -111,6 +111,7 @@ export default function RecorderPanel({ selectedLesson }: RecorderProps) {
             audioData: base64Audio,
             lessonId: selectedLesson.id,
           });
+          console.log("Upload Response:", uploadResponse);
 
           if (!uploadResponse) {
             setErrorMessage("Error uploading audio");
@@ -119,7 +120,7 @@ export default function RecorderPanel({ selectedLesson }: RecorderProps) {
 
           // Then save the Azure URL to database
           const response = await triggerUpdateLesson({
-            audio_file: uploadResponse.data.audioUrl,
+            audio_file: uploadResponse.audioUrl,
           });
 
           setRecording(false);
