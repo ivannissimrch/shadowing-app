@@ -7,9 +7,12 @@ import { ErrorBoundary } from "react-error-boundary";
 import { Lesson } from "../../Types";
 import { useSWRAxios } from "../../hooks/useSWRAxios";
 import { API_PATHS } from "../../constants/apiKeys";
+import { useState } from "react";
 
 export function LessonPracticeView({ id }: { id: string }) {
   const { data: selectedLesson } = useSWRAxios<Lesson>(API_PATHS.LESSON(id));
+  const [isImageVisible, setIsImageVisible] = useState(true);
+  const [isVideoVisible, setIsVideoVisible] = useState(true);
 
   return (
     <ErrorBoundary
@@ -21,8 +24,26 @@ export function LessonPracticeView({ id }: { id: string }) {
     >
       {selectedLesson && (
         <div className={styles.container}>
-          <div className={styles.grid}>
-            <SegmentPlayer selectedLesson={selectedLesson} />
+          <div
+            className={
+              isImageVisible && isVideoVisible
+                ? styles.grid
+                : styles.gridOneColumn
+            }
+          >
+            <div className={isVideoVisible ? "" : styles.hide}>
+              {" "}
+              <SegmentPlayer selectedLesson={selectedLesson} />
+            </div>
+
+            <Image
+              src={selectedLesson.image}
+              alt="ESL lesson"
+              quality={100}
+              fill
+              priority
+              className={!isVideoVisible ? "" : styles.hide}
+            />
             <Image
               src={selectedLesson.image}
               alt="ESL lesson"
@@ -30,7 +51,26 @@ export function LessonPracticeView({ id }: { id: string }) {
               width={625}
               height={390}
               priority
+              className={isImageVisible ? "" : styles.hide}
             />
+
+            {isVideoVisible ? (
+              <button
+                className={styles.toggleImage}
+                onClick={() => setIsImageVisible(!isImageVisible)}
+              >
+                {isImageVisible ? "hide image" : "show image"}
+              </button>
+            ) : null}
+
+            {isImageVisible ? (
+              <button
+                className={styles.toggleVideo}
+                onClick={() => setIsVideoVisible(!isVideoVisible)}
+              >
+                {isVideoVisible ? "hide video" : "show video"}
+              </button>
+            ) : null}
           </div>
           <RecorderPanel selectedLesson={selectedLesson} />
         </div>
