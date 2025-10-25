@@ -11,6 +11,23 @@
   gap: var(--spacing-15);
   width: 100%;
   margin: 0 auto var(--spacing-15) auto;
+  position: relative;
+}
+
+.gridOneColumn {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--spacing-15);
+  width: 100%;
+  margin: 0 auto var(--spacing-15) auto;
+  position: relative;
+  min-height: 500px;
+}
+
+.gridOneColumn img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
 
 .grid > * {
@@ -21,6 +38,54 @@
 .grid img {
   width: 100%;
   height: 100%;
+}
+
+.hide {
+  display: none;
+}
+
+.toggleImage {
+  position: absolute;
+  bottom: 0px;
+  left: 4px;
+  z-index: 10;
+  padding: 3px 6px;
+  background-color: rgba(0, 0, 0, 0.7);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  text-transform: capitalize;
+  transition: background-color 0.2s ease;
+  width: fit-content;
+  height: fit-content;
+}
+
+.toggleVideo {
+  position: absolute;
+  bottom: 0px;
+  right: 4px;
+  z-index: 10;
+  padding: 3px 6px;
+  background-color: rgba(0, 0, 0, 0.7);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  text-transform: capitalize;
+  transition: background-color 0.2s ease;
+  width: fit-content;
+  height: fit-content;
+}
+
+.toggle:hover {
+  background-color: rgba(0, 0, 0, 0.85);
+}
+
+.toggle:active {
+  transform: scale(0.98);
 }
 
 /* Larger than mobile */
@@ -34,5 +99,9 @@
 @media (min-width: 769px) {
   .grid {
     grid-template-columns: 1fr 1fr;
+  }
+
+  .gridOneColumn {
+    grid-template-columns: 1fr;
   }
 }

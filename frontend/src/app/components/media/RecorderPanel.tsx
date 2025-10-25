@@ -247,6 +247,9 @@ export default function RecorderPanel({ selectedLesson }: RecorderProps) {
             )}
           </div>
         )}
+        {selectedLesson?.feedback ? (
+          <p className={styles.feedback}>{selectedLesson?.feedback}</p>
+        ) : null}
       </div>
     </ErrorBoundary>
   );
