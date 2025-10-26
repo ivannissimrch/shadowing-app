@@ -1,7 +1,7 @@
 "use client";
 import { useSWRAxios } from "../../hooks/useSWRAxios";
 import { Lesson } from "../../Types";
-import TeacherLessonCard from "./TeacherLessonCard";
+import Card from "../ui/Card";
 import styles from "./TeacherLessonsList.module.css";
 import { API_PATHS } from "../../constants/apiKeys";
 
@@ -13,10 +13,10 @@ export default function TeacherLessonsList({ id }: { id: string }) {
     <section className={styles.container}>
       {lessons &&
         lessons.map((lesson: Lesson) => (
-          <TeacherLessonCard
-            key={lesson.id}
+          <Card
+            key={lesson.title}
             lesson={lesson}
-            studentId={id}
+            linkPath={`/teacher/student/${id}/lesson/${lesson.id}`}
           />
         ))}
     </section>

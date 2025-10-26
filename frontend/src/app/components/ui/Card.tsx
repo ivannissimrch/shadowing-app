@@ -1,18 +1,22 @@
-import styles from "./TeacherLessonCard.module.css";
+import { Lesson } from "@/app/Types";
+import styles from "./Card.module.css";
 import Link from "next/link";
-import { Lesson } from "../../Types";
-import { FaBook, FaCheckCircle, FaHourglassHalf, FaPlayCircle, FaArrowRight } from "react-icons/fa";
+import {
+  FaBook,
+  FaCheckCircle,
+  FaHourglassHalf,
+  FaPlayCircle,
+  FaArrowRight,
+} from "react-icons/fa";
 
-interface TeacherLessonCardProps {
-  lesson: Lesson;
-  studentId: string;
-}
-
-export default function TeacherLessonCard({
+export default function Card({
   lesson,
-  studentId,
-}: TeacherLessonCardProps) {
-  const { title, status, id } = lesson;
+  linkPath,
+}: {
+  lesson: Lesson;
+  linkPath: string;
+}) {
+  const { title, status } = lesson;
 
   function getStatusIcon() {
     switch (status?.toLowerCase()) {
@@ -35,7 +39,6 @@ export default function TeacherLessonCard({
         return styles.statusPending;
     }
   }
-
   return (
     <div className={styles.card}>
       <div className={styles.cardHeader}>
@@ -50,11 +53,8 @@ export default function TeacherLessonCard({
           {status}
         </div>
       </div>
-      <Link
-        href={`/teacher/student/${studentId}/lesson/${id}`}
-        className={styles.button}
-      >
-        View Lesson <FaArrowRight />
+      <Link href={linkPath} className={styles.button}>
+        Start Lesson <FaArrowRight />
       </Link>
     </div>
   );
