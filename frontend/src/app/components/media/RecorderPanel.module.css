@@ -23,10 +23,10 @@
   align-items: center;
   justify-content: center;
   margin-bottom: var(--spacing-md);
-  border-radius: 38px;
+  border-radius: 30.4px;
   background-color: var(--color-primary-dark);
-  width: 60px;
-  height: 60px;
+  width: 48px;
+  height: 48px;
   color: var(--color-white);
 }
 

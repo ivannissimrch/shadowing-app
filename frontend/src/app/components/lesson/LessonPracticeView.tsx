@@ -48,8 +48,8 @@ export function LessonPracticeView({ id }: { id: string }) {
               src={selectedLesson.image}
               alt="ESL lesson"
               quality={100}
-              width={625}
-              height={390}
+              width={1400}
+              height={875}
               priority
               className={isImageVisible ? "" : styles.hide}
             />

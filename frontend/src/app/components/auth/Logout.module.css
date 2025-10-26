@@ -2,7 +2,7 @@
 
 .logoutButton {
   composes: btn btn-error from "../../../styles/shared.css";
-  padding: 10px 15px;
+  padding: var(--spacing-10) var(--spacing-15);
 }
 
 .logoutButton:hover {
