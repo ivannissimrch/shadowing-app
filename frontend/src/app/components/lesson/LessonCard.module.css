@@ -2,7 +2,7 @@
 
 .card {
   composes: card from '../../../styles/shared.css';
-  min-height: 280px;
+  min-height: 224px;
   display: flex;
   flex-direction: column;
   padding: 0;
@@ -40,19 +40,19 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 100px;
+  min-height: 80px;
 }
 
 .iconWrapper {
-  width: 60px;
-  height: 60px;
+  width: 48px;
+  height: 48px;
   border-radius: 50%;
   background-color: rgba(255, 255, 255, 0.2);
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: var(--font-size-2xl);
-  color: white;
+  color: var(--color-white);
   border: 3px solid rgba(255, 255, 255, 0.3);
 }
 
@@ -94,18 +94,18 @@
 }
 
 .statusCompleted {
-  background-color: #10b981;
-  color: white;
+  background-color: var(--color-success);
+  color: var(--color-white);
 }
 
 .statusInProgress {
-  background-color: #f59e0b;
-  color: white;
+  background-color: var(--color-warning);
+  color: var(--color-white);
 }
 
 .statusPending {
-  background-color: #6b7280;
-  color: white;
+  background-color: var(--color-text-secondary);
+  color: var(--color-white);
 }
 
 .button {
@@ -119,7 +119,7 @@
   gap: var(--spacing-sm);
   font-weight: var(--font-weight-bold);
   background: var(--color-primary);
-  color: white;
+  color: var(--color-white);
   border: none;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -136,7 +136,7 @@
 /* Tablet and up */
 @media (min-width: 1024px) {
   .card {
-    min-height: 300px;
+    min-height: 240px;
   }
 
   .title {
@@ -144,7 +144,7 @@
   }
 
   .iconWrapper {
-    width: 70px;
-    height: 70px;
+    width: 56px;
+    height: 56px;
   }
 }

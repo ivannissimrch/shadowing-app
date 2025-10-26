@@ -9,7 +9,7 @@
 
 .lessonsCard {
   composes: card from '../../../styles/shared.css';
-  min-height: 280px;
+  min-height: 224px;
   display: flex;
   flex-direction: column;
   padding: 0;
@@ -38,7 +38,7 @@
 }
 
 .lessonsCard:hover {
-  border-color: #10b981;
+  border-color: var(--color-success);
 }
 
 .cardHeader {
@@ -47,19 +47,19 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 100px;
+  min-height: 80px;
 }
 
 .iconWrapper {
-  width: 60px;
-  height: 60px;
+  width: 48px;
+  height: 48px;
   border-radius: 50%;
   background-color: rgba(255, 255, 255, 0.2);
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: var(--font-size-2xl);
-  color: white;
+  color: var(--color-white);
   border: 3px solid rgba(255, 255, 255, 0.3);
 }
 
@@ -89,7 +89,7 @@
   display: flex;
   gap: var(--spacing-sm);
   padding: var(--spacing-md);
-  background-color: #f9fafb;
+  background-color: var(--color-bg-lighter);
 }
 
 .assignButton {
@@ -116,14 +116,14 @@
 }
 
 .deleteButton {
-  width: 40px;
-  height: 40px;
+  width: 32px;
+  height: 32px;
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: var(--radius-md);
-  background-color: white;
-  color: #dc2626;
+  background-color: var(--color-white);
+  color: var(--color-error);
   border: 2px solid #fee2e2;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -131,9 +131,9 @@
 }
 
 .deleteButton:hover {
-  background-color: #dc2626;
-  color: white;
-  border-color: #dc2626;
+  background-color: var(--color-error);
+  color: var(--color-white);
+  border-color: var(--color-error);
   transform: translateY(-1px);
   box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
 }
@@ -145,7 +145,7 @@
   }
 
   .lessonsCard {
-    min-height: 300px;
+    min-height: 240px;
   }
 }
 
@@ -157,7 +157,7 @@
   }
 
   .lessonsCard {
-    min-height: 320px;
+    min-height: 256px;
   }
 
   .lessonTitle {
@@ -165,8 +165,8 @@
   }
 
   .iconWrapper {
-    width: 70px;
-    height: 70px;
+    width: 56px;
+    height: 56px;
   }
 }
 
