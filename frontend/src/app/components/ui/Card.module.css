@@ -1,7 +1,7 @@
-@import '../../../styles/shared.css';
+@import "../../../styles/shared.css";
 
 .card {
-  composes: card from '../../../styles/shared.css';
+  composes: card from "../../../styles/shared.css";
   min-height: 224px;
   display: flex;
   flex-direction: column;
@@ -13,7 +13,7 @@
 }
 
 .card::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
@@ -64,10 +64,11 @@
   padding: 0;
   justify-content: center;
   align-items: center;
+  margin-bottom: var(--spacing-sm);
 }
 
 .title {
-  composes: card-title from '../../../styles/shared.css';
+  composes: card-title from "../../../styles/shared.css";
   font-size: var(--font-size-lg);
   font-weight: var(--font-weight-bold);
   text-align: center;
@@ -81,7 +82,7 @@
 }
 
 .status {
-  composes: badge from '../../../styles/shared.css';
+  composes: badge from "../../../styles/shared.css";
   display: flex;
   align-items: center;
   gap: var(--spacing-xs);
@@ -99,12 +100,12 @@
 }
 
 .statusInProgress {
-  background-color: #f59e0b;
+  background-color: var(--color-warning);
   color: var(--color-white);
 }
 
 .statusPending {
-  background-color: #6b7280;
+  background-color: var(--color-text-secondary);
   color: var(--color-white);
 }
 
