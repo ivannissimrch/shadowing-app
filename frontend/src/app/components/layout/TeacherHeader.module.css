@@ -9,10 +9,10 @@
 .header h1 {
   margin: 0;
   font-weight: 900;
-  font-size: 1.5rem;
-  letter-spacing: 1px;
+  font-size: var(--font-size-xl);
+  letter-spacing: 0.8px;
   text-transform: uppercase;
-  color: #ffffff;
+  color: var(--color-white);
   text-shadow:
     0 0 10px rgba(96, 165, 250, 0.8),
     0 0 20px rgba(96, 165, 250, 0.6),
