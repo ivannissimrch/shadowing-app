@@ -1,30 +1,22 @@
 @import "../../../styles/shared.css";
 
 /* Mobile-first styles */
-.buttonsContainer {
-  display: flex;
-  gap: var(--spacing-xl);
-  justify-content: center;
-  margin-top: var(--spacing-xl);
-}
-
 .form-container {
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
   background-color: var(--color-white);
   color: var(--color-text-primary);
   width: 100%;
-  min-height: 100vh;
+  height: 80vh;
   padding: var(--spacing-lg);
+  margin: var(--spacing-sm);
 }
 
 .form-container h1 {
   font-size: var(--font-size-2xl);
   margin-bottom: var(--spacing-md);
   text-align: center;
-  width: 100%;
 }
 
 .form {
