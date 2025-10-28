@@ -73,3 +73,21 @@ export type ImageResponse = {
   imageUrl: string;
 };
 export type AudioUploadResponse = { audioUrl: string };
+
+export interface RecorderPanelContextType {
+  recording: boolean;
+  paused: boolean;
+  audioURL: string | null;
+  startRecording: () => void;
+  pauseRecording: () => void;
+  resumeRecording: () => void;
+  stopRecording: () => void;
+  handleSubmit: () => Promise<void>;
+  setAudioURL: (url: string | null) => void;
+  setRecording: (isRecording: boolean) => void;
+  setPaused: (isPaused: boolean) => void;
+  errorMessage: string;
+  setErrorMessage: (message: string) => void;
+  isAudioMutating: boolean;
+  isLessonMutating: boolean;
+}

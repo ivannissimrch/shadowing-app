@@ -8,6 +8,7 @@ import { Lesson } from "../../Types";
 import { useSWRAxios } from "../../hooks/useSWRAxios";
 import { API_PATHS } from "../../constants/apiKeys";
 import { useState } from "react";
+import RecorderPanelContextProvider from "@/app/RecorderpanelContext";
 
 export function LessonPracticeView({ id }: { id: string }) {
   const { data: selectedLesson } = useSWRAxios<Lesson>(API_PATHS.LESSON(id));
@@ -72,7 +73,9 @@ export function LessonPracticeView({ id }: { id: string }) {
               </button>
             ) : null}
           </div>
-          <RecorderPanel selectedLesson={selectedLesson} />
+          <RecorderPanelContextProvider selectedLesson={selectedLesson}>
+            <RecorderPanel selectedLesson={selectedLesson} />
+          </RecorderPanelContextProvider>
         </div>
       )}
     </ErrorBoundary>
