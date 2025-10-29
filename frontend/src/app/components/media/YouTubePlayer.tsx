@@ -8,6 +8,7 @@ import { useRef, useState, useEffect } from "react";
 import styles from "./YouTubePlayer.module.css";
 import getFormattedTime from "../../helpers/getFormattedTime";
 import LoopSegmentInfo from "./LoopSegmentInfo";
+import VideoTimer from "./VideoTimer";
 
 interface YouTubePlayerProps {
   selectedLesson: Lesson | undefined;
@@ -127,13 +128,8 @@ export default function YouTubePlayer({ selectedLesson }: YouTubePlayerProps) {
         onReady={onPlayerReady}
         onStateChange={onStateChange}
       />
-
-      <div className={styles.controlsContainer}>
-        {/* display video current segment component */}
-        <div className={styles.currentTime}>
-          Current time: <strong>{getFormattedTime(currentTime)}</strong>
-        </div>
-
+      <section className={styles.controlsContainer}>
+        <VideoTimer currentTime={currentTime} />
         {/* display controllers segment component */}
         <div className={styles.buttonsContainer}>
           <button
@@ -174,7 +170,7 @@ export default function YouTubePlayer({ selectedLesson }: YouTubePlayerProps) {
         {startTime !== null && endTime !== null && (
           <LoopSegmentInfo startTime={startTime} endTime={endTime} />
         )}
-      </div>
+      </section>
     </>
   );
 }
