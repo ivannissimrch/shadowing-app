@@ -6,6 +6,7 @@ import YouTube, {
 import { Lesson } from "../../Types";
 import { useRef, useState, useEffect } from "react";
 import styles from "./YouTubePlayer.module.css";
+import getFormattedTime from "../../helpers/getFormattedTime";
 
 interface YouTubePlayerProps {
   selectedLesson: Lesson | undefined;
@@ -111,12 +112,6 @@ export default function YouTubePlayer({ selectedLesson }: YouTubePlayerProps) {
     }
   };
 
-  const formatTime = (seconds: number) => {
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${mins}:${secs.toString().padStart(2, "0")}`;
-  };
-
   const opts: YouTubeProps["opts"] = {
     playerVars: {
       autoplay: 0,
@@ -134,7 +129,7 @@ export default function YouTubePlayer({ selectedLesson }: YouTubePlayerProps) {
 
       <div className={styles.controlsContainer}>
         <div className={styles.currentTime}>
-          Current time: <strong>{formatTime(currentTime)}</strong>
+          Current time: <strong>{getFormattedTime(currentTime)}</strong>
         </div>
 
         <div className={styles.buttonsContainer}>
@@ -142,14 +137,14 @@ export default function YouTubePlayer({ selectedLesson }: YouTubePlayerProps) {
             onClick={setStartAtCurrentTime}
             className={`${styles.button} ${styles.setStartButton}`}
           >
-            Set Start {startTime !== null && `(${formatTime(startTime)})`}
+            Set Start {startTime !== null && `(${getFormattedTime(startTime)})`}
           </button>
 
           <button
             onClick={setEndAtCurrentTime}
             className={`${styles.button} ${styles.setEndButton}`}
           >
-            Set End {endTime !== null && `(${formatTime(endTime)})`}
+            Set End {endTime !== null && `(${getFormattedTime(endTime)})`}
           </button>
 
           {startTime !== null && endTime !== null && (
@@ -175,8 +170,8 @@ export default function YouTubePlayer({ selectedLesson }: YouTubePlayerProps) {
 
         {startTime !== null && endTime !== null && (
           <div className={styles.segmentInfo}>
-            📍 Loop segment: {formatTime(startTime)} → {formatTime(endTime)} (
-            {endTime - startTime}s)
+            📍 Loop segment: {getFormattedTime(startTime)} →{" "}
+            {getFormattedTime(endTime)} ({endTime - startTime}s)
           </div>
         )}
       </div>
