@@ -6,9 +6,9 @@ import YouTube, {
 import { Lesson } from "../../Types";
 import { useRef, useState, useEffect } from "react";
 import styles from "./YouTubePlayer.module.css";
-import getFormattedTime from "../../helpers/getFormattedTime";
 import LoopSegmentInfo from "./LoopSegmentInfo";
 import VideoTimer from "./VideoTimer";
+import LoopButtons from "./LoopButtons";
 
 interface YouTubePlayerProps {
   selectedLesson: Lesson | undefined;
@@ -82,29 +82,29 @@ export default function YouTubePlayer({ selectedLesson }: YouTubePlayerProps) {
     }
   };
 
-  const setStartAtCurrentTime = () => {
+  function updateStartAtCurrentTime() {
     if (playerRef.current) {
       const time = Math.floor(playerRef.current.getCurrentTime());
       setStartTime(time);
     }
-  };
+  }
 
-  const setEndAtCurrentTime = () => {
+  function updateEndAtCurrentTime() {
     if (playerRef.current) {
       const time = Math.floor(playerRef.current.getCurrentTime());
       setEndTime(time);
     }
-  };
+  }
 
-  const toggleLoop = () => {
+  function toggleLoop() {
     if (!isLooping && playerRef.current && startTime !== null) {
       // Enable looping and seek to start
       playerRef.current.seekTo(startTime, true);
     }
     setIsLooping(!isLooping);
-  };
+  }
 
-  const clearLoop = () => {
+  function clearLoop() {
     setStartTime(null);
     setEndTime(null);
     setIsLooping(false);
@@ -112,7 +112,7 @@ export default function YouTubePlayer({ selectedLesson }: YouTubePlayerProps) {
       clearInterval(intervalRef.current);
       intervalRef.current = null;
     }
-  };
+  }
 
   const opts: YouTubeProps["opts"] = {
     playerVars: {
@@ -130,43 +130,15 @@ export default function YouTubePlayer({ selectedLesson }: YouTubePlayerProps) {
       />
       <section className={styles.controlsContainer}>
         <VideoTimer currentTime={currentTime} />
-        {/* display controllers segment component */}
-        <div className={styles.buttonsContainer}>
-          <button
-            onClick={setStartAtCurrentTime}
-            className={`${styles.button} ${styles.setStartButton}`}
-          >
-            Set Start {startTime !== null && `(${getFormattedTime(startTime)})`}
-          </button>
-
-          <button
-            onClick={setEndAtCurrentTime}
-            className={`${styles.button} ${styles.setEndButton}`}
-          >
-            Set End {endTime !== null && `(${getFormattedTime(endTime)})`}
-          </button>
-
-          {startTime !== null && endTime !== null && (
-            <>
-              <button
-                onClick={toggleLoop}
-                className={`${styles.button} ${styles.loopButton} ${
-                  isLooping ? styles.active : ""
-                }`}
-              >
-                {isLooping ? "🔁 Loop ON" : "▶️ Start Loop"}
-              </button>
-
-              <button
-                onClick={clearLoop}
-                className={`${styles.button} ${styles.clearButton}`}
-              >
-                Clear
-              </button>
-            </>
-          )}
-        </div>
-
+        <LoopButtons
+          startTime={startTime}
+          endTime={endTime}
+          isLooping={isLooping}
+          updateStartAtCurrentTime={updateStartAtCurrentTime}
+          updateEndAtCurrentTime={updateEndAtCurrentTime}
+          toggleLoop={toggleLoop}
+          clearLoop={clearLoop}
+        />
         {startTime !== null && endTime !== null && (
           <LoopSegmentInfo startTime={startTime} endTime={endTime} />
         )}
