@@ -6,6 +6,9 @@ import YouTube, {
 import { Lesson } from "../../Types";
 import { useRef, useState, useEffect } from "react";
 import styles from "./YouTubePlayer.module.css";
+import LoopSegmentInfo from "./LoopSegmentInfo";
+import VideoTimer from "./VideoTimer";
+import LoopButtons from "./LoopButtons";
 
 interface YouTubePlayerProps {
   selectedLesson: Lesson | undefined;
@@ -79,29 +82,29 @@ export default function YouTubePlayer({ selectedLesson }: YouTubePlayerProps) {
     }
   };
 
-  const setStartAtCurrentTime = () => {
+  function updateStartAtCurrentTime() {
     if (playerRef.current) {
       const time = Math.floor(playerRef.current.getCurrentTime());
       setStartTime(time);
     }
-  };
+  }
 
-  const setEndAtCurrentTime = () => {
+  function updateEndAtCurrentTime() {
     if (playerRef.current) {
       const time = Math.floor(playerRef.current.getCurrentTime());
       setEndTime(time);
     }
-  };
+  }
 
-  const toggleLoop = () => {
+  function toggleLoop() {
     if (!isLooping && playerRef.current && startTime !== null) {
       // Enable looping and seek to start
       playerRef.current.seekTo(startTime, true);
     }
     setIsLooping(!isLooping);
-  };
+  }
 
-  const clearLoop = () => {
+  function clearLoop() {
     setStartTime(null);
     setEndTime(null);
     setIsLooping(false);
@@ -109,13 +112,7 @@ export default function YouTubePlayer({ selectedLesson }: YouTubePlayerProps) {
       clearInterval(intervalRef.current);
       intervalRef.current = null;
     }
-  };
-
-  const formatTime = (seconds: number) => {
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${mins}:${secs.toString().padStart(2, "0")}`;
-  };
+  }
 
   const opts: YouTubeProps["opts"] = {
     playerVars: {
@@ -124,62 +121,28 @@ export default function YouTubePlayer({ selectedLesson }: YouTubePlayerProps) {
   };
 
   return (
-    <div>
+    <>
       <YouTube
         videoId={selectedLesson.video_id}
         opts={opts}
         onReady={onPlayerReady}
         onStateChange={onStateChange}
       />
-
-      <div className={styles.controlsContainer}>
-        <div className={styles.currentTime}>
-          Current time: <strong>{formatTime(currentTime)}</strong>
-        </div>
-
-        <div className={styles.buttonsContainer}>
-          <button
-            onClick={setStartAtCurrentTime}
-            className={`${styles.button} ${styles.setStartButton}`}
-          >
-            Set Start {startTime !== null && `(${formatTime(startTime)})`}
-          </button>
-
-          <button
-            onClick={setEndAtCurrentTime}
-            className={`${styles.button} ${styles.setEndButton}`}
-          >
-            Set End {endTime !== null && `(${formatTime(endTime)})`}
-          </button>
-
-          {startTime !== null && endTime !== null && (
-            <>
-              <button
-                onClick={toggleLoop}
-                className={`${styles.button} ${styles.loopButton} ${
-                  isLooping ? styles.active : ""
-                }`}
-              >
-                {isLooping ? "🔁 Loop ON" : "▶️ Start Loop"}
-              </button>
-
-              <button
-                onClick={clearLoop}
-                className={`${styles.button} ${styles.clearButton}`}
-              >
-                Clear
-              </button>
-            </>
-          )}
-        </div>
-
+      <section className={styles.controlsContainer}>
+        <VideoTimer currentTime={currentTime} />
+        <LoopButtons
+          startTime={startTime}
+          endTime={endTime}
+          isLooping={isLooping}
+          updateStartAtCurrentTime={updateStartAtCurrentTime}
+          updateEndAtCurrentTime={updateEndAtCurrentTime}
+          toggleLoop={toggleLoop}
+          clearLoop={clearLoop}
+        />
         {startTime !== null && endTime !== null && (
-          <div className={styles.segmentInfo}>
-            📍 Loop segment: {formatTime(startTime)} → {formatTime(endTime)} (
-            {endTime - startTime}s)
-          </div>
+          <LoopSegmentInfo startTime={startTime} endTime={endTime} />
         )}
-      </div>
-    </div>
+      </section>
+    </>
   );
 }
