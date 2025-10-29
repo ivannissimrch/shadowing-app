@@ -3,21 +3,13 @@ import { render, screen, cleanup } from "@testing-library/react";
 import YouTubePlayer from "./YouTubePlayer";
 import { Lesson } from "../../Types";
 
-// ========================================
-// STEP 2: MOCK EXTERNAL DEPENDENCIES
-// ========================================
-
-// Mock the react-youtube library
-// This is needed because we can't actually load YouTube in tests
 vi.mock("react-youtube", () => ({
   default: () => {
-    // Return a simple div that we can test against
     return <div data-testid="youtube-player">YouTube Player Mock</div>;
   },
   YouTubePlayer: vi.fn(),
 }));
 
-// Mock the child components (we're testing YouTubePlayer, not these)
 vi.mock("./VideoTimer", () => ({
   default: ({ currentTime }: { currentTime: number }) => (
     <div data-testid="video-timer">Current time: {currentTime}</div>
@@ -71,23 +63,16 @@ vi.mock("./LoopSegmentInfo", () => ({
   ),
 }));
 
-// ========================================
-// STEP 3: MOCK TIMERS (IMPORTANT!)
-// ========================================
-// This tells Vitest to replace real timers with fake ones we can control
 beforeEach(() => {
   vi.useFakeTimers();
 });
 
 afterEach(() => {
   cleanup();
-  vi.clearAllTimers(); // Clear any pending timers
-  vi.restoreAllMocks(); // Restore original functions
+  vi.clearAllTimers();
+  vi.restoreAllMocks();
 });
 
-// ========================================
-// STEP 4: CREATE TEST DATA
-// ========================================
 describe("YouTubePlayer", () => {
   const mockLesson: Lesson = {
     id: "1",
@@ -106,14 +91,9 @@ describe("YouTubePlayer", () => {
     feedback: null,
   };
 
-  // ========================================
-  // STEP 5: BASIC RENDERING TESTS
-  // ========================================
-
   it("renders YouTubePlayer component with all child components", () => {
     render(<YouTubePlayer selectedLesson={mockLesson} />);
 
-    // Check that all parts are rendered
     expect(screen.getByTestId("youtube-player")).toBeInTheDocument();
     expect(screen.getByTestId("video-timer")).toBeInTheDocument();
     expect(screen.getByTestId("loop-buttons")).toBeInTheDocument();
@@ -125,23 +105,13 @@ describe("YouTubePlayer", () => {
     expect(screen.getByText("Loading...")).toBeInTheDocument();
   });
 
-  // ========================================
-  // STEP 6: TEST BUTTON INTERACTIONS
-  // ========================================
-
   it("shows loop controls only after setting both start and end times", () => {
     render(<YouTubePlayer selectedLesson={mockLesson} />);
 
     // Initially, loop buttons should NOT be visible
     expect(screen.queryByText("Start Loop")).not.toBeInTheDocument();
     expect(screen.queryByText("Clear")).not.toBeInTheDocument();
-
-    // TODO: We'll add interaction tests in the next step
   });
-
-  // ========================================
-  // STEP 7: TEST INTERVAL CLEANUP
-  // ========================================
 
   it("renders without crashing and unmounts cleanly", () => {
     // This test verifies the component mounts and unmounts without errors
