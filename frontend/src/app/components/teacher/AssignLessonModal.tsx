@@ -70,10 +70,10 @@ export default function AssignLessonModal({
       open={isOpen}
       onClose={onClose}
       aria-labelledby="assign-lesson-dialog-title"
+      aria-modal="true"
       disableScrollLock={true}
       keepMounted={false}
-      disableRestoreFocus={true}
-      disableEnforceFocus={true}
+      autoFocus={true}
     >
       <DialogTitle
         id="assign-lesson-dialog-title"
@@ -99,7 +99,15 @@ export default function AssignLessonModal({
               </Suspense>
             </ErrorBoundary>
           </div>
-          {errorMessage && <p>{errorMessage}</p>}
+          {errorMessage && (
+            <p
+              role="alert"
+              aria-live="assertive"
+              style={{ color: "red", marginTop: "8px" }}
+            >
+              {errorMessage}
+            </p>
+          )}
         </form>
       </StyledDialogContent>
       <StyledDialogActions>
@@ -110,6 +118,7 @@ export default function AssignLessonModal({
           variant="contained"
           onClick={handleSubmit}
           disabled={isMutating || !selectedStudent}
+          aria-label={`Assign lesson "${lessonTitle}" to selected student`}
         >
           {isMutating ? "Assigning..." : "Assign Lesson"}
         </StyledButton>

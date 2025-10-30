@@ -27,12 +27,16 @@ export default function TeacherLessonDetails({
       {selectedLesson && (
         <section className={styles.container}>
           <div className={styles.grid}>
-            <div className={styles.videoWrapper}>
+            <div
+              className={styles.videoWrapper}
+              role="region"
+              aria-label="YouTube video player for the lesson"
+            >
               <YouTubePlayer selectedLesson={selectedLesson} />
             </div>
             <Image
               src={selectedLesson.image}
-              alt="Lesson Image"
+              alt={`${selectedLesson.title} - Lesson illustration`}
               quality={100}
               width={625}
               height={390}

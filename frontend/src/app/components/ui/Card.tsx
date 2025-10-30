@@ -47,7 +47,7 @@ export default function Card({
         </div>
       </div>
       <div className={styles["information-container"]}>
-        <h3 className={styles.title}>{title}</h3>
+        <h2 className={styles.title}>{title}</h2>
         <div className={`${styles.status} ${getStatusClass()}`}>
           {getStatusIcon()}
           {status}

@@ -39,7 +39,7 @@ export function LessonPracticeView({ id }: { id: string }) {
 
             <Image
               src={selectedLesson.image}
-              alt="ESL lesson"
+              alt={`${selectedLesson.title} - Practice lesson image`}
               quality={100}
               fill
               priority
@@ -47,7 +47,7 @@ export function LessonPracticeView({ id }: { id: string }) {
             />
             <Image
               src={selectedLesson.image}
-              alt="ESL lesson"
+              alt={`${selectedLesson.title} - Practice lesson image`}
               quality={100}
               width={1400}
               height={875}

@@ -54,7 +54,7 @@ export default function LoginForm() {
   const errorMsg = error instanceof Error ? error.message : null;
 
   return (
-    <main className={styles["form-container"]}>
+    <section className={styles["form-container"]}>
       <h1>Welcome</h1>
       <form className={styles.form} onSubmit={handleSubmit}>
         <label htmlFor="username">Username:</label>
@@ -65,6 +65,9 @@ export default function LoginForm() {
           placeholder="Enter your username"
           className={styles.input}
           required
+          aria-required="true"
+          aria-invalid={errorMsg ? "true" : "false"}
+          aria-describedby={errorMsg ? "login-error" : undefined}
           value={username}
           autoComplete="off"
           onChange={(e) => {
@@ -84,23 +87,41 @@ export default function LoginForm() {
             placeholder="Enter your password"
             className={styles.input}
             required
+            aria-required="true"
+            aria-invalid={errorMsg ? "true" : "false"}
+            aria-describedby={errorMsg ? "login-error" : undefined}
             autoComplete="off"
           />
-          <span
+          <button
+            type="button"
             className={styles.eye}
             onClick={() =>
               setPasswordType(passwordType === "password" ? "text" : "password")
             }
+            aria-label={
+              passwordType === "password"
+                ? "Show password"
+                : "Hide password"
+            }
           >
             <MdOutlineRemoveRedEye />
-          </span>
+          </button>
         </div>
 
         <button className={styles.button} type="submit" disabled={isMutating}>
           {isMutating ? "Logging in..." : "Login"}
         </button>
       </form>
-      {errorMsg && <p className={styles.error}>{errorMsg}</p>}
-    </main>
+      {errorMsg && (
+        <p
+          id="login-error"
+          role="alert"
+          aria-live="assertive"
+          className={styles.error}
+        >
+          {errorMsg}
+        </p>
+      )}
+    </section>
   );
 }

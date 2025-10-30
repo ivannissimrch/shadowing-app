@@ -55,13 +55,13 @@ export default function DeleteStudentModal({
 
   return (
     <StyledDialog
+      aria-modal="true"
       open={isOpen}
       onClose={onClose}
       aria-labelledby="delete-student-dialog-title"
       disableScrollLock={true}
       keepMounted={false}
-      disableRestoreFocus={true}
-      disableEnforceFocus={true}
+      autoFocus={true}
     >
       <DialogTitle
         id="delete-student-dialog-title"
@@ -80,7 +80,13 @@ export default function DeleteStudentModal({
           <strong>{studentUsername}</strong>? This action cannot be undone.
         </p>
         {errorMessage && (
-          <p style={{ color: "red", marginTop: "8px" }}>{errorMessage}</p>
+          <p
+            style={{ color: "red", marginTop: "8px" }}
+            role="alert"
+            aria-live="assertive"
+          >
+            {errorMessage}
+          </p>
         )}
       </StyledDialogContent>
       <StyledDialogActions>
@@ -91,6 +97,7 @@ export default function DeleteStudentModal({
           variant="contained"
           onClick={handleDelete}
           disabled={isMutating}
+          aria-label={`Delete student ${studentUsername}. This action cannot be undone.`}
           sx={{
             backgroundColor: "#dc2626",
             "&:hover": {
