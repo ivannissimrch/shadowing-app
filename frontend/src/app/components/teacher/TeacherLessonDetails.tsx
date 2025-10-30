@@ -32,7 +32,7 @@ export default function TeacherLessonDetails({
             </div>
             <Image
               src={selectedLesson.image}
-              alt="Lesson Image"
+              alt={`${selectedLesson.title} - Lesson illustration`}
               quality={100}
               width={625}
               height={390}

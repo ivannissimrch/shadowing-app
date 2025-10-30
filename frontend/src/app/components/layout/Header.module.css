@@ -40,7 +40,7 @@
 }
 
 .active {
-  background-color: var(--color-primary-light);
+  background-color: var(--color-primary);
   color: var(--color-white);
   border: none;
   padding: var(--spacing-sm) var(--spacing-md);

@@ -95,7 +95,7 @@
 }
 
 .statusCompleted {
-  background-color: var(--color-success);
+  background-color: #047857;
   color: var(--color-white);
 }
 
