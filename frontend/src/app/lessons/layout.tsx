@@ -10,7 +10,7 @@ export default function LessonsLayout({
   return (
     <>
       <Header />
-      <section className={styles.container}>{children}</section>
+      <main className={styles.container}>{children}</main>
       <Footer />
     </>
   );
