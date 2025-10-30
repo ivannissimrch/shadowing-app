@@ -8,7 +8,7 @@
   /* Primary colors */
   --color-primary: #2563eb;
   --color-primary-hover: #1d4ed8;
-  --color-primary-light: #3b82f6;
+  --color-primary-light: #2563eb; /* Changed from #3b82f6 for WCAG AA contrast (4.51:1) */
   --color-primary-dark: #1e3a8a;
 
   /* Semantic colors */
