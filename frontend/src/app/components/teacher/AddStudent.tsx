@@ -128,7 +128,16 @@ export default function AddStudent({
             </div>
           </form>
 
-          {errorMessage && <div>{errorMessage}</div>}
+          {errorMessage && (
+            <div
+              id="from-error"
+              role="alert"
+              aria-live="assertive"
+              style={{ color: "red", marginTop: "10px" }}
+            >
+              {errorMessage}
+            </div>
+          )}
         </StyledDialogContent>
         <StyledDialogActions>
           <StyledButton variant="outlined" onClick={closeAddStudentDialog}>
