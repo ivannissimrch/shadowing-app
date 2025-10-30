@@ -121,7 +121,10 @@ export default function YouTubePlayer({ selectedLesson }: YouTubePlayerProps) {
   };
 
   return (
-    <>
+    <section
+      role="region"
+      aria-label="YouTube video player for pronunciation practice"
+    >
       <YouTube
         videoId={selectedLesson.video_id}
         opts={opts}
@@ -143,6 +146,6 @@ export default function YouTubePlayer({ selectedLesson }: YouTubePlayerProps) {
           <LoopSegmentInfo startTime={startTime} endTime={endTime} />
         )}
       </section>
-    </>
+    </section>
   );
 }

@@ -12,10 +12,10 @@ export default function SegmentPlayer({ selectedLesson }: SegmentPlayerProps) {
   }
 
   return (
-    <div className={styles.card}>
+    <section className={styles.card}>
       <div className={styles.videoBox}>
         <YouTubePlayer selectedLesson={selectedLesson} />
       </div>
-    </div>
+    </section>
   );
 }

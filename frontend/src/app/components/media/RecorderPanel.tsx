@@ -42,15 +42,13 @@ export default function RecorderPanel({ selectedLesson }: RecorderProps) {
 
   return (
     <ErrorBoundary fallback={<p>Error loading recorder panel</p>}>
-      <div className={styles.panel}>
+      <section className={styles.panel}>
         {!audioURL && <RecorderVoiceRecorder />}
-
         {audioURL && <RecorderAudioPlayer selectedLesson={selectedLesson} />}
-
         {selectedLesson?.feedback && (
           <p className={styles.feedback}>{selectedLesson.feedback}</p>
         )}
-      </div>
+      </section>
     </ErrorBoundary>
   );
 }

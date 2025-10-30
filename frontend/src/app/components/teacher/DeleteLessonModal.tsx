@@ -40,7 +40,6 @@ export default function DeleteLessonModal({
 
   const handleDelete = async () => {
     setErrorMessage("");
-
     await trigger(undefined);
 
     if (error) {
@@ -49,7 +48,6 @@ export default function DeleteLessonModal({
       );
       return;
     }
-
     onClose();
   };
 
@@ -60,8 +58,8 @@ export default function DeleteLessonModal({
       aria-labelledby="delete-lesson-dialog-title"
       disableScrollLock={true}
       keepMounted={false}
-      disableRestoreFocus={true}
-      disableEnforceFocus={true}
+      autoFocus={true}
+      aria-modal="true"
     >
       <DialogTitle
         id="delete-lesson-dialog-title"
@@ -81,7 +79,13 @@ export default function DeleteLessonModal({
           remove all student assignments.
         </p>
         {errorMessage && (
-          <p style={{ color: "red", marginTop: "8px" }}>{errorMessage}</p>
+          <div
+            style={{ color: "red", marginTop: "8px" }}
+            role="alert"
+            aria-live="assertive"
+          >
+            {errorMessage}
+          </div>
         )}
       </StyledDialogContent>
       <StyledDialogActions>
@@ -92,6 +96,7 @@ export default function DeleteLessonModal({
           variant="contained"
           onClick={handleDelete}
           disabled={isMutating}
+          aria-label={`Delete lesson ${lessonTitle}. This action cannot be undone.`}
           sx={{
             backgroundColor: "#dc2626",
             "&:hover": {
