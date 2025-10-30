@@ -58,8 +58,8 @@ export default function DeleteLessonModal({
       aria-labelledby="delete-lesson-dialog-title"
       disableScrollLock={true}
       keepMounted={false}
-      disableRestoreFocus={true}
-      disableEnforceFocus={true}
+      autoFocus={true}
+      aria-modal="true"
     >
       <DialogTitle
         id="delete-lesson-dialog-title"
