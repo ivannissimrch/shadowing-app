@@ -81,8 +81,8 @@ export default function AddStudent({
         aria-labelledby="add-student-dialog-title"
         disableScrollLock={true}
         keepMounted={false}
-        disableRestoreFocus={true}
-        disableEnforceFocus={true}
+        autoFocus={true}
+        aria-modal="true"
       >
         <DialogTitle
           id="add-student-dialog-title"
@@ -100,6 +100,7 @@ export default function AddStudent({
             <div>
               <label htmlFor="username">Username</label>
               <input
+                aria-required="true"
                 id="username"
                 type="text"
                 value={username}
@@ -109,12 +110,17 @@ export default function AddStudent({
                 }}
                 placeholder="Enter student username"
                 autoComplete="username"
+                required
+                aria-invalid={errorMessage ? "true" : "false"}
+                aria-describedby={errorMessage ? "form-error" : undefined}
               />
             </div>
 
             <div>
               <label htmlFor="password">Password</label>
               <input
+                required
+                aria-required="true"
                 id="password"
                 type="password"
                 value={password}
@@ -124,13 +130,15 @@ export default function AddStudent({
                 }}
                 placeholder="Enter student password"
                 autoComplete="new-password"
+                aria-invalid={errorMessage ? "true" : "false"}
+                aria-describedby={errorMessage ? "form-error" : undefined}
               />
             </div>
           </form>
 
           {errorMessage && (
             <div
-              id="from-error"
+              id="form-error"
               role="alert"
               aria-live="assertive"
               style={{ color: "red", marginTop: "10px" }}
