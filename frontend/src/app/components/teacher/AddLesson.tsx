@@ -141,13 +141,13 @@ export default function AddLesson({
   return (
     <ErrorBoundary fallback={<div>Something went wrong.</div>}>
       <StyledDialog
+        aria-modal="true"
         open={isAddLessonDialogOpen}
         onClose={closeAddLessonDialog}
         aria-labelledby="add-lesson-dialog-title"
         disableScrollLock={true}
         keepMounted={false}
-        disableRestoreFocus={true}
-        disableEnforceFocus={true}
+        autoFocus={true}
       >
         <DialogTitle
           id="add-lesson-dialog-title"
@@ -170,8 +170,12 @@ export default function AddLesson({
                 type="text"
                 placeholder="Enter lesson title"
                 required
+                aria-required="true"
+                aria-invalid={errorMessage ? "true" : "false"}
+                aria-describedby={errorMessage ? "add-lesson-error" : undefined}
                 value={formData.title}
                 onChange={handleInputChange}
+                autoFocus
               />
             </div>
 
@@ -182,6 +186,9 @@ export default function AddLesson({
                 type="text"
                 placeholder="Enter YouTube video url "
                 required
+                aria-required="true"
+                aria-invalid={errorMessage ? "true" : "false"}
+                aria-describedby={errorMessage ? "add-lesson-error" : undefined}
                 value={formData.videoId}
                 onChange={handleInputChange}
               />
@@ -194,8 +201,19 @@ export default function AddLesson({
                 type="file"
                 accept="image/*"
                 required
+                aria-required="true"
                 onChange={handleImageUpload}
-                style={{ display: "none" }}
+                style={{
+                  position: "absolute",
+                  width: "1px",
+                  height: "1px",
+                  padding: 0,
+                  margin: "-1px",
+                  overflow: "hidden",
+                  clip: "rect(0, 0, 0, 0)",
+                  whiteSpace: "nowrap",
+                  border: 0,
+                }}
               />
               <label
                 htmlFor="image-upload"
@@ -229,6 +247,7 @@ export default function AddLesson({
             </div>
             {errorMessage && (
               <div
+                id="add-lesson-error"
                 role="alert"
                 aria-live="assertive"
                 style={{ color: "red", marginTop: "10px" }}
