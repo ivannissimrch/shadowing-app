@@ -99,7 +99,15 @@ export default function AssignLessonModal({
               </Suspense>
             </ErrorBoundary>
           </div>
-          {errorMessage && <p>{errorMessage}</p>}
+          {errorMessage && (
+            <p
+              role="alert"
+              aria-live="assertive"
+              style={{ color: "red", marginTop: "8px" }}
+            >
+              {errorMessage}
+            </p>
+          )}
         </form>
       </StyledDialogContent>
       <StyledDialogActions>

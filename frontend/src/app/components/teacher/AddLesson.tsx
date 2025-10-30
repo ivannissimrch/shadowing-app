@@ -227,7 +227,15 @@ export default function AddLesson({
                 </div>
               )}
             </div>
-            {errorMessage && <div>{errorMessage}</div>}
+            {errorMessage && (
+              <div
+                role="alert"
+                aria-live="assertive"
+                style={{ color: "red", marginTop: "10px" }}
+              >
+                {errorMessage}
+              </div>
+            )}
           </form>
         </StyledDialogContent>
         <StyledDialogActions>
