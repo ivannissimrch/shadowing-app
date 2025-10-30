@@ -54,7 +54,7 @@ export default function LoginForm() {
   const errorMsg = error instanceof Error ? error.message : null;
 
   return (
-    <main className={styles["form-container"]}>
+    <section className={styles["form-container"]}>
       <h1>Welcome</h1>
       <form className={styles.form} onSubmit={handleSubmit}>
         <label htmlFor="username">Username:</label>
@@ -101,6 +101,6 @@ export default function LoginForm() {
         </button>
       </form>
       {errorMsg && <p className={styles.error}>{errorMsg}</p>}
-    </main>
+    </section>
   );
 }
