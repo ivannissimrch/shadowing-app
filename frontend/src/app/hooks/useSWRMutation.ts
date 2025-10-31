@@ -24,7 +24,6 @@ export function useSWRMutationHook<TData, TVariables = unknown>(
   >(
     endpoint,
     async (url: string, { arg }: { arg: TVariables }) => {
-      // Only pass options as config, don't duplicate arg in config.data
       const requestConfig: AxiosRequestConfig = {
         ...options,
       };
@@ -58,7 +57,7 @@ export function useSWRMutationHook<TData, TVariables = unknown>(
       return response.data.data;
     },
     {
-      throwOnError: true,
+      throwOnError: false,
       ...config,
     }
   );
