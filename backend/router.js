@@ -239,6 +239,45 @@ router.post(
   })
 );
 
+// Unassign lesson from student (teacher only)
+router.delete(
+  "/lessons/:lessonId/unassign/:studentId",
+  asyncHandler(async (req, res, next) => {
+    // 1. Check if user is a teacher
+    if (req.user.role !== "teacher") {
+      return res.status(403).json({
+        success: false,
+        message: "Forbidden: Teachers only",
+      });
+    }
+
+    const { lessonId, studentId } = req.params;
+
+    //Delete the assignment from database (any teacher can remove)
+    const result = await db.query(
+      `DELETE FROM assignments
+       WHERE lesson_id = $1
+       AND student_id = $2
+       RETURNING *`,
+      [lessonId, studentId]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message:
+          "Assignment not found or you don't have permission to unassign it",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Lesson unassigned successfully",
+      data: result.rows[0],
+    });
+  })
+);
+
 //Get all users
 router.get(
   "/users",

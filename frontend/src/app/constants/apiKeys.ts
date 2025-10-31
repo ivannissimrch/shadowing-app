@@ -10,6 +10,8 @@ export const API_PATHS = {
   // Teacher Lessons
   ALL_LESSONS: "/api/all-lessons",
   ASSIGN_LESSON: (lessonId: string) => `/api/lessons/${lessonId}/assign`,
+  UNASSIGN_LESSON: (lessonId: string, studentId: string) =>
+    `/api/lessons/${lessonId}/unassign/${studentId}`,
 
   // Users/Students
   USERS: "/api/users",
