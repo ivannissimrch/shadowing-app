@@ -42,6 +42,7 @@ export function LessonPracticeView({ id }: { id: string }) {
               alt={`${selectedLesson.title} - Practice lesson image`}
               quality={100}
               fill
+              sizes="(max-width: 768px) 100vw, 50vw"
               priority
               className={!isVideoVisible ? "" : styles.hide}
             />
