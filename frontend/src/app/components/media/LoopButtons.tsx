@@ -1,5 +1,6 @@
 import styles from "./YouTubePlayer.module.css";
 import getFormattedTime from "../../helpers/getFormattedTime";
+import { MdLoop, MdPlayArrow } from "react-icons/md";
 
 interface LoopButtonsProps {
   startTime: number | null;
@@ -44,7 +45,15 @@ export default function LoopButtons({
               isLooping ? styles.active : ""
             }`}
           >
-            {isLooping ? "🔁 Loop ON" : "▶️ Start Loop"}
+            {isLooping ? (
+              <>
+                <MdLoop /> Loop ON
+              </>
+            ) : (
+              <>
+                <MdPlayArrow /> Start Loop
+              </>
+            )}
           </button>
 
           <button

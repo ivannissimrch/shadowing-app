@@ -1,14 +1,14 @@
 "use client";
-import YouTube, {
-  YouTubeProps,
-  YouTubePlayer as YTPlayer,
-} from "react-youtube";
+import YouTube, { YouTubePlayer as YTPlayer } from "react-youtube";
 import { Lesson } from "../../Types";
 import { useRef, useState, useEffect } from "react";
 import styles from "./YouTubePlayer.module.css";
 import LoopSegmentInfo from "./LoopSegmentInfo";
 import VideoTimer from "./VideoTimer";
 import LoopButtons from "./LoopButtons";
+import SkeletonLoader from "../ui/SkeletonLoader";
+import useLoopButtons from "@/app/hooks/useLoopButtons";
+import useYouTubePlayer from "@/app/hooks/useYouTubePlayer";
 
 interface YouTubePlayerProps {
   selectedLesson: Lesson | undefined;
@@ -16,109 +16,49 @@ interface YouTubePlayerProps {
 
 export default function YouTubePlayer({ selectedLesson }: YouTubePlayerProps) {
   const playerRef = useRef<YTPlayer | null>(null);
-  const [isLooping, setIsLooping] = useState(false);
-  const [startTime, setStartTime] = useState<number | null>(null);
-  const [endTime, setEndTime] = useState<number | null>(null);
   const [currentTime, setCurrentTime] = useState<number>(0);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const updateTimeIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
+  const {
+    updateStartAtCurrentTime,
+    updateEndAtCurrentTime,
+    toggleLoop,
+    clearLoop,
+    isLooping,
+    startTime,
+    endTime,
+  } = useLoopButtons(playerRef, intervalRef);
+  const lessonLoading = !selectedLesson;
+
+  const { onPlayerReady, onStateChange, opts } = useYouTubePlayer(
+    playerRef,
+    intervalRef,
+    setCurrentTime,
+    updateTimeIntervalRef,
+    isLooping,
+    startTime,
+    endTime
+  );
+
   // Cleanup intervals on unmount
   useEffect(() => {
+    const loopInterval = intervalRef.current;
+    const timeInterval = updateTimeIntervalRef.current;
+
     return () => {
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
+      if (loopInterval) {
+        clearInterval(loopInterval);
       }
-      if (updateTimeIntervalRef.current) {
-        clearInterval(updateTimeIntervalRef.current);
+      if (timeInterval) {
+        clearInterval(timeInterval);
       }
     };
   }, []);
 
-  if (!selectedLesson) {
-    return <div>Loading...</div>;
+  if (lessonLoading) {
+    return <SkeletonLoader />;
   }
-
-  const onPlayerReady: YouTubeProps["onReady"] = (event) => {
-    playerRef.current = event.target;
-    event.target.pauseVideo();
-
-    // Start updating current time display
-    updateTimeIntervalRef.current = setInterval(() => {
-      if (playerRef.current) {
-        setCurrentTime(Math.floor(playerRef.current.getCurrentTime()));
-      }
-    }, 100);
-  };
-
-  const onStateChange: YouTubeProps["onStateChange"] = (event) => {
-    const player = event.target;
-
-    if (
-      event.data === 1 &&
-      isLooping &&
-      startTime !== null &&
-      endTime !== null
-    ) {
-      // Playing state - start checking for end time
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-      }
-
-      intervalRef.current = setInterval(() => {
-        const currentTime = player.getCurrentTime();
-
-        // Loop back to start when end time is reached
-        if (currentTime >= endTime) {
-          player.seekTo(startTime, true);
-        }
-      }, 100); // Check every 100ms
-    } else if (event.data !== 1) {
-      // Not playing - clear interval
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-        intervalRef.current = null;
-      }
-    }
-  };
-
-  function updateStartAtCurrentTime() {
-    if (playerRef.current) {
-      const time = Math.floor(playerRef.current.getCurrentTime());
-      setStartTime(time);
-    }
-  }
-
-  function updateEndAtCurrentTime() {
-    if (playerRef.current) {
-      const time = Math.floor(playerRef.current.getCurrentTime());
-      setEndTime(time);
-    }
-  }
-
-  function toggleLoop() {
-    if (!isLooping && playerRef.current && startTime !== null) {
-      // Enable looping and seek to start
-      playerRef.current.seekTo(startTime, true);
-    }
-    setIsLooping(!isLooping);
-  }
-
-  function clearLoop() {
-    setStartTime(null);
-    setEndTime(null);
-    setIsLooping(false);
-    if (intervalRef.current) {
-      clearInterval(intervalRef.current);
-      intervalRef.current = null;
-    }
-  }
-
-  const opts: YouTubeProps["opts"] = {
-    playerVars: {
-      autoplay: 0,
-    },
-  };
 
   return (
     <section
