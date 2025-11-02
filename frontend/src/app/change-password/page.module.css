@@ -1,0 +1,195 @@
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: calc(100vh - 200px);
+  padding: var(--spacing-xl);
+}
+
+.card {
+  background: var(--color-bg-white);
+  border-radius: var(--card-border-radius);
+  box-shadow: var(--card-shadow);
+  padding: var(--spacing-xl);
+  width: 100%;
+  max-width: 500px;
+}
+
+.card h1 {
+  margin: 0 0 var(--spacing-lg) 0;
+  color: var(--color-text-tertiary);
+  font-size: var(--font-size-2xl);
+  text-align: center;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-20);
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.formGroup label {
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-tertiary);
+  font-size: var(--font-size-base);
+}
+
+.passwordInputWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.passwordInputWrapper input {
+  flex: 1;
+  padding-right: var(--spacing-3xl);
+}
+
+.formGroup input {
+  padding: var(--spacing-12);
+  border: var(--input-border);
+  border-radius: var(--input-border-radius);
+  font-size: var(--font-size-base);
+  transition: border-color var(--transition-base);
+  width: 100%;
+}
+
+.togglePassword {
+  position: absolute;
+  right: var(--spacing-sm);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: var(--spacing-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text-secondary);
+  transition: color var(--transition-base);
+}
+
+.togglePassword:hover {
+  color: var(--color-primary);
+}
+
+.togglePassword:focus {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+.togglePassword svg {
+  width: 20px;
+  height: 20px;
+}
+
+.formGroup input:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.formGroup input:disabled {
+  background-color: var(--color-bg-lighter);
+  cursor: not-allowed;
+}
+
+.formGroup input[aria-invalid="true"] {
+  border-color: var(--color-error);
+}
+
+.formGroup input[aria-invalid="true"]:focus {
+  border-color: var(--color-error);
+  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
+}
+
+.formGroup small {
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+}
+
+.error {
+  background-color: #fee;
+  color: var(--color-error);
+  padding: var(--spacing-12);
+  border-radius: var(--radius-sm);
+  border-left: 4px solid var(--color-error);
+  font-size: var(--font-size-base);
+}
+
+.success {
+  background-color: #efe;
+  color: var(--color-success);
+  padding: var(--spacing-12);
+  border-radius: var(--radius-sm);
+  border-left: 4px solid var(--color-success);
+  font-size: var(--font-size-base);
+}
+
+.buttons {
+  display: flex;
+  gap: var(--spacing-md);
+  margin-top: var(--spacing-sm);
+}
+
+.cancelButton,
+.submitButton {
+  flex: 1;
+  padding: var(--spacing-12);
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition: all var(--transition-base);
+}
+
+.cancelButton {
+  background-color: var(--color-bg-lighter);
+  color: var(--color-text-tertiary);
+}
+
+.cancelButton:hover:not(:disabled) {
+  background-color: var(--color-border-gray);
+}
+
+.submitButton {
+  background-color: var(--color-primary);
+  color: var(--color-white);
+}
+
+.submitButton:hover:not(:disabled) {
+  background-color: var(--color-primary-hover);
+}
+
+.cancelButton:disabled,
+.submitButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Mobile responsive */
+@media (max-width: 600px) {
+  .container {
+    padding: var(--spacing-md);
+    min-height: calc(100vh - 150px);
+  }
+
+  .card {
+    padding: var(--spacing-lg);
+  }
+
+  .card h1 {
+    font-size: var(--font-size-xl);
+  }
+
+  .buttons {
+    flex-direction: column;
+  }
+}

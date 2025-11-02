@@ -29,4 +29,7 @@ export const API_PATHS = {
   // Uploads
   UPLOAD_IMAGE: "/api/upload-image",
   UPLOAD_AUDIO: "/api/upload-audio",
+
+  // User Settings
+  CHANGE_PASSWORD: "/api/change-password",
 } as const;

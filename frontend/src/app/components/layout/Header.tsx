@@ -28,6 +28,14 @@ export default function Header() {
             Lessons
           </Link>
         )}
+        <Link
+          href="/change-password"
+          className={`${styles.link} ${
+            pathname === "/change-password" ? styles.active : ""
+          }`}
+        >
+          Change Password
+        </Link>
       </div>
       <Logout />
     </header>

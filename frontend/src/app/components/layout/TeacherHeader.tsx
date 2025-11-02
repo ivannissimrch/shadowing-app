@@ -44,6 +44,15 @@ export default function TeacherHeader() {
           >
             Lessons
           </Link>
+          <Link
+            href="/change-password"
+            className={`${styles.link} ${
+              pathname === "/change-password" ? styles.active : ""
+            }`}
+            onClick={() => setIsMobileMenuOpen(false)}
+          >
+            Change Password
+          </Link>
           <div className={styles.mobileLogout}>
             <Logout />
           </div>

@@ -4,6 +4,7 @@ import path from "path";
 import { db } from "./server.js";
 import asyncHandler from "./handlers/asyncHandler.js";
 import { uploadImage, uploadAudio } from "./services/azureBlobStorage.js";
+import { comparePasswords, hashPassword } from "./auth.js";
 
 const router = Router();
 
@@ -525,6 +526,73 @@ router.delete(
     res.json({
       success: true,
       message: "Lesson deleted successfully",
+    });
+  })
+);
+
+// Change password (both teachers and students)
+router.patch(
+  "/change-password",
+  asyncHandler(async (req, res, next) => {
+    const { currentPassword, newPassword } = req.body;
+    const userId = req.user.id;
+
+    // Validate request body
+    if (!currentPassword || !newPassword) {
+      return res.status(400).json({
+        success: false,
+        message: "Current password and new password are required",
+      });
+    }
+
+    // Validate new password length
+    if (newPassword.length < 6) {
+      return res.status(400).json({
+        success: false,
+        message: "New password must be at least 6 characters long",
+      });
+    }
+
+    // Get user's current password hash from database
+    const userResult = await db.query(
+      "SELECT password FROM users WHERE id = $1",
+      [userId]
+    );
+
+    if (userResult.rows.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    const currentPasswordHash = userResult.rows[0].password;
+
+    // Verify current password
+    const isPasswordValid = await comparePasswords(
+      currentPassword,
+      currentPasswordHash
+    );
+
+    if (!isPasswordValid) {
+      return res.status(401).json({
+        success: false,
+        message: "Current password is incorrect",
+      });
+    }
+
+    // Hash new password
+    const newPasswordHash = await hashPassword(newPassword);
+
+    // Update password in database
+    await db.query(
+      "UPDATE users SET password = $1 WHERE id = $2",
+      [newPasswordHash, userId]
+    );
+
+    res.json({
+      success: true,
+      message: "Password changed successfully",
     });
   })
 );
