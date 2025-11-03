@@ -10,8 +10,6 @@
     "test": "vitest"
   },
   "dependencies": {
-    "@emotion/react": "^11.14.0",
-    "@emotion/styled": "^11.14.1",
     "@mui/material": "^7.2.0",
     "axios": "^1.12.2",
     "next": "15.3.4",
@@ -20,8 +18,6 @@
     "react-error-boundary": "^6.0.0",
     "react-h5-audio-player": "^3.10.0",
     "react-icons": "^5.5.0",
-    "react-player": "^3.3.1",
-    "react-voice-recorder-player": "^1.2.0",
     "react-youtube": "^10.1.0",
     "swr": "^2.3.6"
   },
