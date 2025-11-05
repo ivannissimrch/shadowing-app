@@ -1,6 +1,7 @@
 import styles from "./YouTubePlayer.module.css";
 import getFormattedTime from "../../helpers/getFormattedTime";
 import { MdLoop, MdPlayArrow } from "react-icons/md";
+import { LoopState } from "./loopTypes";
 
 interface LoopButtonsProps {
   startTime: number | null;
@@ -10,6 +11,7 @@ interface LoopButtonsProps {
   updateEndAtCurrentTime: () => void;
   toggleLoop: () => void;
   clearLoop: () => void;
+  state: LoopState;
 }
 
 export default function LoopButtons({
@@ -20,22 +22,26 @@ export default function LoopButtons({
   updateEndAtCurrentTime,
   toggleLoop,
   clearLoop,
+  state,
 }: LoopButtonsProps) {
   return (
     <div className={styles.buttonsContainer}>
-      <button
-        onClick={updateStartAtCurrentTime}
-        className={`${styles.button} ${styles.setStartButton}`}
-      >
-        Set Start {startTime !== null && `(${getFormattedTime(startTime)})`}
-      </button>
-
-      <button
-        onClick={updateEndAtCurrentTime}
-        className={`${styles.button} ${styles.setEndButton}`}
-      >
-        Set End {endTime !== null && `(${getFormattedTime(endTime)})`}
-      </button>
+      {state.status === "idle" && (
+        <button
+          onClick={updateStartAtCurrentTime}
+          className={`${styles.button} ${styles.setStartButton}`}
+        >
+          Set Start {startTime !== null && `(${getFormattedTime(startTime)})`}
+        </button>
+      )}
+      {state.status === "start_set" && (
+        <button
+          onClick={updateEndAtCurrentTime}
+          className={`${styles.button} ${styles.setEndButton}`}
+        >
+          Set End {endTime !== null && `(${getFormattedTime(endTime)})`}
+        </button>
+      )}
 
       {startTime !== null && endTime !== null && (
         <>

@@ -17,6 +17,7 @@
   display: flex;
   gap: var(--spacing-sm);
   flex-wrap: wrap;
+  justify-content: center;
 }
 
 .button {

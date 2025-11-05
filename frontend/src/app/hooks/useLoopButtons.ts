@@ -1,50 +1,72 @@
-import { useState } from "react";
+import { useReducer, useRef, useEffect } from "react";
 import { YouTubePlayer as YTPlayer } from "react-youtube";
+import { loopReducer } from "@/app/helpers/loopReducer";
+import { LoopState } from "@/app/components/media/loopTypes";
 
 export default function useLoopButtons(
-  playerRef: React.RefObject<YTPlayer | null>,
-  intervalRef: React.RefObject<NodeJS.Timeout | null>
+  playerRef: React.RefObject<YTPlayer | null>
 ) {
-  const [isLooping, setIsLooping] = useState(false);
-  const [startTime, setStartTime] = useState<number | null>(null);
-  const [endTime, setEndTime] = useState<number | null>(null);
+  const initialLoopState: LoopState = { status: "idle" };
+  const [state, dispatch] = useReducer(loopReducer, initialLoopState);
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
   function updateStartAtCurrentTime() {
     if (playerRef.current) {
       const time = Math.floor(playerRef.current.getCurrentTime());
-      setStartTime(time);
+      dispatch({ type: "SET_START", time });
     }
   }
   function updateEndAtCurrentTime() {
     if (playerRef.current) {
       const time = Math.floor(playerRef.current.getCurrentTime());
-      setEndTime(time);
+      dispatch({ type: "SET_END", time });
     }
   }
   function toggleLoop() {
-    if (!isLooping && playerRef.current && startTime !== null) {
-      // Enable looping and seek to start
-      playerRef.current.seekTo(startTime, true);
+    if (state.status === "ready") {
+      dispatch({ type: "START_LOOP" });
+    } else if (state.status === "looping") {
+      dispatch({ type: "STOP_LOOP" });
     }
-    setIsLooping(!isLooping);
   }
   function clearLoop() {
-    setStartTime(null);
-    setEndTime(null);
-    setIsLooping(false);
+    dispatch({ type: "CLEAR" });
     if (intervalRef.current) {
       clearInterval(intervalRef.current);
       intervalRef.current = null;
     }
   }
 
+  useEffect(() => {
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
+    }
+
+    if (state.status !== "looping") {
+      return;
+    }
+
+    intervalRef.current = setInterval(() => {
+      const currentTime = playerRef.current?.getCurrentTime() ?? 0;
+      if (playerRef.current && currentTime >= state.endTime) {
+        playerRef.current.seekTo(state.startTime, true);
+      }
+    }, 100);
+
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
+      }
+    };
+  }, [state, playerRef]);
+
   return {
     updateStartAtCurrentTime,
     updateEndAtCurrentTime,
     toggleLoop,
     clearLoop,
-    isLooping,
-    startTime,
-    endTime,
+    state,
   };
 }

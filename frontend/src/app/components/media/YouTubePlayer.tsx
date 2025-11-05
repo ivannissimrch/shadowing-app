@@ -1,7 +1,7 @@
 "use client";
 import YouTube, { YouTubePlayer as YTPlayer } from "react-youtube";
 import { Lesson } from "../../Types";
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState } from "react";
 import styles from "./YouTubePlayer.module.css";
 import LoopSegmentInfo from "./LoopSegmentInfo";
 import VideoTimer from "./VideoTimer";
@@ -25,11 +25,16 @@ export default function YouTubePlayer({ selectedLesson }: YouTubePlayerProps) {
     updateEndAtCurrentTime,
     toggleLoop,
     clearLoop,
-    isLooping,
-    startTime,
-    endTime,
-  } = useLoopButtons(playerRef, intervalRef);
+    state,
+  } = useLoopButtons(playerRef);
   const lessonLoading = !selectedLesson;
+
+  const isLooping = state.status === "looping";
+  const startTime = state.status === "idle" ? null : state.startTime;
+  const endTime =
+    state.status === "idle" || state.status === "start_set"
+      ? null
+      : state.endTime;
 
   const { onPlayerReady, onStateChange, opts } = useYouTubePlayer(
     playerRef,
@@ -40,21 +45,6 @@ export default function YouTubePlayer({ selectedLesson }: YouTubePlayerProps) {
     startTime,
     endTime
   );
-
-  // Cleanup intervals on unmount
-  useEffect(() => {
-    const loopInterval = intervalRef.current;
-    const timeInterval = updateTimeIntervalRef.current;
-
-    return () => {
-      if (loopInterval) {
-        clearInterval(loopInterval);
-      }
-      if (timeInterval) {
-        clearInterval(timeInterval);
-      }
-    };
-  }, []);
 
   if (lessonLoading) {
     return <SkeletonLoader />;
@@ -81,6 +71,7 @@ export default function YouTubePlayer({ selectedLesson }: YouTubePlayerProps) {
           updateEndAtCurrentTime={updateEndAtCurrentTime}
           toggleLoop={toggleLoop}
           clearLoop={clearLoop}
+          state={state}
         />
         {startTime !== null && endTime !== null && (
           <LoopSegmentInfo startTime={startTime} endTime={endTime} />
