@@ -36,14 +36,11 @@ export default function YouTubePlayer({ selectedLesson }: YouTubePlayerProps) {
       ? null
       : state.endTime;
 
-  const { onPlayerReady, onStateChange, opts } = useYouTubePlayer(
+  const { onPlayerReady, opts } = useYouTubePlayer(
     playerRef,
     intervalRef,
     setCurrentTime,
-    updateTimeIntervalRef,
-    isLooping,
-    startTime,
-    endTime
+    updateTimeIntervalRef
   );
 
   if (lessonLoading) {
@@ -59,7 +56,6 @@ export default function YouTubePlayer({ selectedLesson }: YouTubePlayerProps) {
         videoId={selectedLesson.video_id}
         opts={opts}
         onReady={onPlayerReady}
-        onStateChange={onStateChange}
       />
       <section className={styles.controlsContainer}>
         <VideoTimer currentTime={currentTime} />
