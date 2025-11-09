@@ -26,14 +26,6 @@
   z-index: -1;
 }
 
-.card:hover::before {
-  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1), 0 8px 24px rgba(0, 0, 0, 0.12);
-}
-
-.card:hover {
-  border-color: var(--color-primary);
-}
-
 .cardHeader {
   background: var(--color-primary);
   padding: var(--spacing-xl);
@@ -123,7 +115,6 @@
   color: var(--color-white);
   border: none;
   cursor: pointer;
-  transition: all 0.2s ease;
   text-decoration: none;
   font-size: var(--font-size-sm);
 }
@@ -131,7 +122,6 @@
 .button:hover {
   background: var(--color-primary-hover);
   box-shadow: inset 0 -3px 0 rgba(0, 0, 0, 0.2);
-  gap: var(--spacing-md);
 }
 
 /* Tablet and up */
