@@ -6,7 +6,6 @@ import {
   FaCheckCircle,
   FaHourglassHalf,
   FaPlayCircle,
-  FaArrowRight,
 } from "react-icons/fa";
 
 export default function Card({
@@ -54,7 +53,7 @@ export default function Card({
         </div>
       </div>
       <Link href={linkPath} className={styles.button}>
-        Start Lesson <FaArrowRight />
+        Start Lesson
       </Link>
     </div>
   );
