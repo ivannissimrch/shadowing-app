@@ -20,6 +20,11 @@ backend/dist/
 *.log
 npm-debug.log*
 
+# Test coverage
+frontend/coverage/
+backend/coverage/
+coverage/
+
 # IDE
 .vscode/
 .idea/
