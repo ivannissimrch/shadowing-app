@@ -12,9 +12,7 @@ export default function Practice({
 }) {
   const { id } = use(params);
   return (
-    <ErrorBoundary
-      fallbackRender={(props) => <ErrorFallback {...props} />}
-    >
+    <ErrorBoundary fallbackRender={(props) => <ErrorFallback {...props} />}>
       <Suspense fallback={<SkeletonLoader />}>
         <LessonPracticeView id={id} />
       </Suspense>

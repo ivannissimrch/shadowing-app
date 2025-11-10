@@ -22,9 +22,7 @@ export default function TeacherHeader() {
           ☰
         </button>
         <nav
-          className={`${styles.nav} ${
-            isMobileMenuOpen ? styles.navOpen : ""
-          }`}
+          className={`${styles.nav} ${isMobileMenuOpen ? styles.navOpen : ""}`}
         >
           <Link
             href="/teacher"
@@ -43,6 +41,15 @@ export default function TeacherHeader() {
             onClick={() => setIsMobileMenuOpen(false)}
           >
             Lessons
+          </Link>
+          <Link
+            href="/change-password"
+            className={`${styles.link} ${
+              pathname === "/change-password" ? styles.active : ""
+            }`}
+            onClick={() => setIsMobileMenuOpen(false)}
+          >
+            Change Password
           </Link>
           <div className={styles.mobileLogout}>
             <Logout />

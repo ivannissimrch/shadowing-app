@@ -24,6 +24,12 @@
   position: relative;
 }
 
+.navLinks {
+  display: flex;
+  gap: var(--spacing-md);
+  align-items: center;
+}
+
 .link {
   text-decoration: none;
   color: rgba(255, 255, 255, 0.8);

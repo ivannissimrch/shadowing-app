@@ -16,6 +16,7 @@ export const API_PATHS = {
   // Users/Students
   USERS: "/api/users",
   USER: (id: string) => `/api/users/${id}`,
+  PASSWORD_CHANGE: (userId: string) => `/api/users/${userId}/password`,
 
   // Teacher - Student Management
   TEACHER_STUDENT: (studentId: string) => `/api/teacher/student/${studentId}`,

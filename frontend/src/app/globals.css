@@ -1,5 +1,5 @@
 /* Import design system variables */
-@import '../styles/variables.css';
+@import "../styles/variables.css";
 
 html,
 body {
@@ -25,4 +25,3 @@ a {
   color: inherit;
   text-decoration: none;
 }
-

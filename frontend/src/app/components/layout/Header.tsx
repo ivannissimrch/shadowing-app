@@ -17,17 +17,23 @@ export default function Header() {
       <div>
         <h1>ShadowSpeak</h1>
       </div>
-      <div>
-        {pathname.startsWith("/lessons") && (
-          <Link
-            href="/lessons"
-            className={`${styles.link} ${
-              pathname === "/lessons" ? styles.active : ""
-            }`}
-          >
-            Lessons
-          </Link>
-        )}
+      <div className={styles.navLinks}>
+        <Link
+          href="/lessons"
+          className={`${styles.link} ${
+            pathname === "/lessons" ? styles.active : ""
+          }`}
+        >
+          Lessons
+        </Link>
+        <Link
+          href="/change-password"
+          className={`${styles.link} ${
+            pathname === "/change-password" ? styles.active : ""
+          }`}
+        >
+          Change Password
+        </Link>
       </div>
       <Logout />
     </header>
