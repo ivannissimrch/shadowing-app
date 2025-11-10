@@ -99,9 +99,7 @@ export default function LoginForm() {
               setPasswordType(passwordType === "password" ? "text" : "password")
             }
             aria-label={
-              passwordType === "password"
-                ? "Show password"
-                : "Hide password"
+              passwordType === "password" ? "Show password" : "Hide password"
             }
           >
             <MdOutlineRemoveRedEye />

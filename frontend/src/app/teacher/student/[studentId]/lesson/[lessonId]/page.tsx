@@ -14,7 +14,10 @@ export default function StudentLessonPage({ params }: StudentLessonPageProps) {
   return (
     <ErrorBoundary
       fallbackRender={(props) => (
-        <ErrorFallback {...props} title="Something went wrong loading the lesson" />
+        <ErrorFallback
+          {...props}
+          title="Something went wrong loading the lesson"
+        />
       )}
     >
       <Suspense fallback={<div>Loading lesson...</div>}>

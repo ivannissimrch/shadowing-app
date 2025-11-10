@@ -1,0 +1,27 @@
+# Dependencies
+node_modules
+
+# Build outputs
+.next
+out
+dist
+build
+
+# Test coverage
+coverage
+
+# Cache
+.cache
+
+# Environment files
+.env
+.env.local
+.env*.local
+
+# Logs
+*.log
+
+# Lock files
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
