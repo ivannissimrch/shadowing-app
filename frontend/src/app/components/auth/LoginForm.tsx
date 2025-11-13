@@ -1,6 +1,6 @@
 "use client";
 import styles from "./LoginForm.module.css";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { useAppContext } from "../../AppContext";
 import { MdOutlineRemoveRedEye } from "react-icons/md";
@@ -15,28 +15,30 @@ export default function LoginForm() {
   const router = useRouter();
   const { updateToken, token } = useAppContext();
   const [passwordType, setPasswordType] = useState("password");
-
+  const inputRef = useRef<HTMLInputElement>(null);
   const { isMutating, trigger, error } = useSWRMutationHook<
     AuthResponse,
     { username: string; password: string }
   >("/signin", { method: "POST" });
 
   useEffect(() => {
-    if (token) {
-      // If there's already a token, redirect based on role
-      try {
+    try {
+      if (token) {
+        // If there's already a token, redirect based on role
         const route = redirectBasedOnRole(token);
         router.push(route);
-      } catch (error) {
-        logger.error("Invalid token:", error);
-        updateToken(null);
       }
+      if (inputRef.current) {
+        inputRef.current.focus();
+      }
+    } catch (error) {
+      logger.error("Invalid token:", error);
+      updateToken(null);
     }
   }, [router, token, updateToken]);
 
   async function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
-
     const response = await trigger({
       username: username,
       password: password,
@@ -45,7 +47,6 @@ export default function LoginForm() {
     if (response) {
       const { token } = response;
       updateToken(token);
-
       const route = redirectBasedOnRole(token);
       router.push(route);
     }
@@ -59,6 +60,7 @@ export default function LoginForm() {
       <form className={styles.form} onSubmit={handleSubmit}>
         <label htmlFor="username">Username:</label>
         <input
+          ref={inputRef}
           type="text"
           name="username"
           id="username"
