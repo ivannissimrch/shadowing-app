@@ -18,7 +18,7 @@ export function useSWRAxios<T>(
     {
       revalidateOnFocus: false,
       revalidateOnReconnect: true,
-      suspense: isClient, // Only true on client, false on server
+      suspense: isClient,
       shouldRetryOnError: true,
       ...config,
     }

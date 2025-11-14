@@ -5,6 +5,8 @@ import { ErrorBoundary } from "react-error-boundary";
 import SkeletonLoader from "../components/ui/SkeletonLoader";
 import { Suspense } from "react";
 import ErrorFallback from "../components/ui/ErrorFallback";
+import { mutate } from "swr";
+import { API_PATHS } from "../constants/apiKeys";
 
 export default function Lessons() {
   return (
@@ -14,6 +16,9 @@ export default function Lessons() {
         fallbackRender={(props) => (
           <ErrorFallback {...props} title="Error Loading Lessons" />
         )}
+        onReset={() => {
+          mutate(API_PATHS.LESSONS, undefined, { revalidate: true });
+        }}
       >
         <Suspense fallback={<SkeletonLoader />}>
           <StudentLessons />
