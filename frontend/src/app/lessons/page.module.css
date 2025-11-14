@@ -1,5 +1,5 @@
 .title {
-  font-size: var(--font-size-2rem);
+  font-size: clamp(2rem, 5vw, 2.5rem);
   color: var(--color-black);
   font-weight: var(--font-weight-bold);
   margin: var(--spacing-20) 0;

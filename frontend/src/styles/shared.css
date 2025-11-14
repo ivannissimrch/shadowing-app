@@ -194,6 +194,11 @@
   margin: var(--spacing-xs) 0 0 0;
 }
 
+.card:focus-within {
+  outline: 3px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
 /* ========================================
    BADGES / STATUS PILLS
    ======================================== */
