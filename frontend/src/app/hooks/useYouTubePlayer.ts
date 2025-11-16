@@ -1,28 +1,53 @@
-import { YouTubeProps, YouTubePlayer as YTPlayer } from "react-youtube";
+import {
+  YouTubeProps,
+  YouTubePlayer as YTPlayer,
+  YouTubeEvent,
+} from "react-youtube";
+import { useRef, useState, useEffect, useCallback } from "react";
+
+const opts: YouTubeProps["opts"] = {
+  playerVars: {
+    autoplay: 0,
+  },
+};
+const PLAYER_UPDATE_INTERVAL_MS = 100;
 
 export default function useYouTubePlayer(
-  playerRef: React.RefObject<YTPlayer | null>,
-  intervalRef: React.RefObject<NodeJS.Timeout | null>,
-  setCurrentTime: React.Dispatch<React.SetStateAction<number>>,
-  updateTimeIntervalRef: React.RefObject<NodeJS.Timeout | null>
+  playerRef: React.RefObject<YTPlayer | null>
 ) {
-  const onPlayerReady: YouTubeProps["onReady"] = (event) => {
-    playerRef.current = event.target;
-    event.target.pauseVideo();
+  const [currentTime, setCurrentTime] = useState<number>(0);
+  const updateTimeIntervalRef = useRef<NodeJS.Timeout | null>(null);
+  const onPlayerReady: YouTubeProps["onReady"] = useCallback(
+    (event: YouTubeEvent) => {
+      playerRef.current = event.target;
+      event.target.pauseVideo();
 
-    // Start updating current time display
-    updateTimeIntervalRef.current = setInterval(() => {
-      if (playerRef.current) {
-        setCurrentTime(Math.floor(playerRef.current.getCurrentTime()));
+      if (updateTimeIntervalRef.current) {
+        clearInterval(updateTimeIntervalRef.current);
       }
-    }, 100);
-  };
-
-  const opts: YouTubeProps["opts"] = {
-    playerVars: {
-      autoplay: 0,
+      // Start updating current time display
+      updateTimeIntervalRef.current = setInterval(() => {
+        if (playerRef.current) {
+          setCurrentTime(Math.floor(playerRef.current.getCurrentTime()));
+        }
+      }, PLAYER_UPDATE_INTERVAL_MS);
     },
-  };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
+  );
 
-  return { onPlayerReady, opts };
+  useEffect(() => {
+    return () => {
+      if (updateTimeIntervalRef.current) {
+        clearInterval(updateTimeIntervalRef.current);
+        updateTimeIntervalRef.current = null;
+      }
+    };
+  }, []);
+
+  return {
+    onPlayerReady,
+    opts,
+    currentTime,
+  };
 }

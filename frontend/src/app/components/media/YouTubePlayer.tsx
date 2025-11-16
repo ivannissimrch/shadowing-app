@@ -1,14 +1,13 @@
 "use client";
 import YouTube, { YouTubePlayer as YTPlayer } from "react-youtube";
 import { Lesson } from "../../Types";
-import { useRef, useState } from "react";
 import styles from "./YouTubePlayer.module.css";
 import LoopSegmentInfo from "./LoopSegmentInfo";
 import VideoTimer from "./VideoTimer";
 import LoopButtons from "./LoopButtons";
-import SkeletonLoader from "../ui/SkeletonLoader";
 import useLoopButtons from "@/app/hooks/useLoopButtons";
 import useYouTubePlayer from "@/app/hooks/useYouTubePlayer";
+import { useRef } from "react";
 
 interface YouTubePlayerProps {
   selectedLesson: Lesson | undefined;
@@ -16,10 +15,6 @@ interface YouTubePlayerProps {
 
 export default function YouTubePlayer({ selectedLesson }: YouTubePlayerProps) {
   const playerRef = useRef<YTPlayer | null>(null);
-  const [currentTime, setCurrentTime] = useState<number>(0);
-  const intervalRef = useRef<NodeJS.Timeout | null>(null);
-  const updateTimeIntervalRef = useRef<NodeJS.Timeout | null>(null);
-
   const {
     updateStartAtCurrentTime,
     updateEndAtCurrentTime,
@@ -27,7 +22,6 @@ export default function YouTubePlayer({ selectedLesson }: YouTubePlayerProps) {
     clearLoop,
     state,
   } = useLoopButtons(playerRef);
-  const lessonLoading = !selectedLesson;
 
   const isLooping = state.status === "looping";
   const startTime = state.status === "idle" ? null : state.startTime;
@@ -36,16 +30,7 @@ export default function YouTubePlayer({ selectedLesson }: YouTubePlayerProps) {
       ? null
       : state.endTime;
 
-  const { onPlayerReady, opts } = useYouTubePlayer(
-    playerRef,
-    intervalRef,
-    setCurrentTime,
-    updateTimeIntervalRef
-  );
-
-  if (lessonLoading) {
-    return <SkeletonLoader />;
-  }
+  const { onPlayerReady, opts, currentTime } = useYouTubePlayer(playerRef);
 
   return (
     <section
@@ -53,7 +38,7 @@ export default function YouTubePlayer({ selectedLesson }: YouTubePlayerProps) {
       aria-label="YouTube video player for pronunciation practice"
     >
       <YouTube
-        videoId={selectedLesson.video_id}
+        videoId={selectedLesson ? selectedLesson.video_id : ""}
         opts={opts}
         onReady={onPlayerReady}
       />
