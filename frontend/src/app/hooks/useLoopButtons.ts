@@ -2,6 +2,7 @@ import { useReducer, useRef, useEffect } from "react";
 import { YouTubePlayer as YTPlayer } from "react-youtube";
 import { loopReducer } from "@/app/helpers/loopReducer";
 import { LoopState } from "@/app/components/media/loopTypes";
+const PLAYER_UPDATE_INTERVAL_MS = 100;
 
 export default function useLoopButtons(
   playerRef: React.RefObject<YTPlayer | null>
@@ -52,7 +53,7 @@ export default function useLoopButtons(
       if (playerRef.current && currentTime >= state.endTime) {
         playerRef.current.seekTo(state.startTime, true);
       }
-    }, 100);
+    }, PLAYER_UPDATE_INTERVAL_MS);
 
     return () => {
       if (intervalRef.current) {
@@ -60,7 +61,8 @@ export default function useLoopButtons(
         intervalRef.current = null;
       }
     };
-  }, [state, playerRef]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [state]);
 
   return {
     updateStartAtCurrentTime,
