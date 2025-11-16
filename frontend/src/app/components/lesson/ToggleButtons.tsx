@@ -1,4 +1,4 @@
-import styles from "./LessonPracticeView.module.css";
+import styles from "./ToggleButtons.module.css";
 import { ToggleState } from "./VideoScriptToggle";
 
 interface ToggleButtonsProps {
@@ -56,7 +56,7 @@ export default function ToggleButtons({
   updateToggleState,
 }: ToggleButtonsProps) {
   return (
-    <>
+    <div className={styles.toggleButtonsContainer}>
       {toggleState === ToggleState.SHOW_BOTH && (
         <>
           <HideScriptButton
@@ -81,6 +81,6 @@ export default function ToggleButtons({
           updateToggleState={updateToggleState}
         />
       )}
-    </>
+    </div>
   );
 }

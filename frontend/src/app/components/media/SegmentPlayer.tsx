@@ -12,10 +12,8 @@ export default function SegmentPlayer({ selectedLesson }: SegmentPlayerProps) {
   }
 
   return (
-    <section className={styles.card}>
-      <div className={styles.videoBox}>
-        <YouTubePlayer selectedLesson={selectedLesson} />
-      </div>
-    </section>
+    <div className={styles.videoBox}>
+      <YouTubePlayer selectedLesson={selectedLesson} />
+    </div>
   );
 }

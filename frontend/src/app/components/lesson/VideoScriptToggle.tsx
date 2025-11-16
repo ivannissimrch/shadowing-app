@@ -1,4 +1,4 @@
-import styles from "./LessonPracticeView.module.css";
+import styles from "./VideoScriptToggle.module.css";
 import SegmentPlayer from "../media/SegmentPlayer";
 import Image from "next/image";
 import { Lesson } from "@/app/Types";
@@ -34,7 +34,25 @@ export default function VideoScriptToggle({
     >
       {toggleState === ToggleState.SHOW_BOTH && (
         <>
-          <SegmentPlayer selectedLesson={selectedLesson} />{" "}
+          <SegmentPlayer selectedLesson={selectedLesson} />
+          <div className={styles.imageBox}>
+            <Image
+              src={selectedLesson.image}
+              alt={`${selectedLesson.title}  Practice lesson image`}
+              quality={100}
+              width={1400}
+              height={875}
+              priority
+            />
+          </div>
+        </>
+      )}
+
+      {toggleState === ToggleState.SHOW_VIDEO_ONLY && (
+        <SegmentPlayer selectedLesson={selectedLesson} />
+      )}
+      {toggleState === ToggleState.SHOW_SCRIPT_ONLY && (
+        <div className={styles.imageBox}>
           <Image
             src={selectedLesson.image}
             alt={`${selectedLesson.title}  Practice lesson image`}
@@ -43,21 +61,7 @@ export default function VideoScriptToggle({
             height={875}
             priority
           />
-        </>
-      )}
-
-      {toggleState === ToggleState.SHOW_VIDEO_ONLY && (
-        <SegmentPlayer selectedLesson={selectedLesson} />
-      )}
-      {toggleState === ToggleState.SHOW_SCRIPT_ONLY && (
-        <Image
-          src={selectedLesson.image}
-          alt={`${selectedLesson.title}  Practice lesson image`}
-          quality={100}
-          width={1400}
-          height={875}
-          priority
-        />
+        </div>
       )}
       <ToggleButtons
         toggleState={toggleState}

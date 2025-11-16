@@ -14,18 +14,18 @@ export function LessonPracticeView({ id }: { id: string }) {
   return (
     <ErrorBoundary
       fallback={
-        <div className={styles.grid}>
+        <div className={styles.error}>
           <h1>Error loading lesson.</h1>
         </div>
       }
     >
       {selectedLesson && (
-        <section className={styles.container}>
+        <>
           <VideoScriptToggle selectedLesson={selectedLesson} />
           <RecorderPanelContextProvider selectedLesson={selectedLesson}>
             <RecorderPanel selectedLesson={selectedLesson} />
           </RecorderPanelContextProvider>
-        </section>
+        </>
       )}
     </ErrorBoundary>
   );
