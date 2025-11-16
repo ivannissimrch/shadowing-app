@@ -1,5 +1,11 @@
 "use client";
-import { createContext, useContext, useState, useRef, useEffect } from "react";
+import {
+  createContext,
+  useContext,
+  useReducer,
+  useRef,
+  useEffect,
+} from "react";
 import { useRouter } from "next/navigation";
 import { mutate } from "swr";
 import { API_PATHS } from "../../src/app/constants/apiKeys";
@@ -12,23 +18,18 @@ import {
 } from "../../src/app/Types";
 import { useSWRMutationHook } from "@/app/hooks/useSWRMutation";
 import { useAppContext } from "@/app/AppContext";
+import { recorderReducer } from "./helpers/recorderReducer";
 
 export const RecorderPanelContext = createContext<RecorderPanelContextType>({
-  recording: false,
-  paused: false,
-  audioURL: null,
+  recorderState: { status: "idle" },
+  dispatch: () => {},
   startRecording: () => {},
   pauseRecording: () => {},
   resumeRecording: () => {},
   stopRecording: () => {},
   handleSubmit: async () => {},
-  errorMessage: "",
-  setErrorMessage: () => {},
   isAudioMutating: false,
   isLessonMutating: false,
-  setAudioURL: () => {},
-  setRecording: () => {},
-  setPaused: () => {},
 });
 
 export default function RecorderPanelContextProvider({
@@ -41,23 +42,20 @@ export default function RecorderPanelContextProvider({
   const { openAlertDialog } = useAppContext();
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunks = useRef<Blob[]>([]);
-  const [recording, setRecording] = useState(false);
-  const [paused, setPaused] = useState(false);
-  const [audioURL, setAudioURL] = useState<string | null>(null); // URL of the recorded audio
-  const [blob, setBlob] = useState<Blob | null>(null);
   const router = useRouter();
-  const [errorMessage, setErrorMessage] = useState("");
   const { trigger: triggerUploadAudio, isMutating: isAudioMutating } =
     useSWRMutationHook<
       AudioUploadResponse,
       { audioData: string; lessonId: string }
     >(API_PATHS.UPLOAD_AUDIO, { method: "POST" });
-
   const { trigger: triggerUpdateLesson, isMutating: isLessonMutating } =
     useSWRMutationHook<LessonResponse, { audio_file: string | null }>(
       selectedLesson?.id ? API_PATHS.LESSON(selectedLesson.id) : null,
       { method: "PATCH" }
     );
+  const [recorderState, dispatch] = useReducer(recorderReducer, {
+    status: "idle",
+  });
 
   async function startRecording() {
     try {
@@ -72,13 +70,11 @@ export default function RecorderPanelContextProvider({
       mediaRecorder.onstop = () => {
         const blob = new Blob(audioChunks.current, { type: "audio/webm" });
         const url = URL.createObjectURL(blob);
-        setAudioURL(url);
-        setBlob(blob);
+        dispatch({ type: "STOP_RECORDING", blob, audioURL: url });
       };
 
       mediaRecorder.start();
-      setRecording(true);
-      setPaused(false);
+      dispatch({ type: "START_RECORDING", startedAt: Date.now() });
     } catch (error) {
       logger.error("Error accessing microphone:", error);
       openAlertDialog(
@@ -90,12 +86,12 @@ export default function RecorderPanelContextProvider({
 
   function pauseRecording() {
     mediaRecorderRef.current?.pause();
-    setPaused(true);
+    dispatch({ type: "PAUSE_RECORDING", pausedAt: Date.now() });
   }
 
   function resumeRecording() {
     mediaRecorderRef.current?.resume();
-    setPaused(false);
+    dispatch({ type: "RESUME_RECORDING" });
   }
 
   function stopRecording() {
@@ -104,14 +100,13 @@ export default function RecorderPanelContextProvider({
 
   async function handleSubmit() {
     try {
-      if (!blob) {
-        setErrorMessage(
-          "Error: No audio recorded. Please record audio before submitting."
-        );
+      if (recorderState.status !== "stopped") {
+        dispatch({ type: "ERROR", message: "No audio recorded." });
         return;
       }
+      const audioBlob = recorderState.blob;
       const reader = new FileReader();
-      reader.readAsDataURL(blob);
+      reader.readAsDataURL(audioBlob);
       reader.onloadend = async () => {
         const base64Audio = reader.result;
 
@@ -119,10 +114,10 @@ export default function RecorderPanelContextProvider({
           typeof base64Audio !== "string" ||
           selectedLesson?.id === undefined
         ) {
-          setErrorMessage("Invalid audio data");
+          dispatch({ type: "ERROR", message: "Invalid audio data." });
           return;
         }
-        setErrorMessage("");
+
         try {
           // First, upload audio to Azure
           const uploadResponse = await triggerUploadAudio({
@@ -131,7 +126,7 @@ export default function RecorderPanelContextProvider({
           });
 
           if (!uploadResponse) {
-            setErrorMessage("Error uploading audio");
+            dispatch({ type: "ERROR", message: "Error uploading audio" });
             return;
           }
 
@@ -140,8 +135,7 @@ export default function RecorderPanelContextProvider({
             audio_file: uploadResponse.audioUrl,
           });
 
-          setRecording(false);
-          setPaused(false);
+          dispatch({ type: "UPLOAD_SUCCESS" });
           if (response) {
             openAlertDialog(
               "Submission Successful",
@@ -152,33 +146,41 @@ export default function RecorderPanelContextProvider({
           router.push("/lessons");
         } catch (error) {
           logger.error("Error submitting audio:", error);
-          setErrorMessage("An error occurred while submitting your audio.");
+          dispatch({ type: "ERROR", message: "Error submitting audio." });
         } finally {
-          setBlob(null);
-          setAudioURL(null);
-          setRecording(false);
+          dispatch({ type: "RESET" });
         }
       };
     } catch (error) {
       logger.error("Error submitting audio:", error);
-      setErrorMessage("An error occurred while submitting your audio.");
+      dispatch({
+        type: "ERROR",
+        message: "An error occurred while submitting your audio.",
+      });
     }
   }
 
   useEffect(() => {
     if (selectedLesson?.audio_file) {
       try {
-        // It's an Azure URL - use directly
-        setAudioURL(selectedLesson.audio_file);
+        dispatch({
+          type: "LOAD_EXISTING_AUDIO",
+          audioURL: selectedLesson.audio_file,
+        });
       } catch (error) {
-        logger.error("Error parsing audio data:", error);
-        setErrorMessage("Error loading existing audio recording.");
+        logger.error("Error loading audio:", error);
+        dispatch({
+          type: "ERROR",
+          message: "Error loading existing audio recording.",
+        });
       }
     }
-
     return () => {
-      if (audioURL && audioURL.startsWith("blob:")) {
-        URL.revokeObjectURL(audioURL);
+      if (
+        recorderState.status === "stopped" &&
+        recorderState.audioURL.startsWith("blob:")
+      ) {
+        URL.revokeObjectURL(recorderState.audioURL);
       }
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -187,21 +189,15 @@ export default function RecorderPanelContextProvider({
   return (
     <RecorderPanelContext.Provider
       value={{
-        recording,
-        paused,
-        audioURL,
+        recorderState,
+        dispatch,
         startRecording,
         pauseRecording,
         resumeRecording,
         stopRecording,
         handleSubmit,
-        errorMessage,
-        setErrorMessage,
         isAudioMutating,
         isLessonMutating,
-        setAudioURL,
-        setRecording,
-        setPaused,
       }}
     >
       {children}

@@ -14,21 +14,17 @@ interface RecorderProps {
 }
 
 export default function RecorderPanel({ selectedLesson }: RecorderProps) {
-  const {
-    audioURL,
-    errorMessage,
-    setErrorMessage,
-    isAudioMutating,
-    isLessonMutating,
-  } = useRecorderPanelContext();
+  const { recorderState, dispatch, isAudioMutating, isLessonMutating } =
+    useRecorderPanelContext();
   const isSubmitting = isAudioMutating || isLessonMutating;
 
-  if (errorMessage) {
+  // Check for error state
+  if (recorderState.status === "error") {
     return (
       <div className={styles.error}>
-        <p>{errorMessage}</p>
+        <p>{recorderState.message}</p>
         <button
-          onClick={() => setErrorMessage("")}
+          onClick={() => dispatch({ type: "RESET" })}
           className={styles.recordBtn}
         >
           Dismiss
@@ -36,15 +32,18 @@ export default function RecorderPanel({ selectedLesson }: RecorderProps) {
       </div>
     );
   }
+
   if (isSubmitting) {
     return <SkeletonLoader />;
   }
+  // Check if we have audio (stopped state with audioURL)
+  const hasAudio = recorderState.status === "stopped";
 
   return (
     <ErrorBoundary fallback={<p>Error loading recorder panel</p>}>
       <section className={styles.panel}>
-        {!audioURL && <RecorderVoiceRecorder />}
-        {audioURL && <RecorderAudioPlayer selectedLesson={selectedLesson} />}
+        {!hasAudio && <RecorderVoiceRecorder />}
+        {hasAudio && <RecorderAudioPlayer selectedLesson={selectedLesson} />}
         {selectedLesson?.feedback && (
           <p className={styles.feedback}>{selectedLesson.feedback}</p>
         )}

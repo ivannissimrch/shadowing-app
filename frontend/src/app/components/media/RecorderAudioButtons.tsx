@@ -7,8 +7,8 @@ export default function RecorderAudioButtons({
 }: {
   selectedLesson: Lesson | undefined;
 }) {
-  const { setAudioURL, setRecording, setPaused, handleSubmit } =
-    useRecorderPanelContext();
+  const { dispatch, handleSubmit } = useRecorderPanelContext();
+
   if (selectedLesson?.status === "completed") {
     return null;
   } else {
@@ -17,9 +17,7 @@ export default function RecorderAudioButtons({
         <button
           className={styles.recordBtn}
           onClick={() => {
-            setAudioURL(null);
-            setRecording(false);
-            setPaused(false);
+            dispatch({ type: "RESET" });
           }}
         >
           Delete
