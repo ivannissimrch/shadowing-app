@@ -4,13 +4,16 @@ import { useRecorderPanelContext } from "@/app/RecorderpanelContext";
 
 export default function RecorderVoiceRecorder() {
   const {
-    recording,
-    paused,
+    recorderState,
     startRecording,
     pauseRecording,
     resumeRecording,
     stopRecording,
   } = useRecorderPanelContext();
+
+  const isRecording = recorderState.status === "recording";
+  const isPaused = recorderState.status === "paused";
+  const isIdle = recorderState.status === "idle";
 
   return (
     <>
@@ -19,24 +22,24 @@ export default function RecorderVoiceRecorder() {
         <div className={styles.icon}>
           <FaMicrophone />
         </div>
-        {!recording ? <p>Tap to record</p> : <p>Recording...</p>}
+        {isIdle ? <p>Tap to record</p> : <p>Recording...</p>}
         <div>
-          {!recording && (
+          {isIdle && (
             <button onClick={startRecording} className={styles.recordBtn}>
               Start Recording
             </button>
           )}
-          {recording && !paused && (
+          {isRecording && (
             <button className={styles.recordBtn} onClick={pauseRecording}>
               Pause
             </button>
           )}
-          {recording && paused && (
+          {isPaused && (
             <button onClick={resumeRecording} className={styles.recordBtn}>
               Resume
             </button>
           )}
-          {recording && (
+          {(isRecording || isPaused) && (
             <button onClick={stopRecording} className={styles.recordBtn}>
               Stop
             </button>

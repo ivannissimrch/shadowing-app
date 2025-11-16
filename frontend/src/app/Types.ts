@@ -1,3 +1,8 @@
+import {
+  RecorderState,
+  RecorderAction,
+} from "./components/media/recorderPanelTypes";
+
 export interface AppContextType {
   openAlertDialog: (title: string, message: string) => void;
   closeAlertDialog: () => void;
@@ -75,19 +80,13 @@ export type ImageResponse = {
 export type AudioUploadResponse = { audioUrl: string };
 
 export interface RecorderPanelContextType {
-  recording: boolean;
-  paused: boolean;
-  audioURL: string | null;
+  recorderState: RecorderState;
+  dispatch: React.Dispatch<RecorderAction>;
   startRecording: () => void;
   pauseRecording: () => void;
   resumeRecording: () => void;
   stopRecording: () => void;
   handleSubmit: () => Promise<void>;
-  setAudioURL: (url: string | null) => void;
-  setRecording: (isRecording: boolean) => void;
-  setPaused: (isPaused: boolean) => void;
-  errorMessage: string;
-  setErrorMessage: (message: string) => void;
   isAudioMutating: boolean;
   isLessonMutating: boolean;
 }

@@ -9,7 +9,9 @@ export default function RecorderAudioPlayer({
 }: {
   selectedLesson: Lesson | undefined;
 }) {
-  const { audioURL } = useRecorderPanelContext();
+  const { recorderState } = useRecorderPanelContext();
+  const audioURL =
+    recorderState.status === "stopped" ? recorderState.audioURL : null;
 
   return (
     <section className={styles.MediaRecorder}>
