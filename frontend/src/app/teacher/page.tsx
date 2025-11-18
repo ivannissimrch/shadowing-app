@@ -11,7 +11,7 @@ export default function TeacherPage() {
   return (
     <div className={styles.container}>
       <section className={styles.studentsSection}>
-        <TeacherPageHeader onAddStudentClick={() => openModal()} />
+        <TeacherPageHeader title="Students" onClick={() => openModal()} />
         <Students />
       </section>
       <AddStudent
