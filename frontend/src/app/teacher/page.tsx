@@ -2,23 +2,21 @@
 import styles from "./page.module.css";
 import Students from "../components/student/Students";
 import AddStudent from "../components/teacher/AddStudent";
-import { useState } from "react";
 import TeacherPageHeader from "../components/teacher/TeacherPageHeader";
+import useModal from "@/app/hooks/useModal";
 
 export default function TeacherPage() {
-  const [isAddStudentDialogOpen, setIsAddStudentDialogOpen] = useState(false);
+  const { isModalOpen, openModal, closeModal } = useModal();
 
   return (
     <div className={styles.container}>
       <section className={styles.studentsSection}>
-        <TeacherPageHeader
-          onAddStudentClick={() => setIsAddStudentDialogOpen(true)}
-        />
+        <TeacherPageHeader onAddStudentClick={() => openModal()} />
         <Students />
       </section>
       <AddStudent
-        isAddStudentDialogOpen={isAddStudentDialogOpen}
-        closeAddStudentDialog={() => setIsAddStudentDialogOpen(false)}
+        isAddStudentDialogOpen={isModalOpen}
+        closeAddStudentDialog={() => closeModal()}
         aria-label="Add new student"
       />
     </div>
