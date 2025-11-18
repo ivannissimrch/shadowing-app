@@ -28,7 +28,7 @@ export default function StudentList() {
 
   return (
     <>
-      <div className={styles.studentsGrid}>
+      <div className={styles.studentListContainer}>
         {students &&
           students.map((student: Student) => (
             <div key={student.id} className={styles.studentCard}>
@@ -52,6 +52,7 @@ export default function StudentList() {
                   onClick={() => handleDeleteStudent(student)}
                   className={styles.deleteButton}
                   title="Delete student"
+                  aria-label={`Delete student ${student.username}`}
                 >
                   <FaTrash />
                 </button>

@@ -3,29 +3,23 @@ import styles from "./page.module.css";
 import Students from "../components/student/Students";
 import AddStudent from "../components/teacher/AddStudent";
 import { useState } from "react";
-import { FaUserPlus } from "react-icons/fa";
+import TeacherPageHeader from "../components/teacher/TeacherPageHeader";
 
 export default function TeacherPage() {
   const [isAddStudentDialogOpen, setIsAddStudentDialogOpen] = useState(false);
 
   return (
-    <div className={styles.teacherDashboard}>
-      <section className={styles.statsRow}></section>
+    <div className={styles.container}>
       <section className={styles.studentsSection}>
-        <div className={styles.sectionHeader}>
-          <h2>Students</h2>
-          <button
-            className={styles.addButton}
-            onClick={() => setIsAddStudentDialogOpen(true)}
-          >
-            <FaUserPlus /> Add Student
-          </button>
-        </div>
+        <TeacherPageHeader
+          onAddStudentClick={() => setIsAddStudentDialogOpen(true)}
+        />
         <Students />
       </section>
       <AddStudent
         isAddStudentDialogOpen={isAddStudentDialogOpen}
         closeAddStudentDialog={() => setIsAddStudentDialogOpen(false)}
+        aria-label="Add new student"
       />
     </div>
   );

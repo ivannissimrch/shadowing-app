@@ -1,123 +1,13 @@
 /* Mobile-first styles */
-.teacherDashboard {
+.container {
   display: flex;
   flex-direction: column;
   gap: var(--spacing-20);
 }
 
-.statsRow {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-15);
-  justify-content: space-between;
-}
-
-.statsCard {
-  flex: 1;
-  background: var(--color-bg-white);
-  border: 1px solid var(--color-gray-light);
-  border-radius: var(--radius-sm);
-  padding: var(--spacing-12);
-  text-align: center;
-  box-shadow: var(--shadow-lg);
-  transition: all var(--transition-base);
-}
-
-.statsCard:hover {
-  box-shadow: var(--shadow-md);
-  transform: translateY(-0.5px);
-  cursor: pointer;
-}
-
-.statsCard h3 {
-  margin: 0 0 var(--spacing-sm) 0;
-  font-size: 0.9rem;
-  color: var(--color-black);
-  font-weight: var(--font-weight-semibold);
-}
-
-.statsNumber {
-  margin: 0;
-  font-size: var(--font-size-xl);
-  font-weight: var(--font-weight-bold);
-  color: var(--color-primary);
-}
-
-.studentsSection {
-  margin-top: var(--spacing-20);
-}
-
-.sectionHeader {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: var(--spacing-20);
-  gap: var(--spacing-md);
-  flex-wrap: wrap;
-}
-
-.studentsSection h2 {
-  margin: 0;
-  font-size: var(--font-size-xl);
-  color: var(--color-text-tertiary);
-}
-
-.addButton {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--spacing-sm);
-  padding: var(--spacing-sm) var(--spacing-lg);
-  background: linear-gradient(
-    135deg,
-    var(--color-primary) 0%,
-    var(--color-primary-hover) 100%
-  );
-  color: var(--color-white);
-  border: none;
-  border-radius: var(--radius-md);
-  cursor: pointer;
-  font-weight: var(--font-weight-semibold);
-  font-size: var(--font-size-base);
-  transition: all var(--transition-base);
-  white-space: nowrap;
-  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
-}
-
-.addButton:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(37, 99, 235, 0.4);
-  gap: var(--spacing-md);
-}
-
-.addButton:active {
-  transform: translateY(0);
-  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.3);
-}
-
 /* Tablet and up */
 @media (min-width: 769px) {
-  .teacherDashboard {
+  .container {
     gap: var(--spacing-30);
-  }
-
-  .statsRow {
-    flex-direction: row;
-    gap: var(--spacing-20);
-  }
-
-  .statsCard {
-    padding: var(--spacing-md);
-  }
-
-  .statsCard h3 {
-    font-size: var(--font-size-base);
-  }
-
-  .statsNumber {
-    font-size: var(--font-size-2rem);
-  }
-
-  .studentsSection h2 {
-    font-size: var(--font-size-1-8);
   }
 }
