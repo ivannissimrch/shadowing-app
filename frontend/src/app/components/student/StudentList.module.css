@@ -1,9 +1,9 @@
 @import "../../../styles/shared.css";
 
 /* Mobile-first styles */
-.studentsGrid {
+.studentListContainer {
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: var(--spacing-lg);
 }
 
@@ -42,6 +42,11 @@
 
 .studentCard:hover {
   border-color: var(--color-primary);
+}
+
+.studentCard:focus-within {
+  outline: 3px solid var(--color-primary);
+  outline-offset: 2px;
 }
 
 .cardHeader {
@@ -137,13 +142,27 @@
   border: none;
   cursor: pointer;
   transition: all 0.2s ease;
-  text-decoration: none;
+  /* text-decoration: none; */
 }
 
 .viewButton:hover {
-  transform: translateY(-1px);
+  /* transform: translateY(-1px); */
   background: var(--color-primary-hover);
   box-shadow: 0 4px 16px rgba(8, 145, 178, 0.4);
+}
+
+.viewButton:focus {
+  outline: 3px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+.viewButton:focus:not(:focus-visible) {
+  outline: none;
+}
+
+.viewButton:focus-visible {
+  outline: 3px solid var(--color-primary);
+  outline-offset: 2px;
 }
 
 .deleteButton {
@@ -165,16 +184,26 @@
   background-color: var(--color-error);
   color: var(--color-white);
   border-color: var(--color-error);
-  transform: translateY(-1px);
+  /* transform: translateY(-1px); */
   box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
+}
+
+.deleteButton:focus {
+  outline: 3px solid var(--color-error);
+  outline-offset: 2px;
+}
+
+.deleteButton:focus:not(:focus-visible) {
+  outline: none;
+}
+
+.deleteButton:focus-visible {
+  outline: 3px solid var(--color-error);
+  outline-offset: 2px;
 }
 
 /* Tablet */
 @media (min-width: 769px) {
-  .studentsGrid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
   .studentCard {
     min-height: 240px;
   }
@@ -182,28 +211,17 @@
 
 /* Desktop */
 @media (min-width: 1024px) {
-  .studentsGrid {
-    grid-template-columns: repeat(3, 1fr);
-    gap: var(--spacing-xl);
-  }
-
-  .studentCard {
-    min-height: 256px;
-  }
-
-  .studentTitle {
-    font-size: var(--font-size-2xl);
-  }
-
-  .iconWrapper {
-    width: 72px;
-    height: 72px;
-  }
 }
 
-/* Large desktop */
-@media (min-width: 1440px) {
-  .studentsGrid {
-    grid-template-columns: repeat(4, 1fr);
-  }
+.studentCard {
+  min-height: 256px;
+}
+
+.studentTitle {
+  font-size: var(--font-size-2xl);
+}
+
+.iconWrapper {
+  width: 72px;
+  height: 72px;
 }
