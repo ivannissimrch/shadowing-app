@@ -1,10 +1,9 @@
 "use client";
 import DialogTitle from "@mui/material/DialogTitle";
-import { Suspense, useState } from "react";
+import { useState } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import useAlertMessageStyles from "../../hooks/useAlertMessageStyles";
 import StudentSelect from "../student/StudentSelect";
-import SkeletonLoader from "../ui/SkeletonLoader";
 import { mutate } from "swr";
 import { API_PATHS } from "../../constants/apiKeys";
 import { AssignmentResponse } from "@/app/Types";
@@ -90,13 +89,11 @@ export default function AssignLessonModal({
         <form onSubmit={handleSubmit}>
           <div>
             <ErrorBoundary fallback={<div>Error loading students</div>}>
-              <Suspense fallback={<SkeletonLoader />}>
-                <StudentSelect
-                  selectedStudent={selectedStudent}
-                  onStudentChange={setSelectedStudent}
-                  StyledFormControl={StyledFormControl}
-                />
-              </Suspense>
+              <StudentSelect
+                selectedStudent={selectedStudent}
+                onStudentChange={setSelectedStudent}
+                StyledFormControl={StyledFormControl}
+              />
             </ErrorBoundary>
           </div>
           {errorMessage && (

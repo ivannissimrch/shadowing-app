@@ -2,17 +2,19 @@ import { FaUserPlus } from "react-icons/fa";
 import styles from "./TeacherPageHeader.module.css";
 
 interface TeacherPageHeaderProps {
-  onAddStudentClick: () => void;
+  title: string;
+  onClick: () => void;
 }
 
 export default function TeacherPageHeader({
-  onAddStudentClick,
+  title,
+  onClick,
 }: TeacherPageHeaderProps) {
   return (
     <div className={styles.sectionHeader}>
-      <h2>Students</h2>
-      <button className={styles.addButton} onClick={onAddStudentClick}>
-        <FaUserPlus /> Add Student
+      <h2>{title}</h2>
+      <button className={styles.addButton} onClick={onClick}>
+        <FaUserPlus /> Add {title}
       </button>
     </div>
   );

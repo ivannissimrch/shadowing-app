@@ -49,12 +49,12 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 80px;
+  min-height: 112px;
 }
 
 .iconWrapper {
-  width: 48px;
-  height: 48px;
+  width: 64px;
+  height: 64px;
   border-radius: 50%;
   background-color: rgba(255, 255, 255, 0.2);
   display: flex;
@@ -63,6 +63,7 @@
   font-size: var(--font-size-2xl);
   color: var(--color-white);
   border: 3px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 .cardBody {
@@ -167,8 +168,8 @@
   }
 
   .iconWrapper {
-    width: 56px;
-    height: 56px;
+    width: 72px;
+    height: 72px;
   }
 }
 

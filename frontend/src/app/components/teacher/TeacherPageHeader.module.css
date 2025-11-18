@@ -7,7 +7,7 @@
   flex-wrap: wrap;
 }
 
-.studentsSection h2 {
+.sectionHeader h2 {
   margin: 0;
   font-size: var(--font-size-xl);
   color: var(--color-text-tertiary);
@@ -51,10 +51,4 @@
 .addButton:focus-visible {
   outline: 3px solid var(--color-primary);
   outline-offset: 2px;
-}
-
-@media (min-width: 769px) {
-  .studentsSection h2 {
-    font-size: var(--font-size-1-8);
-  }
 }
