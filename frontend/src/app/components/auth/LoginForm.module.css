@@ -63,12 +63,6 @@
   font-size: var(--font-size-lg);
 }
 
-.button {
-  composes: btn from "../../../styles/shared.css";
-  width: 100%;
-  margin-top: var(--spacing-md);
-}
-
 .error {
   color: var(--color-error);
   font-size: var(--font-size-sm);

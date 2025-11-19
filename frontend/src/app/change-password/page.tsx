@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useAppContext } from "../AppContext";
 import { useSWRMutationHook } from "../hooks/useSWRMutation";
 import { API_PATHS } from "../constants/apiKeys";
+import { Button } from "../components/ui/Button/Button";
 import styles from "./change-password.module.css";
 
 export default function ChangePasswordPage() {
@@ -141,9 +142,14 @@ export default function ChangePasswordPage() {
           </p>
         )}
 
-        <button type="submit" disabled={isMutating} className={styles.button}>
+        <Button
+          type="submit"
+          disabled={isMutating}
+          variant="primary"
+          className={styles.submitButton}
+        >
           {isMutating ? "Changing Password..." : "Change Password"}
-        </button>
+        </Button>
       </form>
 
       <div className={styles.helperText}>

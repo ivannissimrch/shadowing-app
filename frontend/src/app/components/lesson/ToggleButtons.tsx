@@ -1,3 +1,4 @@
+import { Button } from "../ui/Button/Button";
 import styles from "./ToggleButtons.module.css";
 import { ToggleState } from "./VideoScriptToggle";
 
@@ -9,45 +10,45 @@ interface ToggleButtonsProps {
 // Hides script, shows only videos
 function HideScriptButton({ updateToggleState }: ToggleButtonsProps) {
   return (
-    <button
-      className={styles.toggleScript}
+    <Button
+      variant="ghost"
       onClick={() => updateToggleState(ToggleState.SHOW_VIDEO_ONLY)}
     >
       hide script
-    </button>
+    </Button>
   );
 }
 // Hides video, shows only script
 function HideVideoButton({ updateToggleState }: ToggleButtonsProps) {
   return (
-    <button
-      className={styles.toggleVideo}
+    <Button
+      variant="ghost"
       onClick={() => updateToggleState(ToggleState.SHOW_SCRIPT_ONLY)}
     >
       hide video
-    </button>
+    </Button>
   );
 }
 // Shows script back (returns to both visible)
 function ShowScriptButton({ updateToggleState }: ToggleButtonsProps) {
   return (
-    <button
-      className={styles.toggleScript}
+    <Button
+      variant="ghost"
       onClick={() => updateToggleState(ToggleState.SHOW_BOTH)}
     >
       show script
-    </button>
+    </Button>
   );
 }
 // Shows video back (returns to both visible)
 function ShowVideoButton({ updateToggleState }: ToggleButtonsProps) {
   return (
-    <button
-      className={styles.toggleVideo}
+    <Button
+      variant="ghost"
       onClick={() => updateToggleState(ToggleState.SHOW_BOTH)}
     >
       show video
-    </button>
+    </Button>
   );
 }
 

@@ -6,6 +6,7 @@ import { API_PATHS } from "../../constants/apiKeys";
 import { useState } from "react";
 import DeleteLessonModal from "../teacher/DeleteLessonModal";
 import { FaBook, FaTrash, FaUserPlus } from "react-icons/fa";
+import { Button } from "../ui/Button/Button";
 
 interface LessonListProps {
   onAssignLesson: (lesson: { id: string; title: string }) => void;
@@ -44,12 +45,14 @@ export default function LessonList({ onAssignLesson }: LessonListProps) {
                 <h3 className={styles.lessonTitle}>{lesson.title}</h3>
               </div>
               <div className={styles.buttonGroup}>
-                <button
-                  className={styles.assignButton}
+                <Button
+                  variant="secondary"
+                  leftIcon={<FaUserPlus />}
                   onClick={() => onAssignLesson(lesson)}
+                  className={styles.assignButton}
                 >
-                  <FaUserPlus /> Assign
-                </button>
+                  Assign
+                </Button>
                 <button
                   className={styles.deleteButton}
                   onClick={() => handleDeleteLesson(lesson)}

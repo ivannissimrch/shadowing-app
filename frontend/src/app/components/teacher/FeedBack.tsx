@@ -4,6 +4,7 @@ import { useSWRMutationHook } from "@/app/hooks/useSWRMutation";
 import { API_PATHS } from "@/app/constants/apiKeys";
 import { mutate } from "swr";
 import { Lesson } from "@/app/Types";
+import { Button } from "../ui/Button/Button";
 
 interface FeedBackProps {
   idsInfo: { studentId: string; lessonId: string };
@@ -49,13 +50,14 @@ export default function FeedBack({ idsInfo, selectedLesson }: FeedBackProps) {
           setFeedback(event.target.value);
         }}
       />
-      <button
+      <Button
         type="submit"
+        variant="primary"
         className={styles["feedback-button"]}
         disabled={isMutating}
       >
         {isMutating ? "Submitting..." : "Submit Feedback"}
-      </button>
+      </Button>
       {error ? (
         <p className={styles["error-message"]}>
           {"An error occurred while submitting feedback. Try again."}

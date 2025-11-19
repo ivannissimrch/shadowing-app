@@ -1,12 +1,12 @@
 import { Lesson } from "@/app/Types";
 import styles from "./Card.module.css";
-import Link from "next/link";
 import {
   FaBook,
   FaCheckCircle,
   FaHourglassHalf,
   FaPlayCircle,
 } from "react-icons/fa";
+import { Button } from "./Button/Button";
 
 export default function Card({
   lesson,
@@ -52,9 +52,9 @@ export default function Card({
           {status}
         </div>
       </div>
-      <Link href={linkPath} className={styles.button}>
+      <Button variant="primary" href={linkPath} className={styles.button}>
         Start Lesson
-      </Link>
+      </Button>
     </div>
   );
 }
