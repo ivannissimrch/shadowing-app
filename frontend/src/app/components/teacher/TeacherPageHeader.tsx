@@ -1,4 +1,5 @@
-import { FaUserPlus } from "react-icons/fa";
+import { MdAdd } from "react-icons/md";
+import { Button } from "../ui/Button/Button";
 import styles from "./TeacherPageHeader.module.css";
 
 interface TeacherPageHeaderProps {
@@ -13,9 +14,9 @@ export default function TeacherPageHeader({
   return (
     <div className={styles.sectionHeader}>
       <h2>{title}</h2>
-      <button className={styles.addButton} onClick={onClick}>
-        <FaUserPlus /> Add {title}
-      </button>
+      <Button variant="primary" onClick={onClick} leftIcon={<MdAdd />}>
+        Add {title}
+      </Button>
     </div>
   );
 }

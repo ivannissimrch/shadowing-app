@@ -8,6 +8,7 @@ import redirectBasedOnRole from "../../helpers/redirectBasedOnRole";
 import logger from "../../helpers/logger";
 import { AuthResponse } from "@/app/Types";
 import { useSWRMutationHook } from "@/app/hooks/useSWRMutation";
+import { Button } from "../ui/Button/Button";
 
 export default function LoginForm() {
   const [username, setUsername] = useState("");
@@ -108,9 +109,9 @@ export default function LoginForm() {
           </button>
         </div>
 
-        <button className={styles.button} type="submit" disabled={isMutating}>
+        <Button variant="primary" type="submit" disabled={isMutating}>
           {isMutating ? "Logging in..." : "Login"}
-        </button>
+        </Button>
       </form>
       {errorMsg && (
         <p

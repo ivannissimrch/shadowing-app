@@ -1,6 +1,7 @@
 import { Lesson } from "@/app/Types";
 import styles from "./RecorderPanel.module.css";
 import { useRecorderPanelContext } from "@/app/RecorderpanelContext";
+import { Button } from "../ui/Button/Button";
 
 export default function RecorderAudioButtons({
   selectedLesson,
@@ -13,19 +14,24 @@ export default function RecorderAudioButtons({
     return null;
   } else {
     return (
-      <>
-        <button
+      <div className={styles.buttonGroup}>
+        <Button
+          variant="danger"
           className={styles.recordBtn}
           onClick={() => {
             dispatch({ type: "RESET" });
           }}
         >
           Delete
-        </button>
-        <button className={styles.recordBtn} onClick={handleSubmit}>
+        </Button>
+        <Button
+          variant="primary"
+          className={styles.recordBtn}
+          onClick={handleSubmit}
+        >
           Submit
-        </button>
-      </>
+        </Button>
+      </div>
     );
   }
 }

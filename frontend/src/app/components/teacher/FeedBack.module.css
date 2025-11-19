@@ -49,8 +49,6 @@
 }
 
 .feedback-button {
-  composes: btn from "../../../styles/shared.css";
-  width: fit-content;
   align-self: flex-end;
   min-width: 160px;
 }

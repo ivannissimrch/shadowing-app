@@ -129,40 +129,6 @@
 
 .viewButton {
   flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: var(--spacing-xs);
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-semibold);
-  padding: var(--spacing-sm) var(--spacing-md);
-  border-radius: var(--radius-md);
-  background: var(--color-primary);
-  color: var(--color-white);
-  border: none;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  /* text-decoration: none; */
-}
-
-.viewButton:hover {
-  /* transform: translateY(-1px); */
-  background: var(--color-primary-hover);
-  box-shadow: 0 4px 16px rgba(8, 145, 178, 0.4);
-}
-
-.viewButton:focus {
-  outline: 3px solid var(--color-primary);
-  outline-offset: 2px;
-}
-
-.viewButton:focus:not(:focus-visible) {
-  outline: none;
-}
-
-.viewButton:focus-visible {
-  outline: 3px solid var(--color-primary);
-  outline-offset: 2px;
 }
 
 .deleteButton {
@@ -207,21 +173,4 @@
   .studentCard {
     min-height: 240px;
   }
-}
-
-/* Desktop */
-@media (min-width: 1024px) {
-}
-
-.studentCard {
-  min-height: 256px;
-}
-
-.studentTitle {
-  font-size: var(--font-size-2xl);
-}
-
-.iconWrapper {
-  width: 72px;
-  height: 72px;
 }

@@ -1,6 +1,7 @@
 import { FaMicrophone } from "react-icons/fa";
 import styles from "./RecorderPanel.module.css";
 import { useRecorderPanelContext } from "@/app/RecorderpanelContext";
+import { Button } from "../ui/Button/Button";
 
 export default function RecorderVoiceRecorder() {
   const {
@@ -17,32 +18,31 @@ export default function RecorderVoiceRecorder() {
 
   return (
     <>
-      {" "}
       <div className={styles.mic}>
         <div className={styles.icon}>
           <FaMicrophone />
         </div>
         {isIdle ? <p>Tap to record</p> : <p>Recording...</p>}
-        <div>
+        <div className={styles.buttonGroup}>
           {isIdle && (
-            <button onClick={startRecording} className={styles.recordBtn}>
+            <Button variant="primary" onClick={startRecording}>
               Start Recording
-            </button>
+            </Button>
           )}
           {isRecording && (
-            <button className={styles.recordBtn} onClick={pauseRecording}>
+            <Button variant="secondary" onClick={pauseRecording}>
               Pause
-            </button>
+            </Button>
           )}
           {isPaused && (
-            <button onClick={resumeRecording} className={styles.recordBtn}>
+            <Button variant="primary" onClick={resumeRecording}>
               Resume
-            </button>
+            </Button>
           )}
           {(isRecording || isPaused) && (
-            <button onClick={stopRecording} className={styles.recordBtn}>
+            <Button variant="danger" onClick={stopRecording}>
               Stop
-            </button>
+            </Button>
           )}
         </div>
       </div>
