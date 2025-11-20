@@ -52,9 +52,11 @@ export default function Card({
           {status}
         </div>
       </div>
-      <Button variant="primary" href={linkPath} className={styles.button}>
-        Start Lesson
-      </Button>
+      <div className={styles.buttonGroup}>
+        <Button variant="primary" href={linkPath} className={styles.button}>
+          Start Lesson
+        </Button>
+      </div>
     </div>
   );
 }

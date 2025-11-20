@@ -7,33 +7,15 @@
   flex-direction: column;
   padding: 0;
   overflow: hidden;
-  transition: all 0.3s ease;
+  transition: box-shadow 0.3s ease, border-color 0.3s ease;
   border: 1px solid var(--color-gray-light);
-  position: relative;
+  box-shadow: var(--shadow-sm);
 }
 
-.lessonsCard::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  border-radius: var(--card-border-radius);
-  box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
-  transition: box-shadow 0.3s ease;
-  pointer-events: none;
-  z-index: -1;
-}
-
-.lessonsCard:hover::before {
-  box-shadow:
-    0 0 0 4px rgba(16, 185, 129, 0.1),
-    0 8px 24px rgba(0, 0, 0, 0.12);
-}
-
-.lessonsCard:hover {
-  border-color: var(--color-success);
+.lessonsCard:focus-within {
+  outline: 3px solid var(--color-primary);
+  outline-offset: 2px;
+  border-color: var(--color-primary);
 }
 
 .cardHeader {
@@ -111,6 +93,5 @@
   background-color: var(--color-error);
   color: var(--color-white);
   border-color: var(--color-error);
-  transform: translateY(-1px);
   box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
 }

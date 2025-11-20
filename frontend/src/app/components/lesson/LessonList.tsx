@@ -1,12 +1,11 @@
 "use client";
-import styles from "./LessonList.module.css";
 import { Lesson } from "../../Types";
 import { useSWRAxios } from "../../hooks/useSWRAxios";
 import { API_PATHS } from "../../constants/apiKeys";
 import { useState } from "react";
 import DeleteLessonModal from "../teacher/DeleteLessonModal";
-import { FaBook, FaTrash, FaUserPlus } from "react-icons/fa";
-import { Button } from "../ui/Button/Button";
+import CardGrid from "../ui/CardGrid/CardGrid";
+import LessonCard from "../ui/LessonCard";
 
 interface LessonListProps {
   onAssignLesson: (lesson: { id: string; title: string }) => void;
@@ -32,38 +31,15 @@ export default function LessonList({ onAssignLesson }: LessonListProps) {
 
   return (
     <>
-      <div className={styles.lessonsGrid}>
-        {lessons &&
-          lessons.map((lesson: Lesson) => (
-            <div key={lesson.id} className={styles.lessonsCard}>
-              <div className={styles.cardHeader}>
-                <div className={styles.iconWrapper}>
-                  <FaBook />
-                </div>
-              </div>
-              <div className={styles.cardBody}>
-                <h3 className={styles.lessonTitle}>{lesson.title}</h3>
-              </div>
-              <div className={styles.buttonGroup}>
-                <Button
-                  variant="secondary"
-                  leftIcon={<FaUserPlus />}
-                  onClick={() => onAssignLesson(lesson)}
-                  className={styles.assignButton}
-                >
-                  Assign
-                </Button>
-                <button
-                  className={styles.deleteButton}
-                  onClick={() => handleDeleteLesson(lesson)}
-                  title="Delete lesson"
-                >
-                  <FaTrash />
-                </button>
-              </div>
-            </div>
-          ))}
-      </div>
+      <CardGrid>
+        {lessons && (
+          <LessonCard
+            lessons={lessons}
+            onAssignLesson={onAssignLesson}
+            onDeleteLesson={handleDeleteLesson}
+          />
+        )}
+      </CardGrid>
       {selectedLesson && (
         <DeleteLessonModal
           isOpen={isDeleteModalOpen}
