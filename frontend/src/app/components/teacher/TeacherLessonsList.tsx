@@ -7,6 +7,7 @@ import { API_PATHS } from "../../constants/apiKeys";
 import { useState } from "react";
 import UnassignLessonModal from "./UnassignLessonModal";
 import { MdClose } from "react-icons/md"; // Material Design close icon
+import CardGrid from "../ui/CardGrid/CardGrid";
 
 export default function TeacherLessonsList({ id }: { id: string }) {
   const { data: lessons } = useSWRAxios<Lesson[]>(
@@ -26,7 +27,7 @@ export default function TeacherLessonsList({ id }: { id: string }) {
 
   return (
     <>
-      <section className={styles.container}>
+      <CardGrid>
         {lessons &&
           lessons.map((lesson: Lesson) => (
             <div key={lesson.id} className={styles.lessonCardWrapper}>
@@ -49,7 +50,7 @@ export default function TeacherLessonsList({ id }: { id: string }) {
               </button>
             </div>
           ))}
-      </section>
+      </CardGrid>
 
       {student && (
         <UnassignLessonModal
