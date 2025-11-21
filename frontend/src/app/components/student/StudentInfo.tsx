@@ -5,9 +5,8 @@ import styles from "./StudentInfo.module.css";
 import { API_PATHS } from "../../constants/apiKeys";
 
 export default function StudentInfo({ id }: { id: string }) {
-  const { data: student } = useSWRAxios<Student>(API_PATHS.TEACHER_STUDENT(id));
-
-  if (!student) return <div>Loading student info...</div>;
+  const { data } = useSWRAxios<Student>(API_PATHS.TEACHER_STUDENT(id));
+  const student = data as Student;
 
   return (
     <section className={styles["student-info"]}>
