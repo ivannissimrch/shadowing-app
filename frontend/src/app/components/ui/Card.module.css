@@ -1,11 +1,12 @@
-@import "../../../styles/shared.css";
-
 .card {
-  composes: card from "../../../styles/shared.css";
   min-height: 224px;
   display: flex;
   flex-direction: column;
+  background: var(--color-bg-white);
+  border-radius: var(--card-border-radius);
   padding: 0;
+  width: 100%;
+  color: var(--color-black);
   overflow: hidden;
   transition: box-shadow 0.3s ease, border-color 0.3s ease;
   border: 1px solid var(--color-gray-light);
@@ -53,9 +54,9 @@
 }
 
 .title {
-  composes: card-title from "../../../styles/shared.css";
   font-size: var(--font-size-lg);
   font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
   text-align: center;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -67,12 +68,17 @@
 }
 
 .status {
-  composes: badge from "../../../styles/shared.css";
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: var(--spacing-xs);
   font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
   padding: var(--spacing-xs) var(--spacing-md);
+  border-radius: var(--radius-pill);
+  background-color: var(--color-gray-lighter);
+  color: var(--color-text-primary);
+  white-space: nowrap;
 }
 
 .statusIcon {
