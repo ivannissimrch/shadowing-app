@@ -1,7 +1,4 @@
-@import "../../../styles/shared.css";
-
 .logoutButton {
-  composes: btn btn-error from "../../../styles/shared.css";
   padding: var(--spacing-10) var(--spacing-15);
 }
 

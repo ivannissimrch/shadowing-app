@@ -1,11 +1,12 @@
-@import "../../../styles/shared.css";
-
 .lessonsCard {
-  composes: card from "../../../styles/shared.css";
   min-height: 224px;
   display: flex;
   flex-direction: column;
+  background: var(--color-bg-white);
+  border-radius: var(--card-border-radius);
   padding: 0;
+  width: 100%;
+  color: var(--color-black);
   overflow: hidden;
   transition: box-shadow 0.3s ease, border-color 0.3s ease;
   border: 1px solid var(--color-gray-light);
