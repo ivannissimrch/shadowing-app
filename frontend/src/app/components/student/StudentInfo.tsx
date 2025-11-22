@@ -6,7 +6,9 @@ import { API_PATHS } from "../../constants/apiKeys";
 
 export default function StudentInfo({ id }: { id: string }) {
   const { data } = useSWRAxios<Student>(API_PATHS.TEACHER_STUDENT(id));
-  const student = data as Student;
+  const student = data;
+
+  if (!student) return null;
 
   return (
     <section className={styles["student-info"]}>
