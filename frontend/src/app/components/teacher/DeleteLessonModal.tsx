@@ -1,10 +1,10 @@
 "use client";
 import DialogTitle from "@mui/material/DialogTitle";
-import { useState } from "react";
 import useAlertMessageStyles from "../../hooks/useAlertMessageStyles";
 import { mutate } from "swr";
 import { useSWRMutationHook } from "../../hooks/useSWRMutation";
 import { API_PATHS } from "../../constants/apiKeys";
+import { useModalState } from "@/app/hooks/useModalState";
 
 interface DeleteLessonModalProps {
   isOpen: boolean;
@@ -19,7 +19,7 @@ export default function DeleteLessonModal({
   lessonId,
   lessonTitle,
 }: DeleteLessonModalProps) {
-  const [errorMessage, setErrorMessage] = useState("");
+  const modalState = useModalState();
 
   const {
     StyledDialog,
@@ -39,11 +39,11 @@ export default function DeleteLessonModal({
   );
 
   const handleDelete = async () => {
-    setErrorMessage("");
+    modalState.clearError();
     await trigger(undefined);
 
     if (error) {
-      setErrorMessage(
+      modalState.setError(
         error instanceof Error ? error.message : "Error deleting lesson"
       );
       return;
@@ -78,13 +78,13 @@ export default function DeleteLessonModal({
           <strong>{lessonTitle}</strong>? This action cannot be undone and will
           remove all student assignments.
         </p>
-        {errorMessage && (
+        {modalState.state.errorMessage && (
           <div
             style={{ color: "red", marginTop: "8px" }}
             role="alert"
             aria-live="assertive"
           >
-            {errorMessage}
+            {modalState.state.errorMessage}
           </div>
         )}
       </StyledDialogContent>
