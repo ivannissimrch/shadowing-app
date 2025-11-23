@@ -6,7 +6,7 @@
   /* === Colors === */
 
   /* Primary colors */
-  --color-primary: #2563eb;
+  --color-primary: #093594;
   --color-primary-hover: #1d4ed8;
   --color-primary-light: #2563eb;
   --color-primary-dark: #1e3a8a;
@@ -76,21 +76,13 @@
   /* === Shadows (Layered for realistic depth) === */
   --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.05);
 
-  --shadow-sm:
-    0 1px 3px rgba(0, 0, 0, 0.1),
-    0 1px 2px rgba(0, 0, 0, 0.06);
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
 
-  --shadow-md:
-    0 4px 6px rgba(0, 0, 0, 0.07),
-    0 2px 4px rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.06);
 
-  --shadow-lg:
-    0 10px 15px rgba(0, 0, 0, 0.1),
-    0 4px 6px rgba(0, 0, 0, 0.05);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1), 0 4px 6px rgba(0, 0, 0, 0.05);
 
-  --shadow-xl:
-    0 20px 25px rgba(0, 0, 0, 0.1),
-    0 10px 10px rgba(0, 0, 0, 0.04);
+  --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.1), 0 10px 10px rgba(0, 0, 0, 0.04);
 
   /* === Transitions === */
   --transition-base: 0.2s ease;

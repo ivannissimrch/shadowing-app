@@ -69,10 +69,10 @@ export const StyledButton = styled(Button)(({ variant }) => ({
   fontSize: "15px",
   transition: "all 0.2s ease",
   ...(variant === "contained" && {
-    background: "linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%)",
+    background: "var(--color-primary)",
     boxShadow: "0 4px 14px rgba(37, 99, 235, 0.4)",
     "&:hover": {
-      transform: "translateY(-2px)",
+      background: "var(--color-primary-hover)",
       boxShadow: "0 6px 20px rgba(37, 99, 235, 0.5)",
     },
     "&:active": {
@@ -80,7 +80,7 @@ export const StyledButton = styled(Button)(({ variant }) => ({
     },
   }),
   ...(variant === "outlined" && {
-    borderColor: "#cbd5e1",
+    borderColor: "var(--color-border-gray)",
     borderWidth: "2px",
     color: "#475569",
     "&:hover": {
