@@ -6,10 +6,11 @@ import { useState } from "react";
 import DeleteStudentModal from "../teacher/DeleteStudentModal";
 import CardGrid from "../ui/CardGrid/CardGrid";
 import StudentCard from "../ui/StudentCard";
+import useModal from "@/app/hooks/useModal";
 
 export default function StudentList() {
   const { data: students } = useSWRAxios<Student[]>(API_PATHS.USERS);
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const deleteModal = useModal();
   const [selectedStudent, setSelectedStudent] = useState<{
     id: string;
     username: string;
@@ -17,11 +18,11 @@ export default function StudentList() {
 
   function handleDeleteStudent(student: Student) {
     setSelectedStudent({ id: student.id, username: student.username });
-    setIsDeleteModalOpen(true);
+    deleteModal.openModal();
   }
 
   function handleCloseModal() {
-    setIsDeleteModalOpen(false);
+    deleteModal.closeModal();
     setSelectedStudent(null);
   }
 
@@ -35,7 +36,7 @@ export default function StudentList() {
       </CardGrid>
       {selectedStudent && (
         <DeleteStudentModal
-          isOpen={isDeleteModalOpen}
+          isOpen={deleteModal.isModalOpen}
           onClose={handleCloseModal}
           studentId={selectedStudent.id}
           studentUsername={selectedStudent.username}
