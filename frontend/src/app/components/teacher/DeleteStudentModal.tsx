@@ -1,10 +1,10 @@
 "use client";
 import DialogTitle from "@mui/material/DialogTitle";
-import { useState } from "react";
 import useAlertMessageStyles from "../../hooks/useAlertMessageStyles";
 import { mutate } from "swr";
 import { useSWRMutationHook } from "../../hooks/useSWRMutation";
 import { API_PATHS } from "../../constants/apiKeys";
+import { useModalState } from "@/app/hooks/useModalState";
 
 interface DeleteStudentModalProps {
   isOpen: boolean;
@@ -19,7 +19,7 @@ export default function DeleteStudentModal({
   studentId,
   studentUsername,
 }: DeleteStudentModalProps) {
-  const [errorMessage, setErrorMessage] = useState("");
+  const modalState = useModalState();
 
   const {
     StyledDialog,
@@ -38,20 +38,18 @@ export default function DeleteStudentModal({
     }
   );
 
-  const handleDelete = async () => {
-    setErrorMessage("");
-
+  async function handleDelete() {
+    modalState.clearError();
     await trigger(undefined);
 
     if (error) {
-      setErrorMessage(
+      modalState.setError(
         error instanceof Error ? error.message : "Error deleting student"
       );
       return;
     }
-
     onClose();
-  };
+  }
 
   return (
     <StyledDialog
@@ -79,13 +77,13 @@ export default function DeleteStudentModal({
           Are you sure you want to delete the student{" "}
           <strong>{studentUsername}</strong>? This action cannot be undone.
         </p>
-        {errorMessage && (
+        {modalState.state.errorMessage && (
           <p
             style={{ color: "red", marginTop: "8px" }}
             role="alert"
             aria-live="assertive"
           >
-            {errorMessage}
+            {modalState.state.errorMessage}
           </p>
         )}
       </StyledDialogContent>
