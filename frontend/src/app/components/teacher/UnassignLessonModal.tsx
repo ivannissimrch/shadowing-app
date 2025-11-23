@@ -1,10 +1,10 @@
 "use client";
 import DialogTitle from "@mui/material/DialogTitle";
-import { useState } from "react";
 import useAlertMessageStyles from "../../hooks/useAlertMessageStyles";
 import { mutate } from "swr";
 import { API_PATHS } from "../../constants/apiKeys";
 import { useSWRMutationHook } from "@/app/hooks/useSWRMutation";
+import { useModalState } from "@/app/hooks/useModalState";
 
 interface UnassignLessonModalProps {
   isOpen: boolean;
@@ -23,7 +23,8 @@ export default function UnassignLessonModal({
   studentId,
   studentName,
 }: UnassignLessonModalProps) {
-  const [errorMessage, setErrorMessage] = useState("");
+  // const [errorMessage, setErrorMessage] = useState("");
+  const modalState = useModalState();
   const {
     StyledDialog,
     StyledDialogContent,
@@ -42,12 +43,12 @@ export default function UnassignLessonModal({
   );
 
   async function handleUnassign() {
-    setErrorMessage("");
+    modalState.clearError();
 
     const response = await trigger({});
 
     if (!response || error) {
-      setErrorMessage(
+      modalState.setError(
         error instanceof Error ? error.message : "Error removing lesson"
       );
       return;
@@ -86,13 +87,13 @@ export default function UnassignLessonModal({
           This will remove the lesson from the student&apos;s dashboard. Their
           progress will not be deleted.
         </p>
-        {errorMessage && (
+        {modalState.state.errorMessage && (
           <p
             role="alert"
             aria-live="assertive"
             style={{ color: "#ef4444", marginTop: "8px" }}
           >
-            {errorMessage}
+            {modalState.state.errorMessage}
           </p>
         )}
       </StyledDialogContent>
