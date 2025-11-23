@@ -1,6 +1,5 @@
 "use client";
 import DialogTitle from "@mui/material/DialogTitle";
-import { useState } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import useAlertMessageStyles from "../../hooks/useAlertMessageStyles";
 import StudentSelect from "../student/StudentSelect";
@@ -8,6 +7,7 @@ import { mutate } from "swr";
 import { API_PATHS } from "../../constants/apiKeys";
 import { AssignmentResponse } from "@/app/Types";
 import { useSWRMutationHook } from "@/app/hooks/useSWRMutation";
+import { useFormModal } from "@/app/hooks/useFormModal";
 
 interface AssignLessonModalProps {
   isOpen: boolean;
@@ -22,8 +22,7 @@ export default function AssignLessonModal({
   lessonId,
   lessonTitle,
 }: AssignLessonModalProps) {
-  const [selectedStudent, setSelectedStudent] = useState<string | "">("");
-  const [errorMessage, setErrorMessage] = useState("");
+  const form = useFormModal({ selectedStudent: "" });
   const {
     StyledDialog,
     StyledDialogContent,
@@ -46,21 +45,18 @@ export default function AssignLessonModal({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    setErrorMessage("");
+    form.clearErrors();
 
     const response = await trigger({
-      studentId: selectedStudent,
+      studentId: form.fields.selectedStudent,
     });
-
     if (!response || error) {
-      setErrorMessage(
+      form.setFormError(
         error instanceof Error ? error.message : "Error assigning lesson"
       );
       return;
     }
-
-    setSelectedStudent("");
+    form.reset();
     onClose();
   };
 
@@ -90,19 +86,21 @@ export default function AssignLessonModal({
           <div>
             <ErrorBoundary fallback={<div>Error loading students</div>}>
               <StudentSelect
-                selectedStudent={selectedStudent}
-                onStudentChange={setSelectedStudent}
+                selectedStudent={form.fields.selectedStudent}
+                onStudentChange={(value) =>
+                  form.setField("selectedStudent", value)
+                }
                 StyledFormControl={StyledFormControl}
               />
             </ErrorBoundary>
           </div>
-          {errorMessage && (
+          {form.errors.form && (
             <p
               role="alert"
               aria-live="assertive"
               style={{ color: "red", marginTop: "8px" }}
             >
-              {errorMessage}
+              {form.errors.form}
             </p>
           )}
         </form>
@@ -114,7 +112,7 @@ export default function AssignLessonModal({
         <StyledButton
           variant="contained"
           onClick={handleSubmit}
-          disabled={isMutating || !selectedStudent}
+          disabled={isMutating || !form.fields.selectedStudent}
           aria-label={`Assign lesson "${lessonTitle}" to selected student`}
         >
           {isMutating ? "Assigning..." : "Assign Lesson"}
