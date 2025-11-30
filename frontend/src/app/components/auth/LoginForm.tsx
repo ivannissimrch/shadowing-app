@@ -21,6 +21,7 @@ export default function LoginForm() {
     AuthResponse,
     { username: string; password: string }
   >("/signin", { method: "POST" });
+  const [isNavigating, setIsNavigating] = useState(false);
 
   useEffect(() => {
     try {
@@ -34,6 +35,7 @@ export default function LoginForm() {
       }
     } catch (error) {
       logger.error("Invalid token:", error);
+      setIsNavigating(false);
       updateToken(null);
     }
   }, [router, token, updateToken]);
@@ -49,6 +51,7 @@ export default function LoginForm() {
       const { token } = response;
       updateToken(token);
       const route = redirectBasedOnRole(token);
+      setIsNavigating(true);
       router.push(route);
     }
   }
@@ -109,8 +112,12 @@ export default function LoginForm() {
           </button>
         </div>
 
-        <Button variant="primary" type="submit" disabled={isMutating}>
-          {isMutating ? "Logging in..." : "Login"}
+        <Button
+          variant="primary"
+          type="submit"
+          disabled={isMutating || isNavigating}
+        >
+          {isMutating || isNavigating ? "Logging in..." : "Login"}
         </Button>
       </form>
       {errorMsg && (
