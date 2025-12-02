@@ -34,8 +34,10 @@ export default function VideoScriptToggle({
     >
       {toggleState === ToggleState.SHOW_BOTH && (
         <>
-          <SegmentPlayer selectedLesson={selectedLesson} />
-          <div className={styles.imageBox}>
+          <div className={styles.videoArea}>
+            <SegmentPlayer selectedLesson={selectedLesson} />
+          </div>
+          <div className={styles.scriptArea}>
             <Image
               src={selectedLesson.image}
               alt={`${selectedLesson.title}  Practice lesson image`}
@@ -49,10 +51,12 @@ export default function VideoScriptToggle({
       )}
 
       {toggleState === ToggleState.SHOW_VIDEO_ONLY && (
-        <SegmentPlayer selectedLesson={selectedLesson} />
+        <div className={styles.contentArea}>
+          <SegmentPlayer selectedLesson={selectedLesson} />
+        </div>
       )}
       {toggleState === ToggleState.SHOW_SCRIPT_ONLY && (
-        <div className={styles.imageBox}>
+        <div className={styles.contentArea}>
           <Image
             src={selectedLesson.image}
             alt={`${selectedLesson.title}  Practice lesson image`}
@@ -63,10 +67,12 @@ export default function VideoScriptToggle({
           />
         </div>
       )}
-      <ToggleButtons
-        toggleState={toggleState}
-        updateToggleState={updateToggleState}
-      />
+      <div className={styles.buttonsArea}>
+        <ToggleButtons
+          toggleState={toggleState}
+          updateToggleState={updateToggleState}
+        />
+      </div>
     </div>
   );
 }

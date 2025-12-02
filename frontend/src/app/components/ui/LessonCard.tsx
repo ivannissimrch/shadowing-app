@@ -1,7 +1,7 @@
 import styles from "./LessonCard.module.css";
 import { Lesson } from "../../Types";
 import { FaBook, FaTrash, FaUserPlus } from "react-icons/fa";
-import { Button } from "../ui/Button/Button";
+import { Button } from "./Button";
 
 interface LessonCardProps {
   lessons: Lesson[];

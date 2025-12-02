@@ -1,44 +1,55 @@
-/* Mobile-first styles */
-
 .grid {
   display: grid;
-  grid-template-columns: 1fr;
   gap: var(--spacing-15);
   width: 100%;
-  margin: 0 auto 0 auto;
+  margin: 0 auto;
   position: relative;
+  grid-template-areas:
+    "video"
+    "script"
+    "buttons";
+  grid-template-columns: 1fr;
 }
 
 .gridOneColumn {
   display: grid;
-  grid-template-columns: 1fr;
   gap: var(--spacing-15);
   width: 100%;
   max-width: 1400px;
   margin: 0 auto var(--spacing-15) auto;
   position: relative;
+  grid-template-areas:
+    "content"
+    "buttons";
+  grid-template-columns: 1fr;
 }
 
+.videoArea {
+  grid-area: video;
+  width: 100%;
+  height: 100%;
+}
+
+.scriptArea {
+  grid-area: script;
+  background: var(--color-bg-primary);
+  width: 100%;
+}
+
+.contentArea {
+  grid-area: content;
+  width: 100%;
+}
+
+.buttonsArea {
+  grid-area: buttons;
+}
+
+.grid img,
 .gridOneColumn img {
   width: 100%;
-  height: auto;
+  height: 100%;
   object-fit: contain;
-}
-
-.grid > * {
-  width: 100%;
-  height: 100%;
-}
-
-.imageBox {
-  background: var(--color-bg-primary);
-  color: var(--color-white);
-  width: 100%;
-}
-
-.grid img {
-  width: 100%;
-  height: 100%;
 }
 
 .hide {
@@ -52,13 +63,12 @@
   }
 }
 
-/* Desktop and up */
 @media (min-width: 1250px) {
   .grid {
+    grid-template-areas:
+      "video   script"
+      "buttons buttons";
     grid-template-columns: 1fr 1fr;
     grid-template-rows: 1fr auto;
-  }
-  .gridOneColumn {
-    grid-template-columns: 1fr;
   }
 }

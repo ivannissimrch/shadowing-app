@@ -7,7 +7,7 @@ import { API_PATHS } from "../../constants/apiKeys";
 import { useState } from "react";
 import UnassignLessonModal from "./UnassignLessonModal";
 import { MdClose } from "react-icons/md"; // Material Design close icon
-import CardGrid from "../ui/CardGrid/CardGrid";
+import CardGrid from "../ui/CardGrid";
 
 export default function TeacherLessonsList({ id }: { id: string }) {
   const { data: lessons } = useSWRAxios<Lesson[]>(

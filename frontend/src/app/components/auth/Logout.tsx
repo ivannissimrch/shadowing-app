@@ -1,7 +1,7 @@
 "use client";
 import { useRouter } from "next/navigation";
 import { useAppContext } from "../../AppContext";
-import { Button } from "../ui/Button/Button";
+import { Button } from "../ui/Button";
 import styles from "./Logout.module.css";
 
 export default function Logout() {

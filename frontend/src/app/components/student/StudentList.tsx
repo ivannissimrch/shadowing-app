@@ -4,7 +4,7 @@ import { useSWRAxios } from "../../hooks/useSWRAxios";
 import { API_PATHS } from "../../constants/apiKeys";
 import { useState } from "react";
 import DeleteStudentModal from "../teacher/DeleteStudentModal";
-import CardGrid from "../ui/CardGrid/CardGrid";
+import CardGrid from "../ui/CardGrid";
 import StudentCard from "../ui/StudentCard";
 import useModal from "@/app/hooks/useModal";
 

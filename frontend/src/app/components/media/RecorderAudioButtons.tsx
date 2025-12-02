@@ -1,7 +1,7 @@
 import { Lesson } from "@/app/Types";
 import styles from "./RecorderPanel.module.css";
 import { useRecorderPanelContext } from "@/app/RecorderpanelContext";
-import { Button } from "../ui/Button/Button";
+import { Button } from "../ui/Button";
 
 export default function RecorderAudioButtons({
   selectedLesson,

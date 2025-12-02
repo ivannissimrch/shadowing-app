@@ -1,4 +1,5 @@
 .studentCard {
+  container-type: inline-size;
   text-decoration: none;
   min-height: 224px;
   display: flex;
@@ -9,7 +10,9 @@
   width: 100%;
   color: var(--color-black);
   overflow: hidden;
-  transition: box-shadow 0.3s ease, border-color 0.3s ease;
+  transition:
+    box-shadow 0.3s ease,
+    border-color 0.3s ease;
   border: 1px solid var(--color-gray-light);
   box-shadow: var(--shadow-sm);
 }
@@ -138,9 +141,13 @@
   outline-offset: 2px;
 }
 
-/* Tablet */
-@media (min-width: 769px) {
-  .studentCard {
-    min-height: 240px;
+@container (min-width: 320px) {
+  .iconWrapper {
+    width: 72px;
+    height: 72px;
+  }
+
+  .cardHeader {
+    min-height: 128px;
   }
 }

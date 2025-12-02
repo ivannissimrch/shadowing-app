@@ -4,7 +4,7 @@ import { useSWRMutationHook } from "@/app/hooks/useSWRMutation";
 import { API_PATHS } from "@/app/constants/apiKeys";
 import { mutate } from "swr";
 import { Lesson } from "@/app/Types";
-import { Button } from "../ui/Button/Button";
+import { Button } from "../ui/Button";
 
 interface FeedBackProps {
   idsInfo: { studentId: string; lessonId: string };
