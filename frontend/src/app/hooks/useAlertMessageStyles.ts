@@ -91,6 +91,26 @@ export const StyledButton = styled(Button)(({ variant }) => ({
   }),
 }));
 
+export const StyledErrorButton = styled(Button)(({ variant }) => ({
+  borderRadius: "10px",
+  padding: "12px 24px",
+  fontWeight: 600,
+  textTransform: "none",
+  fontSize: "15px",
+  transition: "all 0.2s ease",
+  ...(variant === "contained" && {
+    background: "#dc2626",
+    boxShadow: "0 4px 14px rgba(220, 38, 38, 0.4)",
+    "&:hover": {
+      background: "#b91c1c",
+      boxShadow: "0 6px 20px rgba(220, 38, 38, 0.5)",
+    },
+    "&:active": {
+      transform: "translateY(0)",
+    },
+  }),
+}));
+
 export const StyledFormControl = styled(FormControl)({
   "& .MuiOutlinedInput-root": {
     borderRadius: "10px",
@@ -123,5 +143,6 @@ export default function useAlertMessageStyles() {
     StyledDialogActions,
     StyledButton,
     StyledFormControl,
+    StyledErrorButton,
   };
 }

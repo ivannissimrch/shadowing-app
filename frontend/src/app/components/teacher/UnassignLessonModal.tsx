@@ -4,7 +4,8 @@ import useAlertMessageStyles from "../../hooks/useAlertMessageStyles";
 import { mutate } from "swr";
 import { API_PATHS } from "../../constants/apiKeys";
 import { useSWRMutationHook } from "@/app/hooks/useSWRMutation";
-import { useModalState } from "@/app/hooks/useModalState";
+import { Lesson } from "@/app/Types";
+import { useAppContext } from "@/app/AppContext";
 
 interface UnassignLessonModalProps {
   isOpen: boolean;
@@ -23,39 +24,46 @@ export default function UnassignLessonModal({
   studentId,
   studentName,
 }: UnassignLessonModalProps) {
-  // const [errorMessage, setErrorMessage] = useState("");
-  const modalState = useModalState();
+  const { openAlertDialog } = useAppContext();
+
   const {
     StyledDialog,
     StyledDialogContent,
     StyledDialogActions,
     StyledButton,
+    StyledErrorButton,
   } = useAlertMessageStyles();
 
-  const { trigger, isMutating, error } = useSWRMutationHook(
+  const { trigger } = useSWRMutationHook(
     API_PATHS.UNASSIGN_LESSON(lessonId, studentId),
-    { method: "DELETE" },
-    {
-      onSuccess: () => {
-        mutate(API_PATHS.TEACHER_STUDENT_LESSONS(studentId));
-      },
-    }
+    { method: "DELETE" }
   );
 
-  async function handleUnassign() {
-    modalState.clearError();
-
-    const response = await trigger({});
-
-    if (!response || error) {
-      modalState.setError(
-        error instanceof Error ? error.message : "Error removing lesson"
-      );
-      return;
-    }
-
+  const handleUnassign = async () => {
     onClose();
-  }
+    try {
+      await mutate(
+        API_PATHS.TEACHER_STUDENT_LESSONS(studentId),
+        async (currentLessons: Lesson[] | undefined) => {
+          await trigger(undefined);
+          return (
+            currentLessons?.filter((lesson) => lesson.id !== lessonId) ?? []
+          );
+        },
+        {
+          optimisticData: (currentLessons: Lesson[] | undefined) =>
+            currentLessons?.filter((lesson) => lesson.id !== lessonId) ?? [],
+          rollbackOnError: true,
+          revalidate: false,
+        }
+      );
+    } catch {
+      openAlertDialog(
+        "Remove Failed",
+        `Could not remove "${lessonTitle}" from ${studentName}. Please check your connection and try again.`
+      );
+    }
+  };
 
   return (
     <StyledDialog
@@ -87,34 +95,18 @@ export default function UnassignLessonModal({
           This will remove the lesson from the student&apos;s dashboard. Their
           progress will not be deleted.
         </p>
-        {modalState.state.errorMessage && (
-          <p
-            role="alert"
-            aria-live="assertive"
-            style={{ color: "#ef4444", marginTop: "8px" }}
-          >
-            {modalState.state.errorMessage}
-          </p>
-        )}
       </StyledDialogContent>
       <StyledDialogActions>
         <StyledButton variant="outlined" onClick={onClose}>
           Cancel
         </StyledButton>
-        <StyledButton
+        <StyledErrorButton
           variant="contained"
           onClick={handleUnassign}
-          disabled={isMutating}
           aria-label={`Remove lesson "${lessonTitle}" from ${studentName}`}
-          sx={{
-            backgroundColor: "#ef4444",
-            "&:hover": {
-              backgroundColor: "#dc2626",
-            },
-          }}
         >
-          {isMutating ? "Removing..." : "Remove"}
-        </StyledButton>
+          Remove
+        </StyledErrorButton>
       </StyledDialogActions>
     </StyledDialog>
   );

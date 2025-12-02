@@ -15,7 +15,7 @@ export default function LessonsLayout({
   const router = useRouter();
 
   useEffect(() => {
-    if (!token) {
+    if (token === null) {
       router.push("/");
     }
   }, [token, router]);

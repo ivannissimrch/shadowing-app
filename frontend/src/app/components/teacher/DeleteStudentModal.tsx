@@ -4,7 +4,8 @@ import useAlertMessageStyles from "../../hooks/useAlertMessageStyles";
 import { mutate } from "swr";
 import { useSWRMutationHook } from "../../hooks/useSWRMutation";
 import { API_PATHS } from "../../constants/apiKeys";
-import { useModalState } from "@/app/hooks/useModalState";
+import { Student } from "@/app/Types";
+import { useAppContext } from "@/app/AppContext";
 
 interface DeleteStudentModalProps {
   isOpen: boolean;
@@ -19,37 +20,45 @@ export default function DeleteStudentModal({
   studentId,
   studentUsername,
 }: DeleteStudentModalProps) {
-  const modalState = useModalState();
+  const { openAlertDialog } = useAppContext();
 
   const {
     StyledDialog,
     StyledDialogContent,
     StyledDialogActions,
     StyledButton,
+    StyledErrorButton,
   } = useAlertMessageStyles();
 
-  const { trigger, isMutating, error } = useSWRMutationHook(
-    API_PATHS.USER(studentId),
-    { method: "DELETE" },
-    {
-      onSuccess: () => {
-        mutate(API_PATHS.USERS);
-      },
-    }
-  );
+  const { trigger } = useSWRMutationHook(API_PATHS.USER(studentId), {
+    method: "DELETE",
+  });
 
-  async function handleDelete() {
-    modalState.clearError();
-    await trigger(undefined);
-
-    if (error) {
-      modalState.setError(
-        error instanceof Error ? error.message : "Error deleting student"
-      );
-      return;
-    }
+  const handleDelete = async () => {
     onClose();
-  }
+    try {
+      await mutate(
+        API_PATHS.USERS,
+        async (currentStudents: Student[] | undefined) => {
+          await trigger(undefined);
+          return (
+            currentStudents?.filter((student) => student.id !== studentId) ?? []
+          );
+        },
+        {
+          optimisticData: (currentStudents: Student[] | undefined) =>
+            currentStudents?.filter((student) => student.id !== studentId) ?? [],
+          rollbackOnError: true,
+          revalidate: false,
+        }
+      );
+    } catch {
+      openAlertDialog(
+        "Delete Failed",
+        `Could not delete "${studentUsername}". Please check your connection and try again.`
+      );
+    }
+  };
 
   return (
     <StyledDialog
@@ -77,34 +86,18 @@ export default function DeleteStudentModal({
           Are you sure you want to delete the student{" "}
           <strong>{studentUsername}</strong>? This action cannot be undone.
         </p>
-        {modalState.state.errorMessage && (
-          <p
-            style={{ color: "red", marginTop: "8px" }}
-            role="alert"
-            aria-live="assertive"
-          >
-            {modalState.state.errorMessage}
-          </p>
-        )}
       </StyledDialogContent>
       <StyledDialogActions>
         <StyledButton variant="outlined" onClick={onClose}>
           Cancel
         </StyledButton>
-        <StyledButton
+        <StyledErrorButton
           variant="contained"
           onClick={handleDelete}
-          disabled={isMutating}
           aria-label={`Delete student ${studentUsername}. This action cannot be undone.`}
-          sx={{
-            backgroundColor: "#dc2626",
-            "&:hover": {
-              backgroundColor: "#b91c1c",
-            },
-          }}
         >
-          {isMutating ? "Deleting..." : "Delete Student"}
-        </StyledButton>
+          Delete Student
+        </StyledErrorButton>
       </StyledDialogActions>
     </StyledDialog>
   );
