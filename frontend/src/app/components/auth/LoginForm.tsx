@@ -8,7 +8,7 @@ import redirectBasedOnRole from "../../helpers/redirectBasedOnRole";
 import logger from "../../helpers/logger";
 import { AuthResponse } from "@/app/Types";
 import { useSWRMutationHook } from "@/app/hooks/useSWRMutation";
-import { Button } from "../ui/Button/Button";
+import { Button } from "../ui/Button";
 
 export default function LoginForm() {
   const [username, setUsername] = useState("");

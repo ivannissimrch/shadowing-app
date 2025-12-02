@@ -1,4 +1,4 @@
-import { Button } from "../ui/Button/Button";
+import { Button } from "../ui/Button";
 import styles from "./ToggleButtons.module.css";
 import { ToggleState } from "./VideoScriptToggle";
 

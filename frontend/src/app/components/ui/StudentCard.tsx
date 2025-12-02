@@ -1,7 +1,7 @@
 import { FaUserGraduate, FaEye, FaTrash } from "react-icons/fa";
 import styles from "./StudentCard.module.css";
 import { Student } from "../../Types";
-import { Button } from "../ui/Button/Button";
+import { Button } from "./Button";
 
 export default function studentCard({
   students,

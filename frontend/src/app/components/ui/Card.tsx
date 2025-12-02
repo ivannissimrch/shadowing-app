@@ -6,7 +6,7 @@ import {
   FaHourglassHalf,
   FaPlayCircle,
 } from "react-icons/fa";
-import { Button } from "./Button/Button";
+import { Button } from "./Button";
 
 export default function Card({
   lesson,

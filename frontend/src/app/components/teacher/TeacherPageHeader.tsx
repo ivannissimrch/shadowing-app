@@ -1,5 +1,5 @@
 import { MdAdd } from "react-icons/md";
-import { Button } from "../ui/Button/Button";
+import { Button } from "../ui/Button";
 import styles from "./TeacherPageHeader.module.css";
 
 interface TeacherPageHeaderProps {

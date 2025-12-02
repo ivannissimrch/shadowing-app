@@ -13,7 +13,9 @@
 
   /* Semantic colors */
   --color-error: #dc2626;
+  --color-error-light: #fef2f2;
   --color-success: #10b981;
+  --color-success-light: #ecfdf5;
   --color-warning: #f59e0b;
 
   /* Neutral colors */
@@ -56,9 +58,10 @@
   --font-size-sm: 0.875rem; /* 14px */
   --font-size-base: 1rem; /* 16px */
   --font-size-lg: 1.125rem; /* 18px */
-  --font-size-xl: 1.5rem; /* 24px */
-  --font-size-2xl: 1.875rem; /* 30px */
-  --font-size-2rem: 2rem; /* 32px */
+  /* Fluid headings - scale with viewport, but respect min/max */
+  --font-size-xl: clamp(1.25rem, 2.5vw, 1.5rem); /* 20px → 24px */
+  --font-size-2xl: clamp(1.5rem, 3vw, 1.875rem); /* 24px → 30px */
+  --font-size-2rem: clamp(1.75rem, 3.5vw, 2rem); /* 28px → 32px */
 
   --font-weight-normal: 400;
   --font-weight-medium: 500;
@@ -74,15 +77,9 @@
   --radius-pill: 14.4px;
 
   /* === Shadows (Layered for realistic depth) === */
-  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.05);
-
   --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
-
   --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.06);
-
   --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1), 0 4px 6px rgba(0, 0, 0, 0.05);
-
-  --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.1), 0 10px 10px rgba(0, 0, 0, 0.04);
 
   /* === Transitions === */
   --transition-base: 0.2s ease;
@@ -95,6 +92,7 @@
   /* Inputs */
   --input-border: 1px solid var(--color-gray-light);
   --input-border-radius: var(--radius-sm);
+  --input-height: 2.75rem;
 
   /* Cards */
   --card-border-radius: var(--radius-md);

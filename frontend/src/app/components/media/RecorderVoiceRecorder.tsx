@@ -1,7 +1,7 @@
 import { FaMicrophone } from "react-icons/fa";
 import styles from "./RecorderPanel.module.css";
 import { useRecorderPanelContext } from "@/app/RecorderpanelContext";
-import { Button } from "../ui/Button/Button";
+import { Button } from "../ui/Button";
 
 export default function RecorderVoiceRecorder() {
   const {

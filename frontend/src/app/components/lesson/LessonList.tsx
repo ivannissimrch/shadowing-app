@@ -4,7 +4,7 @@ import { useSWRAxios } from "../../hooks/useSWRAxios";
 import { API_PATHS } from "../../constants/apiKeys";
 import { useState } from "react";
 import DeleteLessonModal from "../teacher/DeleteLessonModal";
-import CardGrid from "../ui/CardGrid/CardGrid";
+import CardGrid from "../ui/CardGrid";
 import LessonCard from "../ui/LessonCard";
 
 interface LessonListProps {
