@@ -12,7 +12,9 @@ export default function ChangePasswordLayout({
   children: React.ReactNode;
 }>) {
   const { token } = useAppContext();
-  const user = token ? JSON.parse(atob(token.split(".")[1])) : null;
+
+  if (!token) return null;
+  const user = JSON.parse(atob(token.split(".")[1]));
 
   return (
     <>

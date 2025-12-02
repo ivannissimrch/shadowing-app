@@ -9,7 +9,7 @@ export const AppContext = createContext<AppContextType>({
   isAlertDialogOpen: false,
   alertDialogTitle: "",
   alertDialogMessage: "",
-  token: null,
+  token: undefined,
   updateToken: () => {},
 });
 

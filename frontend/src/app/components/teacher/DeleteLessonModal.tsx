@@ -4,7 +4,8 @@ import useAlertMessageStyles from "../../hooks/useAlertMessageStyles";
 import { mutate } from "swr";
 import { useSWRMutationHook } from "../../hooks/useSWRMutation";
 import { API_PATHS } from "../../constants/apiKeys";
-import { useModalState } from "@/app/hooks/useModalState";
+import { Lesson } from "@/app/Types";
+import { useAppContext } from "@/app/AppContext";
 
 interface DeleteLessonModalProps {
   isOpen: boolean;
@@ -19,36 +20,44 @@ export default function DeleteLessonModal({
   lessonId,
   lessonTitle,
 }: DeleteLessonModalProps) {
-  const modalState = useModalState();
+  const { openAlertDialog } = useAppContext();
 
   const {
     StyledDialog,
     StyledDialogContent,
     StyledDialogActions,
     StyledButton,
+    StyledErrorButton,
   } = useAlertMessageStyles();
 
-  const { trigger, isMutating, error } = useSWRMutationHook(
-    API_PATHS.LESSON(lessonId),
-    { method: "DELETE" },
-    {
-      onSuccess: () => {
-        mutate(API_PATHS.ALL_LESSONS);
-      },
-    }
-  );
+  const { trigger } = useSWRMutationHook(API_PATHS.LESSON(lessonId), {
+    method: "DELETE",
+  });
 
   const handleDelete = async () => {
-    modalState.clearError();
-    await trigger(undefined);
-
-    if (error) {
-      modalState.setError(
-        error instanceof Error ? error.message : "Error deleting lesson"
-      );
-      return;
-    }
     onClose();
+    try {
+      await mutate(
+        API_PATHS.ALL_LESSONS,
+        async (currentLessons: Lesson[] | undefined) => {
+          await trigger(undefined);
+          return (
+            currentLessons?.filter((lesson) => lesson.id !== lessonId) ?? []
+          );
+        },
+        {
+          optimisticData: (currentLessons: Lesson[] | undefined) =>
+            currentLessons?.filter((lesson) => lesson.id !== lessonId) ?? [],
+          rollbackOnError: true,
+          revalidate: false,
+        }
+      );
+    } catch {
+      openAlertDialog(
+        "Delete Failed",
+        `Could not delete "${lessonTitle}". Please check your connection and try again.`
+      );
+    }
   };
 
   return (
@@ -78,34 +87,18 @@ export default function DeleteLessonModal({
           <strong>{lessonTitle}</strong>? This action cannot be undone and will
           remove all student assignments.
         </p>
-        {modalState.state.errorMessage && (
-          <div
-            style={{ color: "red", marginTop: "8px" }}
-            role="alert"
-            aria-live="assertive"
-          >
-            {modalState.state.errorMessage}
-          </div>
-        )}
       </StyledDialogContent>
       <StyledDialogActions>
         <StyledButton variant="outlined" onClick={onClose}>
           Cancel
         </StyledButton>
-        <StyledButton
+        <StyledErrorButton
           variant="contained"
           onClick={handleDelete}
-          disabled={isMutating}
           aria-label={`Delete lesson ${lessonTitle}. This action cannot be undone.`}
-          sx={{
-            backgroundColor: "#dc2626",
-            "&:hover": {
-              backgroundColor: "#b91c1c",
-            },
-          }}
         >
-          {isMutating ? "Deleting..." : "Delete Lesson"}
-        </StyledButton>
+          Delete Lesson
+        </StyledErrorButton>
       </StyledDialogActions>
     </StyledDialog>
   );

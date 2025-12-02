@@ -30,34 +30,25 @@ export default function AssignLessonModal({
     StyledButton,
     StyledFormControl,
   } = useAlertMessageStyles();
-  const { trigger, isMutating, error } = useSWRMutationHook<
+  const { trigger, isMutating } = useSWRMutationHook<
     AssignmentResponse,
     { studentId: string }
-  >(
-    API_PATHS.ASSIGN_LESSON(lessonId),
-    { method: "POST" },
-    {
-      onSuccess: () => {
-        mutate(API_PATHS.LESSONS);
-      },
-    }
-  );
+  >(API_PATHS.ASSIGN_LESSON(lessonId), { method: "POST" });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     form.clearErrors();
 
-    const response = await trigger({
-      studentId: form.fields.selectedStudent,
-    });
-    if (!response || error) {
+    try {
+      await trigger({ studentId: form.fields.selectedStudent });
+      mutate(API_PATHS.LESSONS);
+      form.reset();
+      onClose();
+    } catch (err) {
       form.setFormError(
-        error instanceof Error ? error.message : "Error assigning lesson"
+        err instanceof Error ? err.message : "Error assigning lesson"
       );
-      return;
     }
-    form.reset();
-    onClose();
   };
 
   return (

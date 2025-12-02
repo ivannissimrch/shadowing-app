@@ -9,10 +9,20 @@ interface MutationOptions extends AxiosRequestConfig {
   method?: MutationMethod;
 }
 
+// Extend SWR config to allow throwOnError option per-mutation
+type MutationConfig<TData, TVariables> = SWRMutationConfiguration<
+  TData,
+  unknown,
+  string,
+  TVariables
+> & {
+  throwOnError?: boolean;
+};
+
 export function useSWRMutationHook<TData, TVariables = unknown>(
   endpoint: string | null,
   options?: MutationOptions,
-  config?: SWRMutationConfiguration<TData, unknown, string, TVariables>
+  config?: MutationConfig<TData, TVariables>
 ) {
   const method = options?.method || "POST";
 
@@ -57,7 +67,7 @@ export function useSWRMutationHook<TData, TVariables = unknown>(
       return response.data.data;
     },
     {
-      throwOnError: false,
+      throwOnError: true,
       ...config,
     }
   );

@@ -1,8 +1,14 @@
-import { useSyncExternalStore } from "react";
+import { useEffect, useState, useSyncExternalStore } from "react";
 import { getItem, setItem } from "../helpers/localStorage";
 const STORAGE_CHANGE_EVENT = "app-storage-change";
 
 export function usePersistedState<T>(key: string, initialValue: T) {
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  useEffect(() => {
+    setIsLoaded(true);
+  }, []);
+
   function subscribe(callback: () => void) {
     const handleStorageChange = (e: Event) => {
       if (e instanceof StorageEvent && e.key !== null && e.key !== key) {
@@ -41,5 +47,7 @@ export function usePersistedState<T>(key: string, initialValue: T) {
     window.dispatchEvent(new CustomEvent(STORAGE_CHANGE_EVENT));
   }
 
-  return [value, setValue] as const;
+  // Return undefined until loaded to prevent hydration mismatch
+  // undefined = loading, null = no value, value = actual value
+  return [isLoaded ? value : undefined, setValue] as const;
 }
