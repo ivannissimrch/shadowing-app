@@ -19,7 +19,7 @@ export default function ChangePasswordPage() {
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
 
-  const { trigger, isMutating, error } = useSWRMutationHook<
+  const { trigger, isMutating } = useSWRMutationHook<
     { success: boolean; message: string },
     { currentPassword: string; newPassword: string }
   >(API_PATHS.PASSWORD_CHANGE(user?.id || ""), { method: "PATCH" });
@@ -43,26 +43,25 @@ export default function ChangePasswordPage() {
       return;
     }
 
-    const result = await trigger({
-      currentPassword,
-      newPassword,
-    });
+    try {
+      await trigger({
+        currentPassword,
+        newPassword,
+      });
 
-    if (!result || error) {
+      setSuccessMessage("Password changed successfully! Redirecting...");
+      setCurrentPassword("");
+      setNewPassword("");
+      setConfirmPassword("");
+
+      setTimeout(() => {
+        router.push(user?.role === "teacher" ? "/teacher" : "/lessons");
+      }, 2000);
+    } catch (err) {
       setErrorMessage(
-        error instanceof Error ? error.message : "Failed to change password"
+        err instanceof Error ? err.message : "Failed to change password"
       );
-      return;
     }
-
-    setSuccessMessage("Password changed successfully! Redirecting...");
-    setCurrentPassword("");
-    setNewPassword("");
-    setConfirmPassword("");
-
-    setTimeout(() => {
-      router.push(user?.role === "teacher" ? "/teacher" : "/lessons");
-    }, 2000);
   };
 
   return (

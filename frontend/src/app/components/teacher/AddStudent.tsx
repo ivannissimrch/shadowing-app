@@ -28,7 +28,7 @@ export default function AddStudent({
     StyledButton,
   } = useAlertMessageStyles();
 
-  const { trigger, isMutating, error } = useSWRMutationHook<
+  const { trigger, isMutating } = useSWRMutationHook<
     AuthResponse,
     { username: string; password: string }
   >(
@@ -49,21 +49,21 @@ export default function AddStudent({
       return;
     }
     setErrorMessage("");
-    const result = await trigger({
-      username,
-      password,
-    });
 
-    if (!result || error) {
+    try {
+      await trigger({
+        username,
+        password,
+      });
+
+      setUsername("");
+      setPassword("");
+      closeAddStudentDialog();
+    } catch (err) {
       setErrorMessage(
-        error instanceof Error ? error.message : "Error adding student"
+        err instanceof Error ? err.message : "Error adding student"
       );
-      return;
     }
-
-    setUsername("");
-    setPassword("");
-    closeAddStudentDialog();
   };
 
   return (

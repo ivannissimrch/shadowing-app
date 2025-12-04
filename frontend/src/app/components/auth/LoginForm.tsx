@@ -17,11 +17,12 @@ export default function LoginForm() {
   const { updateToken, token } = useAppContext();
   const [passwordType, setPasswordType] = useState("password");
   const inputRef = useRef<HTMLInputElement>(null);
-  const { isMutating, trigger, error } = useSWRMutationHook<
+  const { isMutating, trigger } = useSWRMutationHook<
     AuthResponse,
     { username: string; password: string }
   >("/signin", { method: "POST" });
   const [isNavigating, setIsNavigating] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
     try {
@@ -42,21 +43,27 @@ export default function LoginForm() {
 
   async function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
-    const response = await trigger({
-      username: username,
-      password: password,
-    });
+    setErrorMessage("");
 
-    if (response) {
-      const { token } = response;
-      updateToken(token);
-      const route = redirectBasedOnRole(token);
-      setIsNavigating(true);
-      router.push(route);
+    try {
+      const response = await trigger({
+        username: username,
+        password: password,
+      });
+
+      if (response) {
+        const { token } = response;
+        updateToken(token);
+        const route = redirectBasedOnRole(token);
+        setIsNavigating(true);
+        router.push(route);
+      }
+    } catch (err) {
+      setErrorMessage(
+        err instanceof Error ? err.message : "Login failed. Please try again."
+      );
     }
   }
-
-  const errorMsg = error instanceof Error ? error.message : null;
 
   return (
     <section className={styles["form-container"]}>
@@ -72,12 +79,13 @@ export default function LoginForm() {
           className={styles.input}
           required
           aria-required="true"
-          aria-invalid={errorMsg ? "true" : "false"}
-          aria-describedby={errorMsg ? "login-error" : undefined}
+          aria-invalid={errorMessage ? "true" : "false"}
+          aria-describedby={errorMessage ? "login-error" : undefined}
           value={username}
           autoComplete="off"
           onChange={(e) => {
             setUsername(e.target.value);
+            setErrorMessage("");
           }}
         />
         <label htmlFor="password">Password:</label>
@@ -86,6 +94,7 @@ export default function LoginForm() {
             value={password}
             onChange={(e) => {
               setPassword(e.target.value);
+              setErrorMessage("");
             }}
             type={passwordType}
             name="password"
@@ -94,8 +103,8 @@ export default function LoginForm() {
             className={styles.input}
             required
             aria-required="true"
-            aria-invalid={errorMsg ? "true" : "false"}
-            aria-describedby={errorMsg ? "login-error" : undefined}
+            aria-invalid={errorMessage ? "true" : "false"}
+            aria-describedby={errorMessage ? "login-error" : undefined}
             autoComplete="off"
           />
           <button
@@ -120,14 +129,14 @@ export default function LoginForm() {
           {isMutating || isNavigating ? "Logging in..." : "Login"}
         </Button>
       </form>
-      {errorMsg && (
+      {errorMessage && (
         <p
           id="login-error"
           role="alert"
           aria-live="assertive"
           className={styles.error}
         >
-          {errorMsg}
+          {errorMessage}
         </p>
       )}
     </section>

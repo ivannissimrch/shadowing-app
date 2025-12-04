@@ -14,7 +14,8 @@ interface FeedBackProps {
 export default function FeedBack({ idsInfo, selectedLesson }: FeedBackProps) {
   const { studentId, lessonId } = idsInfo;
   const [feedback, setFeedback] = useState("");
-  const { trigger, isMutating, error } = useSWRMutationHook(
+  const [errorMessage, setErrorMessage] = useState("");
+  const { trigger, isMutating } = useSWRMutationHook(
     API_PATHS.TEACHER_STUDENT_LESSON_FEEDBACK(studentId, lessonId),
     {
       method: "PATCH",
@@ -28,8 +29,16 @@ export default function FeedBack({ idsInfo, selectedLesson }: FeedBackProps) {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    await trigger({ feedback });
-    setFeedback("");
+    setErrorMessage("");
+
+    try {
+      await trigger({ feedback });
+      setFeedback("");
+    } catch (err) {
+      setErrorMessage(
+        err instanceof Error ? err.message : "Failed to submit feedback"
+      );
+    }
   };
 
   if (selectedLesson?.feedback !== null) {
@@ -48,6 +57,7 @@ export default function FeedBack({ idsInfo, selectedLesson }: FeedBackProps) {
         placeholder="Leave your feedback here..."
         onChange={(event) => {
           setFeedback(event.target.value);
+          setErrorMessage("");
         }}
       />
       <Button
@@ -58,11 +68,11 @@ export default function FeedBack({ idsInfo, selectedLesson }: FeedBackProps) {
       >
         {isMutating ? "Submitting..." : "Submit Feedback"}
       </Button>
-      {error ? (
-        <p className={styles["error-message"]}>
-          {"An error occurred while submitting feedback. Try again."}
+      {errorMessage && (
+        <p className={styles["error-message"]} role="alert">
+          {errorMessage}
         </p>
-      ) : null}
+      )}
     </form>
   );
 }
