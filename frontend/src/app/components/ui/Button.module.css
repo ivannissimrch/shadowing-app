@@ -17,7 +17,8 @@
   transform: scale(0.98);
 }
 
-.button:disabled {
+.button:disabled,
+.button.disabled {
   background-color: var(--color-gray-light);
   color: var(--color-gray-dark);
   cursor: not-allowed;

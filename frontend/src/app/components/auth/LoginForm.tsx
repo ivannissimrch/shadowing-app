@@ -71,6 +71,7 @@ export default function LoginForm() {
       <form className={styles.form} onSubmit={handleSubmit}>
         <label htmlFor="username">Username:</label>
         <input
+          disabled={isMutating || isNavigating}
           ref={inputRef}
           type="text"
           name="username"
@@ -91,6 +92,7 @@ export default function LoginForm() {
         <label htmlFor="password">Password:</label>
         <div className={styles.passwordContainer}>
           <input
+            disabled={isMutating || isNavigating}
             value={password}
             onChange={(e) => {
               setPassword(e.target.value);
@@ -108,6 +110,7 @@ export default function LoginForm() {
             autoComplete="off"
           />
           <button
+            disabled={isMutating || isNavigating}
             type="button"
             className={styles.eye}
             onClick={() =>
