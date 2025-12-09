@@ -36,7 +36,13 @@ export function Button({
 
   if (href) {
     return (
-      <Link href={href} className={buttonClass}>
+      <Link
+        href={href}
+        className={`${buttonClass} ${disabled ? styles.disabled : ""}`}
+        onClick={onClick}
+        aria-disabled={disabled}
+        style={disabled ? { pointerEvents: "none" } : undefined}
+      >
         {content}
       </Link>
     );

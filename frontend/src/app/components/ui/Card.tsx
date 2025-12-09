@@ -1,3 +1,4 @@
+"use client";
 import { Lesson } from "@/app/Types";
 import styles from "./Card.module.css";
 import {
@@ -7,6 +8,7 @@ import {
   FaPlayCircle,
 } from "react-icons/fa";
 import { Button } from "./Button";
+import { useState } from "react";
 
 export default function Card({
   lesson,
@@ -16,6 +18,7 @@ export default function Card({
   linkPath: string;
 }) {
   const { title, status } = lesson;
+  const [loading, setLoading] = useState(false);
 
   function getStatusIcon() {
     switch (status?.toLowerCase()) {
@@ -38,6 +41,7 @@ export default function Card({
         return styles.statusPending;
     }
   }
+
   return (
     <div className={styles.card}>
       <div className={styles.cardHeader}>
@@ -53,8 +57,14 @@ export default function Card({
         </div>
       </div>
       <div className={styles.buttonGroup}>
-        <Button variant="primary" href={linkPath} className={styles.button}>
-          Start Lesson
+        <Button
+          variant="primary"
+          href={linkPath}
+          className={styles.button}
+          onClick={() => setLoading(true)}
+          disabled={loading}
+        >
+          {loading ? "Loading..." : "View Lesson"}
         </Button>
       </div>
     </div>
