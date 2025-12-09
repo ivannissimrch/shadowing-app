@@ -32,13 +32,15 @@ export const RecorderPanelContext = createContext<RecorderPanelContextType>({
   isLessonMutating: false,
 });
 
+interface RecorderPanelContextProviderProps {
+  children: React.ReactNode;
+  selectedLesson: Lesson | null;
+}
+
 export default function RecorderPanelContextProvider({
   children,
   selectedLesson,
-}: {
-  children: React.ReactNode;
-  selectedLesson: Lesson | null;
-}) {
+}: RecorderPanelContextProviderProps) {
   const { openAlertDialog } = useAppContext();
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunks = useRef<Blob[]>([]);
@@ -102,6 +104,7 @@ export default function RecorderPanelContextProvider({
     try {
       if (recorderState.status !== "stopped") {
         dispatch({ type: "ERROR", message: "No audio recorded." });
+        openAlertDialog("Error", "No audio recorded.");
         return;
       }
       const audioBlob = recorderState.blob;
@@ -115,6 +118,7 @@ export default function RecorderPanelContextProvider({
           selectedLesson?.id === undefined
         ) {
           dispatch({ type: "ERROR", message: "Invalid audio data." });
+          openAlertDialog("Error", "Invalid audio data.");
           return;
         }
 
@@ -127,36 +131,53 @@ export default function RecorderPanelContextProvider({
 
           if (!uploadResponse) {
             dispatch({ type: "ERROR", message: "Error uploading audio" });
+            openAlertDialog(
+              "Error",
+              "Failed to upload audio. Please try again."
+            );
             return;
           }
 
-          // Then save the Azure URL to database
           const response = await triggerUpdateLesson({
             audio_file: uploadResponse.audioUrl,
           });
 
-          dispatch({ type: "UPLOAD_SUCCESS" });
-          if (response) {
+          if (!response) {
+            dispatch({ type: "ERROR", message: "Error saving audio URL" });
             openAlertDialog(
-              "Submission Successful",
-              "Your recording has been successfully submitted for review."
+              "Error",
+              "Failed to save recording. Please try again."
             );
+            return;
           }
+
+          dispatch({ type: "UPLOAD_SUCCESS" });
+          openAlertDialog(
+            "Submission Successful",
+            "Your recording has been successfully submitted for review."
+          );
           await mutate(API_PATHS.LESSON(selectedLesson.id));
+          dispatch({ type: "RESET" });
           router.push("/lessons");
         } catch (error) {
           logger.error("Error submitting audio:", error);
           dispatch({ type: "ERROR", message: "Error submitting audio." });
-        } finally {
-          dispatch({ type: "RESET" });
+          openAlertDialog(
+            "Error",
+            "Failed to submit recording. Please try again."
+          );
         }
       };
     } catch (error) {
-      logger.error("Error submitting audio:", error);
+      logger.error("Error processing audio:", error);
       dispatch({
         type: "ERROR",
-        message: "An error occurred while submitting your audio.",
+        message: "An error occurred while processing your audio.",
       });
+      openAlertDialog(
+        "Error",
+        "An error occurred while processing your audio."
+      );
     }
   }
 
