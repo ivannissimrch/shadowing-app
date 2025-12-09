@@ -20,7 +20,7 @@ export default function TeacherLayout({
     }
   }, [token, router]);
 
-  if (token === undefined) return null;
+  if (!token) return null;
 
   return (
     <>
