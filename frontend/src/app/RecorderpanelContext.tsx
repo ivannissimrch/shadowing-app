@@ -5,6 +5,8 @@ import {
   useReducer,
   useRef,
   useEffect,
+  useCallback,
+  useMemo,
 } from "react";
 import { useRouter } from "next/navigation";
 import { mutate } from "swr";
@@ -59,7 +61,7 @@ export default function RecorderPanelContextProvider({
     status: "idle",
   });
 
-  async function startRecording() {
+  const startRecording = useCallback(async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       const mediaRecorder = new MediaRecorder(stream);
@@ -84,23 +86,23 @@ export default function RecorderPanelContextProvider({
         "Could not access your microphone. Please check your permissions and try again."
       );
     }
-  }
+  }, [openAlertDialog]);
 
-  function pauseRecording() {
+  const pauseRecording = useCallback(() => {
     mediaRecorderRef.current?.pause();
     dispatch({ type: "PAUSE_RECORDING", pausedAt: Date.now() });
-  }
+  }, []);
 
-  function resumeRecording() {
+  const resumeRecording = useCallback(() => {
     mediaRecorderRef.current?.resume();
     dispatch({ type: "RESUME_RECORDING" });
-  }
+  }, []);
 
-  function stopRecording() {
+  const stopRecording = useCallback(() => {
     mediaRecorderRef.current?.stop();
-  }
+  }, []);
 
-  async function handleSubmit() {
+  const handleSubmit = useCallback(async () => {
     try {
       if (recorderState.status !== "stopped") {
         dispatch({ type: "ERROR", message: "No audio recorded." });
@@ -179,7 +181,7 @@ export default function RecorderPanelContextProvider({
         "An error occurred while processing your audio."
       );
     }
-  }
+  }, [recorderState, openAlertDialog, triggerUploadAudio, triggerUpdateLesson, selectedLesson, router]);
 
   useEffect(() => {
     if (selectedLesson?.audio_file) {
@@ -207,20 +209,32 @@ export default function RecorderPanelContextProvider({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedLesson?.audio_file]);
 
+  const value = useMemo(
+    () => ({
+      recorderState,
+      dispatch,
+      startRecording,
+      pauseRecording,
+      resumeRecording,
+      stopRecording,
+      handleSubmit,
+      isAudioMutating,
+      isLessonMutating,
+    }),
+    [
+      recorderState,
+      startRecording,
+      pauseRecording,
+      resumeRecording,
+      stopRecording,
+      handleSubmit,
+      isAudioMutating,
+      isLessonMutating,
+    ]
+  );
+
   return (
-    <RecorderPanelContext.Provider
-      value={{
-        recorderState,
-        dispatch,
-        startRecording,
-        pauseRecording,
-        resumeRecording,
-        stopRecording,
-        handleSubmit,
-        isAudioMutating,
-        isLessonMutating,
-      }}
-    >
+    <RecorderPanelContext.Provider value={value}>
       {children}
     </RecorderPanelContext.Provider>
   );

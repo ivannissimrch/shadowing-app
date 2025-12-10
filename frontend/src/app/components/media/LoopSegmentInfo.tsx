@@ -1,16 +1,14 @@
 import getFormattedTime from "@/app/helpers/getFormattedTime";
 import styles from "./YouTubePlayer.module.css";
 import { FaArrowRight } from "react-icons/fa";
+import { memo } from "react";
 
 interface LoopTimerProps {
   startTime: number;
   endTime: number;
 }
 
-export default function LoopSegmentInfo({
-  startTime,
-  endTime,
-}: LoopTimerProps) {
+function LoopSegmentInfo({ startTime, endTime }: LoopTimerProps) {
   return (
     <div className={styles.segmentInfo}>
       Loop segment: {getFormattedTime(startTime)} <FaArrowRight />{" "}
@@ -18,3 +16,5 @@ export default function LoopSegmentInfo({
     </div>
   );
 }
+
+export default memo(LoopSegmentInfo);
