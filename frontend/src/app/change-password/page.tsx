@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { useAppContext } from "../AppContext";
+import { useAuthContext } from "../AuthContext";
 import { useSWRMutationHook } from "../hooks/useSWRMutation";
 import { API_PATHS } from "../constants/apiKeys";
 import { Button } from "../components/ui/Button";
@@ -10,7 +10,7 @@ import styles from "./change-password.module.css";
 
 export default function ChangePasswordPage() {
   const router = useRouter();
-  const { token } = useAppContext();
+  const { token } = useAuthContext();
   const user = token ? JSON.parse(atob(token.split(".")[1])) : null;
 
   const [currentPassword, setCurrentPassword] = useState("");

@@ -2,7 +2,7 @@
 import styles from "./LoginForm.module.css";
 import { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { useAppContext } from "../../AppContext";
+import { useAuthContext } from "../../AuthContext";
 import { MdOutlineRemoveRedEye } from "react-icons/md";
 import redirectBasedOnRole from "../../helpers/redirectBasedOnRole";
 import logger from "../../helpers/logger";
@@ -14,7 +14,7 @@ export default function LoginForm() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
-  const { updateToken, token } = useAppContext();
+  const { updateToken, token } = useAuthContext();
   const [passwordType, setPasswordType] = useState("password");
   const inputRef = useRef<HTMLInputElement>(null);
   const { isMutating, trigger } = useSWRMutationHook<

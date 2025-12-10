@@ -5,7 +5,7 @@ import { mutate } from "swr";
 import { useSWRMutationHook } from "../../hooks/useSWRMutation";
 import { API_PATHS } from "../../constants/apiKeys";
 import { Lesson } from "@/app/Types";
-import { useAppContext } from "@/app/AppContext";
+import { useAlertContext } from "@/app/AlertContext";
 
 interface DeleteLessonModalProps {
   isOpen: boolean;
@@ -20,7 +20,7 @@ export default function DeleteLessonModal({
   lessonId,
   lessonTitle,
 }: DeleteLessonModalProps) {
-  const { openAlertDialog } = useAppContext();
+  const { openAlertDialog } = useAlertContext();
 
   const {
     StyledDialog,

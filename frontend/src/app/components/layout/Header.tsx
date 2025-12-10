@@ -1,12 +1,12 @@
 "use client";
-import { useAppContext } from "../../AppContext";
+import { useAuthContext } from "../../AuthContext";
 import Logout from "../auth/Logout";
 import styles from "./Header.module.css";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 export default function Header() {
-  const { token } = useAppContext();
+  const { token } = useAuthContext();
   const pathname = usePathname();
 
   if (!token) {
