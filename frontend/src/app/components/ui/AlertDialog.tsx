@@ -3,7 +3,7 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
-import { useAppContext } from "../../AppContext";
+import { useAlertContext } from "../../AlertContext";
 import useAlertMessageStyles from "../../hooks/useAlertMessageStyles";
 
 export default function AlertDialog() {
@@ -12,7 +12,7 @@ export default function AlertDialog() {
     closeAlertDialog,
     alertDialogTitle,
     alertDialogMessage,
-  } = useAppContext();
+  } = useAlertContext();
 
   const { StyledDialog, StyledButton } = useAlertMessageStyles();
   return (

@@ -5,7 +5,7 @@ import { mutate } from "swr";
 import { API_PATHS } from "../../constants/apiKeys";
 import { useSWRMutationHook } from "@/app/hooks/useSWRMutation";
 import { Lesson } from "@/app/Types";
-import { useAppContext } from "@/app/AppContext";
+import { useAlertContext } from "@/app/AlertContext";
 
 interface UnassignLessonModalProps {
   isOpen: boolean;
@@ -24,7 +24,7 @@ export default function UnassignLessonModal({
   studentId,
   studentName,
 }: UnassignLessonModalProps) {
-  const { openAlertDialog } = useAppContext();
+  const { openAlertDialog } = useAlertContext();
 
   const {
     StyledDialog,

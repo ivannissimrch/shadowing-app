@@ -5,7 +5,7 @@ import { mutate } from "swr";
 import { useSWRMutationHook } from "../../hooks/useSWRMutation";
 import { API_PATHS } from "../../constants/apiKeys";
 import { Student } from "@/app/Types";
-import { useAppContext } from "@/app/AppContext";
+import { useAlertContext } from "@/app/AlertContext";
 
 interface DeleteStudentModalProps {
   isOpen: boolean;
@@ -20,7 +20,7 @@ export default function DeleteStudentModal({
   studentId,
   studentUsername,
 }: DeleteStudentModalProps) {
-  const { openAlertDialog } = useAppContext();
+  const { openAlertDialog } = useAlertContext();
 
   const {
     StyledDialog,

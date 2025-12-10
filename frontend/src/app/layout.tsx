@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import AppContext from "./AppContext";
+import AuthContextProvider from "./AuthContext";
+import AlertContextProvider from "./AlertContext";
 import AlertDialog from "./components/ui/AlertDialog";
 
 const geistSans = Geist({
@@ -27,12 +28,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
-        <AppContext>
-          <>
+        <AuthContextProvider>
+          <AlertContextProvider>
             {children}
             <AlertDialog />
-          </>
-        </AppContext>
+          </AlertContextProvider>
+        </AuthContextProvider>
       </body>
     </html>
   );

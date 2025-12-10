@@ -19,7 +19,7 @@ import {
   RecorderPanelContextType,
 } from "../../src/app/Types";
 import { useSWRMutationHook } from "@/app/hooks/useSWRMutation";
-import { useAppContext } from "@/app/AppContext";
+import { useAlertContext } from "@/app/AlertContext";
 import { recorderReducer } from "./helpers/recorderReducer";
 
 export const RecorderPanelContext = createContext<RecorderPanelContextType>({
@@ -43,7 +43,7 @@ export default function RecorderPanelContextProvider({
   children,
   selectedLesson,
 }: RecorderPanelContextProviderProps) {
-  const { openAlertDialog } = useAppContext();
+  const { openAlertDialog } = useAlertContext();
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunks = useRef<Blob[]>([]);
   const router = useRouter();

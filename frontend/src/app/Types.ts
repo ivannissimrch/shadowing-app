@@ -3,14 +3,17 @@ import {
   RecorderAction,
 } from "./components/media/recorderPanelTypes";
 
-export interface AppContextType {
+export interface AlertContextType {
   openAlertDialog: (title: string, message: string) => void;
   closeAlertDialog: () => void;
   isAlertDialogOpen: boolean;
-  token: string | null | undefined;
-  updateToken: (newToken: string | null) => void;
   alertDialogTitle: string;
   alertDialogMessage: string;
+}
+
+export interface AuthContextType {
+  token: string | null | undefined;
+  updateToken: (newToken: string | null) => void;
 }
 
 export interface Lesson {

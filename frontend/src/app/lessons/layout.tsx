@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Header from "../components/layout/Header";
 import Footer from "../components/layout/Footer";
-import { useAppContext } from "../AppContext";
+import { useAuthContext } from "../AuthContext";
 import styles from "./layout.module.css";
 
 export default function LessonsLayout({
@@ -11,7 +11,7 @@ export default function LessonsLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const { token } = useAppContext();
+  const { token } = useAuthContext();
   const router = useRouter();
 
   useEffect(() => {

@@ -1,6 +1,6 @@
 "use client";
 
-import { useAppContext } from "../AppContext";
+import { useAuthContext } from "../AuthContext";
 import Header from "../components/layout/Header";
 import TeacherHeader from "../components/layout/TeacherHeader";
 import Footer from "../components/layout/Footer";
@@ -13,7 +13,7 @@ export default function ChangePasswordLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const { token } = useAppContext();
+  const { token } = useAuthContext();
   const router = useRouter();
 
   useEffect(() => {
