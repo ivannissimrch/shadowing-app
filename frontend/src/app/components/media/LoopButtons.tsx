@@ -2,6 +2,7 @@ import styles from "./YouTubePlayer.module.css";
 import getFormattedTime from "../../helpers/getFormattedTime";
 import { MdLoop, MdPlayArrow } from "react-icons/md";
 import { LoopState } from "./loopTypes";
+import { memo } from "react";
 
 interface LoopButtonsProps {
   startTime: number | null;
@@ -14,7 +15,7 @@ interface LoopButtonsProps {
   state: LoopState;
 }
 
-export default function LoopButtons({
+function LoopButtons({
   startTime,
   endTime,
   isLooping,
@@ -73,3 +74,5 @@ export default function LoopButtons({
     </div>
   );
 }
+
+export default memo(LoopButtons);

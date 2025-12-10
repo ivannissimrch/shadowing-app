@@ -1,4 +1,4 @@
-import { useReducer, useRef, useEffect } from "react";
+import { useReducer, useRef, useEffect, useCallback } from "react";
 import { YouTubePlayer as YTPlayer } from "react-youtube";
 import { loopReducer } from "@/app/helpers/loopReducer";
 import { LoopState } from "@/app/components/media/loopTypes";
@@ -11,32 +11,35 @@ export default function useLoopButtons(
   const [state, dispatch] = useReducer(loopReducer, initialLoopState);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
-  function updateStartAtCurrentTime() {
+  const updateStartAtCurrentTime = useCallback(() => {
     if (playerRef.current) {
       const time = Math.floor(playerRef.current.getCurrentTime());
       dispatch({ type: "SET_START", time });
     }
-  }
-  function updateEndAtCurrentTime() {
+  }, [playerRef]);
+
+  const updateEndAtCurrentTime = useCallback(() => {
     if (playerRef.current) {
       const time = Math.floor(playerRef.current.getCurrentTime());
       dispatch({ type: "SET_END", time });
     }
-  }
-  function toggleLoop() {
+  }, [playerRef]);
+
+  const toggleLoop = useCallback(() => {
     if (state.status === "ready") {
       dispatch({ type: "START_LOOP" });
     } else if (state.status === "looping") {
       dispatch({ type: "STOP_LOOP" });
     }
-  }
-  function clearLoop() {
+  }, [state.status]);
+
+  const clearLoop = useCallback(() => {
     dispatch({ type: "CLEAR" });
     if (intervalRef.current) {
       clearInterval(intervalRef.current);
       intervalRef.current = null;
     }
-  }
+  }, []);
 
   useEffect(() => {
     if (intervalRef.current) {
