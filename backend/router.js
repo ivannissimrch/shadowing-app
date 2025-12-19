@@ -5,6 +5,7 @@ import { db } from "./server.js";
 import asyncHandler from "./handlers/asyncHandler.js";
 import { uploadImage, uploadAudio } from "./services/azureBlobStorage.js";
 import { comparePasswords, hashPassword } from "./auth.js";
+import { requireTeacher } from "./middleware/auth.js";
 
 const router = Router();
 
@@ -168,13 +169,8 @@ router.patch(
 // Create new lesson content (teacher only)
 router.post(
   "/lessons",
+  requireTeacher,
   asyncHandler(async (req, res, next) => {
-    if (req.user.role !== "teacher") {
-      return res.status(403).json({
-        success: false,
-        message: "Forbidden: Teachers only",
-      });
-    }
     const { title, image, videoId, lessonStartTime, lessonEndTime, audioFile } =
       req.body;
     // Create new lesson content
@@ -194,14 +190,8 @@ router.post(
 // Assign lesson to student (teacher only)
 router.post(
   "/lessons/:lessonId/assign",
+  requireTeacher,
   asyncHandler(async (req, res, next) => {
-    if (req.user.role !== "teacher") {
-      return res.status(403).json({
-        success: false,
-        message: "Forbidden: Teachers only",
-      });
-    }
-
     const { lessonId } = req.params;
     const { studentId } = req.body; // Single student ID
     const teacherId = req.user.id;
@@ -243,15 +233,8 @@ router.post(
 // Unassign lesson from student (teacher only)
 router.delete(
   "/lessons/:lessonId/unassign/:studentId",
+  requireTeacher,
   asyncHandler(async (req, res, next) => {
-    // 1. Check if user is a teacher
-    if (req.user.role !== "teacher") {
-      return res.status(403).json({
-        success: false,
-        message: "Forbidden: Teachers only",
-      });
-    }
-
     const { lessonId, studentId } = req.params;
 
     //Delete the assignment from database (any teacher can remove)
@@ -282,13 +265,8 @@ router.delete(
 //Get all users
 router.get(
   "/users",
+  requireTeacher,
   asyncHandler(async (req, res, next) => {
-    if (req.user.role !== "teacher") {
-      return res.status(403).json({
-        success: false,
-        message: "Forbidden: Admins only",
-      });
-    }
     const result = await db.query(
       "SELECT id, username, role FROM users WHERE role = 'student'"
     );
@@ -302,13 +280,8 @@ router.get(
 // Create new student (teacher only)
 router.post(
   "/users",
+  requireTeacher,
   asyncHandler(async (req, res, next) => {
-    if (req.user.role !== "teacher") {
-      return res.status(403).json({
-        success: false,
-        message: "Forbidden: Teachers only",
-      });
-    }
     const { createNewUser } = await import("./handlers/user.js");
     req.body.role = "student";
     await createNewUser(req, res);
@@ -318,14 +291,8 @@ router.post(
 // Delete student (teacher only)
 router.delete(
   "/users/:userId",
+  requireTeacher,
   asyncHandler(async (req, res, next) => {
-    if (req.user.role !== "teacher") {
-      return res.status(403).json({
-        success: false,
-        message: "Forbidden: Teachers only",
-      });
-    }
-
     const { userId } = req.params;
 
     // Check if user exists and is a student
@@ -444,13 +411,8 @@ router.patch(
 //get all lessons (for teacher dashboard)
 router.get(
   "/all-lessons",
+  requireTeacher,
   asyncHandler(async (req, res, next) => {
-    if (req.user.role !== "teacher") {
-      return res.status(403).json({
-        success: false,
-        message: "Forbidden: Teachers only",
-      });
-    }
     const result = await db.query(
       `SELECT l.*, COUNT(a.id) AS assigned_count,
               SUM(CASE WHEN a.completed THEN 1 ELSE 0 END) AS completed_count
@@ -469,13 +431,8 @@ router.get(
 //get student data (for teacher to view student progress)
 router.get(
   "/teacher/student/:studentId",
+  requireTeacher,
   asyncHandler(async (req, res, next) => {
-    if (req.user.role !== "teacher") {
-      return res.status(403).json({
-        success: false,
-        message: "Forbidden: Teachers only",
-      });
-    }
     const { studentId } = req.params;
     const result = await db.query(
       `SELECT id, username, role, created_at
@@ -493,13 +450,8 @@ router.get(
 //get student lessons (for teacher to view student progress)
 router.get(
   "/teacher/student/:studentId/lessons",
+  requireTeacher,
   asyncHandler(async (req, res, next) => {
-    if (req.user.role !== "teacher") {
-      return res.status(403).json({
-        success: false,
-        message: "Forbidden: Teachers only",
-      });
-    }
     const { studentId } = req.params;
     const result = await db.query(
       `SELECT l.*, a.status, a.completed, a.assigned_at, a.completed_at, a.audio_file
@@ -519,13 +471,8 @@ router.get(
 //get specific student lesson (for teacher to view student progress)
 router.get(
   "/teacher/student/:studentId/lesson/:lessonId",
+  requireTeacher,
   asyncHandler(async (req, res, next) => {
-    if (req.user.role !== "teacher") {
-      return res.status(403).json({
-        success: false,
-        message: "Forbidden: Teachers only",
-      });
-    }
     const { studentId, lessonId } = req.params;
     const result = await db.query(
       `SELECT l.*, a.status, a.completed, a.assigned_at, a.completed_at, a.audio_file, a.feedback
@@ -545,14 +492,8 @@ router.get(
 // Update feedback for student assignment (teacher only)
 router.patch(
   "/teacher/student/:studentId/lesson/:lessonId/feedback",
+  requireTeacher,
   asyncHandler(async (req, res, next) => {
-    if (req.user.role !== "teacher") {
-      return res.status(403).json({
-        success: false,
-        message: "Forbidden: Teachers only",
-      });
-    }
-
     const { studentId, lessonId } = req.params;
     const { feedback } = req.body;
 
@@ -581,14 +522,8 @@ router.patch(
 // Delete lesson (teacher only)
 router.delete(
   "/lessons/:lessonId",
+  requireTeacher,
   asyncHandler(async (req, res, next) => {
-    if (req.user.role !== "teacher") {
-      return res.status(403).json({
-        success: false,
-        message: "Forbidden: Teachers only",
-      });
-    }
-
     const { lessonId } = req.params;
 
     // Check if lesson exists
