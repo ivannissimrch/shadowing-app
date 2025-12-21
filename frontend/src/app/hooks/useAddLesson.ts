@@ -24,7 +24,7 @@ export default function useAddLesson(closeAddLessonDialog: () => void) {
         videoId: string;
       }
     >(
-      API_PATHS.LESSONS,
+      API_PATHS.CREATE_LESSON,
       {
         method: "POST",
       },

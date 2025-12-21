@@ -30,7 +30,7 @@ export default function DeleteLessonModal({
     StyledErrorButton,
   } = useAlertMessageStyles();
 
-  const { trigger } = useSWRMutationHook(API_PATHS.LESSON(lessonId), {
+  const { trigger } = useSWRMutationHook(API_PATHS.DELETE_LESSON(lessonId), {
     method: "DELETE",
   });
 
