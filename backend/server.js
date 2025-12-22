@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 import router from "./router.js";
+import { apiLimiter, authLimiter, uploadLimiter } from "./middleware/rateLimiter.js";
 import { protect } from "./auth.js";
 import { signin } from "./handlers/user.js";
 import pool from "./db.js";
@@ -85,8 +86,10 @@ app.get("/", (req, res) => {
     timestamp: new Date().toISOString(),
   });
 });
-app.use("/api", protect, router);
-app.post("/signin", signin);
+app.use("/api/upload-image", uploadLimiter);
+app.use("/api/upload-audio", uploadLimiter);
+app.use("/api", apiLimiter, protect, router);
+app.post("/signin", authLimiter, signin);
 
 app.use(handleError);
 
