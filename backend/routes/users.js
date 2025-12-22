@@ -1,8 +1,8 @@
 import { Router } from "express";
-import { db } from "../server.js";
 import asyncHandler from "../handlers/asyncHandler.js";
 import { comparePasswords, hashPassword } from "../auth.js";
 import { requireTeacher } from "../middleware/auth.js";
+import { userRepository } from "../repositories/userRepository.js";
 
 const router = Router();
 
@@ -11,12 +11,10 @@ router.get(
   "/",
   requireTeacher,
   asyncHandler(async (req, res, next) => {
-    const result = await db.query(
-      "SELECT id, username, role FROM users WHERE role = 'student'"
-    );
+    const students = await userRepository.findAllStudents();
     res.json({
       success: true,
-      data: result.rows,
+      data: students,
     });
   })
 );
@@ -40,19 +38,16 @@ router.delete(
     const { userId } = req.params;
 
     // Check if user exists and is a student
-    const userCheck = await db.query(
-      "SELECT id, role FROM users WHERE id = $1",
-      [userId]
-    );
+    const user = await userRepository.checkExists(userId);
 
-    if (userCheck.rows.length === 0) {
+    if (!user) {
       return res.status(404).json({
         success: false,
         message: "User not found",
       });
     }
 
-    if (userCheck.rows[0].role !== "student") {
+    if (user.role !== "student") {
       return res.status(403).json({
         success: false,
         message: "Cannot delete non-student users",
@@ -60,7 +55,7 @@ router.delete(
     }
 
     // Delete the user (CASCADE will delete related assignments)
-    await db.query("DELETE FROM users WHERE id = $1", [userId]);
+    await userRepository.delete(userId);
 
     res.json({
       success: true,
@@ -110,19 +105,14 @@ router.patch(
     }
 
     // 5. Get user from database
-    const userResult = await db.query(
-      "SELECT id, password FROM users WHERE id = $1",
-      [userId]
-    );
+    const user = await userRepository.findByIdWithPassword(userId);
 
-    if (userResult.rows.length === 0) {
+    if (!user) {
       return res.status(404).json({
         success: false,
         message: "User not found",
       });
     }
-
-    const user = userResult.rows[0];
 
     // 6. Verify current password is correct
     const isValid = await comparePasswords(currentPassword, user.password);
@@ -138,12 +128,7 @@ router.patch(
     const hashedPassword = await hashPassword(newPassword);
 
     // 8. Update password in database
-    await db.query(
-      `UPDATE users
-       SET password = $1
-       WHERE id = $2`,
-      [hashedPassword, userId]
-    );
+    await userRepository.updatePassword(userId, hashedPassword);
 
     res.json({
       success: true,
