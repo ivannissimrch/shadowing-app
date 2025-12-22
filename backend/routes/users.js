@@ -1,4 +1,5 @@
 import { Router } from "express";
+import createError from "http-errors";
 import asyncHandler from "../handlers/asyncHandler.js";
 import { comparePasswords, hashPassword } from "../auth.js";
 import { requireTeacher } from "../middleware/auth.js";
@@ -41,17 +42,11 @@ router.delete(
     const user = await userRepository.checkExists(userId);
 
     if (!user) {
-      return res.status(404).json({
-        success: false,
-        message: "User not found",
-      });
+      throw createError(404, "User not found");
     }
 
     if (user.role !== "student") {
-      return res.status(403).json({
-        success: false,
-        message: "Cannot delete non-student users",
-      });
+      throw createError(403, "Cannot delete non-student users");
     }
 
     // Delete the user (CASCADE will delete related assignments)
@@ -74,54 +69,36 @@ router.patch(
 
     // 1. Security: Users can only change their OWN password
     if (requestingUserId !== userId) {
-      return res.status(403).json({
-        success: false,
-        message: "Forbidden: You can only change your own password",
-      });
+      throw createError(403, "Forbidden: You can only change your own password");
     }
 
     // 2. Validation: Check required fields
     if (!currentPassword || !newPassword) {
-      return res.status(400).json({
-        success: false,
-        message: "Current password and new password are required",
-      });
+      throw createError(400, "Current password and new password are required");
     }
 
     // 3. Validation: Check password length
     if (newPassword.length < 8) {
-      return res.status(400).json({
-        success: false,
-        message: "New password must be at least 8 characters",
-      });
+      throw createError(400, "New password must be at least 8 characters");
     }
 
     // 4. Validation: New password must be different
     if (currentPassword === newPassword) {
-      return res.status(400).json({
-        success: false,
-        message: "New password must be different from current password",
-      });
+      throw createError(400, "New password must be different from current password");
     }
 
     // 5. Get user from database
     const user = await userRepository.findByIdWithPassword(userId);
 
     if (!user) {
-      return res.status(404).json({
-        success: false,
-        message: "User not found",
-      });
+      throw createError(404, "User not found");
     }
 
     // 6. Verify current password is correct
     const isValid = await comparePasswords(currentPassword, user.password);
 
     if (!isValid) {
-      return res.status(401).json({
-        success: false,
-        message: "Current password is incorrect",
-      });
+      throw createError(401, "Current password is incorrect");
     }
 
     // 7. Hash new password

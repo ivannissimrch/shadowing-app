@@ -1,4 +1,5 @@
 import { Router } from "express";
+import createError from "http-errors";
 import asyncHandler from "../handlers/asyncHandler.js";
 import { requireTeacher } from "../middleware/auth.js";
 import { lessonRepository } from "../repositories/lessonRepository.js";
@@ -50,10 +51,7 @@ router.post(
     const lessonExists = await lessonRepository.exists(lessonId);
 
     if (!lessonExists) {
-      return res.status(404).json({
-        success: false,
-        message: "Lesson not found",
-      });
+      throw createError(404, "Lesson not found");
     }
 
     // Create assignment for the student
@@ -80,11 +78,7 @@ router.delete(
     const assignmentExists = await assignmentRepository.exists(studentId, lessonId);
 
     if (!assignmentExists) {
-      return res.status(404).json({
-        success: false,
-        message:
-          "Assignment not found or you don't have permission to unassign it",
-      });
+      throw createError(404, "Assignment not found or you don't have permission to unassign it");
     }
 
     // Delete the assignment from database (any teacher can remove)
@@ -107,10 +101,7 @@ router.delete(
     const lessonExists = await lessonRepository.exists(lessonId);
 
     if (!lessonExists) {
-      return res.status(404).json({
-        success: false,
-        message: "Lesson not found",
-      });
+      throw createError(404, "Lesson not found");
     }
 
     // Delete the lesson (CASCADE will delete related assignments)
@@ -142,6 +133,10 @@ router.get(
     const { studentId } = req.params;
     const student = await userRepository.findStudentById(studentId);
 
+    if (!student) {
+      throw createError(404, "Student not found");
+    }
+
     res.json({
       success: true,
       data: student,
@@ -169,6 +164,10 @@ router.get(
     const { studentId, lessonId } = req.params;
     const lesson = await lessonRepository.findOneForStudent(studentId, lessonId);
 
+    if (!lesson) {
+      throw createError(404, "Lesson not found or not assigned to student");
+    }
+
     res.json({
       success: true,
       data: lesson,
@@ -186,10 +185,7 @@ router.patch(
     const assignment = await assignmentRepository.addFeedback(studentId, lessonId, feedback);
 
     if (!assignment) {
-      return res.status(404).json({
-        success: false,
-        message: "Assignment not found",
-      });
+      throw createError(404, "Assignment not found");
     }
 
     res.json({
