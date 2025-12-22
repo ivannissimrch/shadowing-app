@@ -1,7 +1,9 @@
 import { Router } from "express";
-import { db } from "../server.js";
 import asyncHandler from "../handlers/asyncHandler.js";
 import { requireTeacher } from "../middleware/auth.js";
+import { lessonRepository } from "../repositories/lessonRepository.js";
+import { assignmentRepository } from "../repositories/assignmentRepository.js";
+import { userRepository } from "../repositories/userRepository.js";
 
 const router = Router();
 
@@ -15,15 +17,16 @@ router.post(
     const { title, image, videoId, lessonStartTime, lessonEndTime, audioFile } =
       req.body;
     // Create new lesson content
-    const result = await db.query(
-      `INSERT INTO lessons (title, image, video_id, lesson_start_time, lesson_end_time)
-       VALUES ($1, $2, $3, $4, $5)
-       RETURNING *`,
-      [title, image, videoId, lessonStartTime, lessonEndTime]
-    );
+    const lesson = await lessonRepository.create({
+      title,
+      image,
+      videoId,
+      lessonStartTime,
+      lessonEndTime
+    });
     res.status(201).json({
       success: true,
-      data: result.rows[0],
+      data: lesson,
     });
   })
 );
@@ -44,28 +47,25 @@ router.post(
     }
 
     // Check if lesson exists
-    const lesson = await db.query("SELECT id FROM lessons WHERE id = $1", [
-      lessonId,
-    ]);
+    const lessonExists = await lessonRepository.exists(lessonId);
 
-    if (lesson.rows.length === 0) {
+    if (!lessonExists) {
       return res.status(404).json({
         success: false,
         message: "Lesson not found",
       });
     }
-    const lessonDbId = lesson.rows[0].id;
+
     // Create assignment for the student
-    const result = await db.query(
-      `INSERT INTO assignments (student_id, lesson_id, assigned_by)
-         VALUES ($1, $2, $3)
-         RETURNING *`,
-      [studentId, lessonDbId, teacherId]
-    );
+    const assignment = await assignmentRepository.create({
+      studentId,
+      lessonId,
+      assignedBy: teacherId
+    });
     res.status(201).json({
       success: true,
       message: "Lesson assigned successfully",
-      data: result.rows[0],
+      data: assignment,
     });
   })
 );
@@ -76,16 +76,10 @@ router.delete(
   asyncHandler(async (req, res, next) => {
     const { lessonId, studentId } = req.params;
 
-    //Delete the assignment from database (any teacher can remove)
-    const result = await db.query(
-      `DELETE FROM assignments
-       WHERE lesson_id = $1
-       AND student_id = $2
-       RETURNING *`,
-      [lessonId, studentId]
-    );
+    // Check if assignment exists first
+    const assignmentExists = await assignmentRepository.exists(studentId, lessonId);
 
-    if (result.rows.length === 0) {
+    if (!assignmentExists) {
       return res.status(404).json({
         success: false,
         message:
@@ -93,10 +87,12 @@ router.delete(
       });
     }
 
+    // Delete the assignment from database (any teacher can remove)
+    await assignmentRepository.delete(studentId, lessonId);
+
     res.status(200).json({
       success: true,
       message: "Lesson unassigned successfully",
-      data: result.rows[0],
     });
   })
 );
@@ -108,11 +104,9 @@ router.delete(
     const { lessonId } = req.params;
 
     // Check if lesson exists
-    const lessonCheck = await db.query("SELECT id FROM lessons WHERE id = $1", [
-      lessonId,
-    ]);
+    const lessonExists = await lessonRepository.exists(lessonId);
 
-    if (lessonCheck.rows.length === 0) {
+    if (!lessonExists) {
       return res.status(404).json({
         success: false,
         message: "Lesson not found",
@@ -120,7 +114,7 @@ router.delete(
     }
 
     // Delete the lesson (CASCADE will delete related assignments)
-    await db.query("DELETE FROM lessons WHERE id = $1", [lessonId]);
+    await lessonRepository.delete(lessonId);
 
     res.json({
       success: true,
@@ -133,17 +127,10 @@ router.delete(
 router.get(
   "/all-lessons",
   asyncHandler(async (req, res, next) => {
-    const result = await db.query(
-      `SELECT l.*, COUNT(a.id) AS assigned_count,
-              SUM(CASE WHEN a.completed THEN 1 ELSE 0 END) AS completed_count
-       FROM lessons l
-       LEFT JOIN assignments a ON l.id = a.lesson_id
-       GROUP BY l.id
-       ORDER BY l.created_at DESC`
-    );
+    const lessons = await lessonRepository.findAll();
     res.json({
       success: true,
-      data: result.rows,
+      data: lessons,
     });
   })
 );
@@ -153,16 +140,11 @@ router.get(
   "/student/:studentId",
   asyncHandler(async (req, res, next) => {
     const { studentId } = req.params;
-    const result = await db.query(
-      `SELECT id, username, role, created_at
-       FROM users
-       WHERE id = $1 AND role = 'student'`,
-      [studentId]
-    );
+    const student = await userRepository.findStudentById(studentId);
 
     res.json({
       success: true,
-      data: result.rows[0],
+      data: student,
     });
   })
 );
@@ -172,17 +154,10 @@ router.get(
   "/student/:studentId/lessons",
   asyncHandler(async (req, res, next) => {
     const { studentId } = req.params;
-    const result = await db.query(
-      `SELECT l.*, a.status, a.completed, a.assigned_at, a.completed_at, a.audio_file
-       FROM lessons l
-       JOIN assignments a ON l.id = a.lesson_id
-       WHERE a.student_id = $1
-       ORDER BY a.assigned_at DESC`,
-      [studentId]
-    );
+    const lessons = await lessonRepository.findByStudentId(studentId);
     res.json({
       success: true,
-      data: result.rows,
+      data: lessons,
     });
   })
 );
@@ -192,17 +167,11 @@ router.get(
   "/student/:studentId/lesson/:lessonId",
   asyncHandler(async (req, res, next) => {
     const { studentId, lessonId } = req.params;
-    const result = await db.query(
-      `SELECT l.*, a.status, a.completed, a.assigned_at, a.completed_at, a.audio_file, a.feedback
-       FROM lessons l
-       JOIN assignments a ON l.id = a.lesson_id
-       WHERE a.student_id = $1 AND l.id = $2`,
-      [studentId, lessonId]
-    );
+    const lesson = await lessonRepository.findOneForStudent(studentId, lessonId);
 
     res.json({
       success: true,
-      data: result.rows[0],
+      data: lesson,
     });
   })
 );
@@ -214,15 +183,9 @@ router.patch(
     const { studentId, lessonId } = req.params;
     const { feedback } = req.body;
 
-    const result = await db.query(
-      `UPDATE assignments
-       SET feedback = $1, updated_at = CURRENT_TIMESTAMP
-       WHERE student_id = $2 AND lesson_id = $3
-       RETURNING *`,
-      [feedback, studentId, lessonId]
-    );
+    const assignment = await assignmentRepository.addFeedback(studentId, lessonId, feedback);
 
-    if (result.rows.length === 0) {
+    if (!assignment) {
       return res.status(404).json({
         success: false,
         message: "Assignment not found",
@@ -231,7 +194,7 @@ router.patch(
 
     res.json({
       success: true,
-      data: result.rows[0],
+      data: assignment,
     });
   })
 );
