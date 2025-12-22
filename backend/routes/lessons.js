@@ -1,4 +1,5 @@
 import { Router } from "express";
+import createError from "http-errors";
 import asyncHandler from "../handlers/asyncHandler.js";
 import { lessonRepository } from "../repositories/lessonRepository.js";
 import { assignmentRepository } from "../repositories/assignmentRepository.js";
@@ -29,10 +30,7 @@ router.get(
     const lesson = await lessonRepository.findOneForStudent(userId, lessonId);
 
     if (!lesson) {
-      return res.status(404).json({
-        success: false,
-        message: "Lesson not found or not assigned",
-      });
+      throw createError(404, "Lesson not found or not assigned");
     }
 
     res.json({
@@ -60,6 +58,10 @@ router.patch(
       userId,
       lessonId
     );
+
+    if (!assignment) {
+      throw createError(404, "Assignment not found");
+    }
 
     res.json({
       success: true,

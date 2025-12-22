@@ -1,4 +1,5 @@
 import { Router } from "express";
+import createError from "http-errors";
 import multer from "multer";
 import path from "path";
 import asyncHandler from "../handlers/asyncHandler.js";
@@ -29,10 +30,7 @@ router.post(
   upload.single("image"),
   asyncHandler(async (req, res, next) => {
     if (!req.file) {
-      return res.status(400).json({
-        success: false,
-        message: "No image file uploaded",
-      });
+      throw createError(400, "No image file uploaded");
     }
 
     const ext = path.extname(req.file.originalname);
