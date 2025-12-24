@@ -1,10 +1,10 @@
 import { QueryResult } from "pg";
-import { db } from "../server";
+import { db } from "../server.js";
 import {
   Assignment,
   CreateAssignmentBody,
   AssignmentWithLesson,
-} from "../types";
+} from "../types.js";
 
 export const assignmentRepository = {
   create: async (assignment: CreateAssignmentBody) => {

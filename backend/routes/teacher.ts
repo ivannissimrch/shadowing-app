@@ -1,10 +1,10 @@
 import { Router } from "express";
 import createError from "http-errors";
-import asyncHandler from "../handlers/asyncHandler";
-import { requireTeacher } from "../middleware/auth";
-import { lessonRepository } from "../repositories/lessonRepository";
-import { assignmentRepository } from "../repositories/assignmentRepository";
-import { userRepository } from "../repositories/userRepository";
+import asyncHandler from "../handlers/asyncHandler.js";
+import { requireTeacher } from "../middleware/auth.js";
+import { lessonRepository } from "../repositories/lessonRepository.js";
+import { assignmentRepository } from "../repositories/assignmentRepository.js";
+import { userRepository } from "../repositories/userRepository.js";
 import { Request, Response } from "express";
 
 const router = Router();

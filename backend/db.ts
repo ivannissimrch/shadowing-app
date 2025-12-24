@@ -1,7 +1,7 @@
 import pkg from "pg";
 const { Pool } = pkg;
 import dotenv from "dotenv";
-import logger from "./helpers/logger";
+import logger from "./helpers/logger.js";
 
 dotenv.config();
 

@@ -1,4 +1,4 @@
-import logger from "../helpers/logger";
+import logger from "../helpers/logger.js";
 import { Request, Response, NextFunction } from "express";
 
 export default function handleError(

@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
-import logger from "./helpers/logger";
-import { JwtPayload } from "./types";
+import logger from "./helpers/logger.js";
+import { JwtPayload } from "./types.js";
 import { NextFunction, Request, Response } from "express";
 
 declare global {

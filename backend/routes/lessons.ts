@@ -1,8 +1,8 @@
 import { Router } from "express";
 import createError from "http-errors";
-import asyncHandler from "../handlers/asyncHandler";
-import { lessonRepository } from "../repositories/lessonRepository";
-import { assignmentRepository } from "../repositories/assignmentRepository";
+import asyncHandler from "../handlers/asyncHandler.js";
+import { lessonRepository } from "../repositories/lessonRepository.js";
+import { assignmentRepository } from "../repositories/assignmentRepository.js";
 import { Request, Response } from "express";
 
 const router = Router();
