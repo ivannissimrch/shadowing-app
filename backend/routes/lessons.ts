@@ -1,16 +1,20 @@
 import { Router } from "express";
 import createError from "http-errors";
-import asyncHandler from "../handlers/asyncHandler.js";
-import { lessonRepository } from "../repositories/lessonRepository.js";
-import { assignmentRepository } from "../repositories/assignmentRepository.js";
+import asyncHandler from "../handlers/asyncHandler";
+import { lessonRepository } from "../repositories/lessonRepository";
+import { assignmentRepository } from "../repositories/assignmentRepository";
+import { Request, Response } from "express";
 
 const router = Router();
 
 // Get all lessons assigned to a student (with JOIN)
 router.get(
   "/",
-  asyncHandler(async (req, res, next) => {
-    const userId = req.user.id;
+  asyncHandler(async (req: Request, res: Response) => {
+    const userId = req?.user?.id;
+    if (!userId) {
+      throw createError(401, "Unauthorized");
+    }
     const lessons = await lessonRepository.findByStudentId(userId);
 
     res.json({
@@ -23,10 +27,12 @@ router.get(
 // Get specific lesson for a student (with JOIN)
 router.get(
   "/:lessonId",
-  asyncHandler(async (req, res, next) => {
+  asyncHandler(async (req: Request, res: Response) => {
     const { lessonId } = req.params;
-    const userId = req.user.id;
-
+    const userId = req?.user?.id;
+    if (!userId) {
+      throw createError(401, "Unauthorized");
+    }
     const lesson = await lessonRepository.findOneForStudent(userId, lessonId);
 
     if (!lesson) {
@@ -43,11 +49,13 @@ router.get(
 // Update student's lesson progress (audio file and completion)
 router.patch(
   "/:lessonId",
-  asyncHandler(async (req, res, next) => {
+  asyncHandler(async (req: Request, res: Response) => {
     const { audio_file } = req.body;
     const { lessonId } = req.params;
-    const userId = req.user.id;
-
+    const userId = req?.user?.id;
+    if (!userId) {
+      throw createError(401, "Unauthorized");
+    }
     // Update the lesson's audio file (if provided)
     if (audio_file) {
       await assignmentRepository.updateAudioFile(userId, lessonId, audio_file);
