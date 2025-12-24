@@ -2,8 +2,8 @@ import * as dotenv from "dotenv";
 if (process.env.NODE_ENV !== "production") {
   dotenv.config();
 }
-import app from "./server.js";
-import logger from "./helpers/logger.js";
+import app from "./server";
+import logger from "./helpers/logger";
 const PORT = process.env.PORT || 3001;
 
 // Start

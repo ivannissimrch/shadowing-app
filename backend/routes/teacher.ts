@@ -1,10 +1,11 @@
 import { Router } from "express";
 import createError from "http-errors";
-import asyncHandler from "../handlers/asyncHandler.js";
-import { requireTeacher } from "../middleware/auth.js";
-import { lessonRepository } from "../repositories/lessonRepository.js";
-import { assignmentRepository } from "../repositories/assignmentRepository.js";
-import { userRepository } from "../repositories/userRepository.js";
+import asyncHandler from "../handlers/asyncHandler";
+import { requireTeacher } from "../middleware/auth";
+import { lessonRepository } from "../repositories/lessonRepository";
+import { assignmentRepository } from "../repositories/assignmentRepository";
+import { userRepository } from "../repositories/userRepository";
+import { Request, Response } from "express";
 
 const router = Router();
 
@@ -14,16 +15,15 @@ router.use(requireTeacher);
 // Create new lesson content
 router.post(
   "/lessons",
-  asyncHandler(async (req, res, next) => {
-    const { title, image, videoId, lessonStartTime, lessonEndTime, audioFile } =
-      req.body;
+  asyncHandler(async (req: Request, res: Response) => {
+    const { title, image, videoId, lessonStartTime, lessonEndTime } = req.body;
     // Create new lesson content
     const lesson = await lessonRepository.create({
       title,
       image,
       videoId,
       lessonStartTime,
-      lessonEndTime
+      lessonEndTime,
     });
     res.status(201).json({
       success: true,
@@ -35,10 +35,10 @@ router.post(
 // Assign lesson to student
 router.post(
   "/lessons/:lessonId/assign",
-  asyncHandler(async (req, res, next) => {
+  asyncHandler(async (req: Request, res: Response) => {
     const { lessonId } = req.params;
     const { studentId } = req.body; // Single student ID
-    const teacherId = req.user.id;
+    const teacherId = req?.user?.id;
 
     if (!studentId) {
       return res.status(400).json({
@@ -58,7 +58,7 @@ router.post(
     const assignment = await assignmentRepository.create({
       studentId,
       lessonId,
-      assignedBy: teacherId
+      assignedBy: teacherId,
     });
     res.status(201).json({
       success: true,
@@ -71,14 +71,20 @@ router.post(
 // Unassign lesson from student
 router.delete(
   "/lessons/:lessonId/unassign/:studentId",
-  asyncHandler(async (req, res, next) => {
+  asyncHandler(async (req: Request, res: Response) => {
     const { lessonId, studentId } = req.params;
 
     // Check if assignment exists first
-    const assignmentExists = await assignmentRepository.exists(studentId, lessonId);
+    const assignmentExists = await assignmentRepository.exists(
+      studentId,
+      lessonId
+    );
 
     if (!assignmentExists) {
-      throw createError(404, "Assignment not found or you don't have permission to unassign it");
+      throw createError(
+        404,
+        "Assignment not found or you don't have permission to unassign it"
+      );
     }
 
     // Delete the assignment from database (any teacher can remove)
@@ -94,7 +100,7 @@ router.delete(
 // Delete lesson
 router.delete(
   "/lessons/:lessonId",
-  asyncHandler(async (req, res, next) => {
+  asyncHandler(async (req: Request, res: Response) => {
     const { lessonId } = req.params;
 
     // Check if lesson exists
@@ -117,7 +123,7 @@ router.delete(
 //get all lessons (for teacher dashboard)
 router.get(
   "/all-lessons",
-  asyncHandler(async (req, res, next) => {
+  asyncHandler(async (_req: Request, res: Response) => {
     const lessons = await lessonRepository.findAll();
     res.json({
       success: true,
@@ -129,7 +135,7 @@ router.get(
 //get student data (for teacher to view student progress)
 router.get(
   "/student/:studentId",
-  asyncHandler(async (req, res, next) => {
+  asyncHandler(async (req: Request, res: Response) => {
     const { studentId } = req.params;
     const student = await userRepository.findStudentById(studentId);
 
@@ -147,7 +153,7 @@ router.get(
 //get student lessons (for teacher to view student progress)
 router.get(
   "/student/:studentId/lessons",
-  asyncHandler(async (req, res, next) => {
+  asyncHandler(async (req: Request, res: Response) => {
     const { studentId } = req.params;
     const lessons = await lessonRepository.findByStudentId(studentId);
     res.json({
@@ -160,9 +166,12 @@ router.get(
 //get specific student lesson (for teacher to view student progress)
 router.get(
   "/student/:studentId/lesson/:lessonId",
-  asyncHandler(async (req, res, next) => {
+  asyncHandler(async (req: Request, res: Response) => {
     const { studentId, lessonId } = req.params;
-    const lesson = await lessonRepository.findOneForStudent(studentId, lessonId);
+    const lesson = await lessonRepository.findOneForStudent(
+      studentId,
+      lessonId
+    );
 
     if (!lesson) {
       throw createError(404, "Lesson not found or not assigned to student");
@@ -178,11 +187,15 @@ router.get(
 // Update feedback for student assignment
 router.patch(
   "/student/:studentId/lesson/:lessonId/feedback",
-  asyncHandler(async (req, res, next) => {
+  asyncHandler(async (req: Request, res: Response) => {
     const { studentId, lessonId } = req.params;
     const { feedback } = req.body;
 
-    const assignment = await assignmentRepository.addFeedback(studentId, lessonId, feedback);
+    const assignment = await assignmentRepository.addFeedback(
+      studentId,
+      lessonId,
+      feedback
+    );
 
     if (!assignment) {
       throw createError(404, "Assignment not found");

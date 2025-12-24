@@ -1,8 +1,8 @@
 import { Router } from "express";
-import uploadsRouter from "./routes/uploads.js";
-import lessonsRouter from "./routes/lessons.js";
-import usersRouter from "./routes/users.js";
-import teacherRouter from "./routes/teacher.js";
+import uploadsRouter from "./routes/uploads";
+import lessonsRouter from "./routes/lessons";
+import usersRouter from "./routes/users";
+import teacherRouter from "./routes/teacher";
 
 const router = Router();
 

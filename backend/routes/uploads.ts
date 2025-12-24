@@ -1,9 +1,9 @@
-import { Router } from "express";
+import { Router, Request, Response } from "express";
 import createError from "http-errors";
-import multer from "multer";
+import multer, { FileFilterCallback } from "multer";
 import path from "path";
-import asyncHandler from "../handlers/asyncHandler.js";
-import { uploadImage, uploadAudio } from "../services/azureBlobStorage.js";
+import asyncHandler from "../handlers/asyncHandler";
+import { uploadImage, uploadAudio } from "../services/azureBlobStorage";
 
 const router = Router();
 
@@ -12,11 +12,15 @@ const storage = multer.memoryStorage(); // Store files in memory temporarily
 
 const upload = multer({
   storage: storage,
-  fileFilter: function (req, file, cb) {
+  fileFilter: (
+    _req: Request,
+    file: Express.Multer.File,
+    cb: FileFilterCallback
+  ) => {
     if (file.mimetype.startsWith("image/")) {
       cb(null, true);
     } else {
-      cb(new Error("Only image files are allowed"), false);
+      cb(new Error("Only image files are allowed"));
     }
   },
   limits: {
@@ -28,7 +32,7 @@ const upload = multer({
 router.post(
   "/upload-image",
   upload.single("image"),
-  asyncHandler(async (req, res, next) => {
+  asyncHandler(async (req: Request, res: Response) => {
     if (!req.file) {
       throw createError(400, "No image file uploaded");
     }
@@ -55,9 +59,9 @@ router.post(
 //Audio upload route
 router.post(
   "/upload-audio",
-  asyncHandler(async (req, res, next) => {
+  asyncHandler(async (req: Request, res: Response) => {
     const { audioData, lessonId } = req.body;
-    const userId = req.user.id;
+    const userId = req?.user?.id;
 
     // Convert base64 to buffer
     const base64Data = audioData.replace(/^data:audio\/\w+;base64,/, "");

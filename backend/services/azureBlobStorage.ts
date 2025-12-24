@@ -4,17 +4,22 @@ import * as dotenv from "dotenv";
 if (process.env.NODE_ENV !== "production") {
   dotenv.config();
 }
+const connectionString = process.env.AZURE_STORAGE_CONNECTION_STRING;
+if (!connectionString) {
+  throw new Error(
+    "AZURE_STORAGE_CONNECTION_STRING is not defined in environment variables"
+  );
+}
 
-const blobServiceClient = BlobServiceClient.fromConnectionString(
-  process.env.AZURE_STORAGE_CONNECTION_STRING
-);
+const blobServiceClient =
+  BlobServiceClient.fromConnectionString(connectionString);
 
 // Get container clients
 const imageContainerClient = blobServiceClient.getContainerClient("images");
 const audioContainerClient = blobServiceClient.getContainerClient("audio");
 
 // Upload image to Azure Blob Storage
-export async function uploadImage(fileBuffer, fileName) {
+export async function uploadImage(fileBuffer: Buffer, fileName: string) {
   const blockBlobClient = imageContainerClient.getBlockBlobClient(fileName);
 
   await blockBlobClient.uploadData(fileBuffer, {
@@ -24,7 +29,7 @@ export async function uploadImage(fileBuffer, fileName) {
 }
 
 // Upload audio to Azure Blob Storage
-export async function uploadAudio(audioBuffer, fileName) {
+export async function uploadAudio(audioBuffer: Buffer, fileName: string) {
   const blockBlobClient = audioContainerClient.getBlockBlobClient(fileName);
 
   await blockBlobClient.uploadData(audioBuffer, {
@@ -34,7 +39,7 @@ export async function uploadAudio(audioBuffer, fileName) {
   return blockBlobClient.url;
 }
 // Delete a blob from a specified container
-export async function deleteBlob(containerName, blobName) {
+export async function deleteBlob(containerName: string, blobName: string) {
   const containerClient = blobServiceClient.getContainerClient(containerName);
   await containerClient.deleteBlob(blobName);
 }

@@ -1,9 +1,9 @@
-import { Router } from "express";
+import { NextFunction, Router, Request, Response } from "express";
 import createError from "http-errors";
-import asyncHandler from "../handlers/asyncHandler.js";
-import { comparePasswords, hashPassword } from "../auth.js";
-import { requireTeacher } from "../middleware/auth.js";
-import { userRepository } from "../repositories/userRepository.js";
+import asyncHandler from "../handlers/asyncHandler";
+import { comparePasswords, hashPassword } from "../auth";
+import { requireTeacher } from "../middleware/auth";
+import { userRepository } from "../repositories/userRepository";
 
 const router = Router();
 
@@ -11,7 +11,7 @@ const router = Router();
 router.get(
   "/",
   requireTeacher,
-  asyncHandler(async (req, res, next) => {
+  asyncHandler(async (_req: Request, res: Response, _next: NextFunction) => {
     const students = await userRepository.findAllStudents();
     res.json({
       success: true,
@@ -24,7 +24,7 @@ router.get(
 router.post(
   "/",
   requireTeacher,
-  asyncHandler(async (req, res, next) => {
+  asyncHandler(async (req: Request, res: Response, _next: NextFunction) => {
     const { createNewUser } = await import("../handlers/user.js");
     req.body.role = "student";
     await createNewUser(req, res);
@@ -35,7 +35,7 @@ router.post(
 router.delete(
   "/:userId",
   requireTeacher,
-  asyncHandler(async (req, res, next) => {
+  asyncHandler(async (req: Request, res: Response, _next: NextFunction) => {
     const { userId } = req.params;
 
     // Check if user exists and is a student
@@ -62,14 +62,17 @@ router.delete(
 // Change own password (students and teachers)
 router.patch(
   "/:userId/password",
-  asyncHandler(async (req, res, next) => {
+  asyncHandler(async (req: Request, res: Response, _next: NextFunction) => {
     const { userId } = req.params;
     const { currentPassword, newPassword } = req.body;
-    const requestingUserId = req.user.id;
+    const requestingUserId = req.user?.id;
 
     // 1. Security: Users can only change their OWN password
     if (requestingUserId !== userId) {
-      throw createError(403, "Forbidden: You can only change your own password");
+      throw createError(
+        403,
+        "Forbidden: You can only change your own password"
+      );
     }
 
     // 2. Validation: Check required fields
@@ -84,7 +87,10 @@ router.patch(
 
     // 4. Validation: New password must be different
     if (currentPassword === newPassword) {
-      throw createError(400, "New password must be different from current password");
+      throw createError(
+        400,
+        "New password must be different from current password"
+      );
     }
 
     // 5. Get user from database

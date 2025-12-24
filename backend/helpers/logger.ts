@@ -1,17 +1,17 @@
 const isDevelopment = process.env.NODE_ENV === "development";
 
 const logger = {
-  log: (...args) => {
+  log: (...args: unknown[]) => {
     if (isDevelopment) {
       console.log(...args);
     }
   },
 
-  error: (...args) => {
+  error: (...args: unknown[]) => {
     console.error(...args);
   },
 
-  info: (...args) => {
+  info: (...args: unknown[]) => {
     console.info(...args);
   },
 };
