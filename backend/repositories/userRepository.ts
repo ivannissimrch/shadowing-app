@@ -1,6 +1,6 @@
 import { QueryResult } from "pg";
-import { db } from "../server";
-import { User } from "../types";
+import { db } from "../server.js";
+import { User } from "../types.js";
 
 export const userRepository = {
   findAllStudents: async () => {

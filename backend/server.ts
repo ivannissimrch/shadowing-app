@@ -1,16 +1,16 @@
 import express, { Request, Response } from "express";
 import cors from "cors";
-import router from "./router";
+import router from "./router.js";
 import {
   apiLimiter,
   authLimiter,
   uploadLimiter,
-} from "./middleware/rateLimiter";
-import { protect } from "./auth";
-import { signin } from "./handlers/user";
-import pool from "./db";
-import handleError from "./handlers/handleError";
-import logger from "./helpers/logger";
+} from "./middleware/rateLimiter.js";
+import { protect } from "./auth.js";
+import { signin } from "./handlers/user.js";
+import pool from "./db.js";
+import handleError from "./handlers/handleError.js";
+import logger from "./helpers/logger.js";
 const app = express();
 
 // Initialize database tables if they do not already exist

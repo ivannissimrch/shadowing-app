@@ -1,11 +1,11 @@
 import { QueryResult } from "pg";
-import { db } from "../server";
+import { db } from "../server.js";
 import {
   Lesson,
   CreateLessonBody,
   LessonWithAssignment,
   LessonWithStats,
-} from "../types";
+} from "../types.js";
 
 export const lessonRepository = {
   findByStudentId: async (studentId: string) => {

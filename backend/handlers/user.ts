@@ -1,6 +1,6 @@
-import { db } from "../server.js"; // Import the database connection from server.js
-import { comparePasswords, createJWT, hashPassword } from "../auth";
-import logger from "../helpers/logger";
+import { db } from "../server.js";
+import { comparePasswords, createJWT, hashPassword } from "../auth.js";
+import logger from "../helpers/logger.js";
 import { Request, Response } from "express";
 import { User } from "../types.js";
 import { QueryResult } from "pg";

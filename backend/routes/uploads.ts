@@ -2,8 +2,8 @@ import { Router, Request, Response } from "express";
 import createError from "http-errors";
 import multer, { FileFilterCallback } from "multer";
 import path from "path";
-import asyncHandler from "../handlers/asyncHandler";
-import { uploadImage, uploadAudio } from "../services/azureBlobStorage";
+import asyncHandler from "../handlers/asyncHandler.js";
+import { uploadImage, uploadAudio } from "../services/azureBlobStorage.js";
 
 const router = Router();
 

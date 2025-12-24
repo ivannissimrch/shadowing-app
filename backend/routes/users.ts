@@ -1,9 +1,9 @@
 import { NextFunction, Router, Request, Response } from "express";
 import createError from "http-errors";
-import asyncHandler from "../handlers/asyncHandler";
-import { comparePasswords, hashPassword } from "../auth";
-import { requireTeacher } from "../middleware/auth";
-import { userRepository } from "../repositories/userRepository";
+import asyncHandler from "../handlers/asyncHandler.js";
+import { comparePasswords, hashPassword } from "../auth.js";
+import { requireTeacher } from "../middleware/auth.js";
+import { userRepository } from "../repositories/userRepository.js";
 
 const router = Router();
 
