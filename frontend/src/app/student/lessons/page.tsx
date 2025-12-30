@@ -1,12 +1,12 @@
 "use client";
 import styles from "./page.module.css";
-import StudentLessons from "../components/student/StudentLessons";
+import StudentLessons from "../../components/student/StudentLessons";
 import { ErrorBoundary } from "react-error-boundary";
-import SkeletonLoader from "../components/ui/SkeletonLoader";
+import SkeletonLoader from "../../components/ui/SkeletonLoader";
 import { Suspense } from "react";
-import ErrorFallback from "../components/ui/ErrorFallback";
+import ErrorFallback from "../../components/ui/ErrorFallback";
 import { mutate } from "swr";
-import { API_PATHS } from "../constants/apiKeys";
+import { API_PATHS } from "../../constants/apiKeys";
 
 export default function Lessons() {
   return (

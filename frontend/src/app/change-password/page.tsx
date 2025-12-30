@@ -55,7 +55,7 @@ export default function ChangePasswordPage() {
       setConfirmPassword("");
 
       setTimeout(() => {
-        router.push(user?.role === "teacher" ? "/teacher" : "/lessons");
+        router.push(user?.role === "teacher" ? "/teacher" : "/student/lessons");
       }, 2000);
     } catch (err) {
       setErrorMessage(
