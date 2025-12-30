@@ -101,3 +101,31 @@
     transform: translateY(0);
   }
 }
+
+.guestSection {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 400px;
+  margin-top: var(--spacing-md);
+  gap: var(--spacing-sm);
+}
+
+.divider {
+  color: var(--color-gray);
+  font-size: var(--font-size-sm);
+}
+
+.guestHint {
+  color: var(--color-gray);
+  font-size: var(--font-size-sm);
+  text-align: center;
+  margin: 0;
+}
+
+@media (min-width: 768px) {
+  .guestSection {
+    max-width: 500px;
+  }
+}

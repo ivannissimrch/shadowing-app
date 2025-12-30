@@ -4,7 +4,7 @@ import { useAuthContext } from "../AuthContext";
 import Header from "../components/layout/Header";
 import TeacherHeader from "../components/layout/TeacherHeader";
 import Footer from "../components/layout/Footer";
-import styles from "../lessons/layout.module.css";
+import styles from "../student/layout.module.css";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 

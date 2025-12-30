@@ -26,7 +26,7 @@ export default function StudentLessons() {
           <Card
             key={lesson.title}
             lesson={lesson}
-            linkPath={`/lessons/${lesson.id}`}
+            linkPath={`/student/lessons/${lesson.id}`}
           />
         ))}
     </div>

@@ -19,12 +19,20 @@ export default function Header() {
       </div>
       <div className={styles.navLinks}>
         <Link
-          href="/lessons"
+          href="/student/lessons"
           className={`${styles.link} ${
-            pathname === "/lessons" ? styles.active : ""
+            pathname === "/student/lessons" ? styles.active : ""
           }`}
         >
           Lessons
+        </Link>
+        <Link
+          href="/student/practice"
+          className={`${styles.link} ${
+            pathname === "/student/practice" ? styles.active : ""
+          }`}
+        >
+          Practice
         </Link>
         <Link
           href="/change-password"
