@@ -90,6 +90,7 @@ app.get("/", (_req: Request, res: Response) => {
     timestamp: new Date().toISOString(),
   });
 });
+
 app.use("/api/upload-image", uploadLimiter);
 app.use("/api/upload-audio", uploadLimiter);
 app.use("/api", apiLimiter, protect, router);
