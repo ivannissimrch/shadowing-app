@@ -1,5 +1,6 @@
 import logger from "../helpers/logger.js";
 import { Request, Response, NextFunction } from "express";
+import * as Sentry from "@sentry/node";
 
 export default function handleError(
   err: Error & { status?: number },
@@ -8,6 +9,7 @@ export default function handleError(
   _next: NextFunction
 ) {
   logger.error(err.stack);
+  Sentry.captureException(err);
   if (err.status) {
     res.status(err.status).json({
       success: false,
