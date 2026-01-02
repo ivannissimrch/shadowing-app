@@ -28,7 +28,7 @@ ESL teachers and students rely on fragmented tools during online lessons:
 - **YouTube Segment Looping** - Practice specific phrases with start/end times
 - **Browser Audio Recording** - Record pronunciation attempts directly in the browser
 - **Cloud Submission** - Automatically upload recordings to Azure Blob Storage
-- **Progress Tracking** - View lesson completion status and history
+- **Progress Tracking** - View lesson completion status
 - **Teacher Feedback** - Receive written feedback on each submission
 
 ### For Teachers
@@ -37,7 +37,6 @@ ESL teachers and students rely on fragmented tools during online lessons:
 - **Student Management** - Add students, assign lessons, track progress
 - **Audio Review** - Listen to student recordings with playback controls
 - **Feedback System** - Provide written feedback per lesson submission
-- **Dashboard Analytics** - View completion rates and student activity
 
 ---
 
@@ -215,23 +214,6 @@ api.interceptors.response.use(
 );
 ```
 
-### 4. Role-Based Access Control
-
-```typescript
-// Middleware protects routes based on JWT role claim
-const protect = async (req, res, next) => {
-  const token = req.headers.authorization?.split(" ")[1];
-  const decoded = jwt.verify(token, process.env.JWT_SECRET);
-  req.user = decoded; // { id, username, role }
-  next();
-};
-
-// Teacher-only routes
-router.delete("/api/lessons/:id", protect, requireTeacher, deleteLesson);
-```
-
----
-
 ## Security Features
 
 - **Password Hashing**: bcrypt with 10 salt rounds
@@ -241,51 +223,6 @@ router.delete("/api/lessons/:id", protect, requireTeacher, deleteLesson);
 - **SQL Injection Prevention**: Parameterized queries with pg library
 - **File Upload Validation**: Type and size restrictions
 - **Environment Variables**: Secrets stored outside codebase
-
----
-
-## Database Schema
-
-```sql
--- Users table
-CREATE TABLE users (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  username VARCHAR(255) UNIQUE NOT NULL,
-  password VARCHAR(255) NOT NULL, -- bcrypt hashed
-  name VARCHAR(255),
-  email VARCHAR(255),
-  role VARCHAR(50) DEFAULT 'student', -- 'student' | 'teacher'
-  created_at TIMESTAMP DEFAULT NOW()
-);
-
--- Lessons table
-CREATE TABLE lessons (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  title VARCHAR(255) NOT NULL,
-  image TEXT, -- Azure blob URL
-  video_id VARCHAR(255), -- YouTube video ID
-  lesson_start_time INTEGER, -- milliseconds
-  lesson_end_time INTEGER, -- milliseconds
-  created_at TIMESTAMP DEFAULT NOW(),
-  updated_at TIMESTAMP DEFAULT NOW()
-);
-
--- Assignments table (joins students to lessons)
-CREATE TABLE assignments (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  student_id UUID REFERENCES users(id) ON DELETE CASCADE,
-  lesson_id UUID REFERENCES lessons(id) ON DELETE CASCADE,
-  completed BOOLEAN DEFAULT FALSE,
-  status VARCHAR(50) DEFAULT 'new',
-  assigned_by UUID REFERENCES users(id) ON DELETE SET NULL,
-  assigned_at TIMESTAMP DEFAULT NOW(),
-  completed_at TIMESTAMP,
-  audio_file TEXT, -- Azure blob URL of student recording
-  feedback TEXT, -- Teacher's written feedback
-  updated_at TIMESTAMP DEFAULT NOW(),
-  UNIQUE(student_id, lesson_id)
-);
-```
 
 ---
 
@@ -331,7 +268,7 @@ CREATE TABLE assignments (
 
 ## What I Learned Building This
 
-I built this to solve a real problem I was experiencing in my ESL classes - we were constantly juggling between Google Drive for lesson materials, email for sharing recordings, and dealing with screen-sharing software that would randomly stop working during Zoom calls. My teacher and I needed a centralized solution.
+I built this to solve a real problem I was experiencing in my ESL classes, we were constantly juggling between Google Drive for lesson materials, email for sharing recordings, and dealing with screen-sharing software that would randomly stop working during Zoom calls. My teacher and I needed a centralized solution.
 
 ### Technical Skills
 
@@ -360,22 +297,5 @@ I built this to solve a real problem I was experiencing in my ESL classes - we w
 ### Planned Features
 
 - AI Pronunciation Scoring - Azure Speech API integration for automated feedback
-- Real-time Updates - WebSocket notifications when teachers assign lessons
-- Advanced Analytics - Student progress charts, completion trends
-- Lesson Marketplace - Teachers share/sell lesson packs
-- Gamification - Streaks, badges, leaderboards
-- Offline Mode - Service workers for practicing without internet
-
----
-
-## Contributing
-
-This is a portfolio project, but feedback and suggestions are welcome. Feel free to open issues for bugs or feature requests.
-
----
-
-## License
-
-MIT License - feel free to use this code for learning or your own projects.
 
 ---
