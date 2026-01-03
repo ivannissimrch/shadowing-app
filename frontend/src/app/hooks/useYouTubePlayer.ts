@@ -16,11 +16,14 @@ export default function useYouTubePlayer(
   playerRef: React.RefObject<YTPlayer | null>
 ) {
   const [currentTime, setCurrentTime] = useState<number>(0);
+  const [hasError, setHasError] = useState<boolean>(false);
   const updateTimeIntervalRef = useRef<NodeJS.Timeout | null>(null);
+
   const onPlayerReady: YouTubeProps["onReady"] = useCallback(
     (event: YouTubeEvent) => {
       playerRef.current = event.target;
       event.target.pauseVideo();
+      setHasError(false);
 
       if (updateTimeIntervalRef.current) {
         clearInterval(updateTimeIntervalRef.current);
@@ -32,9 +35,12 @@ export default function useYouTubePlayer(
         }
       }, PLAYER_UPDATE_INTERVAL_MS);
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    []
+    [playerRef]
   );
+
+  const onPlayerError: YouTubeProps["onError"] = useCallback(() => {
+    setHasError(true);
+  }, []);
 
   useEffect(() => {
     return () => {
@@ -47,7 +53,9 @@ export default function useYouTubePlayer(
 
   return {
     onPlayerReady,
+    onPlayerError,
     opts,
     currentTime,
+    hasError,
   };
 }
