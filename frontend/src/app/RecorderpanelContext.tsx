@@ -160,7 +160,7 @@ export default function RecorderPanelContextProvider({
           );
           await mutate(API_PATHS.LESSON(selectedLesson.id));
           dispatch({ type: "RESET" });
-          router.push("/lessons");
+          router.push("/student/lessons");
         } catch (error) {
           logger.error("Error submitting audio:", error);
           dispatch({ type: "ERROR", message: "Error submitting audio." });

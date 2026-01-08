@@ -8,10 +8,12 @@ export const API_PATHS = {
   LESSON: (id: string) => `/api/lessons/${id}`,
 
   // Teacher Lessons
-  ALL_LESSONS: "/api/all-lessons",
-  ASSIGN_LESSON: (lessonId: string) => `/api/lessons/${lessonId}/assign`,
+  CREATE_LESSON: "/api/teacher/lessons",
+  ALL_LESSONS: "/api/teacher/all-lessons",
+  ASSIGN_LESSON: (lessonId: string) => `/api/teacher/lessons/${lessonId}/assign`,
   UNASSIGN_LESSON: (lessonId: string, studentId: string) =>
-    `/api/lessons/${lessonId}/unassign/${studentId}`,
+    `/api/teacher/lessons/${lessonId}/unassign/${studentId}`,
+  DELETE_LESSON: (lessonId: string) => `/api/teacher/lessons/${lessonId}`,
 
   // Users/Students
   USERS: "/api/users",

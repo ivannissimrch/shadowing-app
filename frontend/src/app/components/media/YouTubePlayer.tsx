@@ -30,7 +30,47 @@ export default function YouTubePlayer({ selectedLesson }: YouTubePlayerProps) {
       ? null
       : state.endTime;
 
-  const { onPlayerReady, opts, currentTime } = useYouTubePlayer(playerRef);
+  const { onPlayerReady, onPlayerError, opts, currentTime, hasError } =
+    useYouTubePlayer(playerRef);
+
+  const videoId = selectedLesson?.video_id || "";
+  const youtubeUrl = `https://www.youtube.com/watch?v=${videoId}`;
+
+  if (hasError) {
+    return (
+      <section
+        role="region"
+        aria-label="Video unavailable message"
+        className={styles.errorContainer}
+      >
+        <div className={styles.errorContent}>
+          <svg
+            className={styles.errorIcon}
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+          >
+            <circle cx="12" cy="12" r="10" />
+            <path d="M12 8v4M12 16h.01" />
+          </svg>
+          <h3 className={styles.errorTitle}>Video Unavailable</h3>
+          <p className={styles.errorMessage}>
+            This video cannot be loaded. This may be due to regional
+            restrictions or network settings.
+          </p>
+          <a
+            href={youtubeUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className={styles.youtubeLink}
+          >
+            Watch on YouTube
+          </a>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section
@@ -38,9 +78,10 @@ export default function YouTubePlayer({ selectedLesson }: YouTubePlayerProps) {
       aria-label="YouTube video player for pronunciation practice"
     >
       <YouTube
-        videoId={selectedLesson ? selectedLesson.video_id : ""}
+        videoId={videoId}
         opts={opts}
         onReady={onPlayerReady}
+        onError={onPlayerError}
       />
       <section className={styles.controlsContainer}>
         <VideoTimer currentTime={currentTime} />

@@ -1,29 +1,42 @@
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import logger from "./helpers/logger.js";
+import { JwtPayload } from "./types.js";
+import { NextFunction, Request, Response } from "express";
 
-export const comparePasswords = (password, hash) => {
+declare global {
+  namespace Express {
+    interface Request {
+      user?: JwtPayload;
+    }
+  }
+}
+
+const secret = process.env.JWT_SECRET;
+if (!secret) throw new Error("JWT_SECRET not defined");
+
+export const comparePasswords = (password: string, hash: string) => {
   return bcrypt.compare(password, hash);
 };
 
-export const hashPassword = (password) => {
+export const hashPassword = (password: string) => {
   return bcrypt.hash(password, 10);
 };
 
-export const createJWT = (user) => {
+export const createJWT = (user: JwtPayload) => {
   const token = jwt.sign(
     {
       id: user.id,
       username: user.username,
       role: user.role,
     },
-    process.env.JWT_SECRET,
+    secret,
     { expiresIn: "7d" }
   );
   return token;
 };
 
-export const protect = (req, res, next) => {
+export const protect = (req: Request, res: Response, next: NextFunction) => {
   const bearer = req.headers.authorization;
 
   if (!bearer) {
@@ -41,7 +54,7 @@ export const protect = (req, res, next) => {
   }
 
   try {
-    const user = jwt.verify(token, process.env.JWT_SECRET);
+    const user = jwt.verify(token, secret) as JwtPayload;
     req.user = user;
     next();
   } catch (e) {

@@ -1,11 +1,14 @@
-import { db } from "../server.js"; // Import the database connection from server.js
+import { db } from "../server.js";
 import { comparePasswords, createJWT, hashPassword } from "../auth.js";
 import logger from "../helpers/logger.js";
+import { Request, Response } from "express";
+import { User } from "../types.js";
+import { QueryResult } from "pg";
 
-export const createNewUser = async (req, res) => {
+export const createNewUser = async (req: Request, res: Response) => {
   try {
     // Check if user already exists
-    const existingUserResult = await db.query(
+    const existingUserResult: QueryResult<User> = await db.query(
       "SELECT id FROM users WHERE username = $1",
       [req.body.username]
     );
@@ -21,7 +24,7 @@ export const createNewUser = async (req, res) => {
     const hashedPassword = await hashPassword(req.body.password);
 
     // Create new user
-    const result = await db.query(
+    const result: QueryResult<User> = await db.query(
       `INSERT INTO users (username, password, name, email, role)
        VALUES ($1, $2, $3, $4, $5)
        RETURNING id, username, name, email, role, created_at`,
@@ -34,16 +37,14 @@ export const createNewUser = async (req, res) => {
       ]
     );
 
-    const newUser = result.rows[0];
+    const newUser: User = result.rows[0];
 
-    // Create token (exclude password from user object)
-    const userForToken = {
+    // Create token (only include JwtPayload fields)
+    const token = createJWT({
       id: newUser.id,
       username: newUser.username,
-      name: newUser.name,
       role: newUser.role,
-    };
-    const token = createJWT(userForToken);
+    });
 
     res.json({
       success: true,
@@ -57,7 +58,7 @@ export const createNewUser = async (req, res) => {
         },
       },
     });
-  } catch (error) {
+  } catch (error: unknown) {
     logger.error("Error creating user:", error);
     res.status(500).json({
       success: false,
@@ -66,10 +67,10 @@ export const createNewUser = async (req, res) => {
   }
 };
 
-export const signin = async (req, res) => {
+export const signin = async (req: Request, res: Response) => {
   try {
     // Find user by username
-    const result = await db.query(
+    const result: QueryResult<User> = await db.query(
       "SELECT id, username, name, password, role FROM users WHERE username = $1",
       [req.body.username]
     );
@@ -93,14 +94,12 @@ export const signin = async (req, res) => {
       });
     }
 
-    // Create token (exclude password from user object)
-    const userForToken = {
+    // Create token (only include JwtPayload fields)
+    const token = createJWT({
       id: user.id,
       username: user.username,
-      name: user.name,
       role: user.role,
-    };
-    const token = createJWT(userForToken);
+    });
 
     res.json({
       success: true,
@@ -114,7 +113,7 @@ export const signin = async (req, res) => {
         },
       },
     });
-  } catch (error) {
+  } catch (error: unknown) {
     logger.error("Error during signin:", error);
     res.status(500).json({
       success: false,
