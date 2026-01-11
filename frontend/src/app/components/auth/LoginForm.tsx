@@ -142,24 +142,6 @@ export default function LoginForm() {
           {errorMessage}
         </p>
       )}
-
-      <div className={styles.guestSection}>
-        <span className={styles.divider}>or</span>
-        <Button
-          variant="secondary"
-          type="button"
-          disabled={isMutating || isNavigating}
-          onClick={() => {
-            setUsername("guest");
-            setPassword("test");
-          }}
-        >
-          Try as Guest
-        </Button>
-        <p className={styles.guestHint}>
-          Click above to fill credentials, then login
-        </p>
-      </div>
     </section>
   );
 }
