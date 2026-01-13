@@ -56,20 +56,3 @@
 .hide {
   display: none;
 }
-
-/* Larger than mobile */
-/* @media (min-width: 769px) {
-  .gridOneColumn img {
-    max-height: 70vh;
-  }
-} */
-
-/* @media (min-width: 1250px) {
-  .grid {
-    grid-template-areas:
-      "video   script"
-      "buttons buttons";
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: 1fr auto;
-  }
-} */
