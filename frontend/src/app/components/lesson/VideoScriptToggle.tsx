@@ -1,6 +1,5 @@
 import styles from "./VideoScriptToggle.module.css";
 import SegmentPlayer from "../media/SegmentPlayer";
-import Image from "next/image";
 import { Lesson } from "@/app/Types";
 import { useState } from "react";
 import ToggleButtons from "./ToggleButtons";
@@ -38,13 +37,9 @@ export default function VideoScriptToggle({
             <SegmentPlayer selectedLesson={selectedLesson} />
           </div>
           <div className={styles.scriptArea}>
-            <Image
+            <img
               src={selectedLesson.image}
-              alt={`${selectedLesson.title}  Practice lesson image`}
-              quality={100}
-              width={1400}
-              height={875}
-              priority
+              alt={`${selectedLesson.title} Practice lesson image`}
             />
           </div>
         </>
@@ -57,13 +52,9 @@ export default function VideoScriptToggle({
       )}
       {toggleState === ToggleState.SHOW_SCRIPT_ONLY && (
         <div className={styles.contentArea}>
-          <Image
+          <img
             src={selectedLesson.image}
-            alt={`${selectedLesson.title}  Practice lesson image`}
-            quality={100}
-            width={1400}
-            height={875}
-            priority
+            alt={`${selectedLesson.title} Practice lesson image`}
           />
         </div>
       )}
