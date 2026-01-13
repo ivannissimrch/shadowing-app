@@ -8,7 +8,9 @@ export default function RecorderAudioButtons({
 }: {
   selectedLesson: Lesson | undefined;
 }) {
-  const { dispatch, handleSubmit } = useRecorderPanelContext();
+  const { dispatch, handleSubmit, isAudioMutating, isLessonMutating } =
+    useRecorderPanelContext();
+  const isSubmitting = isAudioMutating || isLessonMutating;
 
   if (selectedLesson?.status === "completed") {
     return null;
@@ -21,6 +23,7 @@ export default function RecorderAudioButtons({
           onClick={() => {
             dispatch({ type: "RESET" });
           }}
+          disabled={isSubmitting}
         >
           Delete
         </Button>
@@ -28,8 +31,9 @@ export default function RecorderAudioButtons({
           variant="primary"
           className={styles.recordBtn}
           onClick={handleSubmit}
+          disabled={isSubmitting}
         >
-          Submit
+          {isSubmitting ? "Submitting..." : "Submit"}
         </Button>
       </div>
     );
