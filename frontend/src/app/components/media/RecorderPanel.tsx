@@ -6,7 +6,6 @@ import { ErrorBoundary } from "react-error-boundary";
 
 import RecorderAudioPlayer from "./RecorderAudioplayer";
 import { useRecorderPanelContext } from "@/app/RecorderpanelContext";
-import SkeletonLoader from "../ui/SkeletonLoader";
 import RecorderVoiceRecorder from "./RecorderVoiceRecorder";
 
 interface RecorderProps {
@@ -14,10 +13,7 @@ interface RecorderProps {
 }
 
 export default function RecorderPanel({ selectedLesson }: RecorderProps) {
-  const { recorderState, dispatch, isAudioMutating, isLessonMutating } =
-    useRecorderPanelContext();
-  const isSubmitting = isAudioMutating || isLessonMutating;
-
+  const { recorderState, dispatch } = useRecorderPanelContext();
   // Check for error state
   if (recorderState.status === "error") {
     return (
@@ -31,10 +27,6 @@ export default function RecorderPanel({ selectedLesson }: RecorderProps) {
         </button>
       </div>
     );
-  }
-
-  if (isSubmitting) {
-    return <SkeletonLoader />;
   }
   // Check if we have audio (stopped state with audioURL)
   const hasAudio = recorderState.status === "stopped";
