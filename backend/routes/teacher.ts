@@ -54,6 +54,16 @@ router.post(
       throw createError(404, "Lesson not found");
     }
 
+    // Check if assignment already exists
+    const assignmentExists = await assignmentRepository.exists(
+      studentId,
+      lessonId
+    );
+
+    if (assignmentExists) {
+      throw createError(409, "This lesson is already assigned to this student");
+    }
+
     // Create assignment for the student
     const assignment = await assignmentRepository.create({
       studentId,
