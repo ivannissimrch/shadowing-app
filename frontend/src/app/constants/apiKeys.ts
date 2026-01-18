@@ -32,4 +32,13 @@ export const API_PATHS = {
   // Uploads
   UPLOAD_IMAGE: "/api/upload-image",
   UPLOAD_AUDIO: "/api/upload-audio",
+
+  // Speech
+  SPEECH_EVALUATE: "/api/speech/evaluate",
+  SPEECH_SYNTHESIZE: "/api/speech/synthesize",
+  SPEECH_COACH: "/api/speech/coach",
+
+  // Practice Words
+  PRACTICE_WORDS: "/api/practice-words",
+  PRACTICE_WORD: (id: number) => `/api/practice-words/${id}`,
 } as const;

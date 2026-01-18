@@ -26,6 +26,14 @@ export default function Header() {
         >
           Lessons
         </Link>
+        <Link
+          href="/student/practice"
+          className={`${styles.link} ${
+            pathname === "/student/practice" ? styles.active : ""
+          }`}
+        >
+          Practice
+        </Link>
 
         <Link
           href="/change-password"

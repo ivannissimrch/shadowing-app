@@ -113,3 +113,11 @@ export interface UpdatePasswordBody {
 export interface FeedbackBody {
   feedback: string;
 }
+
+// Practice words for pronunciation practice
+export interface PracticeWord {
+  id: number;
+  student_id: string;
+  word: string;
+  created_at: Date;
+}
