@@ -43,16 +43,6 @@ export function recorderReducer(
         audioURL: action.audioURL,
       };
 
-    case "LOAD_EXISTING_AUDIO":
-      if (state.status !== "idle") {
-        return state;
-      }
-      return {
-        status: "stopped",
-        blob: new Blob(),
-        audioURL: action.audioURL,
-      };
-
     case "UPLOAD_SUCCESS":
       if (state.status !== "stopped") {
         return state;

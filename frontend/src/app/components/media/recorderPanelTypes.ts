@@ -26,7 +26,6 @@ export type RecorderAction =
   | { type: "PAUSE_RECORDING"; pausedAt: number }
   | { type: "RESUME_RECORDING" }
   | { type: "STOP_RECORDING"; blob: Blob; audioURL: string }
-  | { type: "LOAD_EXISTING_AUDIO"; audioURL: string }
   | { type: "UPLOAD_SUCCESS" }
   | { type: "ERROR"; message: string }
   | { type: "RESET" };
