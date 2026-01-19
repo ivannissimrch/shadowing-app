@@ -28,8 +28,9 @@ export default function RecorderPanel({ selectedLesson }: RecorderProps) {
       </div>
     );
   }
-  // Check if we have audio (stopped state with audioURL)
-  const hasAudio = recorderState.status === "stopped";
+  const hasNewRecording = recorderState.status === "stopped";
+  const hasExistingAudio = selectedLesson?.audio_file != null;
+  const hasAudio = hasNewRecording || hasExistingAudio;
 
   return (
     <ErrorBoundary fallback={<p>Error loading recorder panel</p>}>
