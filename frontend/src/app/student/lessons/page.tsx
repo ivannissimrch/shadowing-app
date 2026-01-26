@@ -1,17 +1,22 @@
 "use client";
-import styles from "./page.module.css";
 import StudentLessons from "../../components/student/StudentLessons";
 import { ErrorBoundary } from "react-error-boundary";
-import SkeletonLoader from "../../components/ui/SkeletonLoader";
-import { Suspense } from "react";
 import ErrorFallback from "../../components/ui/ErrorFallback";
 import { mutate } from "swr";
 import { API_PATHS } from "../../constants/apiKeys";
+import Typography from "@mui/material/Typography";
+import Box from "@mui/material/Box";
 
 export default function Lessons() {
   return (
-    <>
-      <h1 className={styles.title}>My Lessons</h1>
+    <Box>
+      <Typography
+        variant="h4"
+        component="h1"
+        sx={{ fontWeight: 600, color: "text.primary", mb: 3 }}
+      >
+        My Lessons
+      </Typography>
       <ErrorBoundary
         fallbackRender={(props) => (
           <ErrorFallback {...props} title="Error Loading Lessons" />
@@ -20,10 +25,8 @@ export default function Lessons() {
           mutate(API_PATHS.LESSONS, undefined, { revalidate: true });
         }}
       >
-        <Suspense fallback={<SkeletonLoader />}>
-          <StudentLessons />
-        </Suspense>
+        <StudentLessons />
       </ErrorBoundary>
-    </>
+    </Box>
   );
 }

@@ -1,11 +1,18 @@
 "use client";
-import { Suspense, useState } from "react";
+import { useState } from "react";
 import { mutate } from "swr";
 import { ErrorBoundary } from "react-error-boundary";
-import styles from "./page.module.css";
 import { API_PATHS } from "../../constants/apiKeys";
 import { useSWRMutationHook } from "../../hooks/useSWRMutation";
 import PracticeWordsList from "./PracticeWordsList";
+
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import TextField from "@mui/material/TextField";
+import Button from "@mui/material/Button";
+import Alert from "@mui/material/Alert";
+import CircularProgress from "@mui/material/CircularProgress";
+import { FiPlus } from "react-icons/fi";
 
 interface PracticeWord {
   id: number;
@@ -48,49 +55,62 @@ export default function PracticePage() {
   }
 
   return (
-    <div className={styles.container}>
-      <header className={styles.header}>
-        <h1 className={styles.title}>Practice</h1>
-      </header>
+    <Box>
+      {/* Header */}
+      <Typography
+        variant="h4"
+        component="h1"
+        sx={{ fontWeight: 600, color: "text.primary", mb: 3 }}
+      >
+        Practice
+      </Typography>
 
       {/* Add new word form */}
-      <form className={styles.addForm} onSubmit={handleAddWord}>
-        <input
-          type="text"
-          className={styles.addInput}
+      <Box
+        component="form"
+        onSubmit={handleAddWord}
+        sx={{ display: "flex", gap: 2, mb: 3 }}
+      >
+        <TextField
+          fullWidth
           placeholder="Add a word or phrase to practice..."
           value={newWord}
           onChange={(e) => setNewWord(e.target.value)}
           disabled={isAdding}
+          size="small"
         />
-        <button
+        <Button
           type="submit"
-          className={styles.addButton}
+          variant="contained"
           disabled={isAdding || !newWord.trim()}
+          startIcon={isAdding ? <CircularProgress size={16} color="inherit" /> : <FiPlus size={16} />}
+          sx={{ textTransform: "none", fontWeight: 500, whiteSpace: "nowrap" }}
         >
           {isAdding ? "Adding..." : "Add"}
-        </button>
-      </form>
+        </Button>
+      </Box>
 
-      {addError && <p className={styles.errorMessage}>{addError}</p>}
+      {addError && (
+        <Alert severity="error" sx={{ mb: 3 }}>
+          {addError}
+        </Alert>
+      )}
 
       <ErrorBoundary
         fallbackRender={({ error, resetErrorBoundary }) => (
-          <div className={styles.errorContainer}>
-            <p className={styles.errorMessage}>
+          <Box sx={{ textAlign: "center", py: 4 }}>
+            <Alert severity="error" sx={{ mb: 2 }}>
               Failed to load practice words: {error.message}
-            </p>
-            <button onClick={resetErrorBoundary} className={styles.retryButton}>
+            </Alert>
+            <Button variant="contained" onClick={resetErrorBoundary}>
               Try again
-            </button>
-          </div>
+            </Button>
+          </Box>
         )}
         onReset={() => mutate(API_PATHS.PRACTICE_WORDS)}
       >
-        <Suspense fallback={<p>Loading practice words...</p>}>
-          <PracticeWordsList />
-        </Suspense>
+        <PracticeWordsList />
       </ErrorBoundary>
-    </div>
+    </Box>
   );
 }

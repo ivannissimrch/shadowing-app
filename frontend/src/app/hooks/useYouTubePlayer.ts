@@ -16,6 +16,7 @@ export default function useYouTubePlayer(
   playerRef: React.RefObject<YTPlayer | null>
 ) {
   const [currentTime, setCurrentTime] = useState<number>(0);
+  const [duration, setDuration] = useState<number>(0);
   const [hasError, setHasError] = useState<boolean>(false);
   const updateTimeIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -24,6 +25,7 @@ export default function useYouTubePlayer(
       playerRef.current = event.target;
       event.target.pauseVideo();
       setHasError(false);
+      setDuration(Math.floor(event.target.getDuration()));
 
       if (updateTimeIntervalRef.current) {
         clearInterval(updateTimeIntervalRef.current);
@@ -56,6 +58,7 @@ export default function useYouTubePlayer(
     onPlayerError,
     opts,
     currentTime,
+    duration,
     hasError,
   };
 }

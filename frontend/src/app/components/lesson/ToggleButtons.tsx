@@ -1,5 +1,6 @@
-import { Button } from "../ui/Button";
-import styles from "./ToggleButtons.module.css";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import { FiEye, FiEyeOff } from "react-icons/fi";
 import { ToggleState } from "./VideoScriptToggle";
 
 interface ToggleButtonsProps {
@@ -7,81 +8,80 @@ interface ToggleButtonsProps {
   updateToggleState: (newState: ToggleState) => void;
 }
 
-// Hides script, shows only videos
-function HideScriptButton({ updateToggleState }: ToggleButtonsProps) {
-  return (
-    <Button
-      variant="ghost"
-      onClick={() => updateToggleState(ToggleState.SHOW_VIDEO_ONLY)}
-    >
-      hide script
-    </Button>
-  );
-}
-// Hides video, shows only script
-function HideVideoButton({ updateToggleState }: ToggleButtonsProps) {
-  return (
-    <Button
-      variant="ghost"
-      onClick={() => updateToggleState(ToggleState.SHOW_SCRIPT_ONLY)}
-    >
-      hide video
-    </Button>
-  );
-}
-// Shows script back (returns to both visible)
-function ShowScriptButton({ updateToggleState }: ToggleButtonsProps) {
-  return (
-    <Button
-      variant="ghost"
-      onClick={() => updateToggleState(ToggleState.SHOW_BOTH)}
-    >
-      show script
-    </Button>
-  );
-}
-// Shows video back (returns to both visible)
-function ShowVideoButton({ updateToggleState }: ToggleButtonsProps) {
-  return (
-    <Button
-      variant="ghost"
-      onClick={() => updateToggleState(ToggleState.SHOW_BOTH)}
-    >
-      show video
-    </Button>
-  );
-}
-
 export default function ToggleButtons({
   toggleState,
   updateToggleState,
 }: ToggleButtonsProps) {
   return (
-    <div className={styles.toggleButtonsContainer}>
+    <Box sx={{ display: "flex", gap: 1, flexWrap: "wrap" }}>
       {toggleState === ToggleState.SHOW_BOTH && (
         <>
-          <HideScriptButton
-            toggleState={toggleState}
-            updateToggleState={updateToggleState}
-          />
-          <HideVideoButton
-            toggleState={toggleState}
-            updateToggleState={updateToggleState}
-          />
+          <Button
+            size="small"
+            variant="text"
+            color="inherit"
+            onClick={() => updateToggleState(ToggleState.SHOW_VIDEO_ONLY)}
+            startIcon={<FiEyeOff size={14} />}
+            sx={{
+              textTransform: "none",
+              color: "text.secondary",
+              fontSize: "0.75rem",
+              "&:hover": { bgcolor: "action.hover" },
+            }}
+          >
+            Hide script
+          </Button>
+          <Button
+            size="small"
+            variant="text"
+            color="inherit"
+            onClick={() => updateToggleState(ToggleState.SHOW_SCRIPT_ONLY)}
+            startIcon={<FiEyeOff size={14} />}
+            sx={{
+              textTransform: "none",
+              color: "text.secondary",
+              fontSize: "0.75rem",
+              "&:hover": { bgcolor: "action.hover" },
+            }}
+          >
+            Hide video
+          </Button>
         </>
       )}
       {toggleState === ToggleState.SHOW_SCRIPT_ONLY && (
-        <ShowVideoButton
-          toggleState={toggleState}
-          updateToggleState={updateToggleState}
-        />
+        <Button
+          size="small"
+          variant="text"
+          color="inherit"
+          onClick={() => updateToggleState(ToggleState.SHOW_BOTH)}
+          startIcon={<FiEye size={14} />}
+          sx={{
+            textTransform: "none",
+            color: "text.secondary",
+            fontSize: "0.75rem",
+            "&:hover": { bgcolor: "action.hover" },
+          }}
+        >
+          Show video
+        </Button>
       )}
       {toggleState === ToggleState.SHOW_VIDEO_ONLY && (
-        <ShowScriptButton
-          toggleState={toggleState}
-          updateToggleState={updateToggleState}
-        />
+        <Button
+          size="small"
+          variant="text"
+          color="inherit"
+          onClick={() => updateToggleState(ToggleState.SHOW_BOTH)}
+          startIcon={<FiEye size={14} />}
+          sx={{
+            textTransform: "none",
+            color: "text.secondary",
+            fontSize: "0.75rem",
+            "&:hover": { bgcolor: "action.hover" },
+          }}
+        >
+          Show script
+        </Button>
       )}
-    </div>
+    </Box>
   );
 }

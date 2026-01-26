@@ -1,13 +1,15 @@
 "use client";
 import YouTube, { YouTubePlayer as YTPlayer } from "react-youtube";
 import { Lesson } from "../../Types";
-import styles from "./YouTubePlayer.module.css";
-import LoopSegmentInfo from "./LoopSegmentInfo";
 import VideoTimer from "./VideoTimer";
 import LoopButtons from "./LoopButtons";
 import useLoopButtons from "@/app/hooks/useLoopButtons";
 import useYouTubePlayer from "@/app/hooks/useYouTubePlayer";
-import { useRef } from "react";
+import { useRef, useCallback } from "react";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import Button from "@mui/material/Button";
+import { FiAlertCircle, FiExternalLink } from "react-icons/fi";
 
 interface YouTubePlayerProps {
   selectedLesson: Lesson | undefined;
@@ -16,8 +18,7 @@ interface YouTubePlayerProps {
 export default function YouTubePlayer({ selectedLesson }: YouTubePlayerProps) {
   const playerRef = useRef<YTPlayer | null>(null);
   const {
-    updateStartAtCurrentTime,
-    updateEndAtCurrentTime,
+    setRange,
     toggleLoop,
     clearLoop,
     state,
@@ -30,75 +31,96 @@ export default function YouTubePlayer({ selectedLesson }: YouTubePlayerProps) {
       ? null
       : state.endTime;
 
-  const { onPlayerReady, onPlayerError, opts, currentTime, hasError } =
+  const { onPlayerReady, onPlayerError, opts, currentTime, duration, hasError } =
     useYouTubePlayer(playerRef);
+
+  const seekTo = useCallback((time: number) => {
+    if (playerRef.current) {
+      playerRef.current.seekTo(time, true);
+    }
+  }, []);
 
   const videoId = selectedLesson?.video_id || "";
   const youtubeUrl = `https://www.youtube.com/watch?v=${videoId}`;
 
   if (hasError) {
     return (
-      <section
+      <Box
+        sx={{
+          p: 4,
+          textAlign: "center",
+          bgcolor: "grey.100",
+          borderRadius: 2,
+        }}
         role="region"
         aria-label="Video unavailable message"
-        className={styles.errorContainer}
       >
-        <div className={styles.errorContent}>
-          <svg
-            className={styles.errorIcon}
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-          >
-            <circle cx="12" cy="12" r="10" />
-            <path d="M12 8v4M12 16h.01" />
-          </svg>
-          <h3 className={styles.errorTitle}>Video Unavailable</h3>
-          <p className={styles.errorMessage}>
-            This video cannot be loaded. This may be due to regional
-            restrictions or network settings.
-          </p>
-          <a
-            href={youtubeUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.youtubeLink}
-          >
-            Watch on YouTube
-          </a>
-        </div>
-      </section>
+        <FiAlertCircle size={48} color="#697586" style={{ marginBottom: 16 }} />
+        <Typography variant="h6" sx={{ fontWeight: 600, color: "text.primary", mb: 1 }}>
+          Video Unavailable
+        </Typography>
+        <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+          This video cannot be loaded. This may be due to regional
+          restrictions or network settings.
+        </Typography>
+        <Button
+          variant="contained"
+          href={youtubeUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          startIcon={<FiExternalLink size={16} />}
+          sx={{ textTransform: "none" }}
+        >
+          Watch on YouTube
+        </Button>
+      </Box>
     );
   }
 
   return (
-    <section
+    <Box
+      component="section"
       role="region"
       aria-label="YouTube video player for pronunciation practice"
     >
-      <YouTube
-        videoId={videoId}
-        opts={opts}
-        onReady={onPlayerReady}
-        onError={onPlayerError}
-      />
-      <section className={styles.controlsContainer}>
-        <VideoTimer currentTime={currentTime} />
+      <Box sx={{
+        "& iframe": {
+          display: "block",
+          width: "100%",
+          aspectRatio: "16/9",
+        }
+      }}>
+        <YouTube
+          videoId={videoId}
+          opts={opts}
+          onReady={onPlayerReady}
+          onError={onPlayerError}
+        />
+      </Box>
+      <Box
+        sx={{
+          p: 2,
+          bgcolor: "grey.50",
+        }}
+      >
+        <Box sx={{ display: "flex", alignItems: "center", gap: 2, mb: 2 }}>
+          <VideoTimer currentTime={currentTime} />
+          <Typography variant="caption" color="text.secondary">
+            / {Math.floor(duration / 60)}:{String(duration % 60).padStart(2, "0")}
+          </Typography>
+        </Box>
         <LoopButtons
           startTime={startTime}
           endTime={endTime}
           isLooping={isLooping}
-          updateStartAtCurrentTime={updateStartAtCurrentTime}
-          updateEndAtCurrentTime={updateEndAtCurrentTime}
+          duration={duration}
+          setRange={setRange}
+          seekTo={seekTo}
           toggleLoop={toggleLoop}
           clearLoop={clearLoop}
           state={state}
         />
-        {startTime !== null && endTime !== null && (
-          <LoopSegmentInfo startTime={startTime} endTime={endTime} />
-        )}
-      </section>
-    </section>
+      </Box>
+    </Box>
   );
 }

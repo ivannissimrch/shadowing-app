@@ -1,7 +1,15 @@
-import styles from "./LessonCard.module.css";
+"use client";
+import MuiCard from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import CardActions from "@mui/material/CardActions";
+import Typography from "@mui/material/Typography";
+import Button from "@mui/material/Button";
+import IconButton from "@mui/material/IconButton";
+import Box from "@mui/material/Box";
+import Avatar from "@mui/material/Avatar";
+import Tooltip from "@mui/material/Tooltip";
+import { FiBook, FiUserPlus, FiTrash2 } from "react-icons/fi";
 import { Lesson } from "../../Types";
-import { FaBook, FaTrash, FaUserPlus } from "react-icons/fa";
-import { Button } from "./Button";
 
 interface LessonCardProps {
   lessons: Lesson[];
@@ -15,32 +23,69 @@ export default function LessonCard({
   onDeleteLesson,
 }: LessonCardProps) {
   return lessons.map((lesson: Lesson) => (
-    <div key={lesson.id} className={styles.lessonsCard}>
-      <div className={styles.cardHeader}>
-        <div className={styles.iconWrapper}>
-          <FaBook />
-        </div>
-      </div>
-      <div className={styles.cardBody}>
-        <h3 className={styles.lessonTitle}>{lesson.title}</h3>
-      </div>
-      <div className={styles.buttonGroup}>
+    <MuiCard
+      key={lesson.id}
+      sx={{
+        height: "100%",
+        display: "flex",
+        flexDirection: "column",
+      }}
+    >
+      <CardContent sx={{ flexGrow: 1, pb: 1 }}>
+        {/* Icon */}
+        <Box sx={{ display: "flex", justifyContent: "center", mb: 2 }}>
+          <Avatar
+            sx={{
+              bgcolor: "primary.light",
+              color: "primary.main",
+              width: 56,
+              height: 56,
+            }}
+          >
+            <FiBook size={28} />
+          </Avatar>
+        </Box>
+
+        {/* Title */}
+        <Typography
+          variant="h5"
+          component="h3"
+          sx={{
+            fontWeight: 600,
+            color: "text.primary",
+            textAlign: "center",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            display: "-webkit-box",
+            WebkitLineClamp: 2,
+            WebkitBoxOrient: "vertical",
+          }}
+        >
+          {lesson.title}
+        </Typography>
+      </CardContent>
+
+      <CardActions sx={{ p: 2, pt: 0, justifyContent: "space-between" }}>
         <Button
-          variant="secondary"
-          leftIcon={<FaUserPlus />}
+          variant="contained"
+          color="secondary"
+          startIcon={<FiUserPlus size={16} />}
           onClick={() => onAssignLesson(lesson)}
-          className={styles.assignButton}
+          sx={{ textTransform: "none", fontWeight: 500, flex: 1 }}
         >
           Assign
         </Button>
-        <button
-          className={styles.deleteButton}
-          onClick={() => onDeleteLesson(lesson)}
-          title="Delete lesson"
-        >
-          <FaTrash />
-        </button>
-      </div>
-    </div>
+        <Tooltip title="Delete lesson">
+          <IconButton
+            onClick={() => onDeleteLesson(lesson)}
+            color="error"
+            aria-label={`Delete lesson ${lesson.title}`}
+            sx={{ ml: 1 }}
+          >
+            <FiTrash2 size={18} />
+          </IconButton>
+        </Tooltip>
+      </CardActions>
+    </MuiCard>
   ));
 }

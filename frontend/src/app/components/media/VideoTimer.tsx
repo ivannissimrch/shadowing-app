@@ -1,10 +1,15 @@
-import styles from "./YouTubePlayer.module.css";
 import getFormattedTime from "../../helpers/getFormattedTime";
+import Chip from "@mui/material/Chip";
+import { FiClock } from "react-icons/fi";
 
 export default function VideoTimer({ currentTime }: { currentTime: number }) {
   return (
-    <div className={styles.currentTime}>
-      Current time: <strong>{getFormattedTime(currentTime)}</strong>
-    </div>
+    <Chip
+      icon={<FiClock size={14} />}
+      label={getFormattedTime(currentTime)}
+      size="small"
+      variant="outlined"
+      sx={{ fontWeight: 500 }}
+    />
   );
 }

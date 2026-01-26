@@ -1,9 +1,17 @@
 "use client";
-import { FaUserGraduate, FaEye, FaTrash } from "react-icons/fa";
-import styles from "./StudentCard.module.css";
-import { Student } from "../../Types";
-import { Button } from "./Button";
 import { useState } from "react";
+import Link from "next/link";
+import MuiCard from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import CardActions from "@mui/material/CardActions";
+import Typography from "@mui/material/Typography";
+import Button from "@mui/material/Button";
+import IconButton from "@mui/material/IconButton";
+import Box from "@mui/material/Box";
+import Avatar from "@mui/material/Avatar";
+import Tooltip from "@mui/material/Tooltip";
+import { FiUser, FiEye, FiTrash2 } from "react-icons/fi";
+import { Student } from "../../Types";
 
 export default function StudentCard({
   students,
@@ -15,36 +23,81 @@ export default function StudentCard({
   const [loadingId, setLoadingId] = useState<string | null>(null);
 
   return students?.map((student: Student) => (
-    <div key={student.id} className={styles.studentCard}>
-      <div className={styles.cardHeader}>
-        <div className={styles.iconWrapper}>
-          <FaUserGraduate />
-        </div>
-      </div>
-      <div className={styles.cardBody}>
-        <h3 className={styles.studentTitle}>{student.username}</h3>
-        <p className={styles.studentSubtitle}>Student</p>
-      </div>
-      <div className={styles.buttonGroup}>
+    <MuiCard
+      key={student.id}
+      sx={{
+        height: "100%",
+        display: "flex",
+        flexDirection: "column",
+      }}
+    >
+      <CardContent sx={{ flexGrow: 1, pb: 1 }}>
+        {/* Avatar */}
+        <Box sx={{ display: "flex", justifyContent: "center", mb: 2 }}>
+          <Avatar
+            sx={{
+              bgcolor: "secondary.light",
+              color: "secondary.main",
+              width: 64,
+              height: 64,
+              fontSize: "1.5rem",
+              fontWeight: 600,
+            }}
+          >
+            {student.username?.charAt(0).toUpperCase() || <FiUser size={28} />}
+          </Avatar>
+        </Box>
+
+        {/* Name */}
+        <Typography
+          variant="h5"
+          component="h3"
+          sx={{
+            fontWeight: 600,
+            color: "text.primary",
+            textAlign: "center",
+            mb: 0.5,
+          }}
+        >
+          {student.username}
+        </Typography>
+
+        {/* Role badge */}
+        <Typography
+          variant="body2"
+          sx={{
+            color: "text.secondary",
+            textAlign: "center",
+          }}
+        >
+          Student
+        </Typography>
+      </CardContent>
+
+      <CardActions sx={{ p: 2, pt: 0, justifyContent: "space-between" }}>
         <Button
-          variant="secondary"
-          leftIcon={<FaEye />}
+          component={Link}
           href={`/teacher/student/${student.id}`}
-          className={styles.viewButton}
-          onClick={() => setLoadingId(student.id)}
+          variant="outlined"
+          color="primary"
+          startIcon={<FiEye size={16} />}
           disabled={loadingId === student.id}
+          onClick={() => setLoadingId(student.id)}
+          sx={{ textTransform: "none", fontWeight: 500, flex: 1 }}
         >
           {loadingId === student.id ? "Loading..." : "View Details"}
         </Button>
-        <button
-          onClick={() => onDeleteStudent(student)}
-          className={styles.deleteButton}
-          title="Delete student"
-          aria-label={`Delete student ${student.username}`}
-        >
-          <FaTrash />
-        </button>
-      </div>
-    </div>
+        <Tooltip title="Delete student">
+          <IconButton
+            onClick={() => onDeleteStudent(student)}
+            color="error"
+            aria-label={`Delete student ${student.username}`}
+            sx={{ ml: 1 }}
+          >
+            <FiTrash2 size={18} />
+          </IconButton>
+        </Tooltip>
+      </CardActions>
+    </MuiCard>
   ));
 }

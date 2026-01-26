@@ -1,8 +1,9 @@
-import styles from "./VideoScriptToggle.module.css";
 import SegmentPlayer from "../media/SegmentPlayer";
 import { Lesson } from "@/app/Types";
 import { useState } from "react";
 import ToggleButtons from "./ToggleButtons";
+import Box from "@mui/material/Box";
+import Paper from "@mui/material/Paper";
 
 export enum ToggleState {
   SHOW_BOTH,
@@ -24,46 +25,54 @@ export default function VideoScriptToggle({
   }
 
   return (
-    <div
-      className={
-        toggleState === ToggleState.SHOW_BOTH
-          ? styles.grid
-          : styles.gridOneColumn
-      }
-    >
-      {toggleState === ToggleState.SHOW_BOTH && (
-        <>
-          <div className={styles.videoArea}>
+    <Box>
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          gap: 3,
+          mb: 2,
+        }}
+      >
+        {/* Video section */}
+        {(toggleState === ToggleState.SHOW_BOTH ||
+          toggleState === ToggleState.SHOW_VIDEO_ONLY) && (
+          <Paper sx={{ overflow: "hidden", borderRadius: 2 }}>
             <SegmentPlayer selectedLesson={selectedLesson} />
-          </div>
-          <div className={styles.scriptArea}>
-            <img
+          </Paper>
+        )}
+
+        {/* Script/Image section */}
+        {(toggleState === ToggleState.SHOW_BOTH ||
+          toggleState === ToggleState.SHOW_SCRIPT_ONLY) && (
+          <Paper
+            sx={{
+              overflow: "hidden",
+              borderRadius: 2,
+              maxWidth: toggleState === ToggleState.SHOW_SCRIPT_ONLY ? 800 : "100%",
+              mx: toggleState === ToggleState.SHOW_SCRIPT_ONLY ? "auto" : 0,
+            }}
+          >
+            <Box
+              component="img"
               src={selectedLesson.image}
               alt={`${selectedLesson.title} Practice lesson image`}
+              sx={{
+                width: "100%",
+                height: "auto",
+                display: "block",
+                maxHeight: "70vh",
+                objectFit: "contain",
+              }}
             />
-          </div>
-        </>
-      )}
+          </Paper>
+        )}
+      </Box>
 
-      {toggleState === ToggleState.SHOW_VIDEO_ONLY && (
-        <div className={styles.contentArea}>
-          <SegmentPlayer selectedLesson={selectedLesson} />
-        </div>
-      )}
-      {toggleState === ToggleState.SHOW_SCRIPT_ONLY && (
-        <div className={styles.contentArea}>
-          <img
-            src={selectedLesson.image}
-            alt={`${selectedLesson.title} Practice lesson image`}
-          />
-        </div>
-      )}
-      <div className={styles.buttonsArea}>
-        <ToggleButtons
-          toggleState={toggleState}
-          updateToggleState={updateToggleState}
-        />
-      </div>
-    </div>
+      <ToggleButtons
+        toggleState={toggleState}
+        updateToggleState={updateToggleState}
+      />
+    </Box>
   );
 }

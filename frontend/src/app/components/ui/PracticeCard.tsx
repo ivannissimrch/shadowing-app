@@ -1,10 +1,24 @@
+"use client";
 import { useState } from "react";
 import { useReactMediaRecorder } from "react-media-recorder";
 import { API_PATHS } from "../../constants/apiKeys";
 import toIpa from "@/app/helpers/toIpa";
-import styles from "./PracticeCard.module.css";
 import { useSWRMutationHook } from "../../hooks/useSWRMutation";
 import { useSpeakMutation } from "../../hooks/useSpeakMutation";
+
+import MuiCard from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import Typography from "@mui/material/Typography";
+import Button from "@mui/material/Button";
+import IconButton from "@mui/material/IconButton";
+import Box from "@mui/material/Box";
+import Chip from "@mui/material/Chip";
+import Slider from "@mui/material/Slider";
+import Alert from "@mui/material/Alert";
+import Divider from "@mui/material/Divider";
+import LinearProgress from "@mui/material/LinearProgress";
+import Tooltip from "@mui/material/Tooltip";
+import { FiVolume2, FiMic, FiSquare, FiX, FiHelpCircle } from "react-icons/fi";
 
 interface CoachResponse {
   feedback: string;
@@ -33,10 +47,8 @@ export default function PracticeCard({
 }) {
   const [speechRate, setSpeechRate] = useState(0.9);
 
-  // Text-to-speech mutation
   const { speak } = useSpeakMutation();
 
-  // Speech evaluation mutation
   const {
     trigger: evaluate,
     isMutating: isEvaluating,
@@ -48,7 +60,6 @@ export default function PracticeCard({
     { audioData: string; referenceText: string }
   >(API_PATHS.SPEECH_EVALUATE, { method: "POST" }, { throwOnError: false });
 
-  // ESL Coach mutation
   const {
     trigger: getCoachHelp,
     isMutating: isLoadingCoach,
@@ -60,20 +71,16 @@ export default function PracticeCard({
   >(API_PATHS.SPEECH_COACH, { method: "POST" }, { throwOnError: false });
 
   async function handleRecordingStop(_blobUrl: string, blob: Blob) {
-    // Convert blob to base64
     const reader = new FileReader();
     const base64 = await new Promise<string>((resolve) => {
       reader.onloadend = () => resolve(reader.result as string);
       reader.readAsDataURL(blob);
     });
 
-    const result = await evaluate({
+    await evaluate({
       audioData: base64,
       referenceText: text,
     });
-    if (result) {
-      console.log("Evaluation response:", result);
-    }
   }
 
   const error = evalError ? "Evaluation failed" : null;
@@ -100,131 +107,174 @@ export default function PracticeCard({
     }
   }
 
+  const getScoreColor = (score: number) => {
+    if (score >= 80) return "success";
+    if (score >= 50) return "warning";
+    return "error";
+  };
+
   return (
-    <div className={styles.practiceCard}>
-      <div className={styles.cardContent}>
-        <div className={styles.promptRow}>
-          <p className={styles.prompt}>{text}</p>
+    <MuiCard sx={{ mb: 2 }}>
+      <CardContent>
+        {/* Header with text and delete button */}
+        <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", mb: 2 }}>
+          <Typography variant="h4" sx={{ fontWeight: 600, color: "text.primary", flex: 1 }}>
+            {text}
+          </Typography>
           {onDelete && (
-            <button
-              className={styles.deleteButton}
-              onClick={onDelete}
-              title="Remove word"
-            >
-              X
-            </button>
+            <Tooltip title="Remove word">
+              <IconButton onClick={onDelete} size="small" color="error">
+                <FiX size={18} />
+              </IconButton>
+            </Tooltip>
           )}
-        </div>
-        <div className={styles.buttonGroup}>
-          <button
-            className={`${styles.button} ${styles.listenButton}`}
+        </Box>
+
+        {/* Action buttons */}
+        <Box sx={{ display: "flex", gap: 1, mb: 2, flexWrap: "wrap", alignItems: "center" }}>
+          <Button
+            variant="outlined"
+            startIcon={<FiVolume2 />}
             onClick={() => speak(text, speechRate)}
+            sx={{ textTransform: "none" }}
           >
             Listen
-          </button>
-          <button
-            className={`${styles.button} ${styles.speakButton}`}
+          </Button>
+          <Button
+            variant={status === "recording" ? "contained" : "contained"}
+            color={status === "recording" ? "error" : "primary"}
+            startIcon={status === "recording" ? <FiSquare /> : <FiMic />}
             onClick={handleSpeak}
             disabled={isEvaluating}
+            sx={{ textTransform: "none" }}
           >
-            {status === "recording" ? "Stop" : isEvaluating ? "..." : "Speak"}
-          </button>
+            {status === "recording" ? "Stop" : isEvaluating ? "Evaluating..." : "Speak"}
+          </Button>
           {mediaBlobUrl && status !== "recording" && (
-            <audio src={mediaBlobUrl} controls />
+            <Box component="audio" src={mediaBlobUrl} controls sx={{ height: 36 }} />
           )}
-        </div>
-        <div className={styles.speedControl}>
-          <span className={styles.speedLabel}>
+        </Box>
+
+        {/* Speed control */}
+        <Box sx={{ mb: 2 }}>
+          <Typography variant="body2" color="text.secondary" gutterBottom>
             Speed: {speechRate.toFixed(1)}x
-          </span>
-          <input
-            type="range"
-            min="0.5"
-            max="1"
-            step="0.1"
+          </Typography>
+          <Slider
             value={speechRate}
-            onChange={(e) => setSpeechRate(parseFloat(e.target.value))}
-            className={styles.speedSlider}
+            onChange={(_, val) => setSpeechRate(val as number)}
+            min={0.5}
+            max={1}
+            step={0.1}
+            size="small"
+            sx={{ width: 200 }}
           />
-        </div>
-        <div className={styles.feedback}>
-          {status === "recording" && "Recording..."}
-          {isEvaluating && "Evaluating pronunciation..."}
-          {error && <span className={styles.error}>{error}</span>}
+        </Box>
+
+        {/* Feedback section */}
+        <Box sx={{ minHeight: 60 }}>
+          {status === "recording" && (
+            <Alert severity="info" sx={{ mb: 2 }}>Recording... Speak now!</Alert>
+          )}
+          {isEvaluating && <LinearProgress sx={{ mb: 2 }} />}
+          {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
 
           {evaluation && (
-            <div className={styles.evaluation}>
-              <div className={styles.scores}>
-                <span>Accuracy: {Math.round(evaluation.accuracyScore)}%</span>
-                <span>Fluency: {Math.round(evaluation.fluencyScore)}%</span>
-                <span>
-                  Overall: {Math.round(evaluation.pronunciationScore)}%
-                </span>
-              </div>
-              <div className={styles.wordsDetail}>
+            <Box>
+              <Divider sx={{ my: 2 }} />
+
+              {/* Scores */}
+              <Box sx={{ display: "flex", gap: 1, mb: 2, flexWrap: "wrap" }}>
+                <Chip
+                  label={`Accuracy: ${Math.round(evaluation.accuracyScore)}%`}
+                  color={getScoreColor(evaluation.accuracyScore)}
+                  size="small"
+                />
+                <Chip
+                  label={`Fluency: ${Math.round(evaluation.fluencyScore)}%`}
+                  color={getScoreColor(evaluation.fluencyScore)}
+                  size="small"
+                />
+                <Chip
+                  label={`Overall: ${Math.round(evaluation.pronunciationScore)}%`}
+                  color={getScoreColor(evaluation.pronunciationScore)}
+                  size="small"
+                  variant="filled"
+                />
+              </Box>
+
+              {/* Word breakdown */}
+              <Box sx={{ display: "flex", flexWrap: "wrap", gap: 2, mb: 2 }}>
                 {evaluation.words.map((word, i) => (
-                  <div key={i} className={styles.wordBlock}>
-                    <div className={styles.wordHeader}>
-                      <span className={styles.wordText}>{word.word}</span>
-                      <span
-                        className={styles.wordScore}
-                        style={{
-                          color:
-                            word.accuracyScore >= 80
-                              ? "green"
-                              : word.accuracyScore >= 50
-                                ? "orange"
-                                : "red",
-                        }}
-                      >
-                        {Math.round(word.accuracyScore)}%
-                      </span>
-                    </div>
-                    <div className={styles.phonemes}>
+                  <Box key={i} sx={{ textAlign: "center" }}>
+                    <Typography variant="body1" sx={{ fontWeight: 500 }}>
+                      {word.word}
+                    </Typography>
+                    <Typography
+                      variant="caption"
+                      sx={{
+                        color: word.accuracyScore >= 80 ? "success.main" : word.accuracyScore >= 50 ? "warning.main" : "error.main",
+                        fontWeight: 600,
+                      }}
+                    >
+                      {Math.round(word.accuracyScore)}%
+                    </Typography>
+                    <Box sx={{ display: "flex", gap: 0.5, justifyContent: "center", mt: 0.5 }}>
                       {word.phonemes?.map((p, j) => (
-                        <span
-                          key={j}
-                          className={styles.phoneme}
-                          title={`${toIpa(p.phoneme)}: ${Math.round(p.accuracyScore)}%`}
-                          style={{
-                            backgroundColor:
-                              p.accuracyScore >= 80
-                                ? "#22c55e"
-                                : p.accuracyScore >= 50
-                                  ? "#eab308"
-                                  : "#ef4444",
-                            color: "#ffffff",
-                          }}
-                        >
-                          {toIpa(p.phoneme)}
-                        </span>
+                        <Tooltip key={j} title={`${Math.round(p.accuracyScore)}%`}>
+                          <Box
+                            sx={{
+                              px: 0.75,
+                              py: 0.25,
+                              borderRadius: 1,
+                              fontSize: "0.75rem",
+                              fontWeight: 500,
+                              bgcolor: p.accuracyScore >= 80 ? "success.main" : p.accuracyScore >= 50 ? "warning.main" : "error.main",
+                              color: "white",
+                            }}
+                          >
+                            {toIpa(p.phoneme)}
+                          </Box>
+                        </Tooltip>
                       ))}
-                    </div>
-                  </div>
+                    </Box>
+                  </Box>
                 ))}
-              </div>
-              <button
-                className={styles.helpButton}
+              </Box>
+
+              {/* Help button */}
+              <Button
+                variant="outlined"
+                color="secondary"
+                startIcon={<FiHelpCircle />}
                 onClick={handleGetHelp}
                 disabled={isLoadingCoach}
+                sx={{ textTransform: "none", mb: 2 }}
               >
                 {isLoadingCoach ? "Getting help..." : "Help me improve"}
-              </button>
+              </Button>
+
+              {/* Coach feedback */}
               {coachData && (
-                <div className={styles.coachFeedback}>
-                  <div className={styles.coachHeader}>ESL Coach</div>
-                  <div className={styles.coachText}>{coachData.feedback}</div>
-                </div>
+                <Alert severity="info" icon={false} sx={{ mt: 2 }}>
+                  <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 1 }}>
+                    ESL Coach
+                  </Typography>
+                  <Typography variant="body1" sx={{ lineHeight: 1.6 }}>
+                    {coachData.feedback}
+                  </Typography>
+                </Alert>
               )}
-            </div>
+            </Box>
           )}
-          {!mediaBlobUrl &&
-            !isEvaluating &&
-            !evaluation &&
-            status !== "recording" &&
-            "Feedback will appear here"}
-        </div>
-      </div>
-    </div>
+
+          {!mediaBlobUrl && !isEvaluating && !evaluation && status !== "recording" && (
+            <Typography variant="body2" color="text.secondary">
+              Feedback will appear here after you speak
+            </Typography>
+          )}
+        </Box>
+      </CardContent>
+    </MuiCard>
   );
 }

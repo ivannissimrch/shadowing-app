@@ -1,7 +1,0 @@
-.logoutButton {
-  padding: var(--spacing-10) var(--spacing-15);
-}
-
-.logoutButton:hover {
-  text-decoration: underline;
-}

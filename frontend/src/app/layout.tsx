@@ -1,23 +1,23 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
+
+// Berry Theme - Roboto font
+import "@fontsource/roboto/300.css";
+import "@fontsource/roboto/400.css";
+import "@fontsource/roboto/500.css";
+import "@fontsource/roboto/700.css";
+
+// Berry Theme Provider
+import ThemeProvider from "../themes/ThemeProvider";
+
+// App Contexts
 import AuthContextProvider from "./AuthContext";
 import AlertContextProvider from "./AlertContext";
 import AlertDialog from "./components/ui/AlertDialog";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
-
 export const metadata: Metadata = {
-  title: "Lynnex ESL",
+  title: "ShadowSpeak",
   description: "English Pronunciation Learning",
 };
 
@@ -39,13 +39,15 @@ export default function RootLayout({
           `}
         </Script>
       </head>
-      <body className={`${geistSans.variable} ${geistMono.variable}`}>
-        <AuthContextProvider>
-          <AlertContextProvider>
-            {children}
-            <AlertDialog />
-          </AlertContextProvider>
-        </AuthContextProvider>
+      <body>
+        <ThemeProvider>
+          <AuthContextProvider>
+            <AlertContextProvider>
+              {children}
+              <AlertDialog />
+            </AlertContextProvider>
+          </AuthContextProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

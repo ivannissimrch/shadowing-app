@@ -25,19 +25,19 @@ export default function AlertDialog() {
       <DialogTitle
         id="alert-dialog-title"
         sx={{
-          fontWeight: 700,
-          fontSize: "20px",
-          color: "#1f2937",
-          paddingBottom: "8px",
+          fontWeight: 600,
+          fontSize: "1.25rem",
+          color: "text.primary",
+          pb: 1,
         }}
       >
         {alertDialogTitle}
       </DialogTitle>
 
-      <DialogContent sx={{ padding: "24px" }}>
+      <DialogContent sx={{ p: 3 }}>
         <DialogContentText
           id="alert-dialog-description"
-          sx={{ color: "#374151", fontSize: "16px" }}
+          sx={{ color: "text.secondary", fontSize: "0.875rem" }}
         >
           {alertDialogMessage}
         </DialogContentText>

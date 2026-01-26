@@ -1,7 +1,5 @@
-import { Suspense } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import LessonList from "./LessonList";
-import SkeletonLoader from "../ui/SkeletonLoader";
 import ErrorFallback from "../ui/ErrorFallback";
 import { mutate } from "swr";
 import { API_PATHS } from "../../constants/apiKeys";
@@ -20,9 +18,7 @@ export default function Lessons({ onAssignLesson }: LessonsProps) {
         mutate(API_PATHS.ALL_LESSONS, undefined, { revalidate: true });
       }}
     >
-      <Suspense fallback={<SkeletonLoader />}>
-        <LessonList onAssignLesson={onAssignLesson} />
-      </Suspense>
+      <LessonList onAssignLesson={onAssignLesson} />
     </ErrorBoundary>
   );
 }

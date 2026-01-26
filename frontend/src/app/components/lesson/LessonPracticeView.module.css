@@ -1,8 +1,0 @@
-.error {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: var(--spacing-15);
-  width: 100%;
-  margin: 0 auto 0 auto;
-  position: relative;
-}

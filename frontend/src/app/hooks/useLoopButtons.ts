@@ -25,6 +25,10 @@ export default function useLoopButtons(
     }
   }, [playerRef]);
 
+  const setRange = useCallback((startTime: number, endTime: number) => {
+    dispatch({ type: "SET_RANGE", startTime, endTime });
+  }, []);
+
   const toggleLoop = useCallback(() => {
     if (state.status === "ready") {
       dispatch({ type: "START_LOOP" });
@@ -70,6 +74,7 @@ export default function useLoopButtons(
   return {
     updateStartAtCurrentTime,
     updateEndAtCurrentTime,
+    setRange,
     toggleLoop,
     clearLoop,
     state,

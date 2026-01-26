@@ -1,10 +1,8 @@
 "use client";
 import TeacherLessonDetails from "@/app/components/teacher/TeacherLessonDetails";
-import { Suspense } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { use } from "react";
 import ErrorFallback from "@/app/components/ui/ErrorFallback";
-import PracticePageSkeleton from "@/app/components/ui/PracticePageSkeleton";
 import { mutate } from "swr/_internal";
 import { API_PATHS } from "@/app/constants/apiKeys";
 
@@ -32,9 +30,7 @@ export default function StudentLessonPage({ params }: StudentLessonPageProps) {
         );
       }}
     >
-      <Suspense fallback={<PracticePageSkeleton />}>
-        <TeacherLessonDetails idInfo={data} />
-      </Suspense>
+      <TeacherLessonDetails idInfo={data} />
     </ErrorBoundary>
   );
 }
