@@ -65,7 +65,7 @@ export const palette = {
   // Paper and background colors
   background: {
     paper: '#ffffff',      // White - for cards/content
-    default: '#eef2f6',    // grey.100 - page background (more contrast)
+    default: '#e3e8ef',    // grey.200 - page background (better contrast on Mac)
   },
 
   // Text colors
