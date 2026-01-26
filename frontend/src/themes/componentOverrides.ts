@@ -86,10 +86,11 @@ export const componentOverrides = (theme: Theme, borderRadius: number): Componen
     styleOverrides: {
       root: {
         borderRadius: `${borderRadius}px`,
-        boxShadow: '0px 2px 14px 0px rgba(32, 40, 45, 0.08)',
-        border: `1px solid ${palette.grey[100]}`,
+        // Stronger shadow for better visibility on Mac displays (Display P3 gamma)
+        boxShadow: '0px 2px 8px 0px rgba(0, 0, 0, 0.12)',
+        border: `1px solid ${palette.grey[200]}`,
         '&:hover': {
-          boxShadow: '0px 4px 20px 0px rgba(32, 40, 45, 0.12)',
+          boxShadow: '0px 4px 16px 0px rgba(0, 0, 0, 0.15)',
         },
       },
     },
@@ -128,12 +129,14 @@ export const componentOverrides = (theme: Theme, borderRadius: number): Componen
     styleOverrides: {
       root: {
         borderRadius: `${borderRadius}px`,
+        // Subtle border for Mac display compatibility
+        border: `1px solid ${palette.grey[200]}`,
       },
       elevation1: {
-        boxShadow: '0px 2px 14px 0px rgba(32, 40, 45, 0.08)',
+        boxShadow: '0px 2px 8px 0px rgba(0, 0, 0, 0.12)',
       },
       elevation2: {
-        boxShadow: '0px 4px 20px 0px rgba(32, 40, 45, 0.12)',
+        boxShadow: '0px 4px 16px 0px rgba(0, 0, 0, 0.15)',
       },
     },
   },
