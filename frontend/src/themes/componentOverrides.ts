@@ -142,30 +142,31 @@ export const componentOverrides = (theme: Theme, borderRadius: number): Componen
   },
 
   // ===== CHIPS =====
+  // Colors adjusted for WCAG AA contrast (4.5:1 minimum)
   MuiChip: {
     styleOverrides: {
       root: {
         borderRadius: `${borderRadius}px`,
-        fontWeight: 500,
+        fontWeight: 600,
         '&.MuiChip-colorPrimary': {
           backgroundColor: palette.primary.light,
-          color: palette.primary.dark,
+          color: palette.primary[800],  // Darker for contrast
         },
         '&.MuiChip-colorSecondary': {
           backgroundColor: palette.secondary.light,
-          color: palette.secondary.dark,
+          color: palette.secondary[800],  // Darker for contrast
         },
         '&.MuiChip-colorSuccess': {
           backgroundColor: palette.success.light,
-          color: palette.success.dark,
+          color: '#1b5e20',  // Dark green for 4.5:1 contrast
         },
         '&.MuiChip-colorError': {
           backgroundColor: palette.error.light,
-          color: palette.error.dark,
+          color: '#b71c1c',  // Dark red for contrast
         },
         '&.MuiChip-colorWarning': {
           backgroundColor: palette.warning.light,
-          color: palette.warning.dark,
+          color: '#5d4037',  // Brown for contrast on yellow
         },
       },
     },
@@ -187,6 +188,7 @@ export const componentOverrides = (theme: Theme, borderRadius: number): Componen
   },
 
   // ===== ALERT =====
+  // Contrast adjusted for WCAG AA
   MuiAlert: {
     styleOverrides: {
       root: {
@@ -194,19 +196,19 @@ export const componentOverrides = (theme: Theme, borderRadius: number): Componen
       },
       standardSuccess: {
         backgroundColor: palette.success.light,
-        color: palette.success.dark,
+        color: '#1b5e20',  // Dark green for contrast
       },
       standardError: {
         backgroundColor: palette.error.light,
-        color: palette.error.dark,
+        color: '#b71c1c',  // Dark red for contrast
       },
       standardWarning: {
         backgroundColor: palette.warning.light,
-        color: palette.grey[700],
+        color: '#5d4037',  // Brown for contrast on yellow
       },
       standardInfo: {
         backgroundColor: palette.primary.light,
-        color: palette.primary.dark,
+        color: palette.primary[800],  // Darker blue for contrast
       },
     },
   },
@@ -221,6 +223,7 @@ export const componentOverrides = (theme: Theme, borderRadius: number): Componen
   },
 
   // ===== LIST ITEMS (for sidebar menus) =====
+  // Contrast adjusted for WCAG AA
   MuiListItemButton: {
     styleOverrides: {
       root: {
@@ -229,12 +232,12 @@ export const componentOverrides = (theme: Theme, borderRadius: number): Componen
         padding: '10px 16px',
         '&.Mui-selected': {
           backgroundColor: palette.primary.light,
-          color: palette.primary.main,
+          color: palette.primary[800],  // Darker blue for contrast
           '&:hover': {
             backgroundColor: palette.primary.light,
           },
           '& .MuiListItemIcon-root': {
-            color: palette.primary.main,
+            color: palette.primary[800],  // Darker blue for contrast
           },
         },
         '&:hover': {

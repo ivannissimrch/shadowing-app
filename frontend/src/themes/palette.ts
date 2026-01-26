@@ -3,12 +3,13 @@
 
 export const palette = {
   // Primary - Blue (used for main actions, links, highlights)
+  // Darker blue for WCAG AA contrast (4.5:1 with white)
   primary: {
     light: '#e3f2fd',
     200: '#90caf9',
-    main: '#2196f3',
-    dark: '#1e88e5',
-    800: '#1565c0',
+    main: '#1976d2',  // Darker blue for better contrast
+    dark: '#1565c0',
+    800: '#0d47a1',
   },
 
   // Secondary - Purple (used for accents, secondary actions)
@@ -20,12 +21,13 @@ export const palette = {
     800: '#4527a0',
   },
 
-  // Success - Green
+  // Success - Green (with accessible contrast)
   success: {
     light: '#b9f6ca',
     200: '#69f0ae',
-    main: '#00e676',
-    dark: '#00c853',
+    main: '#2e7d32',  // Darker green for better contrast
+    dark: '#1b5e20',
+    contrastText: '#1b5e20',  // Dark green text on light bg
   },
 
   // Error - Red
@@ -35,11 +37,12 @@ export const palette = {
     dark: '#c62828',
   },
 
-  // Warning - Yellow/Orange
+  // Warning - Yellow/Orange (with accessible contrast)
   warning: {
     light: '#fff8e1',
-    main: '#ffe57f',
-    dark: '#ffc107',
+    main: '#f9a825',  // Darker amber for better contrast
+    dark: '#f57f17',
+    contrastText: '#5d4037',  // Brown text on yellow bg for contrast
   },
 
   // Orange (extra color Berry uses)
