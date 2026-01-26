@@ -6,8 +6,8 @@ body {
 }
 
 body {
-  /* Berry grey.200 - better contrast with white cards on Mac displays */
-  background-color: #e3e8ef;
+  /* Darker grey for Mac display compatibility */
+  background-color: #dde3eb;
   min-height: 100vh;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
