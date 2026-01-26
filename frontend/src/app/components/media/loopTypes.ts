@@ -9,6 +9,7 @@ export type LoopState =
 export type LoopAction =
   | { type: "SET_START"; time: number }
   | { type: "SET_END"; time: number }
+  | { type: "SET_RANGE"; startTime: number; endTime: number }
   | { type: "START_LOOP" }
   | { type: "STOP_LOOP" }
   | { type: "CLEAR" };

@@ -5,17 +5,39 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import { styled } from "@mui/material/styles";
 
+// Berry theme colors
+const colors = {
+  primary: {
+    main: "#2196f3",
+    dark: "#1e88e5",
+    light: "#e3f2fd",
+  },
+  text: {
+    primary: "#364152",
+    secondary: "#697586",
+  },
+  grey: {
+    100: "#eef2f6",
+    200: "#e3e8ef",
+    300: "#cdd5df",
+    400: "#9da4ae",
+  },
+  error: {
+    main: "#f44336",
+    dark: "#c62828",
+  },
+};
+
 export const StyledDialog = styled(Dialog)(() => ({
   "& .MuiDialog-paper": {
-    borderRadius: "16px",
+    borderRadius: "12px",
     minWidth: "400px",
     maxWidth: "500px",
-    boxShadow: "0 20px 50px rgba(0, 0, 0, 0.2)",
+    boxShadow: "0 8px 32px rgba(0, 0, 0, 0.12)",
     backgroundColor: "#ffffff",
   },
   "& .MuiBackdrop-root": {
-    backgroundColor: "rgba(15, 23, 42, 0.6)",
-    backdropFilter: "blur(8px)",
+    backgroundColor: "rgba(54, 65, 82, 0.5)",
   },
 }));
 
@@ -32,25 +54,25 @@ export const StyledDialogContent = styled(DialogContent)({
     gap: "8px",
   },
   "& label": {
-    fontWeight: 600,
-    color: "#1e293b",
+    fontWeight: 500,
+    color: colors.text.primary,
     fontSize: "14px",
   },
   "& input": {
     padding: "12px 16px",
-    border: "2px solid #e2e8f0",
-    borderRadius: "10px",
-    fontSize: "16px",
+    border: `1px solid ${colors.grey[200]}`,
+    borderRadius: "8px",
+    fontSize: "14px",
     backgroundColor: "#ffffff",
-    color: "#1e293b",
-    transition: "all 0.2s ease",
+    color: colors.text.primary,
+    transition: "border-color 0.2s ease",
     "&:focus": {
       outline: "none",
-      borderColor: "#2563eb",
-      boxShadow: "0 0 0 3px rgba(37, 99, 235, 0.1)",
+      borderColor: colors.primary.main,
+      boxShadow: `0 0 0 2px ${colors.primary.light}`,
     },
     "&::placeholder": {
-      color: "#94a3b8",
+      color: colors.grey[400],
     },
   },
 });
@@ -62,76 +84,67 @@ export const StyledDialogActions = styled(DialogActions)({
 });
 
 export const StyledButton = styled(Button)(({ variant }) => ({
-  borderRadius: "10px",
-  padding: "12px 24px",
-  fontWeight: 600,
+  borderRadius: "8px",
+  padding: "10px 20px",
+  fontWeight: 500,
   textTransform: "none",
-  fontSize: "15px",
-  transition: "all 0.2s ease",
+  fontSize: "14px",
   ...(variant === "contained" && {
-    background: "var(--color-primary)",
-    boxShadow: "0 4px 14px rgba(37, 99, 235, 0.4)",
+    backgroundColor: colors.primary.main,
+    color: "#ffffff",
+    boxShadow: "none",
     "&:hover": {
-      background: "var(--color-primary-hover)",
-      boxShadow: "0 6px 20px rgba(37, 99, 235, 0.5)",
-    },
-    "&:active": {
-      transform: "translateY(0)",
+      backgroundColor: colors.primary.dark,
+      boxShadow: "none",
     },
   }),
   ...(variant === "outlined" && {
-    borderColor: "var(--color-border-gray)",
-    borderWidth: "2px",
-    color: "#475569",
+    borderColor: colors.grey[300],
+    color: colors.text.secondary,
     "&:hover": {
-      borderColor: "#94a3b8",
-      backgroundColor: "#f8fafc",
-      borderWidth: "2px",
+      borderColor: colors.grey[400],
+      backgroundColor: colors.grey[100],
     },
   }),
 }));
 
 export const StyledErrorButton = styled(Button)(({ variant }) => ({
-  borderRadius: "10px",
-  padding: "12px 24px",
-  fontWeight: 600,
+  borderRadius: "8px",
+  padding: "10px 20px",
+  fontWeight: 500,
   textTransform: "none",
-  fontSize: "15px",
-  transition: "all 0.2s ease",
+  fontSize: "14px",
   ...(variant === "contained" && {
-    background: "#dc2626",
-    boxShadow: "0 4px 14px rgba(220, 38, 38, 0.4)",
+    backgroundColor: colors.error.main,
+    color: "#ffffff",
+    boxShadow: "none",
     "&:hover": {
-      background: "#b91c1c",
-      boxShadow: "0 6px 20px rgba(220, 38, 38, 0.5)",
-    },
-    "&:active": {
-      transform: "translateY(0)",
+      backgroundColor: colors.error.dark,
+      boxShadow: "none",
     },
   }),
 }));
 
 export const StyledFormControl = styled(FormControl)({
   "& .MuiOutlinedInput-root": {
-    borderRadius: "10px",
+    borderRadius: "8px",
     backgroundColor: "#ffffff",
     "& fieldset": {
-      borderColor: "#e2e8f0",
-      borderWidth: "2px",
+      borderColor: colors.grey[200],
     },
     "&:hover fieldset": {
-      borderColor: "#cbd5e1",
+      borderColor: colors.grey[300],
     },
     "&.Mui-focused fieldset": {
-      borderColor: "#2563eb",
-      boxShadow: "0 0 0 3px rgba(37, 99, 235, 0.1)",
+      borderColor: colors.primary.main,
+      boxShadow: `0 0 0 2px ${colors.primary.light}`,
     },
   },
   "& .MuiInputLabel-root": {
-    color: "#1e293b",
-    fontWeight: 600,
+    color: colors.text.primary,
+    fontWeight: 500,
     "&.Mui-focused": {
-      color: "#2563eb",
+      color: colors.primary.main,
     },
   },
 });

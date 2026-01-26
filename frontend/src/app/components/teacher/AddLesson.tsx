@@ -1,9 +1,11 @@
 "use client";
 import DialogTitle from "@mui/material/DialogTitle";
+import Box from "@mui/material/Box";
+import Alert from "@mui/material/Alert";
 import useAlertMessageStyles from "../../hooks/useAlertMessageStyles";
 import { ErrorBoundary } from "react-error-boundary";
-import styles from "./AddLesson.module.css";
 import useAddLesson from "../../hooks/useAddLesson";
+import { FiUpload } from "react-icons/fi";
 
 interface AddLessonProps {
   isAddLessonDialogOpen: boolean;
@@ -44,7 +46,12 @@ export default function AddLesson({
       >
         <DialogTitle
           id="add-lesson-dialog-title"
-          className={styles["dialog-title"]}
+          sx={{
+            fontWeight: 600,
+            fontSize: "1.25rem",
+            color: "text.primary",
+            pb: 1,
+          }}
         >
           Add New Lesson
         </DialogTitle>
@@ -90,28 +97,48 @@ export default function AddLesson({
                 required
                 aria-required="true"
                 onChange={handleImageUpload}
-                className={styles["visually-hidden"]}
+                style={{
+                  position: "absolute",
+                  width: 1,
+                  height: 1,
+                  padding: 0,
+                  margin: -1,
+                  overflow: "hidden",
+                  clip: "rect(0, 0, 0, 0)",
+                  whiteSpace: "nowrap",
+                  border: 0,
+                }}
               />
-              <label
+              <Box
+                component="label"
                 htmlFor="image-upload"
-                className={`${styles["file-upload-button"]} ${
-                  selectedImage
-                    ? styles["file-upload-button--selected"]
-                    : styles["file-upload-button--empty"]
-                }`}
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: 1,
+                  p: 1.5,
+                  border: "1px solid",
+                  borderColor: selectedImage ? "primary.main" : "grey.300",
+                  borderRadius: 1,
+                  cursor: "pointer",
+                  color: selectedImage ? "text.primary" : "text.secondary",
+                  bgcolor: selectedImage ? "primary.light" : "transparent",
+                  transition: "all 0.2s",
+                  "&:hover": {
+                    borderColor: "primary.main",
+                    bgcolor: "primary.light",
+                  },
+                }}
               >
+                <FiUpload size={16} />
                 {selectedImage ? selectedImage.name : "Choose an image file..."}
-              </label>
+              </Box>
             </div>
             {errorMessage && (
-              <div
-                id="add-lesson-error"
-                role="alert"
-                aria-live="assertive"
-                className={styles["error-message"]}
-              >
+              <Alert severity="error" sx={{ mt: 2 }}>
                 {errorMessage}
-              </div>
+              </Alert>
             )}
           </form>
         </StyledDialogContent>

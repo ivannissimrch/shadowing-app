@@ -1,6 +1,7 @@
 import { Lesson } from "../../Types";
-import styles from "./SegmentPlayer.module.css";
 import YouTubePlayer from "./YouTubePlayer";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
 
 interface SegmentPlayerProps {
   selectedLesson: Lesson | undefined;
@@ -8,12 +9,16 @@ interface SegmentPlayerProps {
 
 export default function SegmentPlayer({ selectedLesson }: SegmentPlayerProps) {
   if (!selectedLesson) {
-    return <div>Lesson not found</div>;
+    return (
+      <Box sx={{ p: 3, textAlign: "center" }}>
+        <Typography color="text.secondary">Lesson not found</Typography>
+      </Box>
+    );
   }
 
   return (
-    <div className={styles.videoBox}>
+    <Box sx={{ width: "100%" }}>
       <YouTubePlayer selectedLesson={selectedLesson} />
-    </div>
+    </Box>
   );
 }

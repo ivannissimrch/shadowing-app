@@ -1,10 +1,16 @@
-import styles from "./FeedBack.module.css";
 import { useState } from "react";
 import { useSWRMutationHook } from "@/app/hooks/useSWRMutation";
 import { API_PATHS } from "@/app/constants/apiKeys";
 import { mutate } from "swr";
 import { Lesson } from "@/app/Types";
-import { Button } from "../ui/Button";
+
+import Box from "@mui/material/Box";
+import TextField from "@mui/material/TextField";
+import Button from "@mui/material/Button";
+import Typography from "@mui/material/Typography";
+import Alert from "@mui/material/Alert";
+import Paper from "@mui/material/Paper";
+import { FiSend } from "react-icons/fi";
 
 interface FeedBackProps {
   idsInfo: { studentId: string; lessonId: string };
@@ -43,36 +49,46 @@ export default function FeedBack({ idsInfo, selectedLesson }: FeedBackProps) {
 
   if (selectedLesson?.feedback !== null) {
     return (
-      <section className={styles["feedback-container"]}>
-        <label>{selectedLesson?.feedback}</label>
-      </section>
+      <Paper sx={{ p: 3, bgcolor: "primary.light" }}>
+        <Typography variant="subtitle2" sx={{ fontWeight: 600, color: "primary.dark", mb: 1 }}>
+          Your Feedback
+        </Typography>
+        <Typography variant="body2" color="text.primary">
+          {selectedLesson?.feedback}
+        </Typography>
+      </Paper>
     );
   }
 
   return (
-    <form className={styles["feedback-container"]} onSubmit={handleSubmit}>
-      <textarea
+    <Box component="form" onSubmit={handleSubmit}>
+      <TextField
+        fullWidth
+        multiline
         rows={4}
-        className={styles["feedback-input"]}
         placeholder="Leave your feedback here..."
+        value={feedback}
         onChange={(event) => {
           setFeedback(event.target.value);
           setErrorMessage("");
         }}
+        sx={{ mb: 2 }}
       />
       <Button
         type="submit"
-        variant="primary"
-        className={styles["feedback-button"]}
-        disabled={isMutating}
+        variant="contained"
+        color="primary"
+        disabled={isMutating || !feedback.trim()}
+        startIcon={<FiSend size={16} />}
+        sx={{ textTransform: "none", fontWeight: 500 }}
       >
         {isMutating ? "Submitting..." : "Submit Feedback"}
       </Button>
       {errorMessage && (
-        <p className={styles["error-message"]} role="alert">
+        <Alert severity="error" sx={{ mt: 2 }}>
           {errorMessage}
-        </p>
+        </Alert>
       )}
-    </form>
+    </Box>
   );
 }

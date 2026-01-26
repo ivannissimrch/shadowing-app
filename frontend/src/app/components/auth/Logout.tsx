@@ -1,8 +1,8 @@
 "use client";
 import { useRouter } from "next/navigation";
 import { useAuthContext } from "../../AuthContext";
-import { Button } from "../ui/Button";
-import styles from "./Logout.module.css";
+import Button from "@mui/material/Button";
+import { FiLogOut } from "react-icons/fi";
 
 export default function Logout() {
   const { updateToken } = useAuthContext();
@@ -15,9 +15,20 @@ export default function Logout() {
 
   return (
     <Button
-      variant="secondary"
+      variant="outlined"
+      color="inherit"
       onClick={handleLogout}
-      className={styles.logoutButton}
+      startIcon={<FiLogOut size={16} />}
+      sx={{
+        textTransform: "none",
+        fontWeight: 500,
+        borderColor: "grey.300",
+        color: "text.secondary",
+        "&:hover": {
+          borderColor: "grey.400",
+          bgcolor: "grey.100",
+        },
+      }}
     >
       Logout
     </Button>

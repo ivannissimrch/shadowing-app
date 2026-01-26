@@ -2,12 +2,14 @@
 import { useSWRAxios } from "../../hooks/useSWRAxios";
 import { Lesson, Student } from "../../Types";
 import Card from "../ui/Card";
-import styles from "./TeacherLessonsList.module.css";
 import { API_PATHS } from "../../constants/apiKeys";
 import { useState } from "react";
 import UnassignLessonModal from "./UnassignLessonModal";
-import { MdClose } from "react-icons/md"; // Material Design close icon
 import CardGrid from "../ui/CardGrid";
+import Box from "@mui/material/Box";
+import IconButton from "@mui/material/IconButton";
+import Tooltip from "@mui/material/Tooltip";
+import { FiX } from "react-icons/fi";
 
 export default function TeacherLessonsList({ id }: { id: string }) {
   const { data: lessons } = useSWRAxios<Lesson[]>(
@@ -30,25 +32,37 @@ export default function TeacherLessonsList({ id }: { id: string }) {
       <CardGrid>
         {lessons &&
           lessons.map((lesson: Lesson) => (
-            <div key={lesson.id} className={styles.lessonCardWrapper}>
+            <Box key={lesson.id} sx={{ position: "relative" }}>
               <Card
                 lesson={lesson}
                 linkPath={`/teacher/student/${id}/lesson/${lesson.id}`}
               />
-              <button
-                onClick={() =>
-                  setUnassignModal({
-                    isOpen: true,
-                    lessonId: lesson.id,
-                    lessonTitle: lesson.title,
-                  })
-                }
-                className={styles.unassignButton}
-                aria-label={`Remove ${lesson.title} from student`}
-              >
-                <MdClose size={20} />
-              </button>
-            </div>
+              <Tooltip title="Remove from student">
+                <IconButton
+                  onClick={() =>
+                    setUnassignModal({
+                      isOpen: true,
+                      lessonId: lesson.id,
+                      lessonTitle: lesson.title,
+                    })
+                  }
+                  aria-label={`Remove ${lesson.title} from student`}
+                  size="small"
+                  sx={{
+                    position: "absolute",
+                    top: 8,
+                    left: 8,
+                    bgcolor: "rgba(0, 0, 0, 0.5)",
+                    color: "white",
+                    "&:hover": {
+                      bgcolor: "error.main",
+                    },
+                  }}
+                >
+                  <FiX size={16} />
+                </IconButton>
+              </Tooltip>
+            </Box>
           ))}
       </CardGrid>
 

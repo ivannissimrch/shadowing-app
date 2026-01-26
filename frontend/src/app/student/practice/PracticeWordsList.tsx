@@ -1,11 +1,14 @@
 "use client";
 import { useState } from "react";
 import { mutate } from "swr";
-import styles from "./page.module.css";
 import api from "../../helpers/axiosFetch";
 import { API_PATHS } from "../../constants/apiKeys";
 import PracticeCard from "@/app/components/ui/PracticeCard";
 import { useSWRAxios } from "../../hooks/useSWRAxios";
+
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import Alert from "@mui/material/Alert";
 
 interface PracticeWord {
   id: number;
@@ -34,16 +37,24 @@ export default function PracticeWordsList() {
 
   if (!words || words.length === 0) {
     return (
-      <p className={styles.emptyMessage}>
+      <Typography
+        variant="body1"
+        color="text.secondary"
+        sx={{ textAlign: "center", py: 4 }}
+      >
         No practice words yet. Add some above!
-      </p>
+      </Typography>
     );
   }
 
   return (
     <>
-      {deleteError && <p className={styles.errorMessage}>{deleteError}</p>}
-      <div className={styles.practiceList}>
+      {deleteError && (
+        <Alert severity="error" sx={{ mb: 2 }}>
+          {deleteError}
+        </Alert>
+      )}
+      <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
         {words.map((word) => (
           <PracticeCard
             key={word.id}
@@ -51,7 +62,7 @@ export default function PracticeWordsList() {
             onDelete={() => handleDeleteWord(word.id)}
           />
         ))}
-      </div>
+      </Box>
     </>
   );
 }

@@ -73,10 +73,10 @@ export default function DeleteLessonModal({
       <DialogTitle
         id="delete-lesson-dialog-title"
         sx={{
-          fontWeight: 700,
-          fontSize: "20px",
-          color: "#1f2937",
-          paddingBottom: "8px",
+          fontWeight: 600,
+          fontSize: "1.25rem",
+          color: "text.primary",
+          pb: 1,
         }}
       >
         Delete Lesson

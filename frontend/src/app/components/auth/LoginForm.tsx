@@ -1,21 +1,30 @@
 "use client";
-import styles from "./LoginForm.module.css";
 import { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { useAuthContext } from "../../AuthContext";
-import { MdOutlineRemoveRedEye } from "react-icons/md";
 import redirectBasedOnRole from "../../helpers/redirectBasedOnRole";
 import logger from "../../helpers/logger";
 import { AuthResponse } from "@/app/Types";
 import { useSWRMutationHook } from "@/app/hooks/useSWRMutation";
-import { Button } from "../ui/Button";
+
+import Box from "@mui/material/Box";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import TextField from "@mui/material/TextField";
+import Button from "@mui/material/Button";
+import Typography from "@mui/material/Typography";
+import InputAdornment from "@mui/material/InputAdornment";
+import IconButton from "@mui/material/IconButton";
+import Alert from "@mui/material/Alert";
+import CircularProgress from "@mui/material/CircularProgress";
+import { FiEye, FiEyeOff, FiLogIn } from "react-icons/fi";
 
 export default function LoginForm() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
   const { updateToken, token } = useAuthContext();
-  const [passwordType, setPasswordType] = useState("password");
+  const [showPassword, setShowPassword] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const { isMutating, trigger } = useSWRMutationHook<
     AuthResponse,
@@ -24,10 +33,11 @@ export default function LoginForm() {
   const [isNavigating, setIsNavigating] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
+  const isLoading = isMutating || isNavigating;
+
   useEffect(() => {
     try {
       if (token) {
-        // If there's already a token, redirect based on role
         const route = redirectBasedOnRole(token);
         router.push(route);
       }
@@ -66,82 +76,126 @@ export default function LoginForm() {
   }
 
   return (
-    <section className={styles["form-container"]}>
-      <h1>Welcome</h1>
-      <form className={styles.form} onSubmit={handleSubmit}>
-        <label htmlFor="username">Username:</label>
-        <input
-          disabled={isMutating || isNavigating}
-          ref={inputRef}
-          type="text"
-          name="username"
-          id="username"
-          placeholder="Enter your username"
-          className={styles.input}
-          required
-          aria-required="true"
-          aria-invalid={errorMessage ? "true" : "false"}
-          aria-describedby={errorMessage ? "login-error" : undefined}
-          value={username}
-          autoComplete="off"
-          onChange={(e) => {
-            setUsername(e.target.value);
-            setErrorMessage("");
-          }}
-        />
-        <label htmlFor="password">Password:</label>
-        <div className={styles.passwordContainer}>
-          <input
-            disabled={isMutating || isNavigating}
-            value={password}
-            onChange={(e) => {
-              setPassword(e.target.value);
-              setErrorMessage("");
-            }}
-            type={passwordType}
-            name="password"
-            id="password"
-            placeholder="Enter your password"
-            className={styles.input}
-            required
-            aria-required="true"
-            aria-invalid={errorMessage ? "true" : "false"}
-            aria-describedby={errorMessage ? "login-error" : undefined}
-            autoComplete="off"
-          />
-          <button
-            disabled={isMutating || isNavigating}
-            type="button"
-            className={styles.eye}
-            onClick={() =>
-              setPasswordType(passwordType === "password" ? "text" : "password")
-            }
-            aria-label={
-              passwordType === "password" ? "Show password" : "Hide password"
-            }
-          >
-            <MdOutlineRemoveRedEye />
-          </button>
-        </div>
+    <Box
+      sx={{
+        minHeight: "100vh",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        bgcolor: "background.default",
+        p: 2,
+      }}
+    >
+      <Card
+        sx={{
+          maxWidth: 400,
+          width: "100%",
+          boxShadow: "0 4px 20px rgba(0, 0, 0, 0.08)",
+        }}
+      >
+        <CardContent sx={{ p: 4 }}>
+          {/* Logo/Brand */}
+          <Box sx={{ textAlign: "center", mb: 4 }}>
+            <Typography
+              variant="h4"
+              component="h1"
+              sx={{
+                fontWeight: 700,
+                color: "primary.main",
+                mb: 1,
+              }}
+            >
+              ShadowSpeak
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              Sign in to continue
+            </Typography>
+          </Box>
 
-        <Button
-          variant="primary"
-          type="submit"
-          disabled={isMutating || isNavigating}
-        >
-          {isMutating || isNavigating ? "Logging in..." : "Login"}
-        </Button>
-      </form>
-      {errorMessage && (
-        <p
-          id="login-error"
-          role="alert"
-          aria-live="assertive"
-          className={styles.error}
-        >
-          {errorMessage}
-        </p>
-      )}
-    </section>
+          {/* Error Alert */}
+          {errorMessage && (
+            <Alert severity="error" sx={{ mb: 3 }}>
+              {errorMessage}
+            </Alert>
+          )}
+
+          {/* Form */}
+          <Box component="form" onSubmit={handleSubmit}>
+            <TextField
+              fullWidth
+              label="Username"
+              id="username"
+              name="username"
+              placeholder="Enter your username"
+              value={username}
+              onChange={(e) => {
+                setUsername(e.target.value);
+                setErrorMessage("");
+              }}
+              disabled={isLoading}
+              required
+              inputRef={inputRef}
+              autoComplete="username"
+              sx={{ mb: 2.5 }}
+            />
+
+            <TextField
+              fullWidth
+              label="Password"
+              id="password"
+              name="password"
+              type={showPassword ? "text" : "password"}
+              placeholder="Enter your password"
+              value={password}
+              onChange={(e) => {
+                setPassword(e.target.value);
+                setErrorMessage("");
+              }}
+              disabled={isLoading}
+              required
+              autoComplete="current-password"
+              sx={{ mb: 3 }}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label={showPassword ? "Hide password" : "Show password"}
+                      onClick={() => setShowPassword(!showPassword)}
+                      edge="end"
+                      disabled={isLoading}
+                    >
+                      {showPassword ? <FiEyeOff size={18} /> : <FiEye size={18} />}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
+            />
+
+            <Button
+              type="submit"
+              variant="contained"
+              fullWidth
+              size="large"
+              disabled={isLoading}
+              startIcon={
+                isLoading ? (
+                  <CircularProgress size={20} color="inherit" />
+                ) : (
+                  <FiLogIn size={18} />
+                )
+              }
+              sx={{
+                py: 1.5,
+                textTransform: "none",
+                fontWeight: 600,
+                fontSize: "1rem",
+              }}
+            >
+              {isLoading ? "Signing in..." : "Sign In"}
+            </Button>
+          </Box>
+        </CardContent>
+      </Card>
+    </Box>
   );
 }

@@ -15,6 +15,13 @@ export function loopReducer(state: LoopState, action: LoopAction): LoopState {
         endTime: action.time,
       };
 
+    case "SET_RANGE":
+      return {
+        status: "ready",
+        startTime: action.startTime,
+        endTime: action.endTime,
+      };
+
     case "START_LOOP":
       if (state.status !== "ready") {
         return state;

@@ -78,10 +78,10 @@ export default function UnassignLessonModal({
       <DialogTitle
         id="unassign-lesson-dialog-title"
         sx={{
-          fontWeight: 700,
-          fontSize: "20px",
-          color: "#1f2937",
-          paddingBottom: "8px",
+          fontWeight: 600,
+          fontSize: "1.25rem",
+          color: "text.primary",
+          pb: 1,
         }}
       >
         Remove Lesson?
@@ -91,7 +91,7 @@ export default function UnassignLessonModal({
           Are you sure you want to remove <strong>{lessonTitle}</strong> from{" "}
           <strong>{studentName}</strong>?
         </p>
-        <p style={{ marginTop: "8px", color: "#6b7280", fontSize: "14px" }}>
+        <p style={{ marginTop: "8px", color: "#697586", fontSize: "14px" }}>
           This will remove the lesson from the student&apos;s dashboard. Their
           progress will not be deleted.
         </p>

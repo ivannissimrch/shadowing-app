@@ -64,10 +64,10 @@ export default function AssignLessonModal({
       <DialogTitle
         id="assign-lesson-dialog-title"
         sx={{
-          fontWeight: 700,
-          fontSize: "20px",
-          color: "#1f2937",
-          paddingBottom: "8px",
+          fontWeight: 600,
+          fontSize: "1.25rem",
+          color: "text.primary",
+          pb: 1,
         }}
       >
         Assign Lesson: {lessonTitle}
@@ -89,7 +89,7 @@ export default function AssignLessonModal({
             <p
               role="alert"
               aria-live="assertive"
-              style={{ color: "red", marginTop: "8px" }}
+              style={{ color: "#f44336", marginTop: "8px", fontSize: "14px" }}
             >
               {form.errors.form}
             </p>

@@ -87,10 +87,10 @@ export default function AddStudent({
         <DialogTitle
           id="add-student-dialog-title"
           sx={{
-            fontWeight: 700,
-            fontSize: "20px",
-            color: "#1f2937",
-            paddingBottom: "8px",
+            fontWeight: 600,
+            fontSize: "1.25rem",
+            color: "text.primary",
+            pb: 1,
           }}
         >
           Add New Student
@@ -141,7 +141,7 @@ export default function AddStudent({
               id="form-error"
               role="alert"
               aria-live="assertive"
-              style={{ color: "red", marginTop: "10px" }}
+              style={{ color: "#f44336", marginTop: "10px", fontSize: "14px" }}
             >
               {errorMessage}
             </div>

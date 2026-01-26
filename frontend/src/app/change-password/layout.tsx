@@ -1,12 +1,7 @@
 "use client";
 
 import { useAuthContext } from "../AuthContext";
-import Header from "../components/layout/Header";
-import TeacherHeader from "../components/layout/TeacherHeader";
-import Footer from "../components/layout/Footer";
-import styles from "../student/layout.module.css";
-import { useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { DashboardLayout } from "../components/layout/dashboard";
 
 export default function ChangePasswordLayout({
   children,
@@ -14,24 +9,21 @@ export default function ChangePasswordLayout({
   children: React.ReactNode;
 }>) {
   const { token } = useAuthContext();
-  const router = useRouter();
 
-  useEffect(() => {
-    if (token === null) {
-      router.push("/");
+  // Determine user type from JWT token
+  let userType: "teacher" | "student" = "student";
+  if (token) {
+    try {
+      const payload = JSON.parse(atob(token.split(".")[1]));
+      userType = payload?.role === "teacher" ? "teacher" : "student";
+    } catch {
+      // Default to student if token parsing fails
     }
-  }, [token, router]);
-
-  if (!token) return null;
-  else {
-    const user = JSON.parse(atob(token.split(".")[1]));
-
-    return (
-      <>
-        {user?.role === "teacher" ? <TeacherHeader /> : <Header />}
-        <main className={styles.container}>{children}</main>
-        <Footer />
-      </>
-    );
   }
+
+  return (
+    <DashboardLayout userType={userType}>
+      {children}
+    </DashboardLayout>
+  );
 }

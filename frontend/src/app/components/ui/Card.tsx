@@ -1,14 +1,16 @@
 "use client";
 import { Lesson } from "@/app/Types";
-import styles from "./Card.module.css";
-import {
-  FaBook,
-  FaCheckCircle,
-  FaHourglassHalf,
-  FaPlayCircle,
-} from "react-icons/fa";
-import { Button } from "./Button";
 import { useState } from "react";
+import Link from "next/link";
+import MuiCard from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import CardActions from "@mui/material/CardActions";
+import Typography from "@mui/material/Typography";
+import Chip from "@mui/material/Chip";
+import Button from "@mui/material/Button";
+import Box from "@mui/material/Box";
+import Avatar from "@mui/material/Avatar";
+import { FiBook, FiCheckCircle, FiClock, FiPlay } from "react-icons/fi";
 
 export default function Card({
   lesson,
@@ -20,53 +22,93 @@ export default function Card({
   const { title, status } = lesson;
   const [loading, setLoading] = useState(false);
 
-  function getStatusIcon() {
+  const getStatusConfig = () => {
     switch (status?.toLowerCase()) {
       case "completed":
-        return <FaCheckCircle className={styles.statusIcon} />;
+        return {
+          icon: <FiCheckCircle size={14} />,
+          color: "success" as const,
+          label: "Completed",
+        };
       case "in progress":
-        return <FaPlayCircle className={styles.statusIcon} />;
+        return {
+          icon: <FiPlay size={14} />,
+          color: "primary" as const,
+          label: "In Progress",
+        };
       default:
-        return <FaHourglassHalf className={styles.statusIcon} />;
+        return {
+          icon: <FiClock size={14} />,
+          color: "warning" as const,
+          label: status || "Pending",
+        };
     }
-  }
+  };
 
-  function getStatusClass() {
-    switch (status?.toLowerCase()) {
-      case "completed":
-        return styles.statusCompleted;
-      case "in progress":
-        return styles.statusInProgress;
-      default:
-        return styles.statusPending;
-    }
-  }
+  const statusConfig = getStatusConfig();
 
   return (
-    <div className={styles.card}>
-      <div className={styles.cardHeader}>
-        <div className={styles.iconWrapper}>
-          <FaBook />
-        </div>
-      </div>
-      <div className={styles["information-container"]}>
-        <h2 className={styles.title}>{title}</h2>
-        <div className={`${styles.status} ${getStatusClass()}`}>
-          {getStatusIcon()}
-          {status}
-        </div>
-      </div>
-      <div className={styles.buttonGroup}>
+    <MuiCard
+      sx={{
+        height: "100%",
+        display: "flex",
+        flexDirection: "column",
+      }}
+    >
+      <CardContent sx={{ flexGrow: 1, pb: 1 }}>
+        {/* Icon and Status Row */}
+        <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", mb: 2 }}>
+          <Avatar
+            sx={{
+              bgcolor: "primary.light",
+              color: "primary.main",
+              width: 48,
+              height: 48,
+            }}
+          >
+            <FiBook size={24} />
+          </Avatar>
+          <Chip
+            icon={statusConfig.icon}
+            label={statusConfig.label}
+            color={statusConfig.color}
+            size="small"
+            sx={{ fontWeight: 500 }}
+          />
+        </Box>
+
+        {/* Title */}
+        <Typography
+          variant="h5"
+          component="h2"
+          sx={{
+            fontWeight: 600,
+            color: "text.primary",
+            mb: 1,
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            display: "-webkit-box",
+            WebkitLineClamp: 2,
+            WebkitBoxOrient: "vertical",
+          }}
+        >
+          {title}
+        </Typography>
+      </CardContent>
+
+      <CardActions sx={{ p: 2, pt: 0 }}>
         <Button
-          variant="primary"
+          component={Link}
           href={linkPath}
-          className={styles.button}
-          onClick={() => setLoading(true)}
+          variant="contained"
+          fullWidth
           disabled={loading}
+          onClick={() => setLoading(true)}
+          sx={{ textTransform: "none", fontWeight: 500 }}
         >
           {loading ? "Loading..." : "View Lesson"}
         </Button>
-      </div>
-    </div>
+      </CardActions>
+    </MuiCard>
   );
 }
