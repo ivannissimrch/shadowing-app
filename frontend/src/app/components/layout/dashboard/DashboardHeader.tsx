@@ -12,6 +12,7 @@ import Tooltip from '@mui/material/Tooltip';
 import { FiMenu, FiLogOut, FiUser, FiChevronLeft } from 'react-icons/fi';
 import { useAuthContext } from '../../../AuthContext';
 import { DRAWER_WIDTH } from './Sidebar';
+import DarkModeToggle from '../../ui/DarkModeToggle';
 
 interface DashboardHeaderProps {
   onMenuToggle: () => void;
@@ -124,8 +125,11 @@ export default function DashboardHeader({
           </Typography>
         </Box>
 
-        {/* Right side - User profile and logout */}
+        {/* Right side - Dark mode, User profile and logout */}
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+          {/* Dark mode toggle */}
+          <DarkModeToggle />
+
           {/* User avatar/info */}
           <Box
             sx={{
