@@ -18,6 +18,7 @@ import IconButton from "@mui/material/IconButton";
 import Alert from "@mui/material/Alert";
 import CircularProgress from "@mui/material/CircularProgress";
 import { FiEye, FiEyeOff, FiLogIn } from "react-icons/fi";
+import DarkModeToggle from "../ui/DarkModeToggle";
 
 export default function LoginForm() {
   const [username, setUsername] = useState("");
@@ -84,8 +85,21 @@ export default function LoginForm() {
         justifyContent: "center",
         bgcolor: "background.default",
         p: 2,
+        position: "relative",
       }}
     >
+      {/* Dark mode toggle - positioned absolutely in top right */}
+      <Box
+        sx={{
+          position: "absolute",
+          top: 16,
+          right: 16,
+          zIndex: 1,
+        }}
+      >
+        <DarkModeToggle />
+      </Box>
+
       <Card
         sx={{
           maxWidth: 400,

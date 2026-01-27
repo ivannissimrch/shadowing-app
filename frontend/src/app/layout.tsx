@@ -12,6 +12,7 @@ import "@fontsource/roboto/700.css";
 import ThemeProvider from "../themes/ThemeProvider";
 
 // App Contexts
+import { ThemeContextProvider } from "../contexts/ThemeContext";
 import AuthContextProvider from "./AuthContext";
 import AlertContextProvider from "./AlertContext";
 import AlertDialog from "./components/ui/AlertDialog";
@@ -40,14 +41,16 @@ export default function RootLayout({
         </Script>
       </head>
       <body>
-        <ThemeProvider>
-          <AuthContextProvider>
-            <AlertContextProvider>
-              {children}
-              <AlertDialog />
-            </AlertContextProvider>
-          </AuthContextProvider>
-        </ThemeProvider>
+        <ThemeContextProvider>
+          <ThemeProvider>
+            <AuthContextProvider>
+              <AlertContextProvider>
+                {children}
+                <AlertDialog />
+              </AlertContextProvider>
+            </AuthContextProvider>
+          </ThemeProvider>
+        </ThemeContextProvider>
       </body>
     </html>
   );

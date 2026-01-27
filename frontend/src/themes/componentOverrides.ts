@@ -42,10 +42,10 @@ export const componentOverrides = (theme: Theme, borderRadius: number): Componen
   MuiOutlinedInput: {
     styleOverrides: {
       root: {
-        backgroundColor: palette.grey[50],
+        backgroundColor: theme.palette.mode === 'dark' ? palette.dark.level1 : palette.grey[50],
         borderRadius: `${borderRadius}px`,
         '& .MuiOutlinedInput-notchedOutline': {
-          borderColor: palette.grey[300],
+          borderColor: theme.palette.mode === 'dark' ? palette.dark.level2 : palette.grey[300],
         },
         '&:hover .MuiOutlinedInput-notchedOutline': {
           borderColor: palette.primary.light,
@@ -56,11 +56,12 @@ export const componentOverrides = (theme: Theme, borderRadius: number): Componen
       },
       input: {
         fontWeight: 500,
-        backgroundColor: palette.grey[50],
+        backgroundColor: 'transparent',
         padding: '15.5px 14px',
         borderRadius: `${borderRadius}px`,
+        color: theme.palette.mode === 'dark' ? palette.dark.textPrimary : palette.text.primary,
         '&::placeholder': {
-          color: palette.grey[500],
+          color: theme.palette.mode === 'dark' ? palette.dark.textSecondary : palette.grey[500],
           opacity: 1,
         },
       },
@@ -73,7 +74,7 @@ export const componentOverrides = (theme: Theme, borderRadius: number): Componen
   MuiInputLabel: {
     styleOverrides: {
       root: {
-        color: palette.grey[600],
+        color: theme.palette.mode === 'dark' ? palette.dark.textSecondary : palette.grey[600],
         '&.Mui-focused': {
           color: palette.primary.main,
         },
