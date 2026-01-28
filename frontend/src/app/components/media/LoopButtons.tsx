@@ -85,7 +85,7 @@ function LoopButtons({
   return (
     <Box sx={{ width: "100%" }}>
       {/* Slider */}
-      <Box sx={{ px: 1, mb: 1 }}>
+      <Box sx={{ px: { xs: 0, sm: 1 }, mb: { xs: 2, sm: 1 } }}>
         <Slider
           value={sliderValue}
           onChange={handleSliderChange}
@@ -97,42 +97,60 @@ function LoopButtons({
           disableSwap
           sx={{
             "& .MuiSlider-thumb": {
-              width: 16,
-              height: 16,
+              width: { xs: 24, sm: 16 },
+              height: { xs: 24, sm: 16 },
             },
             "& .MuiSlider-track": {
-              height: 6,
+              height: { xs: 8, sm: 6 },
             },
             "& .MuiSlider-rail": {
-              height: 6,
+              height: { xs: 8, sm: 6 },
               opacity: 0.3,
             },
           }}
         />
         {/* Time labels */}
         <Box sx={{ display: "flex", justifyContent: "space-between", mt: -0.5 }}>
-          <Typography variant="caption" color="text.secondary">
+          <Typography
+            variant="body2"
+            color="text.secondary"
+            sx={{ fontSize: { xs: "0.875rem", sm: "0.75rem" } }}
+          >
             {getFormattedTime(sliderValue[0])}
           </Typography>
-          <Typography variant="caption" color="primary.main" sx={{ fontWeight: 500 }}>
+          <Typography
+            variant="body2"
+            color="primary.main"
+            sx={{ fontWeight: 600, fontSize: { xs: "0.875rem", sm: "0.75rem" } }}
+          >
             Loop: {sliderValue[1] - sliderValue[0]}s
           </Typography>
-          <Typography variant="caption" color="text.secondary">
+          <Typography
+            variant="body2"
+            color="text.secondary"
+            sx={{ fontSize: { xs: "0.875rem", sm: "0.75rem" } }}
+          >
             {getFormattedTime(sliderValue[1])}
           </Typography>
         </Box>
       </Box>
 
       {/* Buttons */}
-      <Box sx={{ display: "flex", gap: 1, justifyContent: "center" }}>
+      <Box sx={{ display: "flex", gap: { xs: 2, sm: 1 }, justifyContent: "center" }}>
         <Button
           onClick={toggleLoop}
           variant={isLooping ? "contained" : "outlined"}
           size="small"
           color="primary"
-          startIcon={<FiRepeat size={14} />}
+          startIcon={<FiRepeat size={16} />}
           disabled={!hasRange}
-          sx={{ textTransform: "none", fontWeight: 500 }}
+          sx={{
+            textTransform: "none",
+            fontWeight: 500,
+            fontSize: { xs: "0.9rem", sm: "0.875rem" },
+            py: { xs: 1, sm: 0.5 },
+            px: { xs: 2, sm: 1.5 },
+          }}
         >
           {isLooping ? "Loop ON" : "Loop OFF"}
         </Button>
@@ -143,8 +161,14 @@ function LoopButtons({
             variant="outlined"
             size="small"
             color="error"
-            startIcon={<FiX size={14} />}
-            sx={{ textTransform: "none", fontWeight: 500 }}
+            startIcon={<FiX size={16} />}
+            sx={{
+              textTransform: "none",
+              fontWeight: 500,
+              fontSize: { xs: "0.9rem", sm: "0.875rem" },
+              py: { xs: 1, sm: 0.5 },
+              px: { xs: 2, sm: 1.5 },
+            }}
           >
             Clear
           </Button>
