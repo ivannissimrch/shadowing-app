@@ -1,6 +1,7 @@
 "use client";
+import { useTranslations } from "next-intl";
 import { useState } from "react";
-import Link from "next/link";
+import { Link } from "@/i18n/routing";
 import MuiCard from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CardActions from "@mui/material/CardActions";
@@ -20,6 +21,8 @@ export default function StudentCard({
   students: Student[] | undefined;
   onDeleteStudent: (student: Student) => void;
 }) {
+  const t = useTranslations("teacher");
+  const tCommon = useTranslations("common");
   const [loadingId, setLoadingId] = useState<string | null>(null);
 
   return students?.map((student: Student) => (
@@ -70,7 +73,7 @@ export default function StudentCard({
             textAlign: "center",
           }}
         >
-          Student
+          {t("student")}
         </Typography>
       </CardContent>
 
@@ -85,13 +88,13 @@ export default function StudentCard({
           onClick={() => setLoadingId(student.id)}
           sx={{ textTransform: "none", fontWeight: 500, flex: 1 }}
         >
-          {loadingId === student.id ? "Loading..." : "View Details"}
+          {loadingId === student.id ? tCommon("loading") : t("viewDetails")}
         </Button>
-        <Tooltip title="Delete student">
+        <Tooltip title={t("deleteStudent")}>
           <IconButton
             onClick={() => onDeleteStudent(student)}
             color="error"
-            aria-label={`Delete student ${student.username}`}
+            aria-label={`${t("deleteStudent")} ${student.username}`}
             sx={{ ml: 1 }}
           >
             <FiTrash2 size={18} />

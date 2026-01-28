@@ -1,7 +1,8 @@
 'use client';
 
 import { usePathname } from 'next/navigation';
-import Link from 'next/link';
+import { useTranslations } from 'next-intl';
+import { Link } from '@/i18n/routing';
 import { useState, useEffect } from 'react';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
@@ -24,9 +25,32 @@ interface SidebarProps {
   variant: 'permanent' | 'temporary';
 }
 
+// Translation keys for menu items
+const menuTranslationKeys: Record<string, string> = {
+  'students': 'navigation.students',
+  'lessons': 'student.myLessons',
+  'practice': 'navigation.practice',
+  'change-password': 'auth.changePassword',
+  'main': 'navigation.home',
+  'settings': 'navigation.settings',
+};
+
 export default function Sidebar({ menuItems, open, onClose, variant }: SidebarProps) {
   const pathname = usePathname();
+  const tNav = useTranslations('navigation');
+  const tAuth = useTranslations('auth');
+  const tStudent = useTranslations('student');
   const [loadingUrl, setLoadingUrl] = useState<string | null>(null);
+
+  // Helper to get translated text
+  const getTranslation = (id: string, fallback: string) => {
+    const key = menuTranslationKeys[id];
+    if (!key) return fallback;
+    if (key.startsWith('navigation.')) return tNav(key.replace('navigation.', ''));
+    if (key.startsWith('auth.')) return tAuth(key.replace('auth.', ''));
+    if (key.startsWith('student.')) return tStudent(key.replace('student.', ''));
+    return fallback;
+  };
 
   // Clear loading state when pathname changes (navigation complete)
   useEffect(() => {
@@ -84,13 +108,16 @@ export default function Sidebar({ menuItems, open, onClose, variant }: SidebarPr
                 letterSpacing: '0.5px',
               }}
             >
-              {group.title}
+              {getTranslation(group.id, group.title)}
             </Typography>
 
             {/* Menu Items */}
             <List disablePadding>
               {group.items.map((item) => {
-                const isActive = pathname === item.url;
+                // pathname includes locale (e.g., /en/teacher), item.url doesn't (e.g., /teacher)
+                // Remove locale prefix for comparison
+                const pathWithoutLocale = pathname.replace(/^\/(en|ko)/, '');
+                const isActive = pathWithoutLocale === item.url || pathname === item.url;
                 const isLoading = loadingUrl === item.url;
                 const Icon = item.icon;
 
@@ -129,7 +156,7 @@ export default function Sidebar({ menuItems, open, onClose, variant }: SidebarPr
                       )}
                     </ListItemIcon>
                     <ListItemText
-                      primary={item.title}
+                      primary={getTranslation(item.id, item.title)}
                       primaryTypographyProps={{
                         variant: 'body1',
                         fontWeight: isActive || isLoading ? 600 : 400,

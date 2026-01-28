@@ -1,4 +1,5 @@
 "use client";
+import { useTranslations } from "next-intl";
 import { useSWRAxios } from "../../hooks/useSWRAxios";
 import { Lesson, Student } from "../../Types";
 import Card from "../ui/Card";
@@ -12,6 +13,7 @@ import Tooltip from "@mui/material/Tooltip";
 import { FiX } from "react-icons/fi";
 
 export default function TeacherLessonsList({ id }: { id: string }) {
+  const t = useTranslations("teacher");
   const { data: lessons } = useSWRAxios<Lesson[]>(
     API_PATHS.TEACHER_STUDENT_LESSONS(id)
   );
@@ -37,7 +39,7 @@ export default function TeacherLessonsList({ id }: { id: string }) {
                 lesson={lesson}
                 linkPath={`/teacher/student/${id}/lesson/${lesson.id}`}
               />
-              <Tooltip title="Remove from student">
+              <Tooltip title={t("removeFromStudent")}>
                 <IconButton
                   onClick={() =>
                     setUnassignModal({
@@ -46,7 +48,7 @@ export default function TeacherLessonsList({ id }: { id: string }) {
                       lessonTitle: lesson.title,
                     })
                   }
-                  aria-label={`Remove ${lesson.title} from student`}
+                  aria-label={`${t("removeFromStudent")} ${lesson.title}`}
                   size="small"
                   sx={{
                     position: "absolute",

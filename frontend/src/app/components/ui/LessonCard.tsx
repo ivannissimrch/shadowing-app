@@ -1,4 +1,5 @@
 "use client";
+import { useTranslations } from "next-intl";
 import MuiCard from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CardActions from "@mui/material/CardActions";
@@ -22,6 +23,8 @@ export default function LessonCard({
   onAssignLesson,
   onDeleteLesson,
 }: LessonCardProps) {
+  const t = useTranslations("teacher");
+
   return lessons.map((lesson: Lesson) => (
     <MuiCard
       key={lesson.id}
@@ -73,13 +76,13 @@ export default function LessonCard({
           onClick={() => onAssignLesson(lesson)}
           sx={{ textTransform: "none", fontWeight: 500, flex: 1 }}
         >
-          Assign
+          {t("assignLesson")}
         </Button>
-        <Tooltip title="Delete lesson">
+        <Tooltip title={t("deleteLesson")}>
           <IconButton
             onClick={() => onDeleteLesson(lesson)}
             color="error"
-            aria-label={`Delete lesson ${lesson.title}`}
+            aria-label={`${t("deleteLesson")} ${lesson.title}`}
             sx={{ ml: 1 }}
           >
             <FiTrash2 size={18} />

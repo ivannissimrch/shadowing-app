@@ -1,4 +1,5 @@
 "use client";
+import { useTranslations } from "next-intl";
 import "react-h5-audio-player/lib/styles.css";
 import { Lesson } from "../../Types";
 import { ErrorBoundary } from "react-error-boundary";
@@ -16,6 +17,8 @@ interface RecorderProps {
 }
 
 export default function RecorderPanel({ selectedLesson }: RecorderProps) {
+  const t = useTranslations("media");
+  const tTeacher = useTranslations("teacher");
   const { recorderState, dispatch } = useRecorderPanelContext();
 
   // Check for error state
@@ -29,7 +32,7 @@ export default function RecorderPanel({ selectedLesson }: RecorderProps) {
             size="small"
             onClick={() => dispatch({ type: "RESET" })}
           >
-            Dismiss
+            {t("dismiss")}
           </Button>
         }
       >
@@ -45,7 +48,7 @@ export default function RecorderPanel({ selectedLesson }: RecorderProps) {
   return (
     <ErrorBoundary
       fallback={
-        <Alert severity="error">Error loading recorder panel</Alert>
+        <Alert severity="error">{t("errorLoadingRecorder")}</Alert>
       }
     >
       <Paper sx={{ p: 3 }}>
@@ -54,7 +57,7 @@ export default function RecorderPanel({ selectedLesson }: RecorderProps) {
         {selectedLesson?.feedback && (
           <Box sx={{ mt: 3, p: 2, bgcolor: "primary.light", borderRadius: 1 }}>
             <Typography variant="subtitle2" sx={{ fontWeight: 600, color: "primary.dark", mb: 1 }}>
-              Teacher Feedback
+              {tTeacher("feedback")}
             </Typography>
             <Typography variant="body1" color="text.primary">
               {selectedLesson.feedback}

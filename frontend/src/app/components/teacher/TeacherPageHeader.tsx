@@ -5,11 +5,13 @@ import { FiPlus } from "react-icons/fi";
 
 interface TeacherPageHeaderProps {
   title: string;
+  buttonText: string;
   onClick: () => void;
 }
 
 export default function TeacherPageHeader({
   title,
+  buttonText,
   onClick,
 }: TeacherPageHeaderProps) {
   return (
@@ -37,7 +39,7 @@ export default function TeacherPageHeader({
         startIcon={<FiPlus size={18} />}
         sx={{ textTransform: "none", fontWeight: 500 }}
       >
-        Add {title}
+        {buttonText}
       </Button>
     </Box>
   );

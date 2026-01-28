@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { useAuthContext } from "../../AuthContext";
 import redirectBasedOnRole from "../../helpers/redirectBasedOnRole";
 import logger from "../../helpers/logger";
@@ -19,8 +20,11 @@ import Alert from "@mui/material/Alert";
 import CircularProgress from "@mui/material/CircularProgress";
 import { FiEye, FiEyeOff, FiLogIn } from "react-icons/fi";
 import DarkModeToggle from "../ui/DarkModeToggle";
+import LanguageSwitcher from "../ui/LanguageSwitcher";
 
 export default function LoginForm() {
+  const t = useTranslations("auth");
+  const tErrors = useTranslations("errors");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
@@ -71,7 +75,7 @@ export default function LoginForm() {
       }
     } catch (err) {
       setErrorMessage(
-        err instanceof Error ? err.message : "Login failed. Please try again."
+        err instanceof Error ? err.message : tErrors("somethingWentWrong")
       );
     }
   }
@@ -88,15 +92,18 @@ export default function LoginForm() {
         position: "relative",
       }}
     >
-      {/* Dark mode toggle - positioned absolutely in top right */}
+      {/* Top right controls */}
       <Box
         sx={{
           position: "absolute",
           top: 16,
           right: 16,
           zIndex: 1,
+          display: "flex",
+          gap: 1,
         }}
       >
+        <LanguageSwitcher />
         <DarkModeToggle />
       </Box>
 
@@ -122,7 +129,7 @@ export default function LoginForm() {
               ShadowSpeak
             </Typography>
             <Typography variant="body2" color="text.secondary">
-              Sign in to continue
+              {t("signInToContinue")}
             </Typography>
           </Box>
 
@@ -137,10 +144,10 @@ export default function LoginForm() {
           <Box component="form" onSubmit={handleSubmit}>
             <TextField
               fullWidth
-              label="Username"
+              label={t("username")}
               id="username"
               name="username"
-              placeholder="Enter your username"
+              placeholder={t("enterUsername")}
               value={username}
               onChange={(e) => {
                 setUsername(e.target.value);
@@ -155,11 +162,11 @@ export default function LoginForm() {
 
             <TextField
               fullWidth
-              label="Password"
+              label={t("password")}
               id="password"
               name="password"
               type={showPassword ? "text" : "password"}
-              placeholder="Enter your password"
+              placeholder={t("enterPassword")}
               value={password}
               onChange={(e) => {
                 setPassword(e.target.value);
@@ -173,7 +180,7 @@ export default function LoginForm() {
                 endAdornment: (
                   <InputAdornment position="end">
                     <IconButton
-                      aria-label={showPassword ? "Hide password" : "Show password"}
+                      aria-label={showPassword ? t("hidePassword") : t("showPassword")}
                       onClick={() => setShowPassword(!showPassword)}
                       edge="end"
                       disabled={isLoading}
@@ -205,7 +212,7 @@ export default function LoginForm() {
                 fontSize: "1rem",
               }}
             >
-              {isLoading ? "Signing in..." : "Sign In"}
+              {isLoading ? t("signingIn") : t("login")}
             </Button>
           </Box>
         </CardContent>

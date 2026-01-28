@@ -1,4 +1,5 @@
 "use client";
+import { useTranslations } from "next-intl";
 import DialogTitle from "@mui/material/DialogTitle";
 import { ErrorBoundary } from "react-error-boundary";
 import useAlertMessageStyles from "../../hooks/useAlertMessageStyles";
@@ -22,6 +23,9 @@ export default function AssignLessonModal({
   lessonId,
   lessonTitle,
 }: AssignLessonModalProps) {
+  const t = useTranslations("teacher");
+  const tCommon = useTranslations("common");
+  const tErrors = useTranslations("errors");
   const form = useFormModal({ selectedStudent: "" });
   const {
     StyledDialog,
@@ -46,7 +50,7 @@ export default function AssignLessonModal({
       onClose();
     } catch (err) {
       form.setFormError(
-        err instanceof Error ? err.message : "Error assigning lesson"
+        err instanceof Error ? err.message : tErrors("failedToSave")
       );
     }
   };
@@ -70,12 +74,12 @@ export default function AssignLessonModal({
           pb: 1,
         }}
       >
-        Assign Lesson: {lessonTitle}
+        {t("assignLesson")}: {lessonTitle}
       </DialogTitle>
       <StyledDialogContent>
         <form onSubmit={handleSubmit}>
           <div>
-            <ErrorBoundary fallback={<div>Error loading students</div>}>
+            <ErrorBoundary fallback={<div>{tErrors("failedToLoad")}</div>}>
               <StudentSelect
                 selectedStudent={form.fields.selectedStudent}
                 onStudentChange={(value) =>
@@ -98,15 +102,15 @@ export default function AssignLessonModal({
       </StyledDialogContent>
       <StyledDialogActions>
         <StyledButton variant="outlined" onClick={onClose}>
-          Cancel
+          {tCommon("cancel")}
         </StyledButton>
         <StyledButton
           variant="contained"
           onClick={handleSubmit}
           disabled={isMutating || !form.fields.selectedStudent}
-          aria-label={`Assign lesson "${lessonTitle}" to selected student`}
+          aria-label={`${t("assignLesson")} "${lessonTitle}"`}
         >
-          {isMutating ? "Assigning..." : "Assign Lesson"}
+          {isMutating ? t("assigningLesson") : t("assignLesson")}
         </StyledButton>
       </StyledDialogActions>
     </StyledDialog>

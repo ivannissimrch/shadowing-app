@@ -1,3 +1,4 @@
+import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { useSWRMutationHook } from "@/app/hooks/useSWRMutation";
 import { API_PATHS } from "@/app/constants/apiKeys";
@@ -19,6 +20,9 @@ interface FeedBackProps {
 }
 
 export default function FeedBack({ idsInfo, selectedLesson }: FeedBackProps) {
+  const t = useTranslations("teacher");
+  const tCommon = useTranslations("common");
+  const tErrors = useTranslations("errors");
   const { studentId, lessonId } = idsInfo;
   const [feedback, setFeedback] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
@@ -45,7 +49,7 @@ export default function FeedBack({ idsInfo, selectedLesson }: FeedBackProps) {
       setFeedback("");
     } catch (err) {
       setErrorMessage(
-        err instanceof Error ? err.message : "Failed to submit feedback"
+        err instanceof Error ? err.message : tErrors("failedToSave")
       );
     }
   };
@@ -71,7 +75,7 @@ export default function FeedBack({ idsInfo, selectedLesson }: FeedBackProps) {
       setEditedFeedback("");
     } catch (err) {
       setErrorMessage(
-        err instanceof Error ? err.message : "Failed to update feedback"
+        err instanceof Error ? err.message : tErrors("failedToSave")
       );
     }
   };
@@ -81,7 +85,7 @@ export default function FeedBack({ idsInfo, selectedLesson }: FeedBackProps) {
       <Paper sx={{ p: 3, bgcolor: "primary.light" }}>
         <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", mb: 1 }}>
           <Typography variant="subtitle2" sx={{ fontWeight: 600, color: "primary.dark" }}>
-            Your Feedback
+            {t("yourFeedback")}
           </Typography>
           {!isEditing && (
             <IconButton
@@ -117,7 +121,7 @@ export default function FeedBack({ idsInfo, selectedLesson }: FeedBackProps) {
                 startIcon={<FiCheck size={14} />}
                 sx={{ textTransform: "none", fontWeight: 500 }}
               >
-                {isMutating ? "Saving..." : "Save"}
+                {isMutating ? tCommon("saving") : tCommon("save")}
               </Button>
               <Button
                 variant="outlined"
@@ -128,7 +132,7 @@ export default function FeedBack({ idsInfo, selectedLesson }: FeedBackProps) {
                 startIcon={<FiX size={14} />}
                 sx={{ textTransform: "none", fontWeight: 500 }}
               >
-                Cancel
+                {tCommon("cancel")}
               </Button>
             </Box>
           </Box>
@@ -153,7 +157,7 @@ export default function FeedBack({ idsInfo, selectedLesson }: FeedBackProps) {
         fullWidth
         multiline
         rows={4}
-        placeholder="Leave your feedback here..."
+        placeholder={t("leaveFeedbackPlaceholder")}
         value={feedback}
         onChange={(event) => {
           setFeedback(event.target.value);
@@ -169,7 +173,7 @@ export default function FeedBack({ idsInfo, selectedLesson }: FeedBackProps) {
         startIcon={<FiSend size={16} />}
         sx={{ textTransform: "none", fontWeight: 500 }}
       >
-        {isMutating ? "Submitting..." : "Submit Feedback"}
+        {isMutating ? tCommon("submitting") : t("submitFeedback")}
       </Button>
       {errorMessage && (
         <Alert severity="error" sx={{ mt: 2 }}>

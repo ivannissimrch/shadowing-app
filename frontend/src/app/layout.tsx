@@ -8,15 +8,6 @@ import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
 
-// Berry Theme Provider
-import ThemeProvider from "../themes/ThemeProvider";
-
-// App Contexts
-import { ThemeContextProvider } from "../contexts/ThemeContext";
-import AuthContextProvider from "./AuthContext";
-import AlertContextProvider from "./AlertContext";
-import AlertDialog from "./components/ui/AlertDialog";
-
 export const metadata: Metadata = {
   title: "ShadowSpeak",
   description: "English Pronunciation Learning",
@@ -28,7 +19,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
         <Script id="microsoft-clarity" strategy="afterInteractive">
           {`
@@ -40,18 +31,7 @@ export default function RootLayout({
           `}
         </Script>
       </head>
-      <body>
-        <ThemeContextProvider>
-          <ThemeProvider>
-            <AuthContextProvider>
-              <AlertContextProvider>
-                {children}
-                <AlertDialog />
-              </AlertContextProvider>
-            </AuthContextProvider>
-          </ThemeProvider>
-        </ThemeContextProvider>
-      </body>
+      <body>{children}</body>
     </html>
   );
 }

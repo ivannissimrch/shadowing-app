@@ -1,4 +1,5 @@
 "use client";
+import { useTranslations } from "next-intl";
 import DialogTitle from "@mui/material/DialogTitle";
 import { useState } from "react";
 import useAlertMessageStyles from "../../hooks/useAlertMessageStyles";
@@ -17,6 +18,10 @@ export default function AddStudent({
   isAddStudentDialogOpen,
   closeAddStudentDialog,
 }: AddStudentProps) {
+  const t = useTranslations("teacher");
+  const tAuth = useTranslations("auth");
+  const tCommon = useTranslations("common");
+  const tErrors = useTranslations("errors");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
@@ -45,7 +50,7 @@ export default function AddStudent({
     e.preventDefault();
 
     if (!username || !password) {
-      setErrorMessage("Please fill in all fields");
+      setErrorMessage(tErrors("fillAllFields"));
       return;
     }
     setErrorMessage("");
@@ -61,7 +66,7 @@ export default function AddStudent({
       closeAddStudentDialog();
     } catch (err) {
       setErrorMessage(
-        err instanceof Error ? err.message : "Error adding student"
+        err instanceof Error ? err.message : tErrors("failedToAdd")
       );
     }
   };
@@ -93,12 +98,12 @@ export default function AddStudent({
             pb: 1,
           }}
         >
-          Add New Student
+          {t("addStudent")}
         </DialogTitle>
         <StyledDialogContent>
           <form onSubmit={handleSubmit}>
             <div>
-              <label htmlFor="username">Username</label>
+              <label htmlFor="username">{tAuth("username")}</label>
               <input
                 aria-required="true"
                 id="username"
@@ -108,7 +113,7 @@ export default function AddStudent({
                   setErrorMessage("");
                   setUsername(e.target.value);
                 }}
-                placeholder="Enter student username"
+                placeholder={tAuth("enterUsername")}
                 autoComplete="username"
                 required
                 aria-invalid={errorMessage ? "true" : "false"}
@@ -117,7 +122,7 @@ export default function AddStudent({
             </div>
 
             <div>
-              <label htmlFor="password">Password</label>
+              <label htmlFor="password">{tAuth("password")}</label>
               <input
                 required
                 aria-required="true"
@@ -128,7 +133,7 @@ export default function AddStudent({
                   setPassword(e.target.value);
                   setErrorMessage("");
                 }}
-                placeholder="Enter student password"
+                placeholder={tAuth("enterPassword")}
                 autoComplete="new-password"
                 aria-invalid={errorMessage ? "true" : "false"}
                 aria-describedby={errorMessage ? "form-error" : undefined}
@@ -149,7 +154,7 @@ export default function AddStudent({
         </StyledDialogContent>
         <StyledDialogActions>
           <StyledButton variant="outlined" onClick={closeAddStudentDialog}>
-            Cancel
+            {tCommon("cancel")}
           </StyledButton>
           <StyledButton
             variant="contained"
@@ -157,7 +162,7 @@ export default function AddStudent({
             onClick={handleSubmit}
             disabled={isMutating}
           >
-            {isMutating ? "Adding..." : "Add Student"}
+            {isMutating ? t("addingStudent") : t("addStudent")}
           </StyledButton>
         </StyledDialogActions>
       </StyledDialog>

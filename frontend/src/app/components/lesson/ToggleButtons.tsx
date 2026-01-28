@@ -1,3 +1,4 @@
+import { useTranslations } from "next-intl";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import { FiEye, FiEyeOff } from "react-icons/fi";
@@ -12,6 +13,7 @@ export default function ToggleButtons({
   toggleState,
   updateToggleState,
 }: ToggleButtonsProps) {
+  const t = useTranslations("lesson");
   return (
     <Box sx={{ display: "flex", gap: 1, flexWrap: "wrap" }}>
       {toggleState === ToggleState.SHOW_BOTH && (
@@ -29,7 +31,7 @@ export default function ToggleButtons({
               "&:hover": { bgcolor: "action.hover" },
             }}
           >
-            Hide script
+            {t("hideScript")}
           </Button>
           <Button
             size="small"
@@ -44,7 +46,7 @@ export default function ToggleButtons({
               "&:hover": { bgcolor: "action.hover" },
             }}
           >
-            Hide video
+            {t("hideVideo")}
           </Button>
         </>
       )}
@@ -62,7 +64,7 @@ export default function ToggleButtons({
             "&:hover": { bgcolor: "action.hover" },
           }}
         >
-          Show video
+          {t("showVideo")}
         </Button>
       )}
       {toggleState === ToggleState.SHOW_VIDEO_ONLY && (
@@ -79,7 +81,7 @@ export default function ToggleButtons({
             "&:hover": { bgcolor: "action.hover" },
           }}
         >
-          Show script
+          {t("showScript")}
         </Button>
       )}
     </Box>

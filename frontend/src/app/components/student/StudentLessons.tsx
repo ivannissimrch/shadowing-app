@@ -1,4 +1,5 @@
 "use client";
+import { useTranslations } from "next-intl";
 import { Lesson } from "../../Types";
 import { useSWRAxios } from "../../hooks/useSWRAxios";
 import { API_PATHS } from "../../constants/apiKeys";
@@ -9,6 +10,7 @@ import Typography from "@mui/material/Typography";
 import { FiBook } from "react-icons/fi";
 
 export default function StudentLessons() {
+  const t = useTranslations("student");
   const { data: lessons } = useSWRAxios<Lesson[]>(API_PATHS.LESSONS);
 
   if (lessons?.length === 0) {
@@ -22,10 +24,7 @@ export default function StudentLessons() {
       >
         <FiBook size={48} color="#9da4ae" style={{ marginBottom: 16 }} />
         <Typography variant="h5" sx={{ fontWeight: 600, color: "text.primary", mb: 1 }}>
-          No Lessons Assigned
-        </Typography>
-        <Typography variant="body1" color="text.secondary">
-          Your teacher hasn&apos;t assigned any lessons yet. Check back soon!
+          {t("noLessons")}
         </Typography>
       </Box>
     );

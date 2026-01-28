@@ -1,7 +1,7 @@
 "use client";
 
-import { useAuthContext } from "../AuthContext";
-import { DashboardLayout } from "../components/layout/dashboard";
+import { useAuthContext } from "../../AuthContext";
+import { DashboardLayout } from "../../components/layout/dashboard";
 
 export default function ChangePasswordLayout({
   children,
