@@ -2,9 +2,10 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { useAuthContext } from "../AuthContext";
-import { useSWRMutationHook } from "../hooks/useSWRMutation";
-import { API_PATHS } from "../constants/apiKeys";
+import { useTranslations } from "next-intl";
+import { useAuthContext } from "../../AuthContext";
+import { useSWRMutationHook } from "../../hooks/useSWRMutation";
+import { API_PATHS } from "../../constants/apiKeys";
 
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
@@ -23,6 +24,7 @@ import IconButton from "@mui/material/IconButton";
 import { FiLock, FiCheck, FiEye, FiEyeOff } from "react-icons/fi";
 
 export default function ChangePasswordPage() {
+  const t = useTranslations("auth");
   const router = useRouter();
   const { token } = useAuthContext();
   const user = token ? JSON.parse(atob(token.split(".")[1])) : null;
@@ -48,15 +50,15 @@ export default function ChangePasswordPage() {
     setSuccessMessage("");
 
     if (newPassword.length < 8) {
-      setErrorMessage("New password must be at least 8 characters");
+      setErrorMessage(t("passwordTooShort"));
       return;
     }
     if (newPassword !== confirmPassword) {
-      setErrorMessage("New passwords do not match");
+      setErrorMessage(t("passwordMismatch"));
       return;
     }
     if (currentPassword === newPassword) {
-      setErrorMessage("New password must be different from current password");
+      setErrorMessage(t("passwordSameAsCurrent"));
       return;
     }
 
@@ -66,7 +68,7 @@ export default function ChangePasswordPage() {
         newPassword,
       });
 
-      setSuccessMessage("Password changed successfully! Redirecting...");
+      setSuccessMessage(t("passwordChanged"));
       setCurrentPassword("");
       setNewPassword("");
       setConfirmPassword("");
@@ -76,7 +78,7 @@ export default function ChangePasswordPage() {
       }, 2000);
     } catch (err) {
       setErrorMessage(
-        err instanceof Error ? err.message : "Failed to change password"
+        err instanceof Error ? err.message : t("passwordMismatch")
       );
     }
   };
@@ -104,10 +106,7 @@ export default function ChangePasswordPage() {
               component="h1"
               sx={{ fontWeight: 600, color: "text.primary", mb: 1 }}
             >
-              Change Password
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              Update your password to keep your account secure
+              {t("changePassword")}
             </Typography>
           </Box>
 
@@ -128,9 +127,9 @@ export default function ChangePasswordPage() {
             <TextField
               fullWidth
               type={showCurrentPassword ? "text" : "password"}
-              label="Current Password"
+              label={t("currentPassword")}
               id="currentPassword"
-              placeholder="Enter current password"
+              placeholder={t("enterCurrentPassword")}
               value={currentPassword}
               onChange={(e) => setCurrentPassword(e.target.value)}
               disabled={isMutating}
@@ -142,7 +141,7 @@ export default function ChangePasswordPage() {
                   endAdornment: (
                     <InputAdornment position="end">
                       <IconButton
-                        aria-label={showCurrentPassword ? "Hide password" : "Show password"}
+                        aria-label={showCurrentPassword ? t("hidePassword") : t("showPassword")}
                         onClick={() => setShowCurrentPassword(!showCurrentPassword)}
                         edge="end"
                         size="small"
@@ -158,9 +157,9 @@ export default function ChangePasswordPage() {
             <TextField
               fullWidth
               type={showNewPassword ? "text" : "password"}
-              label="New Password (minimum 8 characters)"
+              label={t("newPassword")}
               id="newPassword"
-              placeholder="Enter new password"
+              placeholder={t("enterNewPassword")}
               value={newPassword}
               onChange={(e) => setNewPassword(e.target.value)}
               disabled={isMutating}
@@ -173,7 +172,7 @@ export default function ChangePasswordPage() {
                   endAdornment: (
                     <InputAdornment position="end">
                       <IconButton
-                        aria-label={showNewPassword ? "Hide password" : "Show password"}
+                        aria-label={showNewPassword ? t("hidePassword") : t("showPassword")}
                         onClick={() => setShowNewPassword(!showNewPassword)}
                         edge="end"
                         size="small"
@@ -189,9 +188,9 @@ export default function ChangePasswordPage() {
             <TextField
               fullWidth
               type={showConfirmPassword ? "text" : "password"}
-              label="Confirm New Password"
+              label={t("confirmPassword")}
               id="confirmPassword"
-              placeholder="Confirm new password"
+              placeholder={t("confirmNewPassword")}
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
               disabled={isMutating}
@@ -204,7 +203,7 @@ export default function ChangePasswordPage() {
                   endAdornment: (
                     <InputAdornment position="end">
                       <IconButton
-                        aria-label={showConfirmPassword ? "Hide password" : "Show password"}
+                        aria-label={showConfirmPassword ? t("hidePassword") : t("showPassword")}
                         onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                         edge="end"
                         size="small"
@@ -237,7 +236,7 @@ export default function ChangePasswordPage() {
                 fontSize: "1rem",
               }}
             >
-              {isMutating ? "Changing Password..." : "Change Password"}
+              {isMutating ? t("changingPassword") : t("changePassword")}
             </Button>
           </Box>
 
@@ -248,7 +247,7 @@ export default function ChangePasswordPage() {
               color="text.secondary"
               sx={{ fontWeight: 500, mb: 1 }}
             >
-              Password requirements:
+              {t("passwordRequirements")}
             </Typography>
             <List dense disablePadding>
               <ListItem disableGutters sx={{ py: 0.25 }}>
@@ -256,7 +255,7 @@ export default function ChangePasswordPage() {
                   <FiCheck size={14} color="#697586" />
                 </ListItemIcon>
                 <ListItemText
-                  primary="At least 8 characters long"
+                  primary={t("minCharacters")}
                   primaryTypographyProps={{
                     variant: "body2",
                     color: "text.secondary",
@@ -268,7 +267,7 @@ export default function ChangePasswordPage() {
                   <FiCheck size={14} color="#697586" />
                 </ListItemIcon>
                 <ListItemText
-                  primary="Different from your current password"
+                  primary={t("differentFromCurrent")}
                   primaryTypographyProps={{
                     variant: "body2",
                     color: "text.secondary",

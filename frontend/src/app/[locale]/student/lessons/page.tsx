@@ -1,13 +1,16 @@
 "use client";
-import StudentLessons from "../../components/student/StudentLessons";
+import { useTranslations } from "next-intl";
+import StudentLessons from "../../../components/student/StudentLessons";
 import { ErrorBoundary } from "react-error-boundary";
-import ErrorFallback from "../../components/ui/ErrorFallback";
+import ErrorFallback from "../../../components/ui/ErrorFallback";
 import { mutate } from "swr";
-import { API_PATHS } from "../../constants/apiKeys";
+import { API_PATHS } from "../../../constants/apiKeys";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 
 export default function Lessons() {
+  const t = useTranslations("student");
+
   return (
     <Box>
       <Typography
@@ -15,7 +18,7 @@ export default function Lessons() {
         component="h1"
         sx={{ fontWeight: 600, color: "text.primary", mb: 3 }}
       >
-        My Lessons
+        {t("myLessons")}
       </Typography>
       <ErrorBoundary
         fallbackRender={(props) => (

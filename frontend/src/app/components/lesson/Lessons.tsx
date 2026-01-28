@@ -1,3 +1,5 @@
+"use client";
+import { useTranslations } from "next-intl";
 import { ErrorBoundary } from "react-error-boundary";
 import LessonList from "./LessonList";
 import ErrorFallback from "../ui/ErrorFallback";
@@ -9,10 +11,11 @@ interface LessonsProps {
 }
 
 export default function Lessons({ onAssignLesson }: LessonsProps) {
+  const t = useTranslations("lesson");
   return (
     <ErrorBoundary
       fallbackRender={(props) => (
-        <ErrorFallback {...props} title="Error loading lessons" />
+        <ErrorFallback {...props} title={t("errorLoading")} />
       )}
       onReset={() => {
         mutate(API_PATHS.ALL_LESSONS, undefined, { revalidate: true });

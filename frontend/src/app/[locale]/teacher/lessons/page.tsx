@@ -1,4 +1,5 @@
 "use client";
+import { useTranslations } from "next-intl";
 import AssignLessonModal from "@/app/components/teacher/AssignLessonModal";
 import AddLesson from "@/app/components/teacher/AddLesson";
 import { useState } from "react";
@@ -7,6 +8,8 @@ import useModal from "@/app/hooks/useModal";
 import TeacherPageHeader from "@/app/components/teacher/TeacherPageHeader";
 
 export default function LessonsPage() {
+  const t = useTranslations("navigation");
+  const tTeacher = useTranslations("teacher");
   const [selectedLesson, setSelectedLesson] = useState<{
     id: string;
     title: string;
@@ -26,7 +29,8 @@ export default function LessonsPage() {
   return (
     <>
       <TeacherPageHeader
-        title="Lessons"
+        title={t("lessons")}
+        buttonText={tTeacher("addLesson")}
         onClick={() => AddLessonModal.openModal()}
       />
       <Lessons onAssignLesson={handleAssignLesson} />

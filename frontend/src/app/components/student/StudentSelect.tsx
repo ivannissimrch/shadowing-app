@@ -1,4 +1,5 @@
 "use client";
+import { useTranslations } from "next-intl";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
@@ -20,16 +21,17 @@ export default function StudentSelect({
   onStudentChange,
   StyledFormControl,
 }: StudentSelectProps) {
+  const t = useTranslations("teacher");
   const { data: students } = useSWRAxios<Student[]>(API_PATHS.USERS);
 
   return (
     <StyledFormControl fullWidth>
-      <InputLabel id="student-select-label">Select Student</InputLabel>
+      <InputLabel id="student-select-label">{t("selectStudent")}</InputLabel>
       <Select
         labelId="student-select-label"
         value={selectedStudent}
         onChange={(e) => onStudentChange(e.target.value as string)}
-        label="Select Student"
+        label={t("selectStudent")}
       >
         {students &&
           students.map((student: Student) => (

@@ -1,3 +1,4 @@
+import { useTranslations } from "next-intl";
 import { Lesson } from "../../Types";
 import YouTubePlayer from "./YouTubePlayer";
 import Box from "@mui/material/Box";
@@ -8,10 +9,11 @@ interface SegmentPlayerProps {
 }
 
 export default function SegmentPlayer({ selectedLesson }: SegmentPlayerProps) {
+  const t = useTranslations("lesson");
   if (!selectedLesson) {
     return (
       <Box sx={{ p: 3, textAlign: "center" }}>
-        <Typography color="text.secondary">Lesson not found</Typography>
+        <Typography color="text.secondary">{t("lessonNotFound")}</Typography>
       </Box>
     );
   }

@@ -1,10 +1,11 @@
 "use client";
+import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { mutate } from "swr";
-import api from "../../helpers/axiosFetch";
-import { API_PATHS } from "../../constants/apiKeys";
+import api from "../../../helpers/axiosFetch";
+import { API_PATHS } from "../../../constants/apiKeys";
 import PracticeCard from "@/app/components/ui/PracticeCard";
-import { useSWRAxios } from "../../hooks/useSWRAxios";
+import { useSWRAxios } from "../../../hooks/useSWRAxios";
 
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
@@ -17,6 +18,8 @@ interface PracticeWord {
 }
 
 export default function PracticeWordsList() {
+  const t = useTranslations("student");
+  const tErrors = useTranslations("errors");
   const [deleteError, setDeleteError] = useState<string | null>(null);
   const { data: words } = useSWRAxios<PracticeWord[]>(API_PATHS.PRACTICE_WORDS);
 
@@ -31,7 +34,7 @@ export default function PracticeWordsList() {
         false
       );
     } catch {
-      setDeleteError("Failed to delete word");
+      setDeleteError(tErrors("failedToDelete"));
     }
   }
 
@@ -42,7 +45,7 @@ export default function PracticeWordsList() {
         color="text.secondary"
         sx={{ textAlign: "center", py: 4 }}
       >
-        No practice words yet. Add some above!
+        {t("noPracticeWords")}
       </Typography>
     );
   }

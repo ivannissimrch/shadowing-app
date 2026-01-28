@@ -1,6 +1,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
@@ -13,6 +14,7 @@ import { FiMenu, FiLogOut, FiUser, FiChevronLeft } from 'react-icons/fi';
 import { useAuthContext } from '../../../AuthContext';
 import { DRAWER_WIDTH } from './Sidebar';
 import DarkModeToggle from '../../ui/DarkModeToggle';
+import LanguageSwitcher from '../../ui/LanguageSwitcher';
 
 interface DashboardHeaderProps {
   onMenuToggle: () => void;
@@ -25,6 +27,8 @@ export default function DashboardHeader({
   sidebarOpen,
   userType,
 }: DashboardHeaderProps) {
+  const t = useTranslations('auth');
+  const tNav = useTranslations('navigation');
   const { updateToken } = useAuthContext();
   const router = useRouter();
 
@@ -121,12 +125,15 @@ export default function DashboardHeader({
               textTransform: 'capitalize',
             }}
           >
-            {userType} Dashboard
+            {userType === 'teacher' ? tNav('students') : tNav('lessons')} - {tNav('dashboard')}
           </Typography>
         </Box>
 
         {/* Right side - Dark mode, User profile and logout */}
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+          {/* Language switcher */}
+          <LanguageSwitcher />
+
           {/* Dark mode toggle */}
           <DarkModeToggle />
 
@@ -160,7 +167,7 @@ export default function DashboardHeader({
           </Box>
 
           {/* Logout button */}
-          <Tooltip title="Logout">
+          <Tooltip title={t('logout')}>
             <Button
               variant="outlined"
               color="error"
@@ -179,7 +186,7 @@ export default function DashboardHeader({
                 component="span"
                 sx={{ display: { xs: 'none', sm: 'inline' } }}
               >
-                Logout
+                {t('logout')}
               </Box>
             </Button>
           </Tooltip>

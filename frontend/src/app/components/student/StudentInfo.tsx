@@ -1,4 +1,5 @@
 "use client";
+import { useTranslations } from "next-intl";
 import { useSWRAxios } from "../../hooks/useSWRAxios";
 import { Student } from "../../Types";
 import { API_PATHS } from "../../constants/apiKeys";
@@ -10,6 +11,7 @@ import Chip from "@mui/material/Chip";
 import { FiUser } from "react-icons/fi";
 
 export default function StudentInfo({ id }: { id: string }) {
+  const t = useTranslations("teacher");
   const { data } = useSWRAxios<Student>(API_PATHS.TEACHER_STUDENT(id));
   const student = data;
 
@@ -35,7 +37,7 @@ export default function StudentInfo({ id }: { id: string }) {
             {student.username}
           </Typography>
           <Chip
-            label={student.role}
+            label={student.role === "student" ? t("student") : student.role}
             size="small"
             color="secondary"
             sx={{ mt: 0.5, textTransform: "capitalize" }}

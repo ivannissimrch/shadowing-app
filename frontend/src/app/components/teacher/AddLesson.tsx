@@ -1,4 +1,5 @@
 "use client";
+import { useTranslations } from "next-intl";
 import DialogTitle from "@mui/material/DialogTitle";
 import Box from "@mui/material/Box";
 import Alert from "@mui/material/Alert";
@@ -16,6 +17,9 @@ export default function AddLesson({
   isAddLessonDialogOpen,
   closeAddLessonDialog,
 }: AddLessonProps) {
+  const t = useTranslations("teacher");
+  const tLesson = useTranslations("lesson");
+  const tCommon = useTranslations("common");
   const {
     StyledDialog,
     StyledDialogContent,
@@ -53,16 +57,16 @@ export default function AddLesson({
             pb: 1,
           }}
         >
-          Add New Lesson
+          {t("addLesson")}
         </DialogTitle>
         <StyledDialogContent>
           <form onSubmit={handleSubmit}>
             <div>
-              <label htmlFor="lesson-title">Lesson Title</label>
+              <label htmlFor="lesson-title">{tLesson("title")}</label>
               <input
                 id="lesson-title"
                 type="text"
-                placeholder="Enter lesson title"
+                placeholder={t("enterLessonTitle")}
                 required
                 aria-required="true"
                 aria-invalid={errorMessage ? "true" : "false"}
@@ -74,11 +78,11 @@ export default function AddLesson({
             </div>
 
             <div>
-              <label htmlFor="video-id">YouTube Video URL </label>
+              <label htmlFor="video-id">{tLesson("videoUrl")}</label>
               <input
                 id="video-id"
                 type="text"
-                placeholder="Enter YouTube video url "
+                placeholder={t("enterVideoUrl")}
                 required
                 aria-required="true"
                 aria-invalid={errorMessage ? "true" : "false"}
@@ -89,7 +93,7 @@ export default function AddLesson({
             </div>
 
             <div>
-              <label htmlFor="image-upload">Upload Image </label>
+              <label htmlFor="image-upload">{t("uploadImage")}</label>
               <input
                 id="image-upload"
                 type="file"
@@ -132,7 +136,7 @@ export default function AddLesson({
                 }}
               >
                 <FiUpload size={16} />
-                {selectedImage ? selectedImage.name : "Choose an image file..."}
+                {selectedImage ? selectedImage.name : t("chooseImageFile")}
               </Box>
             </div>
             {errorMessage && (
@@ -144,14 +148,14 @@ export default function AddLesson({
         </StyledDialogContent>
         <StyledDialogActions>
           <StyledButton variant="outlined" onClick={closeAddLessonDialog}>
-            Cancel
+            {tCommon("cancel")}
           </StyledButton>
           <StyledButton
             variant="contained"
             onClick={handleSubmit}
             disabled={isMutatingLesson}
           >
-            {isMutatingLesson ? "Adding..." : "Add Lesson"}
+            {isMutatingLesson ? tCommon("adding") : t("addLesson")}
           </StyledButton>
         </StyledDialogActions>
       </StyledDialog>

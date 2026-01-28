@@ -1,4 +1,5 @@
 "use client";
+import { useTranslations } from "next-intl";
 import DialogTitle from "@mui/material/DialogTitle";
 import useAlertMessageStyles from "../../hooks/useAlertMessageStyles";
 import { mutate } from "swr";
@@ -24,6 +25,9 @@ export default function UnassignLessonModal({
   studentId,
   studentName,
 }: UnassignLessonModalProps) {
+  const t = useTranslations("teacher");
+  const tCommon = useTranslations("common");
+  const tErrors = useTranslations("errors");
   const { openAlertDialog } = useAlertContext();
 
   const {
@@ -59,8 +63,8 @@ export default function UnassignLessonModal({
       );
     } catch {
       openAlertDialog(
-        "Remove Failed",
-        `Could not remove "${lessonTitle}" from ${studentName}. Please check your connection and try again.`
+        tErrors("failedToDelete"),
+        t("couldNotRemoveLesson", { title: lessonTitle, name: studentName })
       );
     }
   };
@@ -84,28 +88,26 @@ export default function UnassignLessonModal({
           pb: 1,
         }}
       >
-        Remove Lesson?
+        {t("removeLesson")}
       </DialogTitle>
       <StyledDialogContent>
         <p>
-          Are you sure you want to remove <strong>{lessonTitle}</strong> from{" "}
-          <strong>{studentName}</strong>?
+          {t("confirmRemoveLessonMessage", { title: lessonTitle, name: studentName })}
         </p>
         <p style={{ marginTop: "8px", color: "#697586", fontSize: "14px" }}>
-          This will remove the lesson from the student&apos;s dashboard. Their
-          progress will not be deleted.
+          {t("removeLessonNote")}
         </p>
       </StyledDialogContent>
       <StyledDialogActions>
         <StyledButton variant="outlined" onClick={onClose}>
-          Cancel
+          {tCommon("cancel")}
         </StyledButton>
         <StyledErrorButton
           variant="contained"
           onClick={handleUnassign}
-          aria-label={`Remove lesson "${lessonTitle}" from ${studentName}`}
+          aria-label={`${t("removeLesson")} "${lessonTitle}"`}
         >
-          Remove
+          {t("remove")}
         </StyledErrorButton>
       </StyledDialogActions>
     </StyledDialog>

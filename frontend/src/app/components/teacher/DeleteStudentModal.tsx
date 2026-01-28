@@ -1,4 +1,5 @@
 "use client";
+import { useTranslations } from "next-intl";
 import DialogTitle from "@mui/material/DialogTitle";
 import useAlertMessageStyles from "../../hooks/useAlertMessageStyles";
 import { mutate } from "swr";
@@ -20,6 +21,9 @@ export default function DeleteStudentModal({
   studentId,
   studentUsername,
 }: DeleteStudentModalProps) {
+  const t = useTranslations("teacher");
+  const tCommon = useTranslations("common");
+  const tErrors = useTranslations("errors");
   const { openAlertDialog } = useAlertContext();
 
   const {
@@ -54,8 +58,8 @@ export default function DeleteStudentModal({
       );
     } catch {
       openAlertDialog(
-        "Delete Failed",
-        `Could not delete "${studentUsername}". Please check your connection and try again.`
+        tErrors("failedToDelete"),
+        t("couldNotDeleteStudent", { name: studentUsername })
       );
     }
   };
@@ -79,24 +83,23 @@ export default function DeleteStudentModal({
           pb: 1,
         }}
       >
-        Delete Student
+        {t("deleteStudent")}
       </DialogTitle>
       <StyledDialogContent>
         <p>
-          Are you sure you want to delete the student{" "}
-          <strong>{studentUsername}</strong>? This action cannot be undone.
+          {t("confirmDeleteStudentMessage", { name: studentUsername })}
         </p>
       </StyledDialogContent>
       <StyledDialogActions>
         <StyledButton variant="outlined" onClick={onClose}>
-          Cancel
+          {tCommon("cancel")}
         </StyledButton>
         <StyledErrorButton
           variant="contained"
           onClick={handleDelete}
-          aria-label={`Delete student ${studentUsername}. This action cannot be undone.`}
+          aria-label={`${t("deleteStudent")} ${studentUsername}`}
         >
-          Delete Student
+          {t("deleteStudent")}
         </StyledErrorButton>
       </StyledDialogActions>
     </StyledDialog>

@@ -1,4 +1,5 @@
 "use client";
+import { useTranslations } from "next-intl";
 import DialogTitle from "@mui/material/DialogTitle";
 import useAlertMessageStyles from "../../hooks/useAlertMessageStyles";
 import { mutate } from "swr";
@@ -20,6 +21,9 @@ export default function DeleteLessonModal({
   lessonId,
   lessonTitle,
 }: DeleteLessonModalProps) {
+  const t = useTranslations("teacher");
+  const tCommon = useTranslations("common");
+  const tErrors = useTranslations("errors");
   const { openAlertDialog } = useAlertContext();
 
   const {
@@ -54,8 +58,8 @@ export default function DeleteLessonModal({
       );
     } catch {
       openAlertDialog(
-        "Delete Failed",
-        `Could not delete "${lessonTitle}". Please check your connection and try again.`
+        tErrors("failedToDelete"),
+        t("couldNotDeleteLesson", { title: lessonTitle })
       );
     }
   };
@@ -79,25 +83,23 @@ export default function DeleteLessonModal({
           pb: 1,
         }}
       >
-        Delete Lesson
+        {t("deleteLesson")}
       </DialogTitle>
       <StyledDialogContent>
         <p>
-          Are you sure you want to delete the lesson{" "}
-          <strong>{lessonTitle}</strong>? This action cannot be undone and will
-          remove all student assignments.
+          {t("confirmDeleteLessonMessage", { title: lessonTitle })}
         </p>
       </StyledDialogContent>
       <StyledDialogActions>
         <StyledButton variant="outlined" onClick={onClose}>
-          Cancel
+          {tCommon("cancel")}
         </StyledButton>
         <StyledErrorButton
           variant="contained"
           onClick={handleDelete}
-          aria-label={`Delete lesson ${lessonTitle}. This action cannot be undone.`}
+          aria-label={`${t("deleteLesson")} ${lessonTitle}`}
         >
-          Delete Lesson
+          {t("deleteLesson")}
         </StyledErrorButton>
       </StyledDialogActions>
     </StyledDialog>

@@ -1,3 +1,4 @@
+import { useTranslations } from "next-intl";
 import { useRecorderPanelContext } from "@/app/RecorderpanelContext";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -6,6 +7,7 @@ import Avatar from "@mui/material/Avatar";
 import { FiMic, FiPlay, FiPause, FiSquare } from "react-icons/fi";
 
 export default function RecorderVoiceRecorder() {
+  const t = useTranslations("media");
   const {
     recorderState,
     startRecording,
@@ -40,9 +42,9 @@ export default function RecorderVoiceRecorder() {
       </Avatar>
 
       <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
-        {isIdle && "Click the button to start recording"}
-        {isRecording && "Recording in progress..."}
-        {isPaused && "Recording paused"}
+        {isIdle && t("clickToStartRecording")}
+        {isRecording && t("recordingInProgress")}
+        {isPaused && t("recordingPaused")}
       </Typography>
 
       <Box sx={{ display: "flex", gap: 2 }}>
@@ -54,7 +56,7 @@ export default function RecorderVoiceRecorder() {
             startIcon={<FiMic size={16} />}
             sx={{ textTransform: "none", fontWeight: 500 }}
           >
-            Start Recording
+            {t("startRecording")}
           </Button>
         )}
         {isRecording && (
@@ -65,7 +67,7 @@ export default function RecorderVoiceRecorder() {
             startIcon={<FiPause size={16} />}
             sx={{ textTransform: "none", fontWeight: 500 }}
           >
-            Pause
+            {t("pause")}
           </Button>
         )}
         {isPaused && (
@@ -76,7 +78,7 @@ export default function RecorderVoiceRecorder() {
             startIcon={<FiPlay size={16} />}
             sx={{ textTransform: "none", fontWeight: 500 }}
           >
-            Resume
+            {t("resume")}
           </Button>
         )}
         {(isRecording || isPaused) && (
@@ -87,7 +89,7 @@ export default function RecorderVoiceRecorder() {
             startIcon={<FiSquare size={16} />}
             sx={{ textTransform: "none", fontWeight: 500 }}
           >
-            Stop
+            {t("stop")}
           </Button>
         )}
       </Box>

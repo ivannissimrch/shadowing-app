@@ -1,3 +1,4 @@
+import { useTranslations } from "next-intl";
 import { Lesson } from "@/app/Types";
 import { useRecorderPanelContext } from "@/app/RecorderpanelContext";
 import Box from "@mui/material/Box";
@@ -9,6 +10,7 @@ export default function RecorderAudioButtons({
 }: {
   selectedLesson: Lesson | undefined;
 }) {
+  const tCommon = useTranslations("common");
   const { dispatch, handleSubmit, isAudioMutating, isLessonMutating } =
     useRecorderPanelContext();
   const isSubmitting = isAudioMutating || isLessonMutating;
@@ -28,7 +30,7 @@ export default function RecorderAudioButtons({
           startIcon={<FiTrash2 size={16} />}
           sx={{ textTransform: "none", fontWeight: 500 }}
         >
-          Delete
+          {tCommon("delete")}
         </Button>
         <Button
           variant="contained"
@@ -38,7 +40,7 @@ export default function RecorderAudioButtons({
           startIcon={<FiSend size={16} />}
           sx={{ textTransform: "none", fontWeight: 500 }}
         >
-          {isSubmitting ? "Submitting..." : "Submit"}
+          {isSubmitting ? tCommon("submitting") : tCommon("submit")}
         </Button>
       </Box>
     );

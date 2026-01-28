@@ -1,7 +1,8 @@
 "use client";
+import { useTranslations } from "next-intl";
 import { Lesson } from "@/app/Types";
 import { useState } from "react";
-import Link from "next/link";
+import { Link } from "@/i18n/routing";
 import MuiCard from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CardActions from "@mui/material/CardActions";
@@ -19,6 +20,8 @@ export default function Card({
   lesson: Lesson;
   linkPath: string;
 }) {
+  const t = useTranslations("lesson");
+  const tCommon = useTranslations("common");
   const { title, status } = lesson;
   const [loading, setLoading] = useState(false);
 
@@ -28,19 +31,19 @@ export default function Card({
         return {
           icon: <FiCheckCircle size={14} />,
           color: "success" as const,
-          label: "Completed",
+          label: t("completed"),
         };
       case "in progress":
         return {
           icon: <FiPlay size={14} />,
           color: "primary" as const,
-          label: "In Progress",
+          label: t("inProgress"),
         };
       default:
         return {
           icon: <FiClock size={14} />,
           color: "warning" as const,
-          label: status || "Pending",
+          label: status || t("notStarted"),
         };
     }
   };
@@ -106,7 +109,7 @@ export default function Card({
           onClick={() => setLoading(true)}
           sx={{ textTransform: "none", fontWeight: 500 }}
         >
-          {loading ? "Loading..." : "View Lesson"}
+          {loading ? tCommon("loading") : t("viewLesson")}
         </Button>
       </CardActions>
     </MuiCard>

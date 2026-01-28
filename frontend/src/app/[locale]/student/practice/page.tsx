@@ -1,9 +1,10 @@
 "use client";
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import { mutate } from "swr";
 import { ErrorBoundary } from "react-error-boundary";
-import { API_PATHS } from "../../constants/apiKeys";
-import { useSWRMutationHook } from "../../hooks/useSWRMutation";
+import { API_PATHS } from "../../../constants/apiKeys";
+import { useSWRMutationHook } from "../../../hooks/useSWRMutation";
 import PracticeWordsList from "./PracticeWordsList";
 
 import Box from "@mui/material/Box";
@@ -21,6 +22,10 @@ interface PracticeWord {
 }
 
 export default function PracticePage() {
+  const t = useTranslations("navigation");
+  const tCommon = useTranslations("common");
+  const tErrors = useTranslations("errors");
+  const tPractice = useTranslations("practiceWords");
   const [newWord, setNewWord] = useState("");
   const [addError, setAddError] = useState<string | null>(null);
 
@@ -50,7 +55,7 @@ export default function PracticePage() {
         setNewWord("");
       }
     } catch {
-      setAddError("Failed to add word");
+      setAddError(tErrors("failedToAdd"));
     }
   }
 
@@ -62,7 +67,7 @@ export default function PracticePage() {
         component="h1"
         sx={{ fontWeight: 600, color: "text.primary", mb: 3 }}
       >
-        Practice
+        {t("practice")}
       </Typography>
 
       {/* Add new word form */}
@@ -73,7 +78,7 @@ export default function PracticePage() {
       >
         <TextField
           fullWidth
-          placeholder="Add a word or phrase to practice..."
+          placeholder={tPractice("addWord")}
           value={newWord}
           onChange={(e) => setNewWord(e.target.value)}
           disabled={isAdding}
@@ -86,7 +91,7 @@ export default function PracticePage() {
           startIcon={isAdding ? <CircularProgress size={16} color="inherit" /> : <FiPlus size={16} />}
           sx={{ textTransform: "none", fontWeight: 500, whiteSpace: "nowrap" }}
         >
-          {isAdding ? "Adding..." : "Add"}
+          {isAdding ? tCommon("adding") : tCommon("add")}
         </Button>
       </Box>
 
@@ -100,10 +105,10 @@ export default function PracticePage() {
         fallbackRender={({ error, resetErrorBoundary }) => (
           <Box sx={{ textAlign: "center", py: 4 }}>
             <Alert severity="error" sx={{ mb: 2 }}>
-              Failed to load practice words: {error.message}
+              {tErrors("failedToLoadPracticeWords")}: {error.message}
             </Alert>
             <Button variant="contained" onClick={resetErrorBoundary}>
-              Try again
+              {tErrors("tryAgainButton")}
             </Button>
           </Box>
         )}

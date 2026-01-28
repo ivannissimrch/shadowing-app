@@ -1,4 +1,5 @@
 "use client";
+import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { useReactMediaRecorder } from "react-media-recorder";
 import { API_PATHS } from "../../constants/apiKeys";
@@ -45,6 +46,8 @@ export default function PracticeCard({
   text: string;
   onDelete?: () => void;
 }) {
+  const t = useTranslations("practice");
+  const tPracticeWords = useTranslations("practiceWords");
   const [speechRate, setSpeechRate] = useState(0.9);
 
   const { speak } = useSpeakMutation();
@@ -83,7 +86,7 @@ export default function PracticeCard({
     });
   }
 
-  const error = evalError ? "Evaluation failed" : null;
+  const error = evalError ? t("evaluationFailed") : null;
 
   const { status, startRecording, stopRecording, mediaBlobUrl } =
     useReactMediaRecorder({
@@ -122,7 +125,7 @@ export default function PracticeCard({
             {text}
           </Typography>
           {onDelete && (
-            <Tooltip title="Remove word">
+            <Tooltip title={tPracticeWords("deleteWord")}>
               <IconButton onClick={onDelete} size="small" color="error">
                 <FiX size={18} />
               </IconButton>
@@ -138,7 +141,7 @@ export default function PracticeCard({
             onClick={() => speak(text, speechRate)}
             sx={{ textTransform: "none" }}
           >
-            Listen
+            {t("listen")}
           </Button>
           <Button
             variant={status === "recording" ? "contained" : "contained"}
@@ -148,7 +151,7 @@ export default function PracticeCard({
             disabled={isEvaluating}
             sx={{ textTransform: "none" }}
           >
-            {status === "recording" ? "Stop" : isEvaluating ? "Evaluating..." : "Speak"}
+            {status === "recording" ? t("stop") : isEvaluating ? t("evaluating") : t("speak")}
           </Button>
           {mediaBlobUrl && status !== "recording" && (
             <Box component="audio" src={mediaBlobUrl} controls sx={{ height: 36 }} />
@@ -158,7 +161,7 @@ export default function PracticeCard({
         {/* Speed control */}
         <Box sx={{ mb: 2 }}>
           <Typography variant="body2" color="text.secondary" gutterBottom>
-            Speed: {speechRate.toFixed(1)}x
+            {t("speed")}: {speechRate.toFixed(1)}x
           </Typography>
           <Slider
             value={speechRate}
@@ -174,7 +177,7 @@ export default function PracticeCard({
         {/* Feedback section */}
         <Box sx={{ minHeight: 60 }}>
           {status === "recording" && (
-            <Alert severity="info" sx={{ mb: 2 }}>Recording... Speak now!</Alert>
+            <Alert severity="info" sx={{ mb: 2 }}>{t("recordingSpeakNow")}</Alert>
           )}
           {isEvaluating && <LinearProgress sx={{ mb: 2 }} />}
           {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
@@ -186,17 +189,17 @@ export default function PracticeCard({
               {/* Scores */}
               <Box sx={{ display: "flex", gap: 1, mb: 2, flexWrap: "wrap" }}>
                 <Chip
-                  label={`Accuracy: ${Math.round(evaluation.accuracyScore)}%`}
+                  label={`${t("accuracy")}: ${Math.round(evaluation.accuracyScore)}%`}
                   color={getScoreColor(evaluation.accuracyScore)}
                   size="small"
                 />
                 <Chip
-                  label={`Fluency: ${Math.round(evaluation.fluencyScore)}%`}
+                  label={`${t("fluency")}: ${Math.round(evaluation.fluencyScore)}%`}
                   color={getScoreColor(evaluation.fluencyScore)}
                   size="small"
                 />
                 <Chip
-                  label={`Overall: ${Math.round(evaluation.pronunciationScore)}%`}
+                  label={`${t("overall")}: ${Math.round(evaluation.pronunciationScore)}%`}
                   color={getScoreColor(evaluation.pronunciationScore)}
                   size="small"
                   variant="filled"
@@ -251,14 +254,14 @@ export default function PracticeCard({
                 disabled={isLoadingCoach}
                 sx={{ textTransform: "none", mb: 2 }}
               >
-                {isLoadingCoach ? "Getting help..." : "Help me improve"}
+                {isLoadingCoach ? t("gettingHelp") : t("helpMeImprove")}
               </Button>
 
               {/* Coach feedback */}
               {coachData && (
                 <Alert severity="info" icon={false} sx={{ mt: 2 }}>
                   <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 1 }}>
-                    ESL Coach
+                    {t("eslCoach")}
                   </Typography>
                   <Typography variant="body1" sx={{ lineHeight: 1.6 }}>
                     {coachData.feedback}
@@ -270,7 +273,7 @@ export default function PracticeCard({
 
           {!mediaBlobUrl && !isEvaluating && !evaluation && status !== "recording" && (
             <Typography variant="body2" color="text.secondary">
-              Feedback will appear here after you speak
+              {t("feedbackWillAppear")}
             </Typography>
           )}
         </Box>
