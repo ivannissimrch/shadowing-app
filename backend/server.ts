@@ -72,13 +72,15 @@ app.use(
   cors({
     origin: [
       "https://shadowing-app-spec.vercel.app",
+      "https://shadowspeak.net",
+      "https://www.shadowspeak.net",
       "http://localhost:3000",
       "http://localhost:3001",
     ],
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true,
-  })
+  }),
 );
 app.use(express.json({ limit: "50mb" }));
 app.use(express.urlencoded({ extended: true, limit: "50mb" }));
