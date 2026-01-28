@@ -10,7 +10,8 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Alert from "@mui/material/Alert";
 import Paper from "@mui/material/Paper";
-import { FiSend } from "react-icons/fi";
+import IconButton from "@mui/material/IconButton";
+import { FiSend, FiEdit2, FiX, FiCheck } from "react-icons/fi";
 
 interface FeedBackProps {
   idsInfo: { studentId: string; lessonId: string };
@@ -21,6 +22,8 @@ export default function FeedBack({ idsInfo, selectedLesson }: FeedBackProps) {
   const { studentId, lessonId } = idsInfo;
   const [feedback, setFeedback] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const [isEditing, setIsEditing] = useState(false);
+  const [editedFeedback, setEditedFeedback] = useState("");
   const { trigger, isMutating } = useSWRMutationHook(
     API_PATHS.TEACHER_STUDENT_LESSON_FEEDBACK(studentId, lessonId),
     {
@@ -47,15 +50,99 @@ export default function FeedBack({ idsInfo, selectedLesson }: FeedBackProps) {
     }
   };
 
+  const handleEditClick = () => {
+    setEditedFeedback(selectedLesson?.feedback || "");
+    setIsEditing(true);
+    setErrorMessage("");
+  };
+
+  const handleCancelEdit = () => {
+    setIsEditing(false);
+    setEditedFeedback("");
+    setErrorMessage("");
+  };
+
+  const handleSaveEdit = async () => {
+    setErrorMessage("");
+
+    try {
+      await trigger({ feedback: editedFeedback });
+      setIsEditing(false);
+      setEditedFeedback("");
+    } catch (err) {
+      setErrorMessage(
+        err instanceof Error ? err.message : "Failed to update feedback"
+      );
+    }
+  };
+
   if (selectedLesson?.feedback !== null) {
     return (
       <Paper sx={{ p: 3, bgcolor: "primary.light" }}>
-        <Typography variant="subtitle2" sx={{ fontWeight: 600, color: "primary.dark", mb: 1 }}>
-          Your Feedback
-        </Typography>
-        <Typography variant="body2" color="text.primary">
-          {selectedLesson?.feedback}
-        </Typography>
+        <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", mb: 1 }}>
+          <Typography variant="subtitle2" sx={{ fontWeight: 600, color: "primary.dark" }}>
+            Your Feedback
+          </Typography>
+          {!isEditing && (
+            <IconButton
+              size="small"
+              onClick={handleEditClick}
+              sx={{ color: "primary.dark" }}
+            >
+              <FiEdit2 size={16} />
+            </IconButton>
+          )}
+        </Box>
+
+        {isEditing ? (
+          <Box>
+            <TextField
+              fullWidth
+              multiline
+              rows={4}
+              value={editedFeedback}
+              onChange={(event) => {
+                setEditedFeedback(event.target.value);
+                setErrorMessage("");
+              }}
+              sx={{ mb: 2, bgcolor: "background.paper" }}
+            />
+            <Box sx={{ display: "flex", gap: 1 }}>
+              <Button
+                variant="contained"
+                color="primary"
+                size="small"
+                disabled={isMutating || !editedFeedback.trim()}
+                onClick={handleSaveEdit}
+                startIcon={<FiCheck size={14} />}
+                sx={{ textTransform: "none", fontWeight: 500 }}
+              >
+                {isMutating ? "Saving..." : "Save"}
+              </Button>
+              <Button
+                variant="outlined"
+                color="secondary"
+                size="small"
+                onClick={handleCancelEdit}
+                disabled={isMutating}
+                startIcon={<FiX size={14} />}
+                sx={{ textTransform: "none", fontWeight: 500 }}
+              >
+                Cancel
+              </Button>
+            </Box>
+          </Box>
+        ) : (
+          <Typography variant="body2" sx={{ color: "grey.800", fontWeight: 600 }}>
+            {selectedLesson?.feedback}
+          </Typography>
+        )}
+
+        {errorMessage && (
+          <Alert severity="error" sx={{ mt: 2 }}>
+            {errorMessage}
+          </Alert>
+        )}
       </Paper>
     );
   }
