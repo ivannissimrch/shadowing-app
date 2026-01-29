@@ -67,21 +67,30 @@ export default function VideoScriptToggle({
     <Box>
       <Box
         sx={{
-          display: "flex",
-          flexDirection: "column",
+          display: "grid",
+          gridTemplateColumns: {
+            xs: "1fr",
+            lg: toggleState === ToggleState.SHOW_BOTH ? "1fr 1fr" : "1fr",
+          },
+          alignItems: { xs: "start", lg: "stretch" },
           gap: 3,
           mb: 2,
         }}
       >
-        {/* Video section */}
+        {/* Video section - left side on desktop */}
         {(toggleState === ToggleState.SHOW_BOTH ||
           toggleState === ToggleState.SHOW_VIDEO_ONLY) && (
-          <Paper sx={{ overflow: "hidden", borderRadius: 2 }}>
+          <Paper
+            sx={{
+              overflow: "hidden",
+              borderRadius: 2,
+            }}
+          >
             <SegmentPlayer selectedLesson={selectedLesson} />
           </Paper>
         )}
 
-        {/* Script/Image section - no maxHeight, shows full size */}
+        {/* Script/Image section - right side on desktop */}
         {(toggleState === ToggleState.SHOW_BOTH ||
           toggleState === ToggleState.SHOW_SCRIPT_ONLY) && (
           <Paper
@@ -147,7 +156,8 @@ export default function VideoScriptToggle({
               alt={`${selectedLesson.title} Practice lesson image`}
               sx={{
                 width: "100%",
-                height: "auto",
+                height: { xs: "auto", lg: "100%" },
+                objectFit: { xs: "initial", lg: "contain" },
                 display: "block",
               }}
             />
