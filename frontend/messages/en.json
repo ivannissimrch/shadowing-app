@@ -113,7 +113,12 @@
     "removeFromStudent": "Remove from student",
     "yourFeedback": "Your Feedback",
     "leaveFeedbackPlaceholder": "Leave your feedback here...",
-    "submitFeedback": "Submit Feedback"
+    "submitFeedback": "Submit Feedback",
+    "scriptSource": "Script Source",
+    "formattedText": "Formatted Text",
+    "lessonScript": "Lesson Script",
+    "pasteScriptHere": "Paste your lesson script here...",
+    "scriptHint": "Paste from PowerPoint to keep formatting (bold, colors, lists)"
   },
   "lesson": {
     "title": "Title",

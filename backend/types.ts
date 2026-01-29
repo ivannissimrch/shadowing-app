@@ -12,6 +12,8 @@ export interface Lesson {
   id: string;
   title: string;
   image: string | null;
+  script_text: string | null;
+  script_type: 'image' | 'text';
   video_id: string | null;
   video_type: 'youtube' | 'cloudinary';
   cloudinary_public_id: string | null;
@@ -85,6 +87,8 @@ export interface CreateUserBody {
 export interface CreateLessonBody {
   title: string;
   image?: string;
+  scriptText?: string;
+  scriptType?: 'image' | 'text';
   videoId?: string;
   videoType?: 'youtube' | 'cloudinary';
   cloudinaryPublicId?: string;

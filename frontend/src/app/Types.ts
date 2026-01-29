@@ -19,6 +19,8 @@ export interface AuthContextType {
 export interface Lesson {
   title: string;
   image: string;
+  script_text: string | null;
+  script_type: 'image' | 'text';
   video_id: string;
   video_type: 'youtube' | 'cloudinary';
   cloudinary_public_id: string | null;

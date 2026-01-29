@@ -19,6 +19,8 @@ router.post(
     const {
       title,
       image,
+      scriptText,
+      scriptType,
       videoId,
       videoType,
       cloudinaryPublicId,
@@ -30,6 +32,8 @@ router.post(
     const lesson = await lessonRepository.create({
       title,
       image,
+      scriptText,
+      scriptType,
       videoId,
       videoType,
       cloudinaryPublicId,

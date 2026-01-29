@@ -113,7 +113,12 @@
     "removeFromStudent": "학생에게서 제거",
     "yourFeedback": "피드백",
     "leaveFeedbackPlaceholder": "피드백을 입력하세요...",
-    "submitFeedback": "피드백 제출"
+    "submitFeedback": "피드백 제출",
+    "scriptSource": "스크립트 소스",
+    "formattedText": "서식 있는 텍스트",
+    "lessonScript": "레슨 스크립트",
+    "pasteScriptHere": "레슨 스크립트를 여기에 붙여넣으세요...",
+    "scriptHint": "PowerPoint에서 붙여넣으면 서식(굵게, 색상, 목록)이 유지됩니다"
   },
   "lesson": {
     "title": "제목",

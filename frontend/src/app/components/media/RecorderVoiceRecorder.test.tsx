@@ -26,6 +26,8 @@ const mockLesson = {
   title: "Test Lesson",
   status: "pending",
   image: "https://example.com/image.jpg",
+  script_text: null,
+  script_type: "image" as const,
   video_id: "abc123",
   video_type: "youtube" as const,
   cloudinary_public_id: null,
