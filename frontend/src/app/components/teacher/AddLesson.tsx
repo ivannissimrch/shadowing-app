@@ -8,9 +8,10 @@ import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import Typography from "@mui/material/Typography";
 import useAlertMessageStyles from "../../hooks/useAlertMessageStyles";
 import { ErrorBoundary } from "react-error-boundary";
-import useAddLesson, { VideoType } from "../../hooks/useAddLesson";
-import { FiUpload, FiVideo } from "react-icons/fi";
+import useAddLesson, { VideoType, ScriptType } from "../../hooks/useAddLesson";
+import { FiUpload, FiVideo, FiFileText } from "react-icons/fi";
 import { FaYoutube } from "react-icons/fa";
+import RichTextEditor from "../ui/RichTextEditor";
 
 interface AddLessonProps {
   isAddLessonDialogOpen: boolean;
@@ -37,11 +38,15 @@ export default function AddLesson({
     selectedImage,
     selectedVideo,
     videoType,
+    scriptType,
+    scriptText,
     isMutatingLesson,
     handleInputChange,
     handleImageUpload,
     handleVideoUpload,
     handleVideoTypeChange,
+    handleScriptTypeChange,
+    handleScriptTextChange,
     handleSubmit,
   } = useAddLesson(closeAddLessonDialog);
 
@@ -99,9 +104,20 @@ export default function AddLesson({
                   }
                 }}
                 aria-label="video source type"
-                color="primary"
                 size="small"
                 fullWidth
+                sx={{
+                  "& .MuiToggleButton-root": {
+                    color: "text.primary",
+                    "&.Mui-selected": {
+                      bgcolor: "primary.main",
+                      color: "white",
+                      "&:hover": {
+                        bgcolor: "primary.dark",
+                      },
+                    },
+                  },
+                }}
               >
                 <ToggleButton value="youtube" aria-label="YouTube video">
                   <FaYoutube style={{ marginRight: 8 }} />
@@ -116,7 +132,7 @@ export default function AddLesson({
 
             {/* Conditional Video Input */}
             {videoType === 'youtube' ? (
-              <div>
+              <div key="youtube-input">
                 <label htmlFor="video-id">{tLesson("videoUrl")}</label>
                 <input
                   id="video-id"
@@ -126,12 +142,12 @@ export default function AddLesson({
                   aria-required="true"
                   aria-invalid={errorMessage ? "true" : "false"}
                   aria-describedby={errorMessage ? "add-lesson-error" : undefined}
-                  value={formData.videoId || ""}
+                  value={formData.videoId ?? ""}
                   onChange={handleInputChange}
                 />
               </div>
             ) : (
-              <div>
+              <div key="video-upload-input">
                 <label htmlFor="video-upload">{t("uploadVideo") || "Upload Video"}</label>
                 <input
                   id="video-upload"
@@ -183,53 +199,108 @@ export default function AddLesson({
               </div>
             )}
 
-            <div>
-              <label htmlFor="image-upload">{t("uploadImage")}</label>
-              <input
-                id="image-upload"
-                type="file"
-                accept="image/*"
-                required
-                aria-required="true"
-                onChange={handleImageUpload}
-                style={{
-                  position: "absolute",
-                  width: 1,
-                  height: 1,
-                  padding: 0,
-                  margin: -1,
-                  overflow: "hidden",
-                  clip: "rect(0, 0, 0, 0)",
-                  whiteSpace: "nowrap",
-                  border: 0,
+            {/* Script Type Toggle */}
+            <Box sx={{ mt: 2, mb: 1 }}>
+              <Typography variant="body2" sx={{ mb: 1, fontWeight: 500 }}>
+                {t("scriptSource") || "Script Source"}
+              </Typography>
+              <ToggleButtonGroup
+                value={scriptType}
+                exclusive
+                onChange={(_e, newValue: ScriptType | null) => {
+                  if (newValue !== null) {
+                    handleScriptTypeChange(newValue);
+                  }
                 }}
-              />
-              <Box
-                component="label"
-                htmlFor="image-upload"
+                aria-label="script source type"
+                size="small"
+                fullWidth
                 sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  gap: 1,
-                  p: 1.5,
-                  border: "1px solid",
-                  borderColor: selectedImage ? "primary.main" : "grey.300",
-                  borderRadius: 1,
-                  cursor: "pointer",
-                  color: selectedImage ? "text.primary" : "text.secondary",
-                  bgcolor: selectedImage ? "primary.light" : "transparent",
-                  transition: "all 0.2s",
-                  "&:hover": {
-                    borderColor: "primary.main",
-                    bgcolor: "primary.light",
+                  "& .MuiToggleButton-root": {
+                    color: "text.primary",
+                    "&.Mui-selected": {
+                      bgcolor: "primary.main",
+                      color: "white",
+                      "&:hover": {
+                        bgcolor: "primary.dark",
+                      },
+                    },
                   },
                 }}
               >
-                <FiUpload size={16} />
-                {selectedImage ? selectedImage.name : t("chooseImageFile")}
-              </Box>
-            </div>
+                <ToggleButton value="image" aria-label="Upload image">
+                  <FiUpload style={{ marginRight: 8 }} />
+                  {t("uploadImage")}
+                </ToggleButton>
+                <ToggleButton value="text" aria-label="Formatted text">
+                  <FiFileText style={{ marginRight: 8 }} />
+                  {t("formattedText") || "Formatted Text"}
+                </ToggleButton>
+              </ToggleButtonGroup>
+            </Box>
+
+            {/* Conditional Script Input */}
+            {scriptType === 'image' ? (
+              <div key="image-upload-input">
+                <label htmlFor="image-upload">{t("uploadImage")}</label>
+                <input
+                  id="image-upload"
+                  type="file"
+                  accept="image/*"
+                  required
+                  aria-required="true"
+                  onChange={handleImageUpload}
+                  style={{
+                    position: "absolute",
+                    width: 1,
+                    height: 1,
+                    padding: 0,
+                    margin: -1,
+                    overflow: "hidden",
+                    clip: "rect(0, 0, 0, 0)",
+                    whiteSpace: "nowrap",
+                    border: 0,
+                  }}
+                />
+                <Box
+                  component="label"
+                  htmlFor="image-upload"
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    gap: 1,
+                    p: 1.5,
+                    border: "1px solid",
+                    borderColor: selectedImage ? "primary.main" : "grey.300",
+                    borderRadius: 1,
+                    cursor: "pointer",
+                    color: selectedImage ? "text.primary" : "text.secondary",
+                    bgcolor: selectedImage ? "primary.light" : "transparent",
+                    transition: "all 0.2s",
+                    "&:hover": {
+                      borderColor: "primary.main",
+                      bgcolor: "primary.light",
+                    },
+                  }}
+                >
+                  <FiUpload size={16} />
+                  {selectedImage ? selectedImage.name : t("chooseImageFile")}
+                </Box>
+              </div>
+            ) : (
+              <div key="text-editor-input">
+                <label>{t("lessonScript") || "Lesson Script"}</label>
+                <RichTextEditor
+                  value={scriptText}
+                  onChange={handleScriptTextChange}
+                  placeholder={t("pasteScriptHere") || "Paste your lesson script here..."}
+                />
+                <Typography variant="caption" sx={{ mt: 0.5, display: "block", color: "text.secondary" }}>
+                  {t("scriptHint") || "Paste from PowerPoint to keep formatting (bold, colors, lists)"}
+                </Typography>
+              </div>
+            )}
             {errorMessage && (
               <Alert severity="error" sx={{ mt: 2 }}>
                 {errorMessage}

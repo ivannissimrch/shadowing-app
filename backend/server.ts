@@ -92,6 +92,14 @@ const initDatabase = async () => {
     );
     await addColumnIfNotExists("lessons", "cloudinary_url", "TEXT");
 
+    // Add script text support columns
+    await addColumnIfNotExists("lessons", "script_text", "TEXT");
+    await addColumnIfNotExists(
+      "lessons",
+      "script_type",
+      "VARCHAR(10) DEFAULT 'image'",
+    );
+
     logger.info("Database tables initialized");
   } catch (error) {
     logger.error("Error initializing database:", error);

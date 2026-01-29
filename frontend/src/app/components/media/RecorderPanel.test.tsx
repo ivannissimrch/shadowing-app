@@ -27,6 +27,8 @@ describe("RecorderPanel", () => {
     title: "Test Lesson",
     status: "pending" as const,
     image: "https://example.com/image.jpg",
+    script_text: null,
+    script_type: "image" as const,
     video_id: "abc123",
     video_type: "youtube" as const,
     cloudinary_public_id: null,

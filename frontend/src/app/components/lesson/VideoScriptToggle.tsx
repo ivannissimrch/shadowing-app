@@ -1,6 +1,7 @@
 import SegmentPlayer from "../media/SegmentPlayer";
 import { Lesson } from "@/app/Types";
 import { useState, useRef, useEffect } from "react";
+import DOMPurify from "dompurify";
 import ToggleButtons from "./ToggleButtons";
 import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
@@ -104,12 +105,17 @@ export default function VideoScriptToggle({
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                bgcolor: "black",
+                bgcolor: selectedLesson.script_type === 'text' ? "white" : "black",
+                overflow: "auto",
               },
               "&:fullscreen img": {
                 maxHeight: "100vh",
                 width: "auto",
                 maxWidth: "100vw",
+              },
+              "&:fullscreen > div": {
+                maxWidth: "800px",
+                fontSize: "1.3rem",
               },
             }}
           >
@@ -150,17 +156,38 @@ export default function VideoScriptToggle({
                 <FiX size={28} />
               </IconButton>
             )}
-            <Box
-              component="img"
-              src={selectedLesson.image}
-              alt={`${selectedLesson.title} Practice lesson image`}
-              sx={{
-                width: "100%",
-                height: { xs: "auto", lg: "100%" },
-                objectFit: { xs: "initial", lg: "contain" },
-                display: "block",
-              }}
-            />
+            {selectedLesson.script_type === 'text' && selectedLesson.script_text ? (
+              <Box
+                sx={{
+                  p: 3,
+                  fontSize: '1.1rem',
+                  lineHeight: 1.8,
+                  height: { xs: 'auto', lg: '100%' },
+                  overflowY: 'auto',
+                  '& p': { mb: 1 },
+                  '& ul, & ol': { pl: 3 },
+                  '& strong, & b': { fontWeight: 600 },
+                }}
+                dangerouslySetInnerHTML={{
+                  __html: DOMPurify.sanitize(selectedLesson.script_text, {
+                    ALLOWED_TAGS: ['p', 'br', 'strong', 'b', 'em', 'i', 'u', 'span', 'ul', 'ol', 'li', 'h1', 'h2', 'h3'],
+                    ALLOWED_ATTR: ['style'],
+                  }),
+                }}
+              />
+            ) : (
+              <Box
+                component="img"
+                src={selectedLesson.image}
+                alt={`${selectedLesson.title} Practice lesson image`}
+                sx={{
+                  width: "100%",
+                  height: { xs: "auto", lg: "100%" },
+                  objectFit: { xs: "initial", lg: "contain" },
+                  display: "block",
+                }}
+              />
+            )}
           </Paper>
         )}
       </Box>
