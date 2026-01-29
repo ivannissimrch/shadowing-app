@@ -32,6 +32,7 @@ export const API_PATHS = {
   // Uploads
   UPLOAD_IMAGE: "/api/upload-image",
   UPLOAD_AUDIO: "/api/upload-audio",
+  UPLOAD_VIDEO: "/api/upload-video",
 
   // Speech
   SPEECH_EVALUATE: "/api/speech/evaluate",

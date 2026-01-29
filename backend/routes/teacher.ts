@@ -16,12 +16,24 @@ router.use(requireTeacher);
 router.post(
   "/lessons",
   asyncHandler(async (req: Request, res: Response) => {
-    const { title, image, videoId, lessonStartTime, lessonEndTime } = req.body;
+    const {
+      title,
+      image,
+      videoId,
+      videoType,
+      cloudinaryPublicId,
+      cloudinaryUrl,
+      lessonStartTime,
+      lessonEndTime,
+    } = req.body;
     // Create new lesson content
     const lesson = await lessonRepository.create({
       title,
       image,
       videoId,
+      videoType,
+      cloudinaryPublicId,
+      cloudinaryUrl,
       lessonStartTime,
       lessonEndTime,
     });

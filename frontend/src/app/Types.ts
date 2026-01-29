@@ -20,6 +20,9 @@ export interface Lesson {
   title: string;
   image: string;
   video_id: string;
+  video_type: 'youtube' | 'cloudinary';
+  cloudinary_public_id: string | null;
+  cloudinary_url: string | null;
   id: string;
   status: string;
   audio_file: string;
@@ -81,6 +84,13 @@ export type ImageResponse = {
   imageUrl: string;
 };
 export type AudioUploadResponse = { audioUrl: string };
+
+export type VideoUploadResponse = {
+  publicId: string;
+  url: string;
+  duration: number;
+  format: string;
+};
 
 export interface RecorderPanelContextType {
   recorderState: RecorderState;

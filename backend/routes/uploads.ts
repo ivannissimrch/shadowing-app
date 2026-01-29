@@ -4,6 +4,7 @@ import multer, { FileFilterCallback } from "multer";
 import path from "path";
 import asyncHandler from "../handlers/asyncHandler.js";
 import { uploadImage, uploadAudio } from "../services/azureBlobStorage.js";
+import { uploadVideo } from "../services/cloudinaryStorage.js";
 
 const router = Router();
 
@@ -80,6 +81,65 @@ router.post(
       },
     });
   })
+);
+
+// Configure multer for video uploads
+const videoUpload = multer({
+  storage: multer.memoryStorage(),
+  fileFilter: (
+    _req: Request,
+    file: Express.Multer.File,
+    cb: FileFilterCallback,
+  ) => {
+    // Accept common video formats
+    const allowedMimeTypes = [
+      "video/mp4",
+      "video/webm",
+      "video/quicktime", // .mov files
+      "video/x-msvideo", // .avi files
+      "video/x-matroska", // .mkv files
+    ];
+
+    if (allowedMimeTypes.includes(file.mimetype)) {
+      cb(null, true);
+    } else {
+      cb(new Error("Only video files are allowed (mp4, webm, mov, avi, mkv)"));
+    }
+  },
+  limits: {
+    fileSize: 100 * 1024 * 1024, // 100MB limit for videos
+  },
+});
+
+// Video upload route - uploads to Cloudinary
+router.post(
+  "/upload-video",
+  videoUpload.single("video"),
+  asyncHandler(async (req: Request, res: Response) => {
+    if (!req.file) {
+      throw createError(400, "No video file uploaded");
+    }
+
+    // Generate unique filename: lessonTitle_timestamp (no extension needed)
+    const baseName = req.body.fileName
+      ? req.body.fileName.replace(/[^a-zA-Z0-9]/g, "_") // Sanitize filename
+      : "lesson_video";
+    const fileName = `${baseName}_${Date.now()}`;
+
+    // Upload to Cloudinary
+    const result = await uploadVideo(req.file.buffer, fileName);
+
+    res.json({
+      success: true,
+      data: {
+        publicId: result.publicId,
+        url: result.url,
+        duration: result.duration,
+        format: result.format,
+      },
+      message: "Video uploaded successfully",
+    });
+  }),
 );
 
 export default router;

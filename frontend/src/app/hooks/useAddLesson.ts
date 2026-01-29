@@ -3,17 +3,22 @@ import { useState } from "react";
 import extractVideoId from "./../helpers/extractVideoId";
 import { mutate } from "swr";
 import { API_PATHS } from "./../constants/apiKeys";
-import { LessonResponse, ImageResponse } from "@/app/Types";
+import { LessonResponse, ImageResponse, VideoUploadResponse } from "@/app/Types";
 import { useSWRMutationHook } from "@/app/hooks/useSWRMutation";
+
+export type VideoType = 'youtube' | 'cloudinary';
 
 export default function useAddLesson(closeAddLessonDialog: () => void) {
   const [errorMessage, setErrorMessage] = useState("");
+  const [videoType, setVideoType] = useState<VideoType>('youtube');
   const [formData, setFormData] = useState({
     title: "",
     videoId: "",
     imageName: "",
   });
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
+  const [selectedVideo, setSelectedVideo] = useState<File | null>(null);
+  const [isUploading, setIsUploading] = useState(false);
 
   const { trigger: triggerLesson, isMutating: isMutatingLesson } =
     useSWRMutationHook<
@@ -21,7 +26,10 @@ export default function useAddLesson(closeAddLessonDialog: () => void) {
       {
         title: string;
         image: string;
-        videoId: string;
+        videoId?: string;
+        videoType: VideoType;
+        cloudinaryPublicId?: string;
+        cloudinaryUrl?: string;
       }
     >(
       API_PATHS.CREATE_LESSON,
@@ -39,6 +47,13 @@ export default function useAddLesson(closeAddLessonDialog: () => void) {
     ImageResponse,
     FormData
   >(API_PATHS.UPLOAD_IMAGE, {
+    method: "POST",
+  });
+
+  const { trigger: triggerVideoUpload } = useSWRMutationHook<
+    VideoUploadResponse,
+    FormData
+  >(API_PATHS.UPLOAD_VIDEO, {
     method: "POST",
   });
 
@@ -74,40 +89,113 @@ export default function useAddLesson(closeAddLessonDialog: () => void) {
     }));
   }
 
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
+  function handleVideoUpload(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
 
-    if (!formData.title || !formData.videoId || !selectedImage) {
-      setErrorMessage("Please fill in all required fields");
+    const allowedTypes = ['video/mp4', 'video/webm', 'video/quicktime', 'video/x-msvideo', 'video/x-matroska'];
+    if (!allowedTypes.includes(file.type)) {
+      setErrorMessage("Please select a video file (MP4, WebM, MOV, AVI, MKV)");
+      return;
+    }
+
+    // Check file size (100MB limit)
+    if (file.size > 100 * 1024 * 1024) {
+      setErrorMessage("Video file must be less than 100MB");
       return;
     }
 
     setErrorMessage("");
+    setSelectedVideo(file);
+  }
+
+  function handleVideoTypeChange(newType: VideoType) {
+    setVideoType(newType);
+    setSelectedVideo(null);
+    setFormData((prev) => ({
+      ...prev,
+      videoId: "",
+    }));
+    setErrorMessage("");
+  }
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+
+    // Validate based on video type
+    if (!formData.title || !selectedImage) {
+      setErrorMessage("Please fill in all required fields");
+      return;
+    }
+
+    if (videoType === 'youtube' && !formData.videoId) {
+      setErrorMessage("Please enter a YouTube URL");
+      return;
+    }
+
+    if (videoType === 'cloudinary' && !selectedVideo) {
+      setErrorMessage("Please select a video file to upload");
+      return;
+    }
+
+    setErrorMessage("");
+    setIsUploading(true);
 
     try {
+      // Upload image first
       const imageFormData = new FormData();
       imageFormData.append("image", selectedImage);
       imageFormData.append("imageName", formData.imageName);
       const imageUrl = await triggerImageUpload(imageFormData);
 
-      const videoId = extractVideoId(formData.videoId);
-      await triggerLesson({
+      // Prepare lesson data
+      const lessonData: {
+        title: string;
+        image: string;
+        videoType: VideoType;
+        videoId?: string;
+        cloudinaryPublicId?: string;
+        cloudinaryUrl?: string;
+      } = {
         title: formData.title,
         image: imageUrl.imageUrl,
-        videoId: videoId || "",
-      });
+        videoType: videoType,
+      };
 
+      if (videoType === 'youtube') {
+        // Extract YouTube video ID
+        const extractedVideoId = extractVideoId(formData.videoId);
+        lessonData.videoId = extractedVideoId || "";
+      } else {
+        // Upload video to Cloudinary
+        const videoFormData = new FormData();
+        videoFormData.append("video", selectedVideo!);
+        videoFormData.append("fileName", formData.title);
+
+        const videoResult = await triggerVideoUpload(videoFormData);
+        lessonData.cloudinaryPublicId = videoResult.publicId;
+        lessonData.cloudinaryUrl = videoResult.url;
+      }
+
+      // Create the lesson
+      await triggerLesson(lessonData);
+
+      // Reset form
       setFormData({
         title: "",
         videoId: "",
         imageName: "",
       });
       setSelectedImage(null);
+      setSelectedVideo(null);
+      setVideoType('youtube');
       closeAddLessonDialog();
     } catch (err) {
       setErrorMessage(
         err instanceof Error ? err.message : "Error adding lesson"
       );
+    } finally {
+      setIsUploading(false);
     }
   }
 
@@ -115,9 +203,13 @@ export default function useAddLesson(closeAddLessonDialog: () => void) {
     errorMessage,
     formData,
     selectedImage,
-    isMutatingLesson,
+    selectedVideo,
+    videoType,
+    isMutatingLesson: isMutatingLesson || isUploading,
     handleInputChange,
     handleImageUpload,
+    handleVideoUpload,
+    handleVideoTypeChange,
     handleSubmit,
   };
 }

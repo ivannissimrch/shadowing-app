@@ -59,6 +59,39 @@ const initDatabase = async () => {
       );
     `);
 
+    // Migration: Add Cloudinary video support columns to lessons table
+    // These run safely - if column exists, it just skips
+    const addColumnIfNotExists = async (
+      table: string,
+      column: string,
+      definition: string,
+    ) => {
+      const checkColumn = await pool.query(
+        `SELECT column_name FROM information_schema.columns
+         WHERE table_name = $1 AND column_name = $2`,
+        [table, column],
+      );
+      if (checkColumn.rows.length === 0) {
+        await pool.query(
+          `ALTER TABLE ${table} ADD COLUMN ${column} ${definition}`,
+        );
+        logger.info(`Added column ${column} to ${table}`);
+      }
+    };
+
+    // Add Cloudinary support columns
+    await addColumnIfNotExists(
+      "lessons",
+      "video_type",
+      "VARCHAR(20) DEFAULT 'youtube'",
+    );
+    await addColumnIfNotExists(
+      "lessons",
+      "cloudinary_public_id",
+      "VARCHAR(255)",
+    );
+    await addColumnIfNotExists("lessons", "cloudinary_url", "TEXT");
+
     logger.info("Database tables initialized");
   } catch (error) {
     logger.error("Error initializing database:", error);
@@ -95,6 +128,7 @@ app.get("/", (_req: Request, res: Response) => {
 
 app.use("/api/upload-image", uploadLimiter);
 app.use("/api/upload-audio", uploadLimiter);
+app.use("/api/upload-video", uploadLimiter);
 app.use("/api", apiLimiter, protect, router);
 app.post("/signin", authLimiter, signin);
 

@@ -32,12 +32,21 @@ export const lessonRepository = {
   },
 
   create: async (lesson: CreateLessonBody) => {
-    const { title, image, videoId, lessonStartTime, lessonEndTime } = lesson;
+    const {
+      title,
+      image,
+      videoId,
+      videoType = 'youtube',
+      cloudinaryPublicId,
+      cloudinaryUrl,
+      lessonStartTime,
+      lessonEndTime,
+    } = lesson;
     const result: QueryResult<Lesson> = await db.query(
-      `INSERT INTO lessons (title, image, video_id, lesson_start_time, lesson_end_time)
-       VALUES ($1, $2, $3, $4, $5)
+      `INSERT INTO lessons (title, image, video_id, video_type, cloudinary_public_id, cloudinary_url, lesson_start_time, lesson_end_time)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
        RETURNING *`,
-      [title, image, videoId, lessonStartTime, lessonEndTime]
+      [title, image, videoId, videoType, cloudinaryPublicId, cloudinaryUrl, lessonStartTime, lessonEndTime]
     );
     return result.rows[0];
   },
@@ -62,7 +71,7 @@ export const lessonRepository = {
         COUNT(CASE WHEN a.completed = true THEN 1 END) as completed_count
       FROM lessons l
       LEFT JOIN assignments a ON l.id = a.lesson_id
-      GROUP BY l.id, l.title, l.image, l.video_id, l.lesson_start_time, l.lesson_end_time, l.created_at, l.updated_at
+      GROUP BY l.id, l.title, l.image, l.video_id, l.video_type, l.cloudinary_public_id, l.cloudinary_url, l.lesson_start_time, l.lesson_end_time, l.created_at, l.updated_at
       ORDER BY l.created_at DESC
     `);
     return result.rows;
