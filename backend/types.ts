@@ -13,6 +13,9 @@ export interface Lesson {
   title: string;
   image: string | null;
   video_id: string | null;
+  video_type: 'youtube' | 'cloudinary';
+  cloudinary_public_id: string | null;
+  cloudinary_url: string | null;
   lesson_start_time: number | null;
   lesson_end_time: number | null;
   created_at: Date;
@@ -83,6 +86,9 @@ export interface CreateLessonBody {
   title: string;
   image?: string;
   videoId?: string;
+  videoType?: 'youtube' | 'cloudinary';
+  cloudinaryPublicId?: string;
+  cloudinaryUrl?: string;
   lessonStartTime?: number;
   lessonEndTime?: number;
 }

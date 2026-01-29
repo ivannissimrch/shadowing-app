@@ -3,10 +3,14 @@ import { useTranslations } from "next-intl";
 import DialogTitle from "@mui/material/DialogTitle";
 import Box from "@mui/material/Box";
 import Alert from "@mui/material/Alert";
+import ToggleButton from "@mui/material/ToggleButton";
+import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
+import Typography from "@mui/material/Typography";
 import useAlertMessageStyles from "../../hooks/useAlertMessageStyles";
 import { ErrorBoundary } from "react-error-boundary";
-import useAddLesson from "../../hooks/useAddLesson";
-import { FiUpload } from "react-icons/fi";
+import useAddLesson, { VideoType } from "../../hooks/useAddLesson";
+import { FiUpload, FiVideo } from "react-icons/fi";
+import { FaYoutube } from "react-icons/fa";
 
 interface AddLessonProps {
   isAddLessonDialogOpen: boolean;
@@ -31,9 +35,13 @@ export default function AddLesson({
     errorMessage,
     formData,
     selectedImage,
+    selectedVideo,
+    videoType,
     isMutatingLesson,
     handleInputChange,
     handleImageUpload,
+    handleVideoUpload,
+    handleVideoTypeChange,
     handleSubmit,
   } = useAddLesson(closeAddLessonDialog);
 
@@ -71,26 +79,109 @@ export default function AddLesson({
                 aria-required="true"
                 aria-invalid={errorMessage ? "true" : "false"}
                 aria-describedby={errorMessage ? "add-lesson-error" : undefined}
-                value={formData.title}
+                value={formData.title || ""}
                 onChange={handleInputChange}
                 autoFocus
               />
             </div>
 
-            <div>
-              <label htmlFor="video-id">{tLesson("videoUrl")}</label>
-              <input
-                id="video-id"
-                type="text"
-                placeholder={t("enterVideoUrl")}
-                required
-                aria-required="true"
-                aria-invalid={errorMessage ? "true" : "false"}
-                aria-describedby={errorMessage ? "add-lesson-error" : undefined}
-                value={formData.videoId}
-                onChange={handleInputChange}
-              />
-            </div>
+            {/* Video Type Toggle */}
+            <Box sx={{ mt: 2, mb: 1 }}>
+              <Typography variant="body2" sx={{ mb: 1, fontWeight: 500 }}>
+                {t("videoSource") || "Video Source"}
+              </Typography>
+              <ToggleButtonGroup
+                value={videoType}
+                exclusive
+                onChange={(_e, newValue: VideoType | null) => {
+                  if (newValue !== null) {
+                    handleVideoTypeChange(newValue);
+                  }
+                }}
+                aria-label="video source type"
+                color="primary"
+                size="small"
+                fullWidth
+              >
+                <ToggleButton value="youtube" aria-label="YouTube video">
+                  <FaYoutube style={{ marginRight: 8 }} />
+                  YouTube
+                </ToggleButton>
+                <ToggleButton value="cloudinary" aria-label="Upload video">
+                  <FiVideo style={{ marginRight: 8 }} />
+                  {t("uploadVideo") || "Upload Video"}
+                </ToggleButton>
+              </ToggleButtonGroup>
+            </Box>
+
+            {/* Conditional Video Input */}
+            {videoType === 'youtube' ? (
+              <div>
+                <label htmlFor="video-id">{tLesson("videoUrl")}</label>
+                <input
+                  id="video-id"
+                  type="text"
+                  placeholder={t("enterVideoUrl")}
+                  required
+                  aria-required="true"
+                  aria-invalid={errorMessage ? "true" : "false"}
+                  aria-describedby={errorMessage ? "add-lesson-error" : undefined}
+                  value={formData.videoId || ""}
+                  onChange={handleInputChange}
+                />
+              </div>
+            ) : (
+              <div>
+                <label htmlFor="video-upload">{t("uploadVideo") || "Upload Video"}</label>
+                <input
+                  id="video-upload"
+                  type="file"
+                  accept="video/mp4,video/webm,video/quicktime,video/x-msvideo,video/x-matroska"
+                  required
+                  aria-required="true"
+                  onChange={handleVideoUpload}
+                  style={{
+                    position: "absolute",
+                    width: 1,
+                    height: 1,
+                    padding: 0,
+                    margin: -1,
+                    overflow: "hidden",
+                    clip: "rect(0, 0, 0, 0)",
+                    whiteSpace: "nowrap",
+                    border: 0,
+                  }}
+                />
+                <Box
+                  component="label"
+                  htmlFor="video-upload"
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    gap: 1,
+                    p: 1.5,
+                    border: "1px solid",
+                    borderColor: selectedVideo ? "primary.main" : "grey.300",
+                    borderRadius: 1,
+                    cursor: "pointer",
+                    color: selectedVideo ? "text.primary" : "text.secondary",
+                    bgcolor: selectedVideo ? "primary.light" : "transparent",
+                    transition: "all 0.2s",
+                    "&:hover": {
+                      borderColor: "primary.main",
+                      bgcolor: "primary.light",
+                    },
+                  }}
+                >
+                  <FiVideo size={16} />
+                  {selectedVideo ? selectedVideo.name : (t("chooseVideoFile") || "Choose video file")}
+                </Box>
+                <Typography variant="caption" sx={{ mt: 0.5, display: "block", color: "text.secondary" }}>
+                  {t("videoFormats") || "Supported: MP4, WebM, MOV, AVI, MKV (max 100MB)"}
+                </Typography>
+              </div>
+            )}
 
             <div>
               <label htmlFor="image-upload">{t("uploadImage")}</label>
