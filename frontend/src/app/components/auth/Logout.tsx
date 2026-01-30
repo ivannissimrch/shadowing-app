@@ -1,5 +1,5 @@
 "use client";
-import { useRouter } from "next/navigation";
+import { useRouter } from "@/i18n/routing";
 import { useAuthContext } from "../../AuthContext";
 import Button from "@mui/material/Button";
 import { FiLogOut } from "react-icons/fi";
