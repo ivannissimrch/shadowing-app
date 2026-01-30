@@ -5,4 +5,6 @@ export interface VideoPlayerRef {
   getDuration: () => number;
   play: () => void;
   pause: () => void;
+  setPlaybackRate?: (rate: number) => void;
+  getPlaybackRate?: () => number;
 }

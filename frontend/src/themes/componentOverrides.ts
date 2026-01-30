@@ -406,6 +406,39 @@ export const componentOverrides = (theme: Theme, borderRadius: number): Componen
       },
     },
   },
+
+  // ===== SLIDER =====
+  MuiSlider: {
+    styleOverrides: {
+      root: {
+        '&.Mui-disabled': {
+          color: palette.grey[300],
+        },
+      },
+      mark: {
+        width: 4,
+        height: 4,
+        borderRadius: '50%',
+        backgroundColor: palette.grey[400],
+      },
+      markActive: {
+        backgroundColor: palette.primary.main,
+      },
+      markLabel: {
+        fontSize: '0.7rem',
+        color: palette.grey[600],
+      },
+      valueLabel: {
+        backgroundColor: palette.primary.main,
+        borderRadius: `${borderRadius / 2}px`,
+      },
+      thumb: {
+        '&:hover, &.Mui-focusVisible': {
+          boxShadow: `0 0 0 8px ${palette.primary.light}`,
+        },
+      },
+    },
+  },
 });
 
 export default componentOverrides;
