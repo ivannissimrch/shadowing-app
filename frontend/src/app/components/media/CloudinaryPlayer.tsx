@@ -8,6 +8,7 @@ import Typography from "@mui/material/Typography";
 import { FiAlertCircle } from "react-icons/fi";
 import { VideoPlayerRef } from "./playerTypes";
 import { LoopState } from "./loopTypes";
+import SpeedControl from "./SpeedControl";
 
 // Import Cloudinary video player CSS
 import "cloudinary-video-player/cld-video-player.min.css";
@@ -94,6 +95,7 @@ const CloudinaryPlayer = forwardRef<VideoPlayerRef, CloudinaryPlayerProps>(
     const [duration, setDuration] = useState(0);
     const [hasError, setHasError] = useState(false);
     const [isReady, setIsReady] = useState(false);
+    const [playbackRate, setPlaybackRate] = useState(1);
 
     const { state, setRange, toggleLoop, clearLoop } = useCloudinaryLoop(playerRef);
 
@@ -113,6 +115,13 @@ const CloudinaryPlayer = forwardRef<VideoPlayerRef, CloudinaryPlayerProps>(
           getDuration: () => cloudinaryPlayerRef.current?.duration() ?? 0,
           play: () => cloudinaryPlayerRef.current?.play(),
           pause: () => cloudinaryPlayerRef.current?.pause(),
+          setPlaybackRate: (rate: number) => {
+            if (videoRef.current) {
+              videoRef.current.playbackRate = rate;
+              setPlaybackRate(rate);
+            }
+          },
+          getPlaybackRate: () => videoRef.current?.playbackRate ?? 1,
         };
       }
     }, [isReady]);
@@ -224,6 +233,13 @@ const CloudinaryPlayer = forwardRef<VideoPlayerRef, CloudinaryPlayerProps>(
       }
     }, []);
 
+    const handleSpeedChange = useCallback((rate: number) => {
+      if (videoRef.current) {
+        videoRef.current.playbackRate = rate;
+        setPlaybackRate(rate);
+      }
+    }, []);
+
     if (hasError) {
       return (
         <Box
@@ -277,11 +293,18 @@ const CloudinaryPlayer = forwardRef<VideoPlayerRef, CloudinaryPlayerProps>(
             bgcolor: "grey.50",
           }}
         >
-          <Box sx={{ display: "flex", alignItems: "center", gap: 2, mb: 2 }}>
-            <VideoTimer currentTime={currentTime} />
-            <Typography variant="caption" color="text.secondary">
-              / {Math.floor(duration / 60)}:{String(duration % 60).padStart(2, "0")}
-            </Typography>
+          <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", mb: 2 }}>
+            <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+              <VideoTimer currentTime={currentTime} />
+              <Typography variant="caption" color="text.secondary">
+                / {Math.floor(duration / 60)}:{String(duration % 60).padStart(2, "0")}
+              </Typography>
+            </Box>
+            <SpeedControl
+              speed={playbackRate}
+              onSpeedChange={handleSpeedChange}
+              disabled={!isReady}
+            />
           </Box>
           <LoopButtons
             startTime={startTime}

@@ -3,6 +3,7 @@ import { LoopState } from "./loopTypes";
 import { memo, useState, useEffect } from "react";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
+import IconButton from "@mui/material/IconButton";
 import Slider from "@mui/material/Slider";
 import Typography from "@mui/material/Typography";
 import { FiRepeat, FiX } from "react-icons/fi";
@@ -30,18 +31,19 @@ function LoopButtons({
   clearLoop,
   state,
 }: LoopButtonsProps) {
-  // Local state for slider while dragging
+  const [expanded, setExpanded] = useState(false);
   const [sliderValue, setSliderValue] = useState<number[]>([0, duration || 100]);
   const [prevSliderValue, setPrevSliderValue] = useState<number[]>([0, duration || 100]);
 
-  // Update slider when duration loads or external state changes
+  const hasRange = state.status === "ready" || state.status === "looping";
+  const loopDuration = sliderValue[1] - sliderValue[0];
+
   useEffect(() => {
     if (duration > 0) {
       if (startTime !== null && endTime !== null) {
         setSliderValue([startTime, endTime]);
         setPrevSliderValue([startTime, endTime]);
       } else {
-        // Default to first 10 seconds or full duration if shorter
         const defaultValue = [0, Math.min(10, duration)];
         setSliderValue(defaultValue);
         setPrevSliderValue(defaultValue);
@@ -49,16 +51,18 @@ function LoopButtons({
     }
   }, [duration, startTime, endTime]);
 
+  // Auto-expand when loop is active
+  useEffect(() => {
+    if (isLooping) setExpanded(true);
+  }, [isLooping]);
+
   const handleSliderChange = (_event: Event, newValue: number | number[], activeThumb: number) => {
     const value = newValue as number[];
     setSliderValue(value);
 
-    // Seek video to the position being adjusted
     if (activeThumb === 0 && value[0] !== prevSliderValue[0]) {
-      // Start thumb moved - seek to start position
       seekTo(value[0]);
     } else if (activeThumb === 1 && value[1] !== prevSliderValue[1]) {
-      // End thumb moved - seek to end position
       seekTo(value[1]);
     }
     setPrevSliderValue(value);
@@ -69,111 +73,79 @@ function LoopButtons({
     setRange(value[0], value[1]);
   };
 
-  // Don't render until we have duration
+  const handleClear = () => {
+    clearLoop();
+    setExpanded(false);
+  };
+
   if (duration === 0) {
+    return null;
+  }
+
+  // Collapsed state - just show button
+  if (!expanded && !isLooping) {
     return (
-      <Box sx={{ p: 1 }}>
-        <Typography variant="body2" color="text.secondary">
-          Loading video...
-        </Typography>
-      </Box>
+      <Button
+        onClick={() => setExpanded(true)}
+        variant="outlined"
+        size="small"
+        startIcon={<FiRepeat size={14} />}
+        sx={{ textTransform: "none", fontSize: "0.75rem" }}
+      >
+        Set Loop
+      </Button>
     );
   }
 
-  const hasRange = state.status === "ready" || state.status === "looping";
-
+  // Expanded state - compact slider + toggle
   return (
-    <Box sx={{ width: "100%" }}>
-      {/* Slider */}
-      <Box sx={{ px: { xs: 0, sm: 1 }, mb: { xs: 2, sm: 1 } }}>
-        <Slider
-          value={sliderValue}
-          onChange={handleSliderChange}
-          onChangeCommitted={handleSliderCommit}
-          min={0}
-          max={duration}
-          valueLabelDisplay="auto"
-          valueLabelFormat={(value) => getFormattedTime(value)}
-          disableSwap
-          sx={{
-            "& .MuiSlider-thumb": {
-              width: { xs: 24, sm: 16 },
-              height: { xs: 24, sm: 16 },
-            },
-            "& .MuiSlider-track": {
-              height: { xs: 8, sm: 6 },
-            },
-            "& .MuiSlider-rail": {
-              height: { xs: 8, sm: 6 },
-              opacity: 0.3,
-            },
-          }}
-        />
-        {/* Time labels */}
-        <Box sx={{ display: "flex", justifyContent: "space-between", mt: -0.5 }}>
-          <Typography
-            variant="body2"
-            color="text.secondary"
-            sx={{ fontSize: { xs: "0.875rem", sm: "0.75rem" } }}
-          >
-            {getFormattedTime(sliderValue[0])}
-          </Typography>
-          <Typography
-            variant="body2"
-            color="primary.main"
-            sx={{ fontWeight: 600, fontSize: { xs: "0.875rem", sm: "0.75rem" } }}
-          >
-            Loop: {sliderValue[1] - sliderValue[0]}s
-          </Typography>
-          <Typography
-            variant="body2"
-            color="text.secondary"
-            sx={{ fontSize: { xs: "0.875rem", sm: "0.75rem" } }}
-          >
-            {getFormattedTime(sliderValue[1])}
-          </Typography>
-        </Box>
-      </Box>
+    <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, width: "100%" }}>
+      <Typography variant="caption" color="text.secondary" sx={{ minWidth: 32 }}>
+        {getFormattedTime(sliderValue[0])}
+      </Typography>
 
-      {/* Buttons */}
-      <Box sx={{ display: "flex", gap: { xs: 2, sm: 1 }, justifyContent: "center" }}>
-        <Button
-          onClick={toggleLoop}
-          variant={isLooping ? "contained" : "outlined"}
+      <Slider
+        value={sliderValue}
+        onChange={handleSliderChange}
+        onChangeCommitted={handleSliderCommit}
+        min={0}
+        max={duration}
+        valueLabelDisplay="auto"
+        valueLabelFormat={(value) => getFormattedTime(value)}
+        disableSwap
+        size="small"
+        sx={{ flex: 1 }}
+      />
+
+      <Typography variant="caption" color="text.secondary" sx={{ minWidth: 32 }}>
+        {getFormattedTime(sliderValue[1])}
+      </Typography>
+
+      <Button
+        onClick={toggleLoop}
+        variant={isLooping ? "contained" : "outlined"}
+        size="small"
+        color="primary"
+        sx={{
+          textTransform: "none",
+          fontSize: "0.75rem",
+          minWidth: "auto",
+          px: 1.5,
+        }}
+      >
+        {isLooping ? `Loop ${loopDuration}s` : "Loop"}
+      </Button>
+
+      {hasRange && (
+        <IconButton
+          onClick={handleClear}
           size="small"
-          color="primary"
-          startIcon={<FiRepeat size={16} />}
-          disabled={!hasRange}
-          sx={{
-            textTransform: "none",
-            fontWeight: 500,
-            fontSize: { xs: "0.9rem", sm: "0.875rem" },
-            py: { xs: 1, sm: 0.5 },
-            px: { xs: 2, sm: 1.5 },
-          }}
+          color="error"
+          sx={{ p: 0.5 }}
         >
-          {isLooping ? "Loop ON" : "Loop OFF"}
-        </Button>
-
-        {hasRange && (
-          <Button
-            onClick={clearLoop}
-            variant="outlined"
-            size="small"
-            color="error"
-            startIcon={<FiX size={16} />}
-            sx={{
-              textTransform: "none",
-              fontWeight: 500,
-              fontSize: { xs: "0.9rem", sm: "0.875rem" },
-              py: { xs: 1, sm: 0.5 },
-              px: { xs: 2, sm: 1.5 },
-            }}
-          >
-            Clear
-          </Button>
-        )}
-      </Box>
+          <FiX size={14} />
+        </IconButton>
+      )}
     </Box>
   );
 }
