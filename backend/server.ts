@@ -103,6 +103,28 @@ const initDatabase = async () => {
     // Add category column for lesson organization
     await addColumnIfNotExists("lessons", "category", "VARCHAR(100)");
 
+    // Lists table for organizing lessons
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS lists (
+        id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+        teacher_id UUID REFERENCES users(id) ON DELETE CASCADE,
+        name VARCHAR(255) NOT NULL,
+        description TEXT,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      );
+    `);
+
+    // Junction table for list-lesson many-to-many relationship
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS list_lessons (
+        list_id UUID REFERENCES lists(id) ON DELETE CASCADE,
+        lesson_id UUID REFERENCES lessons(id) ON DELETE CASCADE,
+        added_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        PRIMARY KEY (list_id, lesson_id)
+      );
+    `);
+
     logger.info("Database tables initialized");
   } catch (error) {
     logger.error("Error initializing database:", error);

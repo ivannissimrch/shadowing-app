@@ -1,5 +1,6 @@
 "use client";
 import { useTranslations } from "next-intl";
+import { useState } from "react";
 import { Link } from "@/i18n/routing";
 import MuiCard from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
@@ -28,6 +29,8 @@ export default function LessonCard({
   onEditLesson,
 }: LessonCardProps) {
   const t = useTranslations("teacher");
+  const tCommon = useTranslations("common");
+  const [loadingId, setLoadingId] = useState<string | null>(null);
 
   return lessons.map((lesson: Lesson) => (
     <MuiCard
@@ -98,10 +101,12 @@ export default function LessonCard({
           href={`/teacher/lesson/${lesson.id}`}
           variant="outlined"
           fullWidth
-          startIcon={<FiEye size={16} />}
+          startIcon={loadingId !== lesson.id ? <FiEye size={16} /> : undefined}
+          disabled={loadingId === lesson.id}
+          onClick={() => setLoadingId(lesson.id)}
           sx={{ textTransform: "none", fontWeight: 500 }}
         >
-          {t("viewLesson")}
+          {loadingId === lesson.id ? tCommon("loading") : t("viewLesson")}
         </Button>
 
         {/* Action Buttons Row */}

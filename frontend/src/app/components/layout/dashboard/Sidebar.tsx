@@ -27,8 +27,11 @@ interface SidebarProps {
 
 // Translation keys for menu items
 const menuTranslationKeys: Record<string, string> = {
+  'dashboard': 'navigation.dashboard',
   'students': 'navigation.students',
   'lessons': 'student.myLessons',
+  'lists': 'navigation.lists',
+  'reviews': 'navigation.reviews',
   'practice': 'navigation.practice',
   'change-password': 'auth.changePassword',
   'main': 'navigation.home',

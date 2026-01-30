@@ -51,4 +51,12 @@ export const API_PATHS = {
   // Practice Words
   PRACTICE_WORDS: "/api/practice-words",
   PRACTICE_WORD: (id: number) => `/api/practice-words/${id}`,
+
+  // Lists
+  ALL_LISTS: "/api/teacher/lists",
+  CREATE_LIST: "/api/teacher/lists",
+  LIST: (id: string) => `/api/teacher/lists/${id}`,
+  LIST_LESSONS: (id: string) => `/api/teacher/lists/${id}/lessons`,
+  LIST_REMOVE_LESSON: (listId: string, lessonId: string) =>
+    `/api/teacher/lists/${listId}/lessons/${lessonId}`,
 } as const;
