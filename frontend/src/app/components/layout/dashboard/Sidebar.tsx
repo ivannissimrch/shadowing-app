@@ -1,6 +1,6 @@
 'use client';
 
-import { usePathname } from 'next/navigation';
+import { usePathname } from '@/i18n/routing';
 import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/routing';
 import { useState, useEffect } from 'react';
@@ -114,10 +114,8 @@ export default function Sidebar({ menuItems, open, onClose, variant }: SidebarPr
             {/* Menu Items */}
             <List disablePadding>
               {group.items.map((item) => {
-                // pathname includes locale (e.g., /en/teacher), item.url doesn't (e.g., /teacher)
-                // Remove locale prefix for comparison
-                const pathWithoutLocale = pathname.replace(/^\/(en|ko)/, '');
-                const isActive = pathWithoutLocale === item.url || pathname === item.url;
+                // usePathname from @/i18n/routing returns path without locale prefix
+                const isActive = pathname === item.url;
                 const isLoading = loadingUrl === item.url;
                 const Icon = item.icon;
 

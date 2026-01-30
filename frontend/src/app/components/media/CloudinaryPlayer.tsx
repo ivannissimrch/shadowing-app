@@ -158,6 +158,13 @@ const CloudinaryPlayer = forwardRef<VideoPlayerRef, CloudinaryPlayerProps>(
           // Store reference for event handlers
           const player = cloudinaryPlayerRef.current;
 
+          // Verify player was created successfully before attaching events
+          if (!player || typeof player.on !== "function") {
+            console.error("Cloudinary player failed to initialize properly");
+            setHasError(true);
+            return;
+          }
+
           // Listen for events
           player.on("ready", () => {
             if (mounted) {

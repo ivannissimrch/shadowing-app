@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState, useRef } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter } from "@/i18n/routing";
 import { useTranslations } from "next-intl";
 import { useAuthContext } from "../../AuthContext";
 import redirectBasedOnRole from "../../helpers/redirectBasedOnRole";

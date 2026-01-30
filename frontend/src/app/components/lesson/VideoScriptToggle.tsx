@@ -164,6 +164,9 @@ export default function VideoScriptToggle({
                   lineHeight: 1.8,
                   height: { xs: 'auto', lg: '100%' },
                   overflowY: 'auto',
+                  // Always use light mode colors for readability
+                  bgcolor: '#ffffff',
+                  color: '#1a1a1a',
                   '& p': { mb: 1 },
                   '& ul, & ol': { pl: 3 },
                   '& strong, & b': { fontWeight: 600 },
