@@ -3,10 +3,12 @@
 
 import { IconType } from 'react-icons';
 import {
+  FiHome,
   FiUsers,
   FiBook,
   FiMic,
-  FiLock
+  FiSettings,
+  FiClock
 } from 'react-icons/fi';
 
 export interface MenuItem {
@@ -29,9 +31,15 @@ export const teacherMenuItems: MenuGroup[] = [
     title: 'Main',
     items: [
       {
+        id: 'dashboard',
+        title: 'Dashboard',
+        url: '/teacher',
+        icon: FiHome,
+      },
+      {
         id: 'students',
         title: 'Students',
-        url: '/teacher',
+        url: '/teacher/students',
         icon: FiUsers,
       },
       {
@@ -40,6 +48,12 @@ export const teacherMenuItems: MenuGroup[] = [
         url: '/teacher/lessons',
         icon: FiBook,
       },
+      {
+        id: 'reviews',
+        title: 'Reviews',
+        url: '/teacher/reviews',
+        icon: FiClock,
+      },
     ],
   },
   {
@@ -47,10 +61,10 @@ export const teacherMenuItems: MenuGroup[] = [
     title: 'Settings',
     items: [
       {
-        id: 'change-password',
-        title: 'Change Password',
-        url: '/change-password',
-        icon: FiLock,
+        id: 'settings',
+        title: 'Settings',
+        url: '/settings',
+        icon: FiSettings,
       },
     ],
   },
@@ -81,10 +95,10 @@ export const studentMenuItems: MenuGroup[] = [
     title: 'Settings',
     items: [
       {
-        id: 'change-password',
-        title: 'Change Password',
-        url: '/change-password',
-        icon: FiLock,
+        id: 'settings',
+        title: 'Settings',
+        url: '/settings',
+        icon: FiSettings,
       },
     ],
   },

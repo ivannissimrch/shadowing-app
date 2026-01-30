@@ -1,5 +1,6 @@
 "use client";
 import { useTranslations } from "next-intl";
+import { Link } from "@/i18n/routing";
 import MuiCard from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CardActions from "@mui/material/CardActions";
@@ -9,19 +10,22 @@ import IconButton from "@mui/material/IconButton";
 import Box from "@mui/material/Box";
 import Avatar from "@mui/material/Avatar";
 import Tooltip from "@mui/material/Tooltip";
-import { FiBook, FiUserPlus, FiTrash2 } from "react-icons/fi";
+import Chip from "@mui/material/Chip";
+import { FiBook, FiUserPlus, FiTrash2, FiEdit2, FiEye } from "react-icons/fi";
 import { Lesson } from "../../Types";
 
 interface LessonCardProps {
   lessons: Lesson[];
   onAssignLesson: (lesson: { id: string; title: string }) => void;
   onDeleteLesson: (lesson: Lesson) => void;
+  onEditLesson?: (lesson: Lesson) => void;
 }
 
 export default function LessonCard({
   lessons,
   onAssignLesson,
   onDeleteLesson,
+  onEditLesson,
 }: LessonCardProps) {
   const t = useTranslations("teacher");
 
@@ -32,9 +36,28 @@ export default function LessonCard({
         height: "100%",
         display: "flex",
         flexDirection: "column",
+        position: "relative",
       }}
     >
-      <CardContent sx={{ flexGrow: 1, pb: 1 }}>
+      {/* Category Badge - Upper Right Corner */}
+      {lesson.category && (
+        <Chip
+          label={lesson.category}
+          size="small"
+          sx={{
+            position: "absolute",
+            top: 8,
+            right: 8,
+            bgcolor: "secondary.light",
+            color: "secondary.dark",
+            fontWeight: 500,
+            fontSize: "0.7rem",
+            height: 22,
+          }}
+        />
+      )}
+
+      <CardContent sx={{ flexGrow: 1, pb: 1, pt: lesson.category ? 4 : 2 }}>
         {/* Icon */}
         <Box sx={{ display: "flex", justifyContent: "center", mb: 2 }}>
           <Avatar
@@ -68,26 +91,54 @@ export default function LessonCard({
         </Typography>
       </CardContent>
 
-      <CardActions sx={{ p: 2, pt: 0, justifyContent: "space-between" }}>
+      <CardActions sx={{ p: 2, pt: 0, flexDirection: "column", gap: 1 }}>
+        {/* View Button */}
         <Button
-          variant="contained"
-          color="secondary"
-          startIcon={<FiUserPlus size={16} />}
-          onClick={() => onAssignLesson(lesson)}
-          sx={{ textTransform: "none", fontWeight: 500, flex: 1 }}
+          component={Link}
+          href={`/teacher/lesson/${lesson.id}`}
+          variant="outlined"
+          fullWidth
+          startIcon={<FiEye size={16} />}
+          sx={{ textTransform: "none", fontWeight: 500 }}
         >
-          {t("assignLesson")}
+          {t("viewLesson")}
         </Button>
-        <Tooltip title={t("deleteLesson")}>
-          <IconButton
-            onClick={() => onDeleteLesson(lesson)}
-            color="error"
-            aria-label={`${t("deleteLesson")} ${lesson.title}`}
-            sx={{ ml: 1 }}
+
+        {/* Action Buttons Row */}
+        <Box sx={{ display: "flex", width: "100%", gap: 1 }}>
+          <Button
+            variant="contained"
+            color="secondary"
+            startIcon={<FiUserPlus size={16} />}
+            onClick={() => onAssignLesson(lesson)}
+            sx={{ textTransform: "none", fontWeight: 500, flex: 1 }}
+            size="small"
           >
-            <FiTrash2 size={18} />
-          </IconButton>
-        </Tooltip>
+            {t("assignLesson")}
+          </Button>
+          {onEditLesson && (
+            <Tooltip title={t("editLesson") || "Edit Lesson"}>
+              <IconButton
+                onClick={() => onEditLesson(lesson)}
+                color="primary"
+                size="small"
+                aria-label={`${t("editLesson") || "Edit"} ${lesson.title}`}
+              >
+                <FiEdit2 size={16} />
+              </IconButton>
+            </Tooltip>
+          )}
+          <Tooltip title={t("deleteLesson")}>
+            <IconButton
+              onClick={() => onDeleteLesson(lesson)}
+              color="error"
+              size="small"
+              aria-label={`${t("deleteLesson")} ${lesson.title}`}
+            >
+              <FiTrash2 size={16} />
+            </IconButton>
+          </Tooltip>
+        </Box>
       </CardActions>
     </MuiCard>
   ));

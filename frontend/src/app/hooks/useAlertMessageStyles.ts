@@ -4,27 +4,28 @@ import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import { styled } from "@mui/material/styles";
+import { palette } from "@/themes/palette";
 
-// Berry theme colors
+// Use Berry theme colors from centralized palette
 const colors = {
   primary: {
-    main: "#2196f3",
-    dark: "#1e88e5",
-    light: "#e3f2fd",
+    main: palette.primary.main,      // #1976d2
+    dark: palette.primary.dark,      // #1565c0
+    light: palette.primary.light,    // #e3f2fd
   },
   text: {
-    primary: "#364152",
-    secondary: "#697586",
+    primary: palette.text.primary,   // #364152
+    secondary: palette.text.secondary, // #697586
   },
   grey: {
-    100: "#eef2f6",
-    200: "#e3e8ef",
-    300: "#cdd5df",
-    400: "#9da4ae",
+    100: palette.grey[100],          // #eef2f6
+    200: palette.grey[200],          // #e3e8ef
+    300: palette.grey[300],          // #cdd5df
+    400: palette.grey[400],          // #9da4ae
   },
   error: {
-    main: "#f44336",
-    dark: "#c62828",
+    main: palette.error.main,        // #f44336
+    dark: palette.error.dark,        // #c62828
   },
 };
 

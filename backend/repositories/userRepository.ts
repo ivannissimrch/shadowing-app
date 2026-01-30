@@ -5,14 +5,14 @@ import { User } from "../types.js";
 export const userRepository = {
   findAllStudents: async () => {
     const result: QueryResult<User> = await db.query(
-      "SELECT id, username, role FROM users WHERE role = 'student'"
+      "SELECT id, username, email, role FROM users WHERE role = 'student'"
     );
     return result.rows;
   },
 
   findById: async (userId: string) => {
     const result: QueryResult<User> = await db.query(
-      "SELECT id, username, role FROM users WHERE id = $1",
+      "SELECT id, username, email, role FROM users WHERE id = $1",
       [userId]
     );
     return result.rows[0] || null;
@@ -70,9 +70,17 @@ export const userRepository = {
     return result.rows.length > 0;
   },
 
+  updateEmail: async (userId: string, email: string) => {
+    const result: QueryResult<User> = await db.query(
+      "UPDATE users SET email = $1 WHERE id = $2 RETURNING id, username, email, role",
+      [email, userId]
+    );
+    return result.rows[0] || null;
+  },
+
   findStudentById: async (studentId: string) => {
     const result: QueryResult<User> = await db.query(
-      "SELECT id, username, role, created_at FROM users WHERE id = $1 AND role = 'student'",
+      "SELECT id, username, email, role, created_at FROM users WHERE id = $1 AND role = 'student'",
       [studentId]
     );
     return result.rows[0] || null;

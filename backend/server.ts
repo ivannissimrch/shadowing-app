@@ -100,6 +100,9 @@ const initDatabase = async () => {
       "VARCHAR(10) DEFAULT 'image'",
     );
 
+    // Add category column for lesson organization
+    await addColumnIfNotExists("lessons", "category", "VARCHAR(100)");
+
     logger.info("Database tables initialized");
   } catch (error) {
     logger.error("Error initializing database:", error);

@@ -300,6 +300,7 @@ export const componentOverrides = (theme: Theme, borderRadius: number): Componen
     styleOverrides: {
       paper: {
         borderRadius: `${borderRadius * 1.5}px`,
+        backgroundColor: '#ffffff',
       },
     },
   },
@@ -310,6 +311,56 @@ export const componentOverrides = (theme: Theme, borderRadius: number): Componen
         fontSize: '1.125rem',
         fontWeight: 600,
         padding: '24px 24px 16px',
+        color: palette.text.primary,
+      },
+    },
+  },
+
+  MuiDialogContent: {
+    styleOverrides: {
+      root: {
+        backgroundColor: '#ffffff',
+      },
+    },
+  },
+
+  // ===== SELECT =====
+  MuiSelect: {
+    styleOverrides: {
+      select: {
+        backgroundColor: '#ffffff',
+        color: palette.text.primary,
+      },
+      icon: {
+        color: palette.grey[600],
+      },
+    },
+  },
+
+  // ===== MENU (dropdowns) =====
+  MuiMenu: {
+    styleOverrides: {
+      paper: {
+        backgroundColor: '#ffffff',
+        border: `1px solid ${palette.grey[200]}`,
+      },
+    },
+  },
+
+  MuiMenuItem: {
+    styleOverrides: {
+      root: {
+        color: palette.text.primary,
+        '&:hover': {
+          backgroundColor: palette.grey[100],
+        },
+        '&.Mui-selected': {
+          backgroundColor: palette.primary.light,
+          color: palette.primary.dark,
+          '&:hover': {
+            backgroundColor: palette.primary.light,
+          },
+        },
       },
     },
   },

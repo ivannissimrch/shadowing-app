@@ -7,9 +7,14 @@ export const API_PATHS = {
   LESSONS: "/api/lessons",
   LESSON: (id: string) => `/api/lessons/${id}`,
 
+  // Teacher Dashboard
+  DASHBOARD_STATS: "/api/teacher/dashboard-stats",
+  PENDING_REVIEWS: "/api/teacher/pending-reviews",
+
   // Teacher Lessons
   CREATE_LESSON: "/api/teacher/lessons",
   ALL_LESSONS: "/api/teacher/all-lessons",
+  TEACHER_LESSON: (lessonId: string) => `/api/teacher/lessons/${lessonId}`,
   ASSIGN_LESSON: (lessonId: string) => `/api/teacher/lessons/${lessonId}/assign`,
   UNASSIGN_LESSON: (lessonId: string, studentId: string) =>
     `/api/teacher/lessons/${lessonId}/unassign/${studentId}`,
@@ -19,6 +24,8 @@ export const API_PATHS = {
   USERS: "/api/users",
   USER: (id: string) => `/api/users/${id}`,
   PASSWORD_CHANGE: (userId: string) => `/api/users/${userId}/password`,
+  EMAIL_UPDATE: (userId: string) => `/api/users/${userId}/email`,
+  USER_PROFILE: (userId: string) => `/api/users/${userId}`,
 
   // Teacher - Student Management
   TEACHER_STUDENT: (studentId: string) => `/api/teacher/student/${studentId}`,
@@ -28,6 +35,8 @@ export const API_PATHS = {
     `/api/teacher/student/${studentId}/lesson/${lessonId}`,
   TEACHER_STUDENT_LESSON_FEEDBACK: (studentId: string, lessonId: string) =>
     `/api/teacher/student/${studentId}/lesson/${lessonId}/feedback`,
+  TEACHER_STUDENT_LESSON_COMPLETE: (studentId: string, lessonId: string) =>
+    `/api/teacher/student/${studentId}/lesson/${lessonId}/complete`,
 
   // Uploads
   UPLOAD_IMAGE: "/api/upload-image",

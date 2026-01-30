@@ -23,6 +23,7 @@ export default function AddStudent({
   const tCommon = useTranslations("common");
   const tErrors = useTranslations("errors");
   const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
 
@@ -35,7 +36,7 @@ export default function AddStudent({
 
   const { trigger, isMutating } = useSWRMutationHook<
     AuthResponse,
-    { username: string; password: string }
+    { username: string; password: string; email?: string }
   >(
     API_PATHS.USERS,
     { method: "POST" },
@@ -59,9 +60,11 @@ export default function AddStudent({
       await trigger({
         username,
         password,
+        email: email || undefined,
       });
 
       setUsername("");
+      setEmail("");
       setPassword("");
       closeAddStudentDialog();
     } catch (err) {
@@ -116,6 +119,23 @@ export default function AddStudent({
                 placeholder={tAuth("enterUsername")}
                 autoComplete="username"
                 required
+                aria-invalid={errorMessage ? "true" : "false"}
+                aria-describedby={errorMessage ? "form-error" : undefined}
+              />
+            </div>
+
+            <div>
+              <label htmlFor="email">{tAuth("email")} ({t("optional")})</label>
+              <input
+                id="email"
+                type="email"
+                value={email}
+                onChange={(e) => {
+                  setErrorMessage("");
+                  setEmail(e.target.value);
+                }}
+                placeholder={t("enterStudentEmail")}
+                autoComplete="email"
                 aria-invalid={errorMessage ? "true" : "false"}
                 aria-describedby={errorMessage ? "form-error" : undefined}
               />

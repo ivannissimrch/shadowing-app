@@ -6,8 +6,8 @@ body {
 }
 
 body {
-  /* Darker grey for Mac display compatibility */
-  background-color: #dde3eb;
+  /* Match theme palette.background.default (grey.200) */
+  background-color: #e3e8ef;
   min-height: 100vh;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;

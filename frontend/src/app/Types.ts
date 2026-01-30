@@ -16,6 +16,8 @@ export interface AuthContextType {
   updateToken: (newToken: string | null) => void;
 }
 
+export type LessonStatus = "new" | "in_progress" | "submitted" | "completed";
+
 export interface Lesson {
   title: string;
   image: string;
@@ -26,17 +28,31 @@ export interface Lesson {
   cloudinary_public_id: string | null;
   cloudinary_url: string | null;
   id: string;
-  status: string;
+  status: LessonStatus;
   audio_file: string;
   assigned_at: string | null;
   completed: boolean;
   completed_at: string | null;
   lesson_start_time: string | null;
   lesson_end_time: string | null;
+  category: string | null;
   created_at: string;
   updated_at: string;
   feedback: string | null;
 }
+
+// Predefined lesson categories
+export const LESSON_CATEGORIES = [
+  'Grammar',
+  'Vocabulary',
+  'Pronunciation',
+  'Reading',
+  'Conversation',
+  'Homework',
+  'Other',
+] as const;
+
+export type LessonCategory = typeof LESSON_CATEGORIES[number];
 
 //User can be either a student or an admin
 export interface User {

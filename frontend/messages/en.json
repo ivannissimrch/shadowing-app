@@ -54,9 +54,20 @@
     "lessons": "Lessons",
     "practice": "Practice",
     "students": "Students",
+    "reviews": "Reviews",
     "profile": "Profile",
     "settings": "Settings",
     "dashboard": "Dashboard"
+  },
+  "dashboard": {
+    "pendingReview": "Pending Review",
+    "completedThisWeek": "Completed This Week",
+    "quickActions": "Quick Actions",
+    "recentLessons": "Recent Lessons",
+    "studentProgress": "Student Progress",
+    "needsAttention": "Needs attention",
+    "noLessons": "No lessons yet",
+    "noStudents": "No students yet"
   },
   "student": {
     "myLessons": "My Lessons",
@@ -70,6 +81,7 @@
   },
   "teacher": {
     "myStudents": "My Students",
+    "myLessons": "My Lessons",
     "createLesson": "Create Lesson",
     "addLesson": "Add Lesson",
     "addStudent": "Add Student",
@@ -80,6 +92,8 @@
     "selectStudent": "Select a student",
     "studentName": "Student Name",
     "studentEmail": "Student Email",
+    "enterStudentEmail": "Enter student email for notifications",
+    "optional": "optional",
     "addingStudent": "Adding student...",
     "feedback": "Feedback",
     "addFeedback": "Add Feedback",
@@ -118,7 +132,25 @@
     "formattedText": "Formatted Text",
     "lessonScript": "Lesson Script",
     "pasteScriptHere": "Paste your lesson script here...",
-    "scriptHint": "Paste from PowerPoint to keep formatting (bold, colors, lists)"
+    "scriptHint": "Paste from PowerPoint to keep formatting (bold, colors, lists)",
+    "editLesson": "Edit Lesson",
+    "category": "Category (optional)",
+    "enterCategory": "e.g., Vowel sounds, Intonation...",
+    "currentVideoKept": "Current video (click to change)",
+    "currentImageKept": "Current image (click to change)",
+    "pendingReview": "Pending Review",
+    "studentRecording": "Student Recording",
+    "readyToComplete": "Ready to Complete?",
+    "markCompleteDescription": "Mark this lesson as completed after reviewing with the student.",
+    "markAsCompleted": "Mark as Completed",
+    "marking": "Marking...",
+    "lessonCompleted": "Lesson Completed",
+    "lessonCompletedDescription": "This lesson has been reviewed and marked as completed.",
+    "noSubmissionYet": "No Submission Yet",
+    "waitingForStudent": "The student hasn't submitted their recording yet.",
+    "review": "Review",
+    "noReviewsPending": "No Reviews Pending",
+    "allCaughtUp": "All caught up! No lessons waiting for review."
   },
   "lesson": {
     "title": "Title",
@@ -206,6 +238,14 @@
     "goHome": "Go Home",
     "fillAllFields": "Please fill in all fields",
     "errorLoadingStudents": "Error loading students"
+  },
+  "settings": {
+    "title": "Settings",
+    "emailNotifications": "Email Notifications (Optional)",
+    "emailDescription": "Add your email to receive notifications when students submit lessons. Leave empty to disable email notifications.",
+    "enterEmail": "Enter your email address (optional)",
+    "emailUpdated": "Email updated successfully!",
+    "emailUpdateFailed": "Failed to update email"
   },
   "language": {
     "selectLanguage": "Select Language",

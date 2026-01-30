@@ -20,6 +20,31 @@ router.get(
   })
 );
 
+// Get own user profile
+router.get(
+  "/:userId",
+  asyncHandler(async (req: Request, res: Response, _next: NextFunction) => {
+    const { userId } = req.params;
+    const requestingUserId = req.user?.id;
+
+    // Security: Users can only get their OWN profile
+    if (requestingUserId !== userId) {
+      throw createError(403, "Forbidden: You can only view your own profile");
+    }
+
+    const user = await userRepository.findById(userId);
+
+    if (!user) {
+      throw createError(404, "User not found");
+    }
+
+    res.json({
+      success: true,
+      data: user,
+    });
+  })
+);
+
 // Create new student (teacher only)
 router.post(
   "/",
@@ -116,6 +141,37 @@ router.patch(
     res.json({
       success: true,
       message: "Password updated successfully",
+    });
+  })
+);
+
+// Update own email (for notifications)
+router.patch(
+  "/:userId/email",
+  asyncHandler(async (req: Request, res: Response, _next: NextFunction) => {
+    const { userId } = req.params;
+    const { email } = req.body;
+    const requestingUserId = req.user?.id;
+
+    // Security: Users can only update their OWN email
+    if (requestingUserId !== userId) {
+      throw createError(403, "Forbidden: You can only update your own email");
+    }
+
+    if (!email) {
+      throw createError(400, "Email is required");
+    }
+
+    const user = await userRepository.updateEmail(userId, email);
+
+    if (!user) {
+      throw createError(404, "User not found");
+    }
+
+    res.json({
+      success: true,
+      message: "Email updated successfully",
+      data: user,
     });
   })
 );
