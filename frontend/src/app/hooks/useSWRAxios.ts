@@ -6,9 +6,6 @@ export function useSWRAxios<T>(
   endpoint: string | null,
   config?: SWRConfiguration
 ) {
-  // Only enable Suspense on client side (not during SSR)
-  const isClient = typeof window !== "undefined";
-
   const { data, error, mutate, isValidating } = useSWR<T>(
     endpoint,
     async (url: string) => {
@@ -18,7 +15,6 @@ export function useSWRAxios<T>(
     {
       revalidateOnFocus: false,
       revalidateOnReconnect: true,
-      suspense: isClient,
       shouldRetryOnError: true,
       ...config,
     }

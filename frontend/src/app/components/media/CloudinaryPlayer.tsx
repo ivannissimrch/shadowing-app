@@ -296,7 +296,7 @@ const CloudinaryPlayer = forwardRef<VideoPlayerRef, CloudinaryPlayerProps>(
           <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", mb: 2 }}>
             <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
               <VideoTimer currentTime={currentTime} />
-              <Typography variant="caption" color="text.secondary">
+              <Typography variant="caption" sx={{ color: "grey.600" }}>
                 / {Math.floor(duration / 60)}:{String(duration % 60).padStart(2, "0")}
               </Typography>
             </Box>

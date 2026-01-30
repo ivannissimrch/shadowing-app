@@ -5,6 +5,7 @@ import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
+import { useTheme } from "@mui/material/styles";
 import { FiAlertTriangle, FiRefreshCw } from "react-icons/fi";
 
 interface ErrorFallbackProps {
@@ -19,6 +20,7 @@ export default function ErrorFallback({
   title,
 }: ErrorFallbackProps) {
   const t = useTranslations("errors");
+  const theme = useTheme();
   const displayTitle = title || t("somethingWentWrong");
   return (
     <Box
@@ -32,7 +34,7 @@ export default function ErrorFallback({
     >
       <Card sx={{ maxWidth: 400, width: "100%", textAlign: "center" }}>
         <CardContent sx={{ p: 4 }}>
-          <FiAlertTriangle size={48} color="#f44336" style={{ marginBottom: 16 }} />
+          <FiAlertTriangle size={48} color={theme.palette.error.main} style={{ marginBottom: 16 }} />
           <Typography
             variant="h5"
             sx={{ fontWeight: 600, color: "text.primary", mb: 1 }}

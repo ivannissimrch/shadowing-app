@@ -1,16 +1,19 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import DOMPurify from "dompurify";
 import extractVideoId from "./../helpers/extractVideoId";
 import { mutate } from "swr";
 import { API_PATHS } from "./../constants/apiKeys";
-import { LessonResponse, ImageResponse, VideoUploadResponse } from "@/app/Types";
+import { Lesson, LessonResponse, ImageResponse, VideoUploadResponse } from "@/app/Types";
 import { useSWRMutationHook } from "@/app/hooks/useSWRMutation";
 
 export type VideoType = 'youtube' | 'cloudinary';
 export type ScriptType = 'image' | 'text';
 
-export default function useAddLesson(closeAddLessonDialog: () => void) {
+export default function useEditLesson(
+  lesson: Lesson | null,
+  closeEditLessonDialog: () => void
+) {
   const [errorMessage, setErrorMessage] = useState("");
   const [videoType, setVideoType] = useState<VideoType>('youtube');
   const [formData, setFormData] = useState({
@@ -24,25 +27,48 @@ export default function useAddLesson(closeAddLessonDialog: () => void) {
   const [isUploading, setIsUploading] = useState(false);
   const [scriptType, setScriptType] = useState<ScriptType>('image');
   const [scriptText, setScriptText] = useState("");
+  // Track if media has changed (to know if we need to re-upload)
+  const [hasVideoChanged, setHasVideoChanged] = useState(false);
+  const [hasImageChanged, setHasImageChanged] = useState(false);
 
-  const { trigger: triggerLesson, isMutating: isMutatingLesson } =
+  // Initialize form with lesson data when lesson changes
+  useEffect(() => {
+    if (lesson) {
+      setFormData({
+        title: lesson.title || "",
+        videoId: lesson.video_id || "",
+        imageName: "",
+        category: lesson.category || "",
+      });
+      setVideoType(lesson.video_type || 'youtube');
+      setScriptType(lesson.script_type || 'image');
+      setScriptText(lesson.script_text || "");
+      setSelectedImage(null);
+      setSelectedVideo(null);
+      setHasVideoChanged(false);
+      setHasImageChanged(false);
+      setErrorMessage("");
+    }
+  }, [lesson]);
+
+  const { trigger: triggerUpdateLesson, isMutating: isMutatingLesson } =
     useSWRMutationHook<
       LessonResponse,
       {
-        title: string;
+        title?: string;
         image?: string;
         scriptText?: string;
-        scriptType: ScriptType;
+        scriptType?: ScriptType;
         videoId?: string;
-        videoType: VideoType;
+        videoType?: VideoType;
         cloudinaryPublicId?: string;
         cloudinaryUrl?: string;
         category?: string;
       }
     >(
-      API_PATHS.CREATE_LESSON,
+      lesson ? `${API_PATHS.CREATE_LESSON}/${lesson.id}` : null,
       {
-        method: "POST",
+        method: "PATCH",
       },
       {
         onSuccess: () => {
@@ -65,14 +91,14 @@ export default function useAddLesson(closeAddLessonDialog: () => void) {
     method: "POST",
   });
 
-  function handleInputChange(e: React.ChangeEvent<HTMLInputElement>) {
+  function handleInputChange(e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) {
     const { id, value } = e.target;
     let fieldName = "";
 
-    if (id === "lesson-title") fieldName = "title";
-    else if (id === "video-id") fieldName = "videoId";
-    else if (id === "image-name") fieldName = "imageName";
-    else if (id === "lesson-category") fieldName = "category";
+    if (id === "edit-lesson-title") fieldName = "title";
+    else if (id === "edit-video-id") fieldName = "videoId";
+    else if (id === "edit-image-name") fieldName = "imageName";
+    else if (id === "edit-lesson-category") fieldName = "category";
 
     setFormData((prev) => ({
       ...prev,
@@ -98,6 +124,7 @@ export default function useAddLesson(closeAddLessonDialog: () => void) {
 
     setErrorMessage("");
     setSelectedImage(file);
+    setHasImageChanged(true);
     const fileName = file.name.split(".")[0];
     setFormData((prev) => ({
       ...prev,
@@ -115,7 +142,6 @@ export default function useAddLesson(closeAddLessonDialog: () => void) {
       return;
     }
 
-    // Check file size (100MB limit)
     if (file.size > 100 * 1024 * 1024) {
       setErrorMessage("Video file must be less than 100MB");
       return;
@@ -123,11 +149,13 @@ export default function useAddLesson(closeAddLessonDialog: () => void) {
 
     setErrorMessage("");
     setSelectedVideo(file);
+    setHasVideoChanged(true);
   }
 
   function handleVideoTypeChange(newType: VideoType) {
     setVideoType(newType);
     setSelectedVideo(null);
+    setHasVideoChanged(true);
     setFormData((prev) => ({
       ...prev,
       videoId: "",
@@ -139,18 +167,19 @@ export default function useAddLesson(closeAddLessonDialog: () => void) {
     setScriptType(newType);
     if (newType === 'text') {
       setSelectedImage(null);
+      setHasImageChanged(true);
       setFormData((prev) => ({
         ...prev,
         imageName: "",
       }));
     } else {
       setScriptText("");
+      setHasImageChanged(true);
     }
     setErrorMessage("");
   }
 
   function handleScriptTextChange(html: string) {
-    // Sanitize HTML to prevent XSS
     const cleanHtml = DOMPurify.sanitize(html, {
       ALLOWED_TAGS: ['p', 'br', 'strong', 'b', 'em', 'i', 'u', 'span', 'ul', 'ol', 'li', 'h1', 'h2', 'h3'],
       ALLOWED_ATTR: ['style'],
@@ -161,14 +190,19 @@ export default function useAddLesson(closeAddLessonDialog: () => void) {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
 
+    if (!lesson) {
+      setErrorMessage("No lesson selected");
+      return;
+    }
+
     // Validate title
     if (!formData.title) {
       setErrorMessage("Please enter a lesson title");
       return;
     }
 
-    // Validate based on script type
-    if (scriptType === 'image' && !selectedImage) {
+    // Validate based on script type (only if changed or new)
+    if (scriptType === 'image' && hasImageChanged && !selectedImage && !lesson.image) {
       setErrorMessage("Please select an image file");
       return;
     }
@@ -178,13 +212,13 @@ export default function useAddLesson(closeAddLessonDialog: () => void) {
       return;
     }
 
-    // Validate based on video type
+    // Validate based on video type (only if changed)
     if (videoType === 'youtube' && !formData.videoId) {
       setErrorMessage("Please enter a YouTube URL");
       return;
     }
 
-    if (videoType === 'cloudinary' && !selectedVideo) {
+    if (videoType === 'cloudinary' && hasVideoChanged && !selectedVideo && !lesson.cloudinary_public_id) {
       setErrorMessage("Please select a video file to upload");
       return;
     }
@@ -193,13 +227,12 @@ export default function useAddLesson(closeAddLessonDialog: () => void) {
     setIsUploading(true);
 
     try {
-      // Prepare lesson data
-      const lessonData: {
-        title: string;
+      const updateData: {
+        title?: string;
         image?: string;
         scriptText?: string;
-        scriptType: ScriptType;
-        videoType: VideoType;
+        scriptType?: ScriptType;
+        videoType?: VideoType;
         videoId?: string;
         cloudinaryPublicId?: string;
         cloudinaryUrl?: string;
@@ -213,51 +246,43 @@ export default function useAddLesson(closeAddLessonDialog: () => void) {
 
       // Handle script content based on type
       if (scriptType === 'image') {
-        // Upload image
-        const imageFormData = new FormData();
-        imageFormData.append("image", selectedImage!);
-        imageFormData.append("imageName", formData.imageName);
-        const imageUrl = await triggerImageUpload(imageFormData);
-        lessonData.image = imageUrl.imageUrl;
+        if (hasImageChanged && selectedImage) {
+          // Upload new image
+          const imageFormData = new FormData();
+          imageFormData.append("image", selectedImage);
+          imageFormData.append("imageName", formData.imageName);
+          const imageUrl = await triggerImageUpload(imageFormData);
+          updateData.image = imageUrl.imageUrl;
+        }
+        // Clear script text if switching from text to image
+        updateData.scriptText = "";
       } else {
         // Use formatted text
-        lessonData.scriptText = scriptText;
+        updateData.scriptText = scriptText;
       }
 
       if (videoType === 'youtube') {
         // Extract YouTube video ID
         const extractedVideoId = extractVideoId(formData.videoId);
-        lessonData.videoId = extractedVideoId || "";
-      } else {
-        // Upload video to Cloudinary
+        updateData.videoId = extractedVideoId || formData.videoId;
+      } else if (hasVideoChanged && selectedVideo) {
+        // Upload video to Cloudinary only if changed
         const videoFormData = new FormData();
-        videoFormData.append("video", selectedVideo!);
+        videoFormData.append("video", selectedVideo);
         videoFormData.append("fileName", formData.title);
 
         const videoResult = await triggerVideoUpload(videoFormData);
-        lessonData.cloudinaryPublicId = videoResult.publicId;
-        lessonData.cloudinaryUrl = videoResult.url;
+        updateData.cloudinaryPublicId = videoResult.publicId;
+        updateData.cloudinaryUrl = videoResult.url;
       }
 
-      // Create the lesson
-      await triggerLesson(lessonData);
+      // Update the lesson
+      await triggerUpdateLesson(updateData);
 
-      // Reset form
-      setFormData({
-        title: "",
-        videoId: "",
-        imageName: "",
-        category: "",
-      });
-      setSelectedImage(null);
-      setSelectedVideo(null);
-      setVideoType('youtube');
-      setScriptType('image');
-      setScriptText("");
-      closeAddLessonDialog();
+      closeEditLessonDialog();
     } catch (err) {
       setErrorMessage(
-        err instanceof Error ? err.message : "Error adding lesson"
+        err instanceof Error ? err.message : "Error updating lesson"
       );
     } finally {
       setIsUploading(false);
@@ -272,6 +297,8 @@ export default function useAddLesson(closeAddLessonDialog: () => void) {
     videoType,
     scriptType,
     scriptText,
+    hasVideoChanged,
+    hasImageChanged,
     isMutatingLesson: isMutatingLesson || isUploading,
     handleInputChange,
     handleCategoryChange,

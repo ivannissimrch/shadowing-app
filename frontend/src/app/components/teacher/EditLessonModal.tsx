@@ -8,20 +8,23 @@ import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import Typography from "@mui/material/Typography";
 import useAlertMessageStyles from "../../hooks/useAlertMessageStyles";
 import { ErrorBoundary } from "react-error-boundary";
-import useAddLesson, { VideoType, ScriptType } from "../../hooks/useAddLesson";
-import { FiUpload, FiVideo, FiFileText } from "react-icons/fi";
+import useEditLesson, { VideoType, ScriptType } from "../../hooks/useEditLesson";
+import { FiUpload, FiVideo, FiFileText, FiCheck } from "react-icons/fi";
 import { FaYoutube } from "react-icons/fa";
 import RichTextEditor from "../ui/RichTextEditor";
+import { Lesson } from "../../Types";
 
-interface AddLessonProps {
-  isAddLessonDialogOpen: boolean;
-  closeAddLessonDialog: () => void;
+interface EditLessonModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  lesson: Lesson | null;
 }
 
-export default function AddLesson({
-  isAddLessonDialogOpen,
-  closeAddLessonDialog,
-}: AddLessonProps) {
+export default function EditLessonModal({
+  isOpen,
+  onClose,
+  lesson,
+}: EditLessonModalProps) {
   const t = useTranslations("teacher");
   const tLesson = useTranslations("lesson");
   const tCommon = useTranslations("common");
@@ -40,6 +43,8 @@ export default function AddLesson({
     videoType,
     scriptType,
     scriptText,
+    hasVideoChanged,
+    hasImageChanged,
     isMutatingLesson,
     handleInputChange,
     handleImageUpload,
@@ -48,21 +53,21 @@ export default function AddLesson({
     handleScriptTypeChange,
     handleScriptTextChange,
     handleSubmit,
-  } = useAddLesson(closeAddLessonDialog);
+  } = useEditLesson(lesson, onClose);
 
   return (
     <ErrorBoundary fallback={<div>Something went wrong.</div>}>
       <StyledDialog
         aria-modal="true"
-        open={isAddLessonDialogOpen}
-        onClose={closeAddLessonDialog}
-        aria-labelledby="add-lesson-dialog-title"
+        open={isOpen}
+        onClose={onClose}
+        aria-labelledby="edit-lesson-dialog-title"
         disableScrollLock={true}
         keepMounted={false}
         autoFocus={true}
       >
         <DialogTitle
-          id="add-lesson-dialog-title"
+          id="edit-lesson-dialog-title"
           sx={{
             fontWeight: 600,
             fontSize: "1.25rem",
@@ -70,20 +75,19 @@ export default function AddLesson({
             pb: 1,
           }}
         >
-          {t("addLesson")}
+          {t("editLesson") || "Edit Lesson"}
         </DialogTitle>
         <StyledDialogContent>
           <form onSubmit={handleSubmit}>
             <div>
-              <label htmlFor="lesson-title">{tLesson("title")}</label>
+              <label htmlFor="edit-lesson-title">{tLesson("title")}</label>
               <input
-                id="lesson-title"
+                id="edit-lesson-title"
                 type="text"
                 placeholder={t("enterLessonTitle")}
                 required
                 aria-required="true"
                 aria-invalid={errorMessage ? "true" : "false"}
-                aria-describedby={errorMessage ? "add-lesson-error" : undefined}
                 value={formData.title || ""}
                 onChange={handleInputChange}
                 autoFocus
@@ -92,9 +96,9 @@ export default function AddLesson({
 
             {/* Category Input */}
             <div>
-              <label htmlFor="lesson-category">{t("category") || "Category"}</label>
+              <label htmlFor="edit-lesson-category">{t("category") || "Category"}</label>
               <input
-                id="lesson-category"
+                id="edit-lesson-category"
                 type="text"
                 placeholder={t("enterCategory") || "e.g., Vowel sounds, Intonation..."}
                 value={formData.category || ""}
@@ -145,28 +149,24 @@ export default function AddLesson({
             {/* Conditional Video Input */}
             {videoType === 'youtube' ? (
               <div key="youtube-input">
-                <label htmlFor="video-id">{tLesson("videoUrl")}</label>
+                <label htmlFor="edit-video-id">{tLesson("videoUrl")}</label>
                 <input
-                  id="video-id"
+                  id="edit-video-id"
                   type="text"
                   placeholder={t("enterVideoUrl")}
                   required
                   aria-required="true"
-                  aria-invalid={errorMessage ? "true" : "false"}
-                  aria-describedby={errorMessage ? "add-lesson-error" : undefined}
                   value={formData.videoId ?? ""}
                   onChange={handleInputChange}
                 />
               </div>
             ) : (
               <div key="video-upload-input">
-                <label htmlFor="video-upload">{t("uploadVideo") || "Upload Video"}</label>
+                <label htmlFor="edit-video-upload">{t("uploadVideo") || "Upload Video"}</label>
                 <input
-                  id="video-upload"
+                  id="edit-video-upload"
                   type="file"
                   accept="video/mp4,video/webm,video/quicktime,video/x-msvideo,video/x-matroska"
-                  required
-                  aria-required="true"
                   onChange={handleVideoUpload}
                   style={{
                     position: "absolute",
@@ -182,7 +182,7 @@ export default function AddLesson({
                 />
                 <Box
                   component="label"
-                  htmlFor="video-upload"
+                  htmlFor="edit-video-upload"
                   sx={{
                     display: "flex",
                     alignItems: "center",
@@ -190,11 +190,17 @@ export default function AddLesson({
                     gap: 1,
                     p: 1.5,
                     border: "1px solid",
-                    borderColor: selectedVideo ? "primary.main" : "grey.300",
+                    borderColor: selectedVideo || (!hasVideoChanged && lesson?.cloudinary_public_id)
+                      ? "primary.main"
+                      : "grey.300",
                     borderRadius: 1,
                     cursor: "pointer",
-                    color: selectedVideo ? "text.primary" : "text.secondary",
-                    bgcolor: selectedVideo ? "primary.light" : "transparent",
+                    color: selectedVideo || (!hasVideoChanged && lesson?.cloudinary_public_id)
+                      ? "text.primary"
+                      : "text.secondary",
+                    bgcolor: selectedVideo || (!hasVideoChanged && lesson?.cloudinary_public_id)
+                      ? "primary.light"
+                      : "transparent",
                     transition: "all 0.2s",
                     "&:hover": {
                       borderColor: "primary.main",
@@ -202,8 +208,22 @@ export default function AddLesson({
                     },
                   }}
                 >
-                  <FiVideo size={16} />
-                  {selectedVideo ? selectedVideo.name : (t("chooseVideoFile") || "Choose video file")}
+                  {selectedVideo ? (
+                    <>
+                      <FiVideo size={16} />
+                      {selectedVideo.name}
+                    </>
+                  ) : !hasVideoChanged && lesson?.cloudinary_public_id ? (
+                    <>
+                      <FiCheck size={16} />
+                      {t("currentVideoKept") || "Current video (click to change)"}
+                    </>
+                  ) : (
+                    <>
+                      <FiVideo size={16} />
+                      {t("chooseVideoFile") || "Choose video file"}
+                    </>
+                  )}
                 </Box>
                 <Typography variant="caption" sx={{ mt: 0.5, display: "block", color: "text.secondary" }}>
                   {t("videoFormats") || "Supported: MP4, WebM, MOV, AVI, MKV (max 100MB)"}
@@ -254,13 +274,11 @@ export default function AddLesson({
             {/* Conditional Script Input */}
             {scriptType === 'image' ? (
               <div key="image-upload-input">
-                <label htmlFor="image-upload">{t("uploadImage")}</label>
+                <label htmlFor="edit-image-upload">{t("uploadImage")}</label>
                 <input
-                  id="image-upload"
+                  id="edit-image-upload"
                   type="file"
                   accept="image/*"
-                  required
-                  aria-required="true"
                   onChange={handleImageUpload}
                   style={{
                     position: "absolute",
@@ -276,7 +294,7 @@ export default function AddLesson({
                 />
                 <Box
                   component="label"
-                  htmlFor="image-upload"
+                  htmlFor="edit-image-upload"
                   sx={{
                     display: "flex",
                     alignItems: "center",
@@ -284,11 +302,17 @@ export default function AddLesson({
                     gap: 1,
                     p: 1.5,
                     border: "1px solid",
-                    borderColor: selectedImage ? "primary.main" : "grey.300",
+                    borderColor: selectedImage || (!hasImageChanged && lesson?.image)
+                      ? "primary.main"
+                      : "grey.300",
                     borderRadius: 1,
                     cursor: "pointer",
-                    color: selectedImage ? "text.primary" : "text.secondary",
-                    bgcolor: selectedImage ? "primary.light" : "transparent",
+                    color: selectedImage || (!hasImageChanged && lesson?.image)
+                      ? "text.primary"
+                      : "text.secondary",
+                    bgcolor: selectedImage || (!hasImageChanged && lesson?.image)
+                      ? "primary.light"
+                      : "transparent",
                     transition: "all 0.2s",
                     "&:hover": {
                       borderColor: "primary.main",
@@ -296,8 +320,22 @@ export default function AddLesson({
                     },
                   }}
                 >
-                  <FiUpload size={16} />
-                  {selectedImage ? selectedImage.name : t("chooseImageFile")}
+                  {selectedImage ? (
+                    <>
+                      <FiUpload size={16} />
+                      {selectedImage.name}
+                    </>
+                  ) : !hasImageChanged && lesson?.image ? (
+                    <>
+                      <FiCheck size={16} />
+                      {t("currentImageKept") || "Current image (click to change)"}
+                    </>
+                  ) : (
+                    <>
+                      <FiUpload size={16} />
+                      {t("chooseImageFile")}
+                    </>
+                  )}
                 </Box>
               </div>
             ) : (
@@ -313,6 +351,7 @@ export default function AddLesson({
                 </Typography>
               </div>
             )}
+
             {errorMessage && (
               <Alert severity="error" sx={{ mt: 2 }}>
                 {errorMessage}
@@ -321,7 +360,7 @@ export default function AddLesson({
           </form>
         </StyledDialogContent>
         <StyledDialogActions>
-          <StyledButton variant="outlined" onClick={closeAddLessonDialog}>
+          <StyledButton variant="outlined" onClick={onClose}>
             {tCommon("cancel")}
           </StyledButton>
           <StyledButton
@@ -329,7 +368,7 @@ export default function AddLesson({
             onClick={handleSubmit}
             disabled={isMutatingLesson}
           >
-            {isMutatingLesson ? tCommon("adding") : t("addLesson")}
+            {isMutatingLesson ? tCommon("saving") || "Saving..." : tCommon("save") || "Save"}
           </StyledButton>
         </StyledDialogActions>
       </StyledDialog>

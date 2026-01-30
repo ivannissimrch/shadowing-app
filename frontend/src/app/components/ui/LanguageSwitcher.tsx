@@ -3,6 +3,7 @@
 import { useState, useTransition } from 'react';
 import { useLocale } from 'next-intl';
 import { usePathname, useRouter } from '@/i18n/routing';
+import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
 import Menu from '@mui/material/Menu';
@@ -105,7 +106,9 @@ export default function LanguageSwitcher() {
             </ListItemIcon>
             <ListItemText primary={lang.label} />
             {lang.code === locale && (
-              <FiCheck size={16} style={{ marginLeft: 8, color: '#1976d2' }} />
+              <Box component="span" sx={{ ml: 1, color: 'primary.main', display: 'flex' }}>
+                <FiCheck size={16} />
+              </Box>
             )}
           </MenuItem>
         ))}

@@ -30,6 +30,7 @@
     "microsoft-cognitiveservices-speech-sdk": "^1.47.0",
     "multer": "^2.0.2",
     "pg": "^8.16.3",
+    "resend": "^6.9.1",
     "uuid": "^11.1.0"
   },
   "devDependencies": {

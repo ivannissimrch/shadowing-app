@@ -20,13 +20,14 @@ export interface Lesson {
   cloudinary_url: string | null;
   lesson_start_time: number | null;
   lesson_end_time: number | null;
+  category: string | null;
   created_at: Date;
   updated_at: Date;
 }
 
 // Lesson joined with assignment data (for student views)
 export interface LessonWithAssignment extends Lesson {
-  status: "new" | "in_progress" | "completed";
+  status: "new" | "in_progress" | "submitted" | "completed";
   completed: boolean;
   assigned_at: Date;
   completed_at: Date | null;
@@ -45,7 +46,7 @@ export interface Assignment {
   student_id: string;
   lesson_id: string;
   completed: boolean;
-  status: "new" | "in_progress" | "completed";
+  status: "new" | "in_progress" | "submitted" | "completed";
   assigned_by: string | null;
   assigned_at: Date;
   completed_at: Date | null;
@@ -95,6 +96,22 @@ export interface CreateLessonBody {
   cloudinaryUrl?: string;
   lessonStartTime?: number;
   lessonEndTime?: number;
+  category?: string;
+}
+
+// Update lesson request body (all fields optional)
+export interface UpdateLessonBody {
+  title?: string;
+  image?: string;
+  scriptText?: string;
+  scriptType?: 'image' | 'text';
+  videoId?: string;
+  videoType?: 'youtube' | 'cloudinary';
+  cloudinaryPublicId?: string;
+  cloudinaryUrl?: string;
+  lessonStartTime?: number;
+  lessonEndTime?: number;
+  category?: string;
 }
 
 // Create assignment input
@@ -130,4 +147,19 @@ export interface PracticeWord {
   student_id: string;
   word: string;
   created_at: Date;
+}
+
+// Dashboard stats types
+export interface StudentProgress {
+  id: string;
+  username: string;
+  totalLessons: number;
+  completedLessons: number;
+}
+
+export interface DashboardStats {
+  pendingReviewCount: number;
+  completedThisWeek: number;
+  recentLessons: Lesson[];
+  studentProgress: StudentProgress[];
 }

@@ -32,7 +32,26 @@ function SpeedControl({ speed, onSpeedChange, disabled = false }: SpeedControlPr
         <ToggleButton
           key={option}
           value={option}
-          sx={{ px: 1.5, py: 0.5, fontSize: "0.75rem", textTransform: "none" }}
+          sx={{
+            px: 1.5,
+            py: 0.5,
+            fontSize: "0.75rem",
+            textTransform: "none",
+            // Force dark text on light background (grey.50 container)
+            color: "grey.700",
+            borderColor: "grey.300",
+            "&.Mui-selected": {
+              color: "primary.dark",
+              bgcolor: "primary.light",
+              borderColor: "primary.main",
+              "&:hover": {
+                bgcolor: "primary.light",
+              },
+            },
+            "&:hover": {
+              bgcolor: "grey.100",
+            },
+          }}
         >
           {option}x
         </ToggleButton>

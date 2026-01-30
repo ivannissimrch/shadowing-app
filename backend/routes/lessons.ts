@@ -3,6 +3,8 @@ import createError from "http-errors";
 import asyncHandler from "../handlers/asyncHandler.js";
 import { lessonRepository } from "../repositories/lessonRepository.js";
 import { assignmentRepository } from "../repositories/assignmentRepository.js";
+import { userRepository } from "../repositories/userRepository.js";
+import { emailService } from "../services/emailService.js";
 import { Request, Response } from "express";
 
 const router = Router();
@@ -61,14 +63,32 @@ router.patch(
       await assignmentRepository.updateAudioFile(userId, lessonId, audio_file);
     }
 
-    // Update assignment status to completed
-    const assignment = await assignmentRepository.markCompleted(
+    // Update assignment status to submitted (pending teacher review)
+    const assignment = await assignmentRepository.markSubmitted(
       userId,
       lessonId
     );
 
     if (!assignment) {
       throw createError(404, "Assignment not found");
+    }
+
+    // Send email notification to teacher who assigned this lesson
+    if (assignment.assigned_by) {
+      const [student, lesson, teacher] = await Promise.all([
+        userRepository.findById(userId),
+        lessonRepository.findById(lessonId),
+        userRepository.findById(assignment.assigned_by),
+      ]);
+
+      if (student && lesson && teacher?.email) {
+        emailService.notifyTeacherNewSubmission(
+          teacher.email,
+          teacher.username,
+          student.username,
+          lesson.title
+        ).catch((err) => console.error("[Email] Failed to notify teacher:", err));
+      }
     }
 
     res.json({

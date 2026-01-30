@@ -31,6 +31,19 @@ export const assignmentRepository = {
     );
   },
 
+  // Called when student submits recording - goes to teacher review
+  markSubmitted: async (studentId: string, lessonId: string) => {
+    const result: QueryResult<Assignment> = await db.query(
+      `UPDATE assignments
+       SET status = 'submitted', updated_at = CURRENT_TIMESTAMP
+       WHERE student_id = $1 AND lesson_id = $2
+       RETURNING *`,
+      [studentId, lessonId]
+    );
+    return result.rows[0];
+  },
+
+  // Called when teacher marks lesson as completed after review
   markCompleted: async (studentId: string, lessonId: string) => {
     const result: QueryResult<Assignment> = await db.query(
       `UPDATE assignments
@@ -93,5 +106,72 @@ export const assignmentRepository = {
       [studentId, lessonId]
     );
     return result.rows[0] || null;
+  },
+
+  // Dashboard stats methods
+  countPendingReview: async () => {
+    const result = await db.query(
+      `SELECT COUNT(*) as count FROM assignments
+       WHERE status = 'submitted'`
+    );
+    return parseInt(result.rows[0].count, 10);
+  },
+
+  countCompletedThisWeek: async () => {
+    const result = await db.query(
+      `SELECT COUNT(*) as count FROM assignments
+       WHERE completed = true
+       AND completed_at >= NOW() - INTERVAL '7 days'`
+    );
+    return parseInt(result.rows[0].count, 10);
+  },
+
+  // Get all assignments pending teacher review
+  getPendingReviews: async () => {
+    const result = await db.query(
+      `SELECT
+         a.id as assignment_id,
+         a.student_id,
+         a.lesson_id,
+         a.audio_file,
+         a.updated_at as submitted_at,
+         u.username as student_name,
+         u.email as student_email,
+         l.title as lesson_title,
+         l.category as lesson_category
+       FROM assignments a
+       JOIN users u ON a.student_id = u.id
+       JOIN lessons l ON a.lesson_id = l.id
+       WHERE a.status = 'submitted'
+       ORDER BY a.updated_at DESC`
+    );
+    return result.rows;
+  },
+
+  getStudentProgress: async () => {
+    const result = await db.query(
+      `SELECT
+         u.id,
+         u.username,
+         COUNT(a.id) as total_lessons,
+         COUNT(CASE WHEN a.completed = true THEN 1 END) as completed_lessons
+       FROM users u
+       LEFT JOIN assignments a ON u.id = a.student_id
+       WHERE u.role = 'student'
+       GROUP BY u.id, u.username
+       ORDER BY
+         CASE WHEN COUNT(a.id) > 0
+           THEN COUNT(CASE WHEN a.completed = true THEN 1 END)::float / COUNT(a.id)::float
+           ELSE 0
+         END DESC,
+         u.username ASC
+       LIMIT 10`
+    );
+    return result.rows.map((row) => ({
+      id: row.id,
+      username: row.username,
+      totalLessons: parseInt(row.total_lessons, 10),
+      completedLessons: parseInt(row.completed_lessons, 10),
+    }));
   },
 };

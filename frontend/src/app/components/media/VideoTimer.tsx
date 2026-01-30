@@ -9,7 +9,15 @@ export default function VideoTimer({ currentTime }: { currentTime: number }) {
       label={getFormattedTime(currentTime)}
       size="small"
       variant="outlined"
-      sx={{ fontWeight: 500 }}
+      sx={{
+        fontWeight: 500,
+        // Force dark colors on light background (grey.50 container)
+        color: "grey.700",
+        borderColor: "grey.300",
+        "& .MuiChip-icon": {
+          color: "grey.600",
+        },
+      }}
     />
   );
 }

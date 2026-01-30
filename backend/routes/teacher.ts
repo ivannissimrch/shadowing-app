@@ -5,12 +5,54 @@ import { requireTeacher } from "../middleware/auth.js";
 import { lessonRepository } from "../repositories/lessonRepository.js";
 import { assignmentRepository } from "../repositories/assignmentRepository.js";
 import { userRepository } from "../repositories/userRepository.js";
+import { emailService } from "../services/emailService.js";
 import { Request, Response } from "express";
 
 const router = Router();
 
 // All routes in this file require teacher role
 router.use(requireTeacher);
+
+// Get pending reviews (lessons submitted but not yet completed)
+router.get(
+  "/pending-reviews",
+  asyncHandler(async (_req: Request, res: Response) => {
+    const pendingReviews = await assignmentRepository.getPendingReviews();
+
+    res.json({
+      success: true,
+      data: pendingReviews,
+    });
+  })
+);
+
+// Dashboard stats endpoint
+router.get(
+  "/dashboard-stats",
+  asyncHandler(async (_req: Request, res: Response) => {
+    const [
+      pendingReviewCount,
+      completedThisWeek,
+      recentLessons,
+      studentProgress,
+    ] = await Promise.all([
+      assignmentRepository.countPendingReview(),
+      assignmentRepository.countCompletedThisWeek(),
+      lessonRepository.findRecent(5),
+      assignmentRepository.getStudentProgress(),
+    ]);
+
+    res.json({
+      success: true,
+      data: {
+        pendingReviewCount,
+        completedThisWeek,
+        recentLessons,
+        studentProgress,
+      },
+    });
+  })
+);
 
 // Create new lesson content
 router.post(
@@ -123,6 +165,55 @@ router.delete(
   })
 );
 
+// Update/Edit lesson
+router.patch(
+  "/lessons/:lessonId",
+  asyncHandler(async (req: Request, res: Response) => {
+    const { lessonId } = req.params;
+    const {
+      title,
+      image,
+      scriptText,
+      scriptType,
+      videoId,
+      videoType,
+      cloudinaryPublicId,
+      cloudinaryUrl,
+      lessonStartTime,
+      lessonEndTime,
+      category,
+    } = req.body;
+
+    // Check if lesson exists
+    const lessonExists = await lessonRepository.exists(lessonId);
+
+    if (!lessonExists) {
+      throw createError(404, "Lesson not found");
+    }
+
+    // Update the lesson
+    const lesson = await lessonRepository.update(lessonId, {
+      title,
+      image,
+      scriptText,
+      scriptType,
+      videoId,
+      videoType,
+      cloudinaryPublicId,
+      cloudinaryUrl,
+      lessonStartTime,
+      lessonEndTime,
+      category,
+    });
+
+    res.json({
+      success: true,
+      message: "Lesson updated successfully",
+      data: lesson,
+    });
+  })
+);
+
 // Delete lesson
 router.delete(
   "/lessons/:lessonId",
@@ -154,6 +245,24 @@ router.get(
     res.json({
       success: true,
       data: lessons,
+    });
+  })
+);
+
+// Get single lesson (for teacher preview)
+router.get(
+  "/lessons/:lessonId",
+  asyncHandler(async (req: Request, res: Response) => {
+    const { lessonId } = req.params;
+    const lesson = await lessonRepository.findById(lessonId);
+
+    if (!lesson) {
+      throw createError(404, "Lesson not found");
+    }
+
+    res.json({
+      success: true,
+      data: lesson,
     });
   })
 );
@@ -227,8 +336,61 @@ router.patch(
       throw createError(404, "Assignment not found");
     }
 
+    // Send email notification to student (async, don't block response)
+    const [student, lesson] = await Promise.all([
+      userRepository.findById(studentId),
+      lessonRepository.findById(lessonId),
+    ]);
+
+    if (student?.email && lesson) {
+      emailService.notifyStudentFeedback(
+        student.email,
+        student.username,
+        lesson.title,
+        false // not completed yet
+      ).catch((err) => console.error("[Email] Failed to notify student:", err));
+    }
+
     res.json({
       success: true,
+      data: assignment,
+    });
+  })
+);
+
+// Mark lesson as completed (after teacher review)
+router.patch(
+  "/student/:studentId/lesson/:lessonId/complete",
+  asyncHandler(async (req: Request, res: Response) => {
+    const { studentId, lessonId } = req.params;
+
+    const assignment = await assignmentRepository.markCompleted(
+      studentId,
+      lessonId
+    );
+
+    if (!assignment) {
+      throw createError(404, "Assignment not found");
+    }
+
+    // Send email notification to student (async, don't block response)
+    const [student, lesson] = await Promise.all([
+      userRepository.findById(studentId),
+      lessonRepository.findById(lessonId),
+    ]);
+
+    if (student?.email && lesson) {
+      emailService.notifyStudentFeedback(
+        student.email,
+        student.username,
+        lesson.title,
+        true // completed
+      ).catch((err) => console.error("[Email] Failed to notify student:", err));
+    }
+
+    res.json({
+      success: true,
+      message: "Lesson marked as completed",
       data: assignment,
     });
   })
