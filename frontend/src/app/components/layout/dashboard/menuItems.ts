@@ -8,7 +8,8 @@ import {
   FiBook,
   FiMic,
   FiSettings,
-  FiClock
+  FiClock,
+  FiList
 } from 'react-icons/fi';
 
 export interface MenuItem {
@@ -47,6 +48,12 @@ export const teacherMenuItems: MenuGroup[] = [
         title: 'Lessons',
         url: '/teacher/lessons',
         icon: FiBook,
+      },
+      {
+        id: 'lists',
+        title: 'Lists',
+        url: '/teacher/lists',
+        icon: FiList,
       },
       {
         id: 'reviews',

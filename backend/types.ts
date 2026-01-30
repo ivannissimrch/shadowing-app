@@ -163,3 +163,35 @@ export interface DashboardStats {
   recentLessons: Lesson[];
   studentProgress: StudentProgress[];
 }
+
+// List types for lesson organization
+export interface List {
+  id: string;
+  teacher_id: string;
+  name: string;
+  description: string | null;
+  created_at: Date;
+  updated_at: Date;
+}
+
+export interface ListWithLessonCount extends List {
+  lesson_count: number;
+}
+
+export interface ListWithLessons extends List {
+  lessons: Lesson[];
+}
+
+export interface CreateListBody {
+  name: string;
+  description?: string;
+}
+
+export interface UpdateListBody {
+  name?: string;
+  description?: string;
+}
+
+export interface AddLessonsToListBody {
+  lessonIds: string[];
+}

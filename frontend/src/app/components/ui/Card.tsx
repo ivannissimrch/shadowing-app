@@ -11,7 +11,7 @@ import Chip from "@mui/material/Chip";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 import Avatar from "@mui/material/Avatar";
-import { FiBook, FiCheckCircle, FiClock, FiPlay } from "react-icons/fi";
+import { FiBook, FiCheckCircle, FiClock, FiPlay, FiEye } from "react-icons/fi";
 
 export default function Card({
   lesson,
@@ -103,8 +103,9 @@ export default function Card({
         <Button
           component={Link}
           href={linkPath}
-          variant="contained"
+          variant="outlined"
           fullWidth
+          startIcon={!loading ? <FiEye size={16} /> : undefined}
           disabled={loading}
           onClick={() => setLoading(true)}
           sx={{ textTransform: "none", fontWeight: 500 }}

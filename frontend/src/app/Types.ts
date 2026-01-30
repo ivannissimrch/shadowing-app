@@ -121,3 +121,17 @@ export interface RecorderPanelContextType {
   isAudioMutating: boolean;
   isLessonMutating: boolean;
 }
+
+// List types for lesson organization
+export interface List {
+  id: string;
+  name: string;
+  description: string | null;
+  lesson_count: number;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface ListWithLessons extends Omit<List, 'lesson_count'> {
+  lessons: Lesson[];
+}
