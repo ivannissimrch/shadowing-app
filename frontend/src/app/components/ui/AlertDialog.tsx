@@ -1,4 +1,5 @@
 "use client";
+import { useTranslations } from "next-intl";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
@@ -7,6 +8,7 @@ import { useAlertContext } from "../../AlertContext";
 import useAlertMessageStyles from "../../hooks/useAlertMessageStyles";
 
 export default function AlertDialog() {
+  const t = useTranslations("common");
   const {
     isAlertDialogOpen,
     closeAlertDialog,
@@ -44,7 +46,7 @@ export default function AlertDialog() {
       </DialogContent>
       <DialogActions sx={{ padding: "16px 24px", justifyContent: "flex-end" }}>
         <StyledButton variant="contained" onClick={closeAlertDialog} autoFocus>
-          Close
+          {t("close")}
         </StyledButton>
       </DialogActions>
     </StyledDialog>

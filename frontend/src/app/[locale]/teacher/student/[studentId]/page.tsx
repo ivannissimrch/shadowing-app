@@ -6,6 +6,7 @@ import StudentInfo from "@/app/components/student/StudentInfo";
 import ErrorFallback from "@/app/components/ui/ErrorFallback";
 import { API_PATHS } from "@/app/constants/apiKeys";
 import { mutate } from "swr";
+import Transitions from "@/app/components/ui/Transitions";
 
 interface StudentPageProps {
   params: Promise<{ studentId: string }>;
@@ -26,8 +27,10 @@ export default function StudentPage({ params }: StudentPageProps) {
         });
       }}
     >
-      <StudentInfo id={id} />
-      <TeacherLessonsList id={id} />
+      <Transitions type="fade">
+        <StudentInfo id={id} />
+        <TeacherLessonsList id={id} />
+      </Transitions>
     </ErrorBoundary>
   );
 }

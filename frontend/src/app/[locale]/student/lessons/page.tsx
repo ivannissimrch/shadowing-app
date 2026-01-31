@@ -3,6 +3,7 @@ import { useTranslations } from "next-intl";
 import StudentLessons from "../../../components/student/StudentLessons";
 import { ErrorBoundary } from "react-error-boundary";
 import ErrorFallback from "../../../components/ui/ErrorFallback";
+import Transitions from "../../../components/ui/Transitions";
 import { mutate } from "swr";
 import { API_PATHS } from "../../../constants/apiKeys";
 import Typography from "@mui/material/Typography";
@@ -20,16 +21,18 @@ export default function Lessons() {
       >
         {t("myLessons")}
       </Typography>
-      <ErrorBoundary
-        fallbackRender={(props) => (
-          <ErrorFallback {...props} title="Error Loading Lessons" />
-        )}
-        onReset={() => {
-          mutate(API_PATHS.LESSONS, undefined, { revalidate: true });
-        }}
-      >
-        <StudentLessons />
-      </ErrorBoundary>
+      <Transitions type="fade">
+        <ErrorBoundary
+          fallbackRender={(props) => (
+            <ErrorFallback {...props} title="Error Loading Lessons" />
+          )}
+          onReset={() => {
+            mutate(API_PATHS.LESSONS, undefined, { revalidate: true });
+          }}
+        >
+          <StudentLessons />
+        </ErrorBoundary>
+      </Transitions>
     </Box>
   );
 }

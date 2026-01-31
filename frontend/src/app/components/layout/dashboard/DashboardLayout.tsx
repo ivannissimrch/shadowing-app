@@ -7,7 +7,7 @@ import Toolbar from '@mui/material/Toolbar';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
 
-import Sidebar, { DRAWER_WIDTH } from './Sidebar';
+import Sidebar, { DRAWER_WIDTH, MINI_DRAWER_WIDTH } from './Sidebar';
 import DashboardHeader from './DashboardHeader';
 import { MenuGroup, teacherMenuItems, studentMenuItems } from './menuItems';
 import { useAuthContext } from '../../../AuthContext';
@@ -60,19 +60,21 @@ export default function DashboardLayout({ children, userType }: DashboardLayoutP
     return null;
   }
 
+  const currentDrawerWidth = sidebarOpen ? DRAWER_WIDTH : MINI_DRAWER_WIDTH;
+
   return (
-    <Box sx={{ display: 'flex', minHeight: '100vh' }}>
-      {/* Sidebar - Desktop (permanent) - only render when open */}
-      {!isMobile && sidebarOpen && (
+    <Box sx={{ display: 'flex', minHeight: '100vh', bgcolor: 'background.default' }}>
+      {!isMobile && (
         <Sidebar
           menuItems={menuItems}
-          open={sidebarOpen}
+          open={true}
           onClose={() => setSidebarOpen(false)}
           variant="permanent"
+          mini={!sidebarOpen}
+          onExpand={() => setSidebarOpen(true)}
         />
       )}
 
-      {/* Sidebar - Mobile (temporary) */}
       {isMobile && (
         <Sidebar
           menuItems={menuItems}
@@ -82,33 +84,29 @@ export default function DashboardLayout({ children, userType }: DashboardLayoutP
         />
       )}
 
-      {/* Header */}
       <DashboardHeader
         onMenuToggle={handleMenuToggle}
         sidebarOpen={!isMobile && sidebarOpen}
         userType={userType}
       />
 
-      {/* Main Content */}
       <Box
         component="main"
         sx={{
           flexGrow: 1,
           p: 3,
-          width: { md: `calc(100% - ${sidebarOpen ? DRAWER_WIDTH : 0}px)` },
+          width: { md: `calc(100% - ${currentDrawerWidth}px)` },
           minHeight: '100vh',
           backgroundColor: 'background.default',
           transition: (theme) =>
             theme.transitions.create('width', {
               easing: theme.transitions.easing.sharp,
-              duration: theme.transitions.duration.leavingScreen,
+              duration: theme.transitions.duration.enteringScreen,
             }),
         }}
       >
-        {/* Toolbar spacer - pushes content below the AppBar */}
         <Toolbar />
 
-        {/* Page Content */}
         <Box sx={{ py: 2 }}>
           {children}
         </Box>

@@ -6,7 +6,7 @@ import { mutate } from "swr";
 import { API_PATHS } from "../../constants/apiKeys";
 import { useSWRMutationHook } from "@/app/hooks/useSWRMutation";
 import { Lesson } from "@/app/Types";
-import { useAlertContext } from "@/app/AlertContext";
+import { useSnackbar } from "@/app/SnackbarContext";
 
 interface UnassignLessonModalProps {
   isOpen: boolean;
@@ -27,8 +27,7 @@ export default function UnassignLessonModal({
 }: UnassignLessonModalProps) {
   const t = useTranslations("teacher");
   const tCommon = useTranslations("common");
-  const tErrors = useTranslations("errors");
-  const { openAlertDialog } = useAlertContext();
+  const { showSnackbar } = useSnackbar();
 
   const {
     StyledDialog,
@@ -62,10 +61,7 @@ export default function UnassignLessonModal({
         }
       );
     } catch {
-      openAlertDialog(
-        tErrors("failedToDelete"),
-        t("couldNotRemoveLesson", { title: lessonTitle, name: studentName })
-      );
+      showSnackbar(t("couldNotRemoveLesson", { title: lessonTitle, name: studentName }), "error");
     }
   };
 

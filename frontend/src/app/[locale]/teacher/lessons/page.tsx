@@ -5,6 +5,7 @@ import AddLesson from "@/app/components/teacher/AddLesson";
 import { useState } from "react";
 import Lessons from "@/app/components/lesson/Lessons";
 import MainCard from "@/app/components/ui/MainCard";
+import Transitions from "@/app/components/ui/Transitions";
 import useModal from "@/app/hooks/useModal";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
@@ -32,7 +33,6 @@ export default function LessonsPage() {
 
   return (
     <Box>
-      {/* Page Title */}
       <Typography
         variant="h4"
         sx={{ fontWeight: 600, color: "text.primary", mb: 3 }}
@@ -40,25 +40,25 @@ export default function LessonsPage() {
         {t("lessons")}
       </Typography>
 
-      {/* Lessons List */}
-      <MainCard
-        title={tTeacher("myLessons")}
-        secondary={
-          <Button
-            variant="contained"
-            size="small"
-            onClick={() => addLessonModal.openModal()}
-            startIcon={<FiPlus size={14} />}
-            sx={{ textTransform: "none" }}
-          >
-            {tTeacher("addLesson")}
-          </Button>
-        }
-      >
-        <Lessons onAssignLesson={handleAssignLesson} />
-      </MainCard>
+      <Transitions type="fade">
+        <MainCard
+          title={tTeacher("myLessons")}
+          secondary={
+            <Button
+              variant="contained"
+              size="small"
+              onClick={() => addLessonModal.openModal()}
+              startIcon={<FiPlus size={14} />}
+              sx={{ textTransform: "none" }}
+            >
+              {tTeacher("addLesson")}
+            </Button>
+          }
+        >
+          <Lessons onAssignLesson={handleAssignLesson} />
+        </MainCard>
+      </Transitions>
 
-      {/* Modals */}
       {selectedLesson && (
         <AssignLessonModal
           isOpen={assignModal.isModalOpen}

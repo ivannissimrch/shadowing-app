@@ -1,5 +1,4 @@
 "use client";
-
 import { useRouter } from "next/navigation";
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
@@ -34,18 +33,18 @@ export default function Error({
     >
       <Card sx={{ maxWidth: 400, width: "100%", textAlign: "center" }}>
         <CardContent sx={{ p: 4 }}>
-          <FiAlertTriangle size={48} color="#f44336" style={{ marginBottom: 16 }} />
+          <FiAlertTriangle
+            size={48}
+            color="#f44336"
+            style={{ marginBottom: 16 }}
+          />
           <Typography
             variant="h5"
             sx={{ fontWeight: 600, color: "text.primary", mb: 1 }}
           >
             Something went wrong
           </Typography>
-          <Typography
-            variant="body2"
-            color="text.secondary"
-            sx={{ mb: 3 }}
-          >
+          <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
             {error.message || "An unexpected error occurred"}
           </Typography>
           <Button

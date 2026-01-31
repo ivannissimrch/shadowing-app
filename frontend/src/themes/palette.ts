@@ -1,95 +1,90 @@
-// Berry Default Color Palette
-// These are the signature colors that make Berry look professional
-
 export const palette = {
-  // Primary - Blue (used for main actions, links, highlights)
-  // Darker blue for WCAG AA contrast (4.5:1 with white)
   primary: {
-    light: '#e3f2fd',
-    200: '#90caf9',
-    main: '#1976d2',  // Darker blue for better contrast
-    dark: '#1565c0',
-    800: '#0d47a1',
+    light: "#e3f2fd",
+    200: "#90caf9",
+    main: "#1976d2",
+    dark: "#1565c0",
+    800: "#0d47a1",
   },
 
-  // Secondary - Purple (used for accents, secondary actions)
   secondary: {
-    light: '#ede7f6',
-    200: '#b39ddb',
-    main: '#673ab7',
-    dark: '#5e35b1',
-    800: '#4527a0',
+    light: "#ede7f6",
+    200: "#b39ddb",
+    main: "#673ab7",
+    dark: "#5e35b1",
+    800: "#4527a0",
   },
 
-  // Success - Green (with accessible contrast)
   success: {
-    light: '#b9f6ca',
-    200: '#69f0ae',
-    main: '#2e7d32',  // Darker green for better contrast
-    dark: '#1b5e20',
-    contrastText: '#1b5e20',  // Dark green text on light bg
+    light: "#b9f6ca",
+    200: "#69f0ae",
+    main: "#2e7d32",
+    dark: "#1b5e20",
+    contrastText: "#1b5e20",
   },
 
-  // Error - Red
   error: {
-    light: '#ef9a9a',
-    main: '#f44336',
-    dark: '#c62828',
+    light: "#ef9a9a",
+    main: "#f44336",
+    dark: "#c62828",
   },
 
-  // Warning - Yellow/Orange (with accessible contrast)
   warning: {
-    light: '#fff8e1',
-    main: '#f9a825',  // Darker amber for better contrast
-    dark: '#f57f17',
-    contrastText: '#5d4037',  // Brown text on yellow bg for contrast
+    light: "#fff8e1",
+    main: "#f9a825",
+    dark: "#f57f17",
+    contrastText: "#5d4037",
   },
 
-  // Orange (extra color Berry uses)
   orange: {
-    light: '#fbe9e7',
-    main: '#ffab91',
-    dark: '#d84315',
+    light: "#fbe9e7",
+    main: "#ffab91",
+    dark: "#d84315",
   },
 
-  // Greys - Essential for text, borders, backgrounds
+  // Editor colors (for RichTextEditor text formatting)
+  editor: {
+    blue: "#0066FF",
+    blueDark: "#0052CC",
+    blueLight: "rgba(0, 102, 255, 0.08)",
+    red: "#FF0000",
+    redDark: "#CC0000",
+    redLight: "rgba(255, 0, 0, 0.08)",
+  },
+
   grey: {
-    50: '#f8fafc',
-    100: '#eef2f6',
-    200: '#e3e8ef',
-    300: '#cdd5df',
-    400: '#9da4ae',
-    500: '#697586',
-    600: '#4b5565',
-    700: '#364152',
-    900: '#121926',
+    50: "#f8fafc",
+    100: "#eef2f6",
+    200: "#e3e8ef",
+    300: "#cdd5df",
+    400: "#9da4ae",
+    500: "#697586",
+    600: "#4b5565",
+    700: "#364152",
+    900: "#121926",
   },
 
-  // Paper and background colors
   background: {
-    paper: '#ffffff',      // White - for cards/content
-    default: '#e3e8ef',    // grey.200 - page background (better contrast on Mac)
+    paper: "#ffffff",
+    default: "#e3e8ef",
   },
 
-  // Text colors
   text: {
-    primary: '#364152', // grey.700
-    secondary: '#697586', // grey.500
-    disabled: '#9da4ae', // grey.400
+    primary: "#364152",
+    secondary: "#697586",
+    disabled: "#9da4ae",
   },
 
-  // Divider color
-  divider: '#e3e8ef', // grey.200
+  divider: "#e3e8ef",
 
-  // Dark mode colors (for later)
   dark: {
-    paper: '#111936',
-    background: '#1a223f',
-    level1: '#29314f',
-    level2: '#212946',
-    textTitle: '#d7dcec',
-    textPrimary: '#bdc8f0',
-    textSecondary: '#8492c4',
+    paper: "#111936",
+    background: "#1a223f",
+    level1: "#29314f",
+    level2: "#212946",
+    textTitle: "#d7dcec",
+    textPrimary: "#bdc8f0",
+    textSecondary: "#8492c4",
   },
 };
 

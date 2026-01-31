@@ -7,6 +7,7 @@ import { useSWRMutationHook } from "../../hooks/useSWRMutation";
 import { useSWRAxios } from "../../hooks/useSWRAxios";
 import { API_PATHS } from "../../constants/apiKeys";
 import MainCard from "../../components/ui/MainCard";
+import Transitions from "../../components/ui/Transitions";
 
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
@@ -122,7 +123,8 @@ export default function SettingsPage() {
         {tSettings("title")}
       </Typography>
 
-      <Grid container spacing={3}>
+      <Transitions type="fade">
+        <Grid container spacing={3}>
         {/* Email Notifications */}
         <Grid size={{ xs: 12, md: 6 }}>
           <MainCard>
@@ -341,6 +343,7 @@ export default function SettingsPage() {
           </MainCard>
         </Grid>
       </Grid>
+      </Transitions>
     </Box>
   );
 }

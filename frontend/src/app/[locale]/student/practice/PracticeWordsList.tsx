@@ -6,7 +6,6 @@ import api from "../../../helpers/axiosFetch";
 import { API_PATHS } from "../../../constants/apiKeys";
 import PracticeCard from "@/app/components/ui/PracticeCard";
 import { useSWRAxios } from "../../../hooks/useSWRAxios";
-
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Alert from "@mui/material/Alert";

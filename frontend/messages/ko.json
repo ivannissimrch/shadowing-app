@@ -243,7 +243,16 @@
     "recordingInProgress": "녹음 중...",
     "recordingPaused": "녹음 일시정지",
     "startRecording": "녹음 시작",
-    "resume": "계속"
+    "resume": "계속",
+    "microphoneError": "마이크 접근 오류",
+    "microphoneErrorMessage": "마이크에 접근할 수 없습니다. 권한을 확인하고 다시 시도해 주세요.",
+    "noAudioRecorded": "녹음된 오디오가 없습니다.",
+    "invalidAudioData": "잘못된 오디오 데이터입니다.",
+    "failedToUploadAudio": "오디오 업로드 실패. 다시 시도해 주세요.",
+    "failedToSaveRecording": "녹음 저장 실패. 다시 시도해 주세요.",
+    "submissionSuccessful": "녹음이 검토를 위해 제출되었습니다.",
+    "failedToSubmitRecording": "녹음 제출 실패. 다시 시도해 주세요.",
+    "audioProcessingError": "오디오 처리 중 오류가 발생했습니다."
   },
   "errors": {
     "somethingWentWrong": "문제가 발생했습니다",

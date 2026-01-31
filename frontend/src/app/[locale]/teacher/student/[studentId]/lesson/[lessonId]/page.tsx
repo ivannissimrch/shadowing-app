@@ -5,6 +5,7 @@ import { use } from "react";
 import ErrorFallback from "@/app/components/ui/ErrorFallback";
 import { mutate } from "swr/_internal";
 import { API_PATHS } from "@/app/constants/apiKeys";
+import Transitions from "@/app/components/ui/Transitions";
 
 export interface StudentLessonPageProps {
   params: Promise<{ studentId: string; lessonId: string }>;
@@ -30,7 +31,9 @@ export default function StudentLessonPage({ params }: StudentLessonPageProps) {
         );
       }}
     >
-      <TeacherLessonDetails idInfo={data} />
+      <Transitions type="fade">
+        <TeacherLessonDetails idInfo={data} />
+      </Transitions>
     </ErrorBoundary>
   );
 }

@@ -8,6 +8,7 @@ import EditLessonModal from "@/app/components/teacher/EditLessonModal";
 import AssignLessonModal from "@/app/components/teacher/AssignLessonModal";
 import { API_PATHS } from "@/app/constants/apiKeys";
 import { Lesson } from "@/app/Types";
+import Transitions from "@/app/components/ui/Transitions";
 
 export default function TeacherLessonPage({
   params,
@@ -30,11 +31,13 @@ export default function TeacherLessonPage({
         mutate(API_PATHS.TEACHER_LESSON(id), undefined, { revalidate: true });
       }}
     >
-      <LessonPreview
+      <Transitions type="fade">
+        <LessonPreview
         lessonId={id}
         onEdit={(lesson) => setEditLesson(lesson)}
         onAssign={(lesson) => setAssignLesson({ id: lesson.id, title: lesson.title })}
       />
+      </Transitions>
 
       <EditLessonModal
         isOpen={!!editLesson}

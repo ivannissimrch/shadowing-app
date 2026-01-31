@@ -1,30 +1,28 @@
-'use client';
+"use client";
+import { createTheme, ThemeOptions } from "@mui/material/styles";
+import { palette } from "./palette";
+import { typography } from "./typography";
+import { componentOverrides } from "./componentOverrides";
 
-import { createTheme, ThemeOptions } from '@mui/material/styles';
-import { palette } from './palette';
-import { typography } from './typography';
-import { componentOverrides } from './componentOverrides';
-
-// Berry Dark Theme Configuration
 const BORDER_RADIUS = 8;
 const FONT_FAMILY = '"Roboto", "Helvetica", "Arial", sans-serif';
 
 const darkThemeOptions: ThemeOptions = {
-  direction: 'ltr',
+  direction: "ltr",
 
   palette: {
-    mode: 'dark',
+    mode: "dark",
     primary: {
       light: palette.primary.light,
       main: palette.primary.main,
       dark: palette.primary.dark,
-      contrastText: '#ffffff',
+      contrastText: "#ffffff",
     },
     secondary: {
       light: palette.secondary.light,
       main: palette.secondary.main,
       dark: palette.secondary.dark,
-      contrastText: '#ffffff',
+      contrastText: "#ffffff",
     },
     error: {
       light: palette.error.light,
@@ -64,8 +62,8 @@ const darkThemeOptions: ThemeOptions = {
   mixins: {
     toolbar: {
       minHeight: 48,
-      padding: '16px',
-      '@media (min-width: 600px)': {
+      padding: "16px",
+      "@media (min-width: 600px)": {
         minHeight: 48,
       },
     },

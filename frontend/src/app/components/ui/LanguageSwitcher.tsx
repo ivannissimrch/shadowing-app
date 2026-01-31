@@ -66,6 +66,7 @@ export default function LanguageSwitcher() {
         anchorEl={anchorEl}
         open={Boolean(anchorEl)}
         onClose={handleClose}
+        disableScrollLock
         anchorOrigin={{
           vertical: 'bottom',
           horizontal: 'right',

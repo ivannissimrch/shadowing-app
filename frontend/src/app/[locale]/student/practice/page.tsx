@@ -6,7 +6,6 @@ import { ErrorBoundary } from "react-error-boundary";
 import { API_PATHS } from "../../../constants/apiKeys";
 import { useSWRMutationHook } from "../../../hooks/useSWRMutation";
 import PracticeWordsList from "./PracticeWordsList";
-
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
@@ -14,6 +13,7 @@ import Button from "@mui/material/Button";
 import Alert from "@mui/material/Alert";
 import CircularProgress from "@mui/material/CircularProgress";
 import { FiPlus } from "react-icons/fi";
+import Transitions from "../../../components/ui/Transitions";
 
 interface PracticeWord {
   id: number;
@@ -61,7 +61,6 @@ export default function PracticePage() {
 
   return (
     <Box>
-      {/* Header */}
       <Typography
         variant="h4"
         component="h1"
@@ -69,13 +68,12 @@ export default function PracticePage() {
       >
         {t("practice")}
       </Typography>
-
-      {/* Add new word form */}
-      <Box
-        component="form"
-        onSubmit={handleAddWord}
-        sx={{ display: "flex", gap: 2, mb: 3 }}
-      >
+      <Transitions type="fade">
+        <Box
+          component="form"
+          onSubmit={handleAddWord}
+          sx={{ display: "flex", gap: 2, mb: 3 }}
+        >
         <TextField
           fullWidth
           placeholder={tPractice("addWord")}
@@ -88,7 +86,13 @@ export default function PracticePage() {
           type="submit"
           variant="contained"
           disabled={isAdding || !newWord.trim()}
-          startIcon={isAdding ? <CircularProgress size={16} color="inherit" /> : <FiPlus size={16} />}
+          startIcon={
+            isAdding ? (
+              <CircularProgress size={16} color="inherit" />
+            ) : (
+              <FiPlus size={16} />
+            )
+          }
           sx={{ textTransform: "none", fontWeight: 500, whiteSpace: "nowrap" }}
         >
           {isAdding ? tCommon("adding") : tCommon("add")}
@@ -116,6 +120,7 @@ export default function PracticePage() {
       >
         <PracticeWordsList />
       </ErrorBoundary>
+      </Transitions>
     </Box>
   );
 }
