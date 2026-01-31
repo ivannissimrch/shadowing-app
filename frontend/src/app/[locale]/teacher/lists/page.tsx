@@ -5,6 +5,7 @@ import AddListModal from "@/app/components/teacher/AddListModal";
 import ListsView from "@/app/components/teacher/ListsView";
 import ErrorFallback from "@/app/components/ui/ErrorFallback";
 import MainCard from "@/app/components/ui/MainCard";
+import Transitions from "@/app/components/ui/Transitions";
 import useModal from "@/app/hooks/useModal";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
@@ -20,7 +21,6 @@ export default function ListsPage() {
 
   return (
     <Box>
-      {/* Page Title */}
       <Typography
         variant="h4"
         sx={{ fontWeight: 600, color: "text.primary", mb: 3 }}
@@ -28,9 +28,9 @@ export default function ListsPage() {
         {t("lists")}
       </Typography>
 
-      {/* Lists */}
-      <MainCard
-        title={tTeacher("myLists")}
+      <Transitions type="fade">
+        <MainCard
+          title={tTeacher("myLists")}
         secondary={
           <Button
             variant="contained"
@@ -54,8 +54,8 @@ export default function ListsPage() {
           <ListsView />
         </ErrorBoundary>
       </MainCard>
+      </Transitions>
 
-      {/* Add List Modal */}
       <AddListModal
         isOpen={addListModal.isModalOpen}
         onClose={() => addListModal.closeModal()}

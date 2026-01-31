@@ -6,7 +6,6 @@ import { ErrorBoundary } from "react-error-boundary";
 import { API_PATHS } from "../../../constants/apiKeys";
 import { useSWRMutationHook } from "../../../hooks/useSWRMutation";
 import PracticeWordsList from "./PracticeWordsList";
-
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
@@ -14,6 +13,7 @@ import Button from "@mui/material/Button";
 import Alert from "@mui/material/Alert";
 import CircularProgress from "@mui/material/CircularProgress";
 import { FiPlus } from "react-icons/fi";
+import Transitions from "../../../components/ui/Transitions";
 
 interface PracticeWord {
   id: number;
@@ -61,7 +61,6 @@ export default function PracticePage() {
 
   return (
     <Box>
-      {/* Header */}
       <Typography
         variant="h4"
         component="h1"
@@ -69,53 +68,61 @@ export default function PracticePage() {
       >
         {t("practice")}
       </Typography>
-
-      {/* Add new word form */}
-      <Box
-        component="form"
-        onSubmit={handleAddWord}
-        sx={{ display: "flex", gap: 2, mb: 3 }}
-      >
-        <TextField
-          fullWidth
-          placeholder={tPractice("addWord")}
-          value={newWord}
-          onChange={(e) => setNewWord(e.target.value)}
-          disabled={isAdding}
-          size="small"
-        />
-        <Button
-          type="submit"
-          variant="contained"
-          disabled={isAdding || !newWord.trim()}
-          startIcon={isAdding ? <CircularProgress size={16} color="inherit" /> : <FiPlus size={16} />}
-          sx={{ textTransform: "none", fontWeight: 500, whiteSpace: "nowrap" }}
-        >
-          {isAdding ? tCommon("adding") : tCommon("add")}
-        </Button>
-      </Box>
-
-      {addError && (
-        <Alert severity="error" sx={{ mb: 3 }}>
-          {addError}
-        </Alert>
-      )}
-
-      <ErrorBoundary
-        fallbackRender={({ error, resetErrorBoundary }) => (
-          <Box sx={{ textAlign: "center", py: 4 }}>
-            <Alert severity="error" sx={{ mb: 2 }}>
-              {tErrors("failedToLoadPracticeWords")}: {error.message}
-            </Alert>
-            <Button variant="contained" onClick={resetErrorBoundary}>
-              {tErrors("tryAgainButton")}
+      <Transitions type="fade">
+        <Box>
+          <Box
+            component="form"
+            onSubmit={handleAddWord}
+            sx={{ display: "flex", gap: 2, mb: 3 }}
+          >
+            <TextField
+              fullWidth
+              placeholder={tPractice("addWord")}
+              value={newWord}
+              onChange={(e) => setNewWord(e.target.value)}
+              disabled={isAdding}
+              size="small"
+            />
+            <Button
+              type="submit"
+              variant="contained"
+              disabled={isAdding || !newWord.trim()}
+              startIcon={
+                isAdding ? (
+                  <CircularProgress size={16} color="inherit" />
+                ) : (
+                  <FiPlus size={16} />
+                )
+              }
+              sx={{ textTransform: "none", fontWeight: 500, whiteSpace: "nowrap" }}
+            >
+              {isAdding ? tCommon("adding") : tCommon("add")}
             </Button>
           </Box>
-        )}
-        onReset={() => mutate(API_PATHS.PRACTICE_WORDS)}
-      >
-        <PracticeWordsList />
-      </ErrorBoundary>
+
+          {addError && (
+            <Alert severity="error" sx={{ mb: 3 }}>
+              {addError}
+            </Alert>
+          )}
+
+          <ErrorBoundary
+            fallbackRender={({ error, resetErrorBoundary }) => (
+              <Box sx={{ textAlign: "center", py: 4 }}>
+                <Alert severity="error" sx={{ mb: 2 }}>
+                  {tErrors("failedToLoadPracticeWords")}: {error.message}
+                </Alert>
+                <Button variant="contained" onClick={resetErrorBoundary}>
+                  {tErrors("tryAgainButton")}
+                </Button>
+              </Box>
+            )}
+            onReset={() => mutate(API_PATHS.PRACTICE_WORDS)}
+          >
+            <PracticeWordsList />
+          </ErrorBoundary>
+        </Box>
+      </Transitions>
     </Box>
   );
 }

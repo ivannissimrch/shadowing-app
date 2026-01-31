@@ -1,8 +1,15 @@
-'use client';
+"use client";
+import {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  useCallback,
+  useMemo,
+  ReactNode,
+} from "react";
 
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-
-type ThemeMode = 'light' | 'dark';
+type ThemeMode = "light" | "dark";
 
 interface ThemeContextType {
   mode: ThemeMode;
@@ -16,36 +23,31 @@ interface ThemeContextProviderProps {
 }
 
 export function ThemeContextProvider({ children }: ThemeContextProviderProps) {
-  const [mode, setMode] = useState<ThemeMode>('light');
+  const [mode, setMode] = useState<ThemeMode>(() => {
+    if (typeof window === "undefined") return "light";
+    const savedMode = localStorage.getItem("themeMode");
+    return savedMode === "dark" ? "dark" : "light";
+  });
 
-  // Load theme from localStorage on mount
   useEffect(() => {
-    const savedMode = localStorage.getItem('themeMode') as ThemeMode;
-    if (savedMode && (savedMode === 'light' || savedMode === 'dark')) {
-      setMode(savedMode);
-    }
-  }, []);
-
-  // Save theme to localStorage when it changes
-  useEffect(() => {
-    localStorage.setItem('themeMode', mode);
+    localStorage.setItem("themeMode", mode);
   }, [mode]);
 
-  const toggleMode = () => {
-    setMode(prevMode => prevMode === 'light' ? 'dark' : 'light');
-  };
+  const toggleMode = useCallback(() => {
+    setMode((prevMode) => (prevMode === "light" ? "dark" : "light"));
+  }, []);
+
+  const value = useMemo(() => ({ mode, toggleMode }), [mode, toggleMode]);
 
   return (
-    <ThemeContext.Provider value={{ mode, toggleMode }}>
-      {children}
-    </ThemeContext.Provider>
+    <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>
   );
 }
 
 export function useTheme() {
   const context = useContext(ThemeContext);
   if (context === undefined) {
-    throw new Error('useTheme must be used within a ThemeContextProvider');
+    throw new Error("useTheme must be used within a ThemeContextProvider");
   }
   return context;
 }

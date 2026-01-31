@@ -13,16 +13,19 @@ import ListItemText from '@mui/material/ListItemText';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import CircularProgress from '@mui/material/CircularProgress';
+import Image from 'next/image';
 import { MenuGroup } from './menuItems';
 
-// Drawer width constant
 export const DRAWER_WIDTH = 260;
+export const MINI_DRAWER_WIDTH = 72;
 
 interface SidebarProps {
   menuItems: MenuGroup[];
   open: boolean;
   onClose: () => void;
   variant: 'permanent' | 'temporary';
+  mini?: boolean;
+  onExpand?: () => void;
 }
 
 // Translation keys for menu items
@@ -38,7 +41,8 @@ const menuTranslationKeys: Record<string, string> = {
   'settings': 'navigation.settings',
 };
 
-export default function Sidebar({ menuItems, open, onClose, variant }: SidebarProps) {
+export default function Sidebar({ menuItems, open, onClose, variant, mini = false, onExpand }: SidebarProps) {
+  const drawerWidth = mini ? MINI_DRAWER_WIDTH : DRAWER_WIDTH;
   const pathname = usePathname();
   const tNav = useTranslations('navigation');
   const tAuth = useTranslations('auth');
@@ -71,53 +75,60 @@ export default function Sidebar({ menuItems, open, onClose, variant }: SidebarPr
 
   const drawerContent = (
     <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
-      {/* Logo Section */}
       <Box
+        onClick={mini && onExpand ? onExpand : undefined}
         sx={{
           display: 'flex',
           alignItems: 'center',
-          p: 3,
-          pb: 2,
+          justifyContent: 'center',
+          p: 2,
+          cursor: mini ? 'pointer' : 'default',
         }}
       >
-        <Typography
-          variant="h4"
-          sx={{
-            fontWeight: 700,
-            color: 'primary.main',
-            letterSpacing: '-0.5px',
-          }}
-        >
-          ShadowSpeak
-        </Typography>
+        {mini ? (
+          <Image
+            src="/favicon.png"
+            alt="ShadowSpeak"
+            width={50}
+            height={40}
+            style={{ objectFit: 'contain' }}
+          />
+        ) : (
+          <Image
+            src="/logo.png"
+            alt="ShadowSpeak"
+            width={180}
+            height={48}
+            style={{ objectFit: 'contain', maxWidth: '100%' }}
+            priority
+          />
+        )}
       </Box>
 
       <Divider sx={{ mb: 2 }} />
 
-      {/* Navigation Menu */}
-      <Box sx={{ flex: 1, px: 2 }}>
+      <Box sx={{ flex: 1, px: mini ? 1 : 2 }}>
         {menuItems.map((group, groupIndex) => (
           <Box key={group.id} sx={{ mb: 2 }}>
-            {/* Group Title */}
-            <Typography
-              variant="caption"
-              sx={{
-                px: 2,
-                py: 1,
-                display: 'block',
-                color: 'text.secondary',
-                fontWeight: 600,
-                textTransform: 'uppercase',
-                letterSpacing: '0.5px',
-              }}
-            >
-              {getTranslation(group.id, group.title)}
-            </Typography>
+            {!mini && (
+              <Typography
+                variant="caption"
+                sx={{
+                  px: 2,
+                  py: 1,
+                  display: 'block',
+                  color: 'text.secondary',
+                  fontWeight: 600,
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.5px',
+                }}
+              >
+                {getTranslation(group.id, group.title)}
+              </Typography>
+            )}
 
-            {/* Menu Items */}
             <List disablePadding>
               {group.items.map((item) => {
-                // usePathname from @/i18n/routing returns path without locale prefix
                 const isActive = pathname === item.url;
                 const isLoading = loadingUrl === item.url;
                 const Icon = item.icon;
@@ -132,6 +143,8 @@ export default function Sidebar({ menuItems, open, onClose, variant }: SidebarPr
                     sx={{
                       borderRadius: 2,
                       mb: 0.5,
+                      justifyContent: mini ? 'center' : 'flex-start',
+                      px: mini ? 1.5 : 2,
                       '&.Mui-selected': {
                         backgroundColor: 'primary.light',
                         color: 'primary.main',
@@ -146,7 +159,8 @@ export default function Sidebar({ menuItems, open, onClose, variant }: SidebarPr
                   >
                     <ListItemIcon
                       sx={{
-                        minWidth: 40,
+                        minWidth: mini ? 'auto' : 40,
+                        mr: mini ? 0 : 1,
                         color: isActive || isLoading ? 'primary.main' : 'text.secondary',
                       }}
                     >
@@ -156,40 +170,42 @@ export default function Sidebar({ menuItems, open, onClose, variant }: SidebarPr
                         <Icon size={20} />
                       )}
                     </ListItemIcon>
-                    <ListItemText
-                      primary={getTranslation(item.id, item.title)}
-                      primaryTypographyProps={{
-                        variant: 'body1',
-                        fontWeight: isActive || isLoading ? 600 : 400,
-                      }}
-                    />
+                    {!mini && (
+                      <ListItemText
+                        primary={getTranslation(item.id, item.title)}
+                        primaryTypographyProps={{
+                          variant: 'body1',
+                          fontWeight: isActive || isLoading ? 600 : 400,
+                        }}
+                      />
+                    )}
                   </ListItemButton>
                 );
               })}
             </List>
 
-            {/* Divider between groups (except last) */}
-            {groupIndex < menuItems.length - 1 && (
+            {!mini && groupIndex < menuItems.length - 1 && (
               <Divider sx={{ mt: 2 }} />
             )}
           </Box>
         ))}
       </Box>
 
-      {/* Footer */}
-      <Box sx={{ p: 2, pt: 0 }}>
-        <Divider sx={{ mb: 2 }} />
-        <Typography
-          variant="caption"
-          sx={{
-            color: 'text.secondary',
-            display: 'block',
-            textAlign: 'center',
-          }}
-        >
-          ShadowSpeak v1.0
-        </Typography>
-      </Box>
+      {!mini && (
+        <Box sx={{ p: 2, pt: 0 }}>
+          <Divider sx={{ mb: 2 }} />
+          <Typography
+            variant="caption"
+            sx={{
+              color: 'text.secondary',
+              display: 'block',
+              textAlign: 'center',
+            }}
+          >
+            ShadowSpeak v1.0
+          </Typography>
+        </Box>
+      )}
     </Box>
   );
 
@@ -199,14 +215,20 @@ export default function Sidebar({ menuItems, open, onClose, variant }: SidebarPr
       open={open}
       onClose={onClose}
       sx={{
-        width: DRAWER_WIDTH,
+        width: drawerWidth,
         flexShrink: 0,
         '& .MuiDrawer-paper': {
-          width: DRAWER_WIDTH,
+          width: drawerWidth,
           boxSizing: 'border-box',
           borderRight: '1px solid',
           borderColor: 'divider',
           backgroundColor: 'background.paper',
+          transition: (theme) =>
+            theme.transitions.create('width', {
+              easing: theme.transitions.easing.sharp,
+              duration: theme.transitions.duration.enteringScreen,
+            }),
+          overflowX: 'hidden',
         },
       }}
     >

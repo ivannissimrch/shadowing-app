@@ -1,35 +1,27 @@
-'use client';
+"use client";
+import { createTheme, ThemeOptions, Theme } from "@mui/material/styles";
+import { palette } from "./palette";
+import { typography } from "./typography";
+import { componentOverrides } from "./componentOverrides";
 
-import { createTheme, ThemeOptions, Theme } from '@mui/material/styles';
-import { palette } from './palette';
-import { typography } from './typography';
-import { componentOverrides } from './componentOverrides';
-
-// Berry Theme Configuration
-// Border radius affects all components (inputs, buttons, cards, etc.)
 const BORDER_RADIUS = 8;
-
-// Font family - Roboto is Berry's signature font
 const FONT_FAMILY = '"Roboto", "Helvetica", "Arial", sans-serif';
 
-// Create the theme options
 const themeOptions: ThemeOptions = {
-  direction: 'ltr',
-
-  // Color palette
+  direction: "ltr",
   palette: {
-    mode: 'light',
+    mode: "light",
     primary: {
       light: palette.primary.light,
       main: palette.primary.main,
       dark: palette.primary.dark,
-      contrastText: '#ffffff',
+      contrastText: "#ffffff",
     },
     secondary: {
       light: palette.secondary.light,
       main: palette.secondary.main,
       dark: palette.secondary.dark,
-      contrastText: '#ffffff',
+      contrastText: "#ffffff",
     },
     error: {
       light: palette.error.light,
@@ -60,26 +52,22 @@ const themeOptions: ThemeOptions = {
     divider: palette.divider,
   },
 
-  // Typography settings
   typography: typography(FONT_FAMILY),
 
-  // Shape settings
   shape: {
     borderRadius: BORDER_RADIUS,
   },
 
-  // Mixins (toolbar height, etc.)
   mixins: {
     toolbar: {
       minHeight: 48,
-      padding: '16px',
-      '@media (min-width: 600px)': {
+      padding: "16px",
+      "@media (min-width: 600px)": {
         minHeight: 48,
       },
     },
   },
 
-  // Breakpoints (responsive design)
   breakpoints: {
     values: {
       xs: 0,
@@ -91,10 +79,8 @@ const themeOptions: ThemeOptions = {
   },
 };
 
-// Create the base theme
 const baseTheme = createTheme(themeOptions);
 
-// Apply component overrides
 const theme: Theme = createTheme(baseTheme, {
   components: componentOverrides(baseTheme, BORDER_RADIUS),
 });

@@ -38,6 +38,7 @@ import {
   FiTrash2,
   FiX,
 } from "react-icons/fi";
+import Transitions from "@/app/components/ui/Transitions";
 
 interface ListDetailContentProps {
   listId: string;
@@ -97,9 +98,10 @@ function ListDetailContent({ listId }: ListDetailContentProps) {
   const existingLessonIds = list.lessons.map((l) => l.id);
 
   return (
-    <Box>
-      {/* Breadcrumbs */}
-      <Breadcrumbs sx={{ mb: 2 }}>
+    <Transitions type="fade">
+      <Box>
+        {/* Breadcrumbs */}
+        <Breadcrumbs sx={{ mb: 2 }}>
         <Link
           href="/teacher/lists"
           style={{ color: "inherit", textDecoration: "none" }}
@@ -118,7 +120,10 @@ function ListDetailContent({ listId }: ListDetailContentProps) {
           mb: 1,
         }}
       >
-        <Typography variant="h4" sx={{ fontWeight: 600, color: "text.primary" }}>
+        <Typography
+          variant="h4"
+          sx={{ fontWeight: 600, color: "text.primary" }}
+        >
           {list.name}
         </Typography>
         <Tooltip title={t("editList")}>
@@ -155,7 +160,10 @@ function ListDetailContent({ listId }: ListDetailContentProps) {
         }
       >
         {list.lessons.length === 0 ? (
-          <Typography color="text.secondary" sx={{ py: 4, textAlign: "center" }}>
+          <Typography
+            color="text.secondary"
+            sx={{ py: 4, textAlign: "center" }}
+          >
             {t("noLessonsInList")}
           </Typography>
         ) : (
@@ -192,7 +200,9 @@ function ListDetailContent({ listId }: ListDetailContentProps) {
                   sx={{ flexGrow: 1, pb: 1, pt: lesson.category ? 4 : 2 }}
                 >
                   {/* Icon */}
-                  <Box sx={{ display: "flex", justifyContent: "center", mb: 2 }}>
+                  <Box
+                    sx={{ display: "flex", justifyContent: "center", mb: 2 }}
+                  >
                     <Avatar
                       sx={{
                         bgcolor: "primary.light",
@@ -233,12 +243,18 @@ function ListDetailContent({ listId }: ListDetailContentProps) {
                     href={`/teacher/lesson/${lesson.id}`}
                     variant="outlined"
                     fullWidth
-                    startIcon={viewingLessonId !== lesson.id ? <FiEye size={16} /> : undefined}
+                    startIcon={
+                      viewingLessonId !== lesson.id ? (
+                        <FiEye size={16} />
+                      ) : undefined
+                    }
                     disabled={viewingLessonId === lesson.id}
                     onClick={() => setViewingLessonId(lesson.id)}
                     sx={{ textTransform: "none", fontWeight: 500 }}
                   >
-                    {viewingLessonId === lesson.id ? tCommon("loading") : t("viewLesson")}
+                    {viewingLessonId === lesson.id
+                      ? tCommon("loading")
+                      : t("viewLesson")}
                   </Button>
 
                   {/* Action Buttons Row */}
@@ -303,7 +319,6 @@ function ListDetailContent({ listId }: ListDetailContentProps) {
         )}
       </MainCard>
 
-      {/* Modals */}
       <AddListModal
         isOpen={editListModal.isModalOpen}
         onClose={() => editListModal.closeModal()}
@@ -343,7 +358,8 @@ function ListDetailContent({ listId }: ListDetailContentProps) {
           lessonTitle={lessonToDelete.title}
         />
       )}
-    </Box>
+      </Box>
+    </Transitions>
   );
 }
 

@@ -6,7 +6,7 @@ import { mutate } from "swr";
 import { useSWRMutationHook } from "../../hooks/useSWRMutation";
 import { API_PATHS } from "../../constants/apiKeys";
 import { Student } from "@/app/Types";
-import { useAlertContext } from "@/app/AlertContext";
+import { useSnackbar } from "@/app/SnackbarContext";
 
 interface DeleteStudentModalProps {
   isOpen: boolean;
@@ -23,8 +23,7 @@ export default function DeleteStudentModal({
 }: DeleteStudentModalProps) {
   const t = useTranslations("teacher");
   const tCommon = useTranslations("common");
-  const tErrors = useTranslations("errors");
-  const { openAlertDialog } = useAlertContext();
+  const { showSnackbar } = useSnackbar();
 
   const {
     StyledDialog,
@@ -57,10 +56,7 @@ export default function DeleteStudentModal({
         }
       );
     } catch {
-      openAlertDialog(
-        tErrors("failedToDelete"),
-        t("couldNotDeleteStudent", { name: studentUsername })
-      );
+      showSnackbar(t("couldNotDeleteStudent", { name: studentUsername }), "error");
     }
   };
 

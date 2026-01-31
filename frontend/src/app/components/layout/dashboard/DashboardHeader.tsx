@@ -11,8 +11,9 @@ import Button from '@mui/material/Button';
 import Avatar from '@mui/material/Avatar';
 import Tooltip from '@mui/material/Tooltip';
 import { FiMenu, FiLogOut, FiUser, FiChevronLeft } from 'react-icons/fi';
+import Image from 'next/image';
 import { useAuthContext } from '../../../AuthContext';
-import { DRAWER_WIDTH } from './Sidebar';
+import { DRAWER_WIDTH, MINI_DRAWER_WIDTH } from './Sidebar';
 import DarkModeToggle from '../../ui/DarkModeToggle';
 import LanguageSwitcher from '../../ui/LanguageSwitcher';
 
@@ -45,13 +46,12 @@ export default function DashboardHeader({
         backgroundColor: 'background.paper',
         borderBottom: '1px solid',
         borderColor: 'divider',
-        // Adjust width when sidebar is open (desktop only)
-        width: { md: sidebarOpen ? `calc(100% - ${DRAWER_WIDTH}px)` : '100%' },
-        ml: { md: sidebarOpen ? `${DRAWER_WIDTH}px` : 0 },
+        width: { md: `calc(100% - ${sidebarOpen ? DRAWER_WIDTH : MINI_DRAWER_WIDTH}px)` },
+        ml: { md: `${sidebarOpen ? DRAWER_WIDTH : MINI_DRAWER_WIDTH}px` },
         transition: (theme) =>
           theme.transitions.create(['width', 'margin'], {
             easing: theme.transitions.easing.sharp,
-            duration: theme.transitions.duration.leavingScreen,
+            duration: theme.transitions.duration.enteringScreen,
           }),
       }}
     >
@@ -88,32 +88,16 @@ export default function DashboardHeader({
             <FiMenu size={24} />
           </IconButton>
 
-          {/* Mobile logo */}
-          <Typography
-            variant="h5"
-            sx={{
-              display: { xs: 'block', md: 'none' },
-              fontWeight: 700,
-              color: 'primary.main',
-            }}
-          >
-            ShadowSpeak
-          </Typography>
-
-          {/* Desktop logo when sidebar is collapsed */}
-          {!sidebarOpen && (
-            <Typography
-              variant="h5"
-              sx={{
-                display: { xs: 'none', md: 'block' },
-                fontWeight: 700,
-                color: 'primary.main',
-                ml: 1,
-              }}
-            >
-              ShadowSpeak
-            </Typography>
-          )}
+          {/* Mobile logo - only on mobile since sidebar is hidden */}
+          <Box sx={{ display: { xs: 'flex', md: 'none' }, alignItems: 'center' }}>
+            <Image
+              src="/favicon.png"
+              alt="ShadowSpeak"
+              width={32}
+              height={32}
+              style={{ objectFit: 'contain' }}
+            />
+          </Box>
         </Box>
 
         {/* Center - Page title or breadcrumb (optional) */}

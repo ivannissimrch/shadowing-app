@@ -5,6 +5,7 @@ import { use } from "react";
 import ErrorFallback from "@/app/components/ui/ErrorFallback";
 import { mutate } from "swr";
 import { API_PATHS } from "@/app/constants/apiKeys";
+import Transitions from "@/app/components/ui/Transitions";
 
 export default function Practice({
   params,
@@ -21,7 +22,9 @@ export default function Practice({
         mutate(API_PATHS.LESSON(id), undefined, { revalidate: true });
       }}
     >
-      <LessonPracticeView id={id} />
+      <Transitions type="fade">
+        <LessonPracticeView id={id} />
+      </Transitions>
     </ErrorBoundary>
   );
 }

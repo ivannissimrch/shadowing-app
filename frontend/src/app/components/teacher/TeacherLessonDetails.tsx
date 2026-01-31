@@ -3,13 +3,14 @@ import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { useSWRAxios } from "../../hooks/useSWRAxios";
 import { useSWRMutationHook } from "../../hooks/useSWRMutation";
-import { Lesson } from "../../Types";
+import { Lesson, Student } from "../../Types";
 import AudioPlayer from "react-h5-audio-player";
 import "react-h5-audio-player/lib/styles.css";
 import { API_PATHS } from "../../constants/apiKeys";
 import FeedBack from "./FeedBack";
 import VideoScriptToggle from "../lesson/VideoScriptToggle";
 import MainCard from "../ui/MainCard";
+import Breadcrumbs from "../ui/Breadcrumbs";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
@@ -26,8 +27,13 @@ export default function TeacherLessonDetails({
   idInfo,
 }: TeacherLessonDetailsProps) {
   const t = useTranslations("teacher");
+  const tNav = useTranslations("navigation");
   const tLesson = useTranslations("lesson");
   const [isMarking, setIsMarking] = useState(false);
+
+  const { data: student } = useSWRAxios<Student>(
+    API_PATHS.TEACHER_STUDENT(idInfo.studentId)
+  );
 
   const { data: selectedLesson } = useSWRAxios<Lesson>(
     API_PATHS.TEACHER_STUDENT_LESSON(idInfo.studentId, idInfo.lessonId)
@@ -59,7 +65,14 @@ export default function TeacherLessonDetails({
 
   return (
     <Box>
-      {/* Status Badge */}
+      <Breadcrumbs
+        items={[
+          { label: tNav("students"), href: "/teacher/students" },
+          { label: student?.username || "...", href: `/teacher/student/${idInfo.studentId}` },
+          { label: selectedLesson.title },
+        ]}
+      />
+
       <Box sx={{ mb: 2, display: "flex", alignItems: "center", gap: 2 }}>
         <Typography variant="h5" sx={{ fontWeight: 600 }}>
           {selectedLesson.title}

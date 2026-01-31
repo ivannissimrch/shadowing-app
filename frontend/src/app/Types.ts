@@ -11,6 +11,13 @@ export interface AlertContextType {
   alertDialogMessage: string;
 }
 
+export type SnackbarSeverity = "success" | "error" | "warning" | "info";
+
+export interface SnackbarContextType {
+  showSnackbar: (message: string, severity?: SnackbarSeverity) => void;
+  hideSnackbar: () => void;
+}
+
 export interface AuthContextType {
   token: string | null | undefined;
   updateToken: (newToken: string | null) => void;
@@ -22,9 +29,9 @@ export interface Lesson {
   title: string;
   image: string;
   script_text: string | null;
-  script_type: 'image' | 'text';
+  script_type: "image" | "text";
   video_id: string;
-  video_type: 'youtube' | 'cloudinary';
+  video_type: "youtube" | "cloudinary";
   cloudinary_public_id: string | null;
   cloudinary_url: string | null;
   id: string;
@@ -41,20 +48,18 @@ export interface Lesson {
   feedback: string | null;
 }
 
-// Predefined lesson categories
 export const LESSON_CATEGORIES = [
-  'Grammar',
-  'Vocabulary',
-  'Pronunciation',
-  'Reading',
-  'Conversation',
-  'Homework',
-  'Other',
+  "Grammar",
+  "Vocabulary",
+  "Pronunciation",
+  "Reading",
+  "Conversation",
+  "Homework",
+  "Other",
 ] as const;
 
-export type LessonCategory = typeof LESSON_CATEGORIES[number];
+export type LessonCategory = (typeof LESSON_CATEGORIES)[number];
 
-//User can be either a student or an admin
 export interface User {
   name: string;
   email: string;
@@ -122,7 +127,6 @@ export interface RecorderPanelContextType {
   isLessonMutating: boolean;
 }
 
-// List types for lesson organization
 export interface List {
   id: string;
   name: string;
@@ -132,6 +136,6 @@ export interface List {
   updated_at: string;
 }
 
-export interface ListWithLessons extends Omit<List, 'lesson_count'> {
+export interface ListWithLessons extends Omit<List, "lesson_count"> {
   lessons: Lesson[];
 }

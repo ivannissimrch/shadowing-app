@@ -4,6 +4,7 @@ import { Link } from "@/i18n/routing";
 import { useSWRAxios } from "../../../hooks/useSWRAxios";
 import { API_PATHS } from "../../../constants/apiKeys";
 import MainCard from "../../../components/ui/MainCard";
+import Transitions from "../../../components/ui/Transitions";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Avatar from "@mui/material/Avatar";
@@ -59,7 +60,6 @@ export default function ReviewsPage() {
 
   return (
     <Box>
-      {/* Page Title */}
       <Typography
         variant="h4"
         sx={{ fontWeight: 600, color: "text.primary", mb: 3 }}
@@ -67,18 +67,28 @@ export default function ReviewsPage() {
         {tTeacher("pendingReview")}
       </Typography>
 
-      <MainCard>
+      <Transitions type="fade">
+        <MainCard>
         {isLoading ? (
           <Stack spacing={2}>
             {[1, 2, 3].map((i) => (
               <Box key={i}>
-                <Stack direction="row" spacing={2} sx={{ alignItems: "center" }}>
+                <Stack
+                  direction="row"
+                  spacing={2}
+                  sx={{ alignItems: "center" }}
+                >
                   <Skeleton variant="circular" width={48} height={48} />
                   <Box sx={{ flex: 1 }}>
                     <Skeleton variant="text" width="40%" height={24} />
                     <Skeleton variant="text" width="60%" height={20} />
                   </Box>
-                  <Skeleton variant="rectangular" width={100} height={36} sx={{ borderRadius: 1 }} />
+                  <Skeleton
+                    variant="rectangular"
+                    width={100}
+                    height={36}
+                    sx={{ borderRadius: 1 }}
+                  />
                 </Stack>
                 {i < 3 && <Divider sx={{ my: 2 }} />}
               </Box>
@@ -116,10 +126,16 @@ export default function ReviewsPage() {
                       {getInitials(review.student_name)}
                     </Avatar>
 
-                    {/* Info */}
                     <Box sx={{ flex: 1, minWidth: 0 }}>
-                      <Stack direction="row" spacing={1} sx={{ alignItems: "center", flexWrap: "wrap" }}>
-                        <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
+                      <Stack
+                        direction="row"
+                        spacing={1}
+                        sx={{ alignItems: "center", flexWrap: "wrap" }}
+                      >
+                        <Typography
+                          variant="subtitle1"
+                          sx={{ fontWeight: 600 }}
+                        >
                           {review.student_name}
                         </Typography>
                         <Chip
@@ -129,7 +145,11 @@ export default function ReviewsPage() {
                           sx={{ height: 22, fontSize: "0.7rem" }}
                         />
                       </Stack>
-                      <Stack direction="row" spacing={1} sx={{ alignItems: "center", mt: 0.5 }}>
+                      <Stack
+                        direction="row"
+                        spacing={1}
+                        sx={{ alignItems: "center", mt: 0.5 }}
+                      >
                         <FiBook size={14} color="#666" />
                         <Typography
                           variant="body2"
@@ -157,7 +177,6 @@ export default function ReviewsPage() {
                       </Stack>
                     </Box>
 
-                    {/* Action Button */}
                     <Button
                       component={Link}
                       href={`/teacher/student/${review.student_id}/lesson/${review.lesson_id}`}
@@ -187,6 +206,7 @@ export default function ReviewsPage() {
           </Box>
         )}
       </MainCard>
+      </Transitions>
     </Box>
   );
 }

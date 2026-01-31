@@ -9,16 +9,25 @@ import Typography from "@mui/material/Typography";
 import Avatar from "@mui/material/Avatar";
 import Chip from "@mui/material/Chip";
 import { FiUser } from "react-icons/fi";
+import Breadcrumbs from "../ui/Breadcrumbs";
 
 export default function StudentInfo({ id }: { id: string }) {
   const t = useTranslations("teacher");
+  const tNav = useTranslations("navigation");
   const { data } = useSWRAxios<Student>(API_PATHS.TEACHER_STUDENT(id));
   const student = data;
 
   if (!student) return null;
 
   return (
-    <Paper sx={{ p: 3, mb: 3 }}>
+    <>
+      <Breadcrumbs
+        items={[
+          { label: tNav("students"), href: "/teacher/students" },
+          { label: student.username },
+        ]}
+      />
+      <Paper sx={{ p: 3, mb: 3 }}>
       <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
         <Avatar
           sx={{
@@ -45,5 +54,6 @@ export default function StudentInfo({ id }: { id: string }) {
         </Box>
       </Box>
     </Paper>
+    </>
   );
 }

@@ -243,7 +243,16 @@
     "recordingInProgress": "Recording in progress...",
     "recordingPaused": "Recording paused",
     "startRecording": "Start Recording",
-    "resume": "Resume"
+    "resume": "Resume",
+    "microphoneError": "Microphone Access Error",
+    "microphoneErrorMessage": "Could not access your microphone. Please check your permissions and try again.",
+    "noAudioRecorded": "No audio recorded.",
+    "invalidAudioData": "Invalid audio data.",
+    "failedToUploadAudio": "Failed to upload audio. Please try again.",
+    "failedToSaveRecording": "Failed to save recording. Please try again.",
+    "submissionSuccessful": "Your recording has been submitted for review.",
+    "failedToSubmitRecording": "Failed to submit recording. Please try again.",
+    "audioProcessingError": "An error occurred while processing your audio."
   },
   "errors": {
     "somethingWentWrong": "Something went wrong",

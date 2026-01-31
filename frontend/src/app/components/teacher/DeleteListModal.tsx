@@ -6,7 +6,7 @@ import { mutate } from "swr";
 import { useSWRMutationHook } from "../../hooks/useSWRMutation";
 import { API_PATHS } from "../../constants/apiKeys";
 import { List } from "@/app/Types";
-import { useAlertContext } from "@/app/AlertContext";
+import { useSnackbar } from "@/app/SnackbarContext";
 
 interface DeleteListModalProps {
   isOpen: boolean;
@@ -23,8 +23,7 @@ export default function DeleteListModal({
 }: DeleteListModalProps) {
   const t = useTranslations("teacher");
   const tCommon = useTranslations("common");
-  const tErrors = useTranslations("errors");
-  const { openAlertDialog } = useAlertContext();
+  const { showSnackbar } = useSnackbar();
 
   const {
     StyledDialog,
@@ -57,10 +56,7 @@ export default function DeleteListModal({
         }
       );
     } catch {
-      openAlertDialog(
-        tErrors("failedToDelete"),
-        t("couldNotDeleteList", { name: listName })
-      );
+      showSnackbar(t("couldNotDeleteList", { name: listName }), "error");
     }
   };
 

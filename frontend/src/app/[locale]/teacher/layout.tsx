@@ -1,5 +1,4 @@
 "use client";
-
 import { DashboardLayout } from "../../components/layout/dashboard";
 
 export default function TeacherLayout({
@@ -7,9 +6,5 @@ export default function TeacherLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return (
-    <DashboardLayout userType="teacher">
-      {children}
-    </DashboardLayout>
-  );
+  return <DashboardLayout userType="teacher">{children}</DashboardLayout>;
 }

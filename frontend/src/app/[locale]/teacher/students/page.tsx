@@ -3,6 +3,7 @@ import { useTranslations } from "next-intl";
 import Students from "../../../components/student/Students";
 import AddStudent from "../../../components/teacher/AddStudent";
 import MainCard from "../../../components/ui/MainCard";
+import Transitions from "../../../components/ui/Transitions";
 import useModal from "@/app/hooks/useModal";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
@@ -16,7 +17,6 @@ export default function StudentsPage() {
 
   return (
     <Box>
-      {/* Page Title */}
       <Typography
         variant="h4"
         sx={{ fontWeight: 600, color: "text.primary", mb: 3 }}
@@ -24,25 +24,25 @@ export default function StudentsPage() {
         {t("students")}
       </Typography>
 
-      {/* Students List */}
-      <MainCard
-        title={tTeacher("myStudents")}
-        secondary={
-          <Button
-            variant="contained"
-            size="small"
-            onClick={() => studentModal.openModal()}
-            startIcon={<FiPlus size={14} />}
-            sx={{ textTransform: "none" }}
-          >
-            {tTeacher("addStudent")}
-          </Button>
-        }
-      >
-        <Students />
-      </MainCard>
+      <Transitions type="fade">
+        <MainCard
+          title={tTeacher("myStudents")}
+          secondary={
+            <Button
+              variant="contained"
+              size="small"
+              onClick={() => studentModal.openModal()}
+              startIcon={<FiPlus size={14} />}
+              sx={{ textTransform: "none" }}
+            >
+              {tTeacher("addStudent")}
+            </Button>
+          }
+        >
+          <Students />
+        </MainCard>
+      </Transitions>
 
-      {/* Add Student Modal */}
       <AddStudent
         isAddStudentDialogOpen={studentModal.isModalOpen}
         closeAddStudentDialog={() => studentModal.closeModal()}
