@@ -23,15 +23,25 @@ interface ThemeContextProviderProps {
 }
 
 export function ThemeContextProvider({ children }: ThemeContextProviderProps) {
-  const [mode, setMode] = useState<ThemeMode>(() => {
-    if (typeof window === "undefined") return "light";
-    const savedMode = localStorage.getItem("themeMode");
-    return savedMode === "dark" ? "dark" : "light";
-  });
+  // Always start with "light" to match server render and avoid hydration mismatch
+  const [mode, setMode] = useState<ThemeMode>("light");
+  const [isHydrated, setIsHydrated] = useState(false);
 
+  // Load saved theme after hydration
   useEffect(() => {
-    localStorage.setItem("themeMode", mode);
-  }, [mode]);
+    const savedMode = localStorage.getItem("themeMode");
+    if (savedMode === "dark") {
+      setMode("dark");
+    }
+    setIsHydrated(true);
+  }, []);
+
+  // Save theme changes (but not the initial hydration load)
+  useEffect(() => {
+    if (isHydrated) {
+      localStorage.setItem("themeMode", mode);
+    }
+  }, [mode, isHydrated]);
 
   const toggleMode = useCallback(() => {
     setMode((prevMode) => (prevMode === "light" ? "dark" : "light"));
