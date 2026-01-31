@@ -10,6 +10,9 @@ export function usePersistedState<T>(key: string, initialValue: T) {
   }, []);
 
   function subscribe(callback: () => void) {
+    if (typeof window === "undefined") {
+      return () => {};
+    }
     const handleStorageChange = (e: Event) => {
       if (e instanceof StorageEvent && e.key !== null && e.key !== key) {
         return;
@@ -44,7 +47,9 @@ export function usePersistedState<T>(key: string, initialValue: T) {
         : newValue;
 
     setItem(key, valueToStore);
-    window.dispatchEvent(new CustomEvent(STORAGE_CHANGE_EVENT));
+    if (typeof window !== "undefined") {
+      window.dispatchEvent(new CustomEvent(STORAGE_CHANGE_EVENT));
+    }
   }
 
   // Return undefined until loaded to prevent hydration mismatch
