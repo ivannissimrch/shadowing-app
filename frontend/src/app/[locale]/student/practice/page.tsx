@@ -69,57 +69,59 @@ export default function PracticePage() {
         {t("practice")}
       </Typography>
       <Transitions type="fade">
-        <Box
-          component="form"
-          onSubmit={handleAddWord}
-          sx={{ display: "flex", gap: 2, mb: 3 }}
-        >
-        <TextField
-          fullWidth
-          placeholder={tPractice("addWord")}
-          value={newWord}
-          onChange={(e) => setNewWord(e.target.value)}
-          disabled={isAdding}
-          size="small"
-        />
-        <Button
-          type="submit"
-          variant="contained"
-          disabled={isAdding || !newWord.trim()}
-          startIcon={
-            isAdding ? (
-              <CircularProgress size={16} color="inherit" />
-            ) : (
-              <FiPlus size={16} />
-            )
-          }
-          sx={{ textTransform: "none", fontWeight: 500, whiteSpace: "nowrap" }}
-        >
-          {isAdding ? tCommon("adding") : tCommon("add")}
-        </Button>
-      </Box>
-
-      {addError && (
-        <Alert severity="error" sx={{ mb: 3 }}>
-          {addError}
-        </Alert>
-      )}
-
-      <ErrorBoundary
-        fallbackRender={({ error, resetErrorBoundary }) => (
-          <Box sx={{ textAlign: "center", py: 4 }}>
-            <Alert severity="error" sx={{ mb: 2 }}>
-              {tErrors("failedToLoadPracticeWords")}: {error.message}
-            </Alert>
-            <Button variant="contained" onClick={resetErrorBoundary}>
-              {tErrors("tryAgainButton")}
+        <Box>
+          <Box
+            component="form"
+            onSubmit={handleAddWord}
+            sx={{ display: "flex", gap: 2, mb: 3 }}
+          >
+            <TextField
+              fullWidth
+              placeholder={tPractice("addWord")}
+              value={newWord}
+              onChange={(e) => setNewWord(e.target.value)}
+              disabled={isAdding}
+              size="small"
+            />
+            <Button
+              type="submit"
+              variant="contained"
+              disabled={isAdding || !newWord.trim()}
+              startIcon={
+                isAdding ? (
+                  <CircularProgress size={16} color="inherit" />
+                ) : (
+                  <FiPlus size={16} />
+                )
+              }
+              sx={{ textTransform: "none", fontWeight: 500, whiteSpace: "nowrap" }}
+            >
+              {isAdding ? tCommon("adding") : tCommon("add")}
             </Button>
           </Box>
-        )}
-        onReset={() => mutate(API_PATHS.PRACTICE_WORDS)}
-      >
-        <PracticeWordsList />
-      </ErrorBoundary>
+
+          {addError && (
+            <Alert severity="error" sx={{ mb: 3 }}>
+              {addError}
+            </Alert>
+          )}
+
+          <ErrorBoundary
+            fallbackRender={({ error, resetErrorBoundary }) => (
+              <Box sx={{ textAlign: "center", py: 4 }}>
+                <Alert severity="error" sx={{ mb: 2 }}>
+                  {tErrors("failedToLoadPracticeWords")}: {error.message}
+                </Alert>
+                <Button variant="contained" onClick={resetErrorBoundary}>
+                  {tErrors("tryAgainButton")}
+                </Button>
+              </Box>
+            )}
+            onReset={() => mutate(API_PATHS.PRACTICE_WORDS)}
+          >
+            <PracticeWordsList />
+          </ErrorBoundary>
+        </Box>
       </Transitions>
     </Box>
   );

@@ -7,6 +7,7 @@ import ErrorFallback from "@/app/components/ui/ErrorFallback";
 import { API_PATHS } from "@/app/constants/apiKeys";
 import { mutate } from "swr";
 import Transitions from "@/app/components/ui/Transitions";
+import Box from "@mui/material/Box";
 
 interface StudentPageProps {
   params: Promise<{ studentId: string }>;
@@ -28,8 +29,10 @@ export default function StudentPage({ params }: StudentPageProps) {
       }}
     >
       <Transitions type="fade">
-        <StudentInfo id={id} />
-        <TeacherLessonsList id={id} />
+        <Box>
+          <StudentInfo id={id} />
+          <TeacherLessonsList id={id} />
+        </Box>
       </Transitions>
     </ErrorBoundary>
   );
