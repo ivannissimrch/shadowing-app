@@ -25,6 +25,7 @@ export const API_PATHS = {
   USER: (id: string) => `/api/users/${id}`,
   PASSWORD_CHANGE: (userId: string) => `/api/users/${userId}/password`,
   EMAIL_UPDATE: (userId: string) => `/api/users/${userId}/email`,
+  NATIVE_LANGUAGE_UPDATE: (userId: string) => `/api/users/${userId}/native-language`,
   USER_PROFILE: (userId: string) => `/api/users/${userId}`,
 
   // Teacher - Student Management

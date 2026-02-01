@@ -276,7 +276,13 @@
     "emailDescription": "Add your email to receive notifications when students submit lessons. Leave empty to disable email notifications.",
     "enterEmail": "Enter your email address (optional)",
     "emailUpdated": "Email updated successfully!",
-    "emailUpdateFailed": "Failed to update email"
+    "emailUpdateFailed": "Failed to update email",
+    "nativeLanguage": "Native Language",
+    "nativeLanguageDescription": "Set your first language to get personalized pronunciation feedback from the ESL Coach.",
+    "selectNativeLanguage": "Select your native language",
+    "nativeLanguageUpdated": "Native language updated successfully!",
+    "nativeLanguageUpdateFailed": "Failed to update native language",
+    "notSpecified": "Not specified"
   },
   "language": {
     "selectLanguage": "Select Language",

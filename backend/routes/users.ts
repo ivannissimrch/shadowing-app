@@ -176,4 +176,34 @@ router.patch(
   })
 );
 
+// Update own native language (for ESL Coach personalization)
+router.patch(
+  "/:userId/native-language",
+  asyncHandler(async (req: Request, res: Response, _next: NextFunction) => {
+    const { userId } = req.params;
+    const { nativeLanguage } = req.body;
+    const requestingUserId = req.user?.id;
+
+    // Security: Users can only update their OWN native language
+    if (requestingUserId !== userId) {
+      throw createError(403, "Forbidden: You can only update your own profile");
+    }
+
+    const user = await userRepository.updateNativeLanguage(
+      userId,
+      nativeLanguage || null
+    );
+
+    if (!user) {
+      throw createError(404, "User not found");
+    }
+
+    res.json({
+      success: true,
+      message: "Native language updated successfully",
+      data: user,
+    });
+  })
+);
+
 export default router;

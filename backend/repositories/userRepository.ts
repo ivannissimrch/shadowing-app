@@ -12,7 +12,7 @@ export const userRepository = {
 
   findById: async (userId: string) => {
     const result: QueryResult<User> = await db.query(
-      "SELECT id, username, email, role FROM users WHERE id = $1",
+      "SELECT id, username, email, native_language, role FROM users WHERE id = $1",
       [userId]
     );
     return result.rows[0] || null;
@@ -72,8 +72,16 @@ export const userRepository = {
 
   updateEmail: async (userId: string, email: string) => {
     const result: QueryResult<User> = await db.query(
-      "UPDATE users SET email = $1 WHERE id = $2 RETURNING id, username, email, role",
+      "UPDATE users SET email = $1 WHERE id = $2 RETURNING id, username, email, native_language, role",
       [email, userId]
+    );
+    return result.rows[0] || null;
+  },
+
+  updateNativeLanguage: async (userId: string, nativeLanguage: string | null) => {
+    const result: QueryResult<User> = await db.query(
+      "UPDATE users SET native_language = $1 WHERE id = $2 RETURNING id, username, email, native_language, role",
+      [nativeLanguage, userId]
     );
     return result.rows[0] || null;
   },

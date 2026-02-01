@@ -57,13 +57,13 @@ router.post(
 router.post(
   "/coach",
   asyncHandler(async (req: Request, res: Response) => {
-    const { referenceText, evaluation } = req.body;
+    const { referenceText, evaluation, nativeLanguage } = req.body;
 
     if (!referenceText || !evaluation) {
       throw createError(400, "referenceText and evaluation are required");
     }
 
-    const feedback = await getCoachFeedback(referenceText, evaluation);
+    const feedback = await getCoachFeedback(referenceText, evaluation, nativeLanguage);
 
     res.json({
       success: true,

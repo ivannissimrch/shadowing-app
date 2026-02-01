@@ -19,12 +19,41 @@ import CircularProgress from "@mui/material/CircularProgress";
 import InputAdornment from "@mui/material/InputAdornment";
 import IconButton from "@mui/material/IconButton";
 import Stack from "@mui/material/Stack";
-import { FiMail, FiLock, FiSave, FiEye, FiEyeOff, FiCheck } from "react-icons/fi";
+import FormControl from "@mui/material/FormControl";
+import InputLabel from "@mui/material/InputLabel";
+import Select from "@mui/material/Select";
+import MenuItem from "@mui/material/MenuItem";
+import { FiMail, FiLock, FiSave, FiEye, FiEyeOff, FiCheck, FiGlobe } from "react-icons/fi";
+
+const NATIVE_LANGUAGES = [
+  "",
+  "Spanish",
+  "Mandarin Chinese",
+  "Cantonese",
+  "Korean",
+  "Japanese",
+  "Vietnamese",
+  "Tagalog",
+  "Arabic",
+  "Hindi",
+  "Portuguese",
+  "French",
+  "German",
+  "Russian",
+  "Italian",
+  "Polish",
+  "Turkish",
+  "Thai",
+  "Indonesian",
+  "Farsi",
+  "Dutch",
+];
 
 interface UserProfile {
   id: string;
   username: string;
   email: string | null;
+  native_language: string | null;
   role: string;
 }
 
@@ -39,6 +68,10 @@ export default function SettingsPage() {
   const [email, setEmail] = useState("");
   const [emailMessage, setEmailMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
 
+  // Native language state
+  const [nativeLanguage, setNativeLanguage] = useState("");
+  const [nativeLanguageMessage, setNativeLanguageMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
+
   // Password state
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
@@ -52,10 +85,13 @@ export default function SettingsPage() {
     user?.id ? API_PATHS.USER_PROFILE(user.id) : null
   );
 
-  // Set initial email from profile
+  // Set initial values from profile
   useEffect(() => {
     if (profile?.email) {
       setEmail(profile.email);
+    }
+    if (profile?.native_language) {
+      setNativeLanguage(profile.native_language);
     }
   }, [profile]);
 
@@ -64,6 +100,12 @@ export default function SettingsPage() {
     { success: boolean },
     { email: string }
   >(API_PATHS.EMAIL_UPDATE(user?.id || ""), { method: "PATCH" });
+
+  // Native language mutation
+  const { trigger: updateNativeLanguage, isMutating: isNativeLanguageMutating } = useSWRMutationHook<
+    { success: boolean },
+    { nativeLanguage: string }
+  >(API_PATHS.NATIVE_LANGUAGE_UPDATE(user?.id || ""), { method: "PATCH" });
 
   // Password mutation
   const { trigger: updatePassword, isMutating: isPasswordMutating } = useSWRMutationHook<
@@ -82,6 +124,21 @@ export default function SettingsPage() {
       setEmailMessage({
         type: "error",
         text: err instanceof Error ? err.message : tSettings("emailUpdateFailed"),
+      });
+    }
+  };
+
+  const handleNativeLanguageSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setNativeLanguageMessage(null);
+
+    try {
+      await updateNativeLanguage({ nativeLanguage: nativeLanguage || "" });
+      setNativeLanguageMessage({ type: "success", text: tSettings("nativeLanguageUpdated") });
+    } catch (err) {
+      setNativeLanguageMessage({
+        type: "error",
+        text: err instanceof Error ? err.message : tSettings("nativeLanguageUpdateFailed"),
       });
     }
   };
@@ -202,6 +259,90 @@ export default function SettingsPage() {
                 }}
               >
                 {isEmailMutating ? tCommon("saving") : tCommon("save")}
+              </Button>
+            </Box>
+          </MainCard>
+        </Grid>
+
+        {/* Native Language */}
+        <Grid size={{ xs: 12, md: 6 }}>
+          <MainCard>
+            <Stack direction="row" spacing={2} sx={{ alignItems: "center", mb: 2 }}>
+              <Box
+                sx={{
+                  width: 44,
+                  height: 44,
+                  borderRadius: 2,
+                  bgcolor: "success.light",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <FiGlobe size={22} color="#2e7d32" />
+              </Box>
+              <Box>
+                <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                  {tSettings("nativeLanguage")}
+                </Typography>
+                <Typography variant="caption" sx={{ color: "text.secondary" }}>
+                  {tSettings("nativeLanguageDescription")}
+                </Typography>
+              </Box>
+            </Stack>
+
+            {nativeLanguageMessage && (
+              <Alert
+                severity={nativeLanguageMessage.type}
+                sx={{ mb: 2, borderRadius: 2 }}
+                icon={nativeLanguageMessage.type === "success" ? <FiCheck /> : undefined}
+              >
+                {nativeLanguageMessage.text}
+              </Alert>
+            )}
+
+            <Box component="form" onSubmit={handleNativeLanguageSubmit}>
+              <FormControl fullWidth sx={{ mb: 2.5 }}>
+                <InputLabel id="native-language-label">{tSettings("nativeLanguage")}</InputLabel>
+                <Select
+                  labelId="native-language-label"
+                  value={nativeLanguage}
+                  onChange={(e) => setNativeLanguage(e.target.value)}
+                  disabled={isNativeLanguageMutating}
+                  label={tSettings("nativeLanguage")}
+                  sx={{
+                    borderRadius: 2,
+                    "& .MuiOutlinedInput-notchedOutline": {
+                      borderRadius: 2,
+                    }
+                  }}
+                >
+                  <MenuItem value="">
+                    <em>{tSettings("notSpecified")}</em>
+                  </MenuItem>
+                  {NATIVE_LANGUAGES.filter(lang => lang !== "").map((lang) => (
+                    <MenuItem key={lang} value={lang}>
+                      {lang}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+
+              <Button
+                type="submit"
+                variant="contained"
+                color="success"
+                disabled={isNativeLanguageMutating}
+                startIcon={isNativeLanguageMutating ? <CircularProgress size={16} color="inherit" /> : <FiSave size={16} />}
+                sx={{
+                  textTransform: "none",
+                  borderRadius: 2,
+                  px: 3,
+                  py: 1,
+                  fontWeight: 600,
+                }}
+              >
+                {isNativeLanguageMutating ? tCommon("saving") : tCommon("save")}
               </Button>
             </Box>
           </MainCard>

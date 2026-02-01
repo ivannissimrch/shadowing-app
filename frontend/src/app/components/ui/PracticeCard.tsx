@@ -42,9 +42,11 @@ interface EvaluationResult {
 export default function PracticeCard({
   text,
   onDelete,
+  nativeLanguage,
 }: {
   text: string;
   onDelete?: () => void;
+  nativeLanguage?: string | null;
 }) {
   const t = useTranslations("practice");
   const tPracticeWords = useTranslations("practiceWords");
@@ -70,7 +72,7 @@ export default function PracticeCard({
     reset: resetCoach,
   } = useSWRMutationHook<
     CoachResponse,
-    { referenceText: string; evaluation: EvaluationResult }
+    { referenceText: string; evaluation: EvaluationResult; nativeLanguage?: string }
   >(API_PATHS.SPEECH_COACH, { method: "POST" }, { throwOnError: false });
 
   async function handleRecordingStop(_blobUrl: string, blob: Blob) {
@@ -106,7 +108,7 @@ export default function PracticeCard({
 
   function handleGetHelp() {
     if (evaluation) {
-      getCoachHelp({ referenceText: text, evaluation });
+      getCoachHelp({ referenceText: text, evaluation, nativeLanguage: nativeLanguage || undefined });
     }
   }
 
