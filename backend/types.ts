@@ -4,6 +4,7 @@ export interface User {
   password: string;
   name: string;
   email: string | null;
+  native_language: string | null;
   role: "student" | "teacher";
   created_at: Date;
 }

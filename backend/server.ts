@@ -103,6 +103,9 @@ const initDatabase = async () => {
     // Add category column for lesson organization
     await addColumnIfNotExists("lessons", "category", "VARCHAR(100)");
 
+    // Add native_language column for ESL Coach personalization
+    await addColumnIfNotExists("users", "native_language", "VARCHAR(100)");
+
     // Lists table for organizing lessons
     await pool.query(`
       CREATE TABLE IF NOT EXISTS lists (
