@@ -12,6 +12,7 @@ import Button from "@mui/material/Button";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import Divider from "@mui/material/Divider";
+import CircularProgress from "@mui/material/CircularProgress";
 import { useState, MouseEvent } from "react";
 import {
   FiBold,
@@ -397,7 +398,9 @@ export default function RichTextEditor({
         {editor ? (
           <EditorContent editor={editor} />
         ) : (
-          <Box sx={{ color: "#9e9e9e", minHeight: 180 }}>Loading editor...</Box>
+          <Box sx={{ minHeight: 180, display: "grid", placeItems: "center" }}>
+            <CircularProgress size={32} />
+          </Box>
         )}
       </Box>
     </Box>
