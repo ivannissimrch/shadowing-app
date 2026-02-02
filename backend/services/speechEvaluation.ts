@@ -34,7 +34,9 @@ function convertToWav(inputBuffer: Buffer): Promise<Buffer> {
       .audioChannels(1)
       .audioCodec("pcm_s16le")
       .format("wav")
-      .on("error", reject)
+      .on("error", () => {
+        reject(new Error("Failed to process audio. The recording may be empty or corrupted."));
+      })
       .pipe(outputStream);
   });
 }
@@ -130,9 +132,10 @@ export async function evaluatePronunciation(
             })),
           });
         } else if (result.reason === sdk.ResultReason.NoMatch) {
-          reject(new Error("Speech not recognized. Please try again."));
+          reject(new Error("No speech detected. Please check your microphone is working and try again."));
         } else {
-          reject(new Error(`Recognition failed: ${result.errorDetails}`));
+          const errorMessage = result.errorDetails || "No speech detected. Please check your microphone and try again.";
+          reject(new Error(errorMessage));
         }
         recognizer.close();
       },
