@@ -152,8 +152,8 @@ export default function useAddLesson(closeAddLessonDialog: () => void) {
   function handleScriptTextChange(html: string) {
     // Sanitize HTML to prevent XSS
     const cleanHtml = DOMPurify.sanitize(html, {
-      ALLOWED_TAGS: ['p', 'br', 'strong', 'b', 'em', 'i', 'u', 'span', 'ul', 'ol', 'li', 'h1', 'h2', 'h3'],
-      ALLOWED_ATTR: ['style'],
+      ALLOWED_TAGS: ['p', 'br', 'strong', 'b', 'em', 'i', 'u', 's', 'span', 'ul', 'ol', 'li', 'h1', 'h2', 'h3', 'mark'],
+      ALLOWED_ATTR: ['style', 'data-color'],
     });
     setScriptText(cleanHtml);
   }
