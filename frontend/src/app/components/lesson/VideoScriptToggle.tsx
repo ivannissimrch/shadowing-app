@@ -160,6 +160,7 @@ export default function VideoScriptToggle({
               <Box
                 sx={{
                   p: 3,
+                  fontFamily: 'Verdana, sans-serif',
                   fontSize: '1.1rem',
                   lineHeight: 1.8,
                   height: { xs: 'auto', lg: '100%' },
@@ -170,11 +171,13 @@ export default function VideoScriptToggle({
                   '& p': { mb: 1 },
                   '& ul, & ol': { pl: 3 },
                   '& strong, & b': { fontWeight: 600 },
+                  '& s': { textDecoration: 'line-through' },
+                  '& mark': { borderRadius: '2px', padding: '0 2px' },
                 }}
                 dangerouslySetInnerHTML={{
                   __html: DOMPurify.sanitize(selectedLesson.script_text, {
-                    ALLOWED_TAGS: ['p', 'br', 'strong', 'b', 'em', 'i', 'u', 'span', 'ul', 'ol', 'li', 'h1', 'h2', 'h3'],
-                    ALLOWED_ATTR: ['style'],
+                    ALLOWED_TAGS: ['p', 'br', 'strong', 'b', 'em', 'i', 'u', 's', 'span', 'ul', 'ol', 'li', 'h1', 'h2', 'h3', 'mark'],
+                    ALLOWED_ATTR: ['style', 'data-color'],
                   }),
                 }}
               />
