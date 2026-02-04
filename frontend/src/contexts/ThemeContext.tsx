@@ -22,6 +22,16 @@ interface ThemeContextProviderProps {
   children: ReactNode;
 }
 
+function safeLocalStorage() {
+  try {
+    return typeof window !== "undefined" && window.localStorage
+      ? window.localStorage
+      : null;
+  } catch {
+    return null;
+  }
+}
+
 export function ThemeContextProvider({ children }: ThemeContextProviderProps) {
   // Always start with "light" to match server render and avoid hydration mismatch
   const [mode, setMode] = useState<ThemeMode>("light");
@@ -29,7 +39,8 @@ export function ThemeContextProvider({ children }: ThemeContextProviderProps) {
 
   // Load saved theme after hydration
   useEffect(() => {
-    const savedMode = localStorage.getItem("themeMode");
+    const storage = safeLocalStorage();
+    const savedMode = storage?.getItem("themeMode");
     if (savedMode === "dark") {
       setMode("dark");
     }
@@ -39,7 +50,8 @@ export function ThemeContextProvider({ children }: ThemeContextProviderProps) {
   // Save theme changes (but not the initial hydration load)
   useEffect(() => {
     if (isHydrated) {
-      localStorage.setItem("themeMode", mode);
+      const storage = safeLocalStorage();
+      storage?.setItem("themeMode", mode);
     }
   }, [mode, isHydrated]);
 
