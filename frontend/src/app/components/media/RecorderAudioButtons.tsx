@@ -11,38 +11,61 @@ export default function RecorderAudioButtons({
   selectedLesson: Lesson | undefined;
 }) {
   const tCommon = useTranslations("common");
-  const { dispatch, handleSubmit, isAudioMutating, isLessonMutating } =
-    useRecorderPanelContext();
+  const {
+    dispatch,
+    handleSubmit,
+    handleDeleteSubmission,
+    isAudioMutating,
+    isLessonMutating,
+    isDeleting,
+  } = useRecorderPanelContext();
   const isSubmitting = isAudioMutating || isLessonMutating;
 
   if (selectedLesson?.status === "completed") {
     return null;
-  } else {
+  }
+
+  if (selectedLesson?.status === "submitted") {
     return (
       <Box sx={{ display: "flex", gap: 2, mt: 2 }}>
         <Button
           variant="outlined"
           color="error"
-          onClick={() => {
-            dispatch({ type: "RESET" });
-          }}
-          disabled={isSubmitting}
+          onClick={handleDeleteSubmission}
+          disabled={isDeleting}
           startIcon={<FiTrash2 size={16} />}
           sx={{ textTransform: "none", fontWeight: 500 }}
         >
-          {tCommon("delete")}
-        </Button>
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={handleSubmit}
-          disabled={isSubmitting}
-          startIcon={<FiSend size={16} />}
-          sx={{ textTransform: "none", fontWeight: 500 }}
-        >
-          {isSubmitting ? tCommon("submitting") : tCommon("submit")}
+          {isDeleting ? tCommon("deleting") : tCommon("deleteAndResubmit")}
         </Button>
       </Box>
     );
   }
+
+  return (
+    <Box sx={{ display: "flex", gap: 2, mt: 2 }}>
+      <Button
+        variant="outlined"
+        color="error"
+        onClick={() => {
+          dispatch({ type: "RESET" });
+        }}
+        disabled={isSubmitting}
+        startIcon={<FiTrash2 size={16} />}
+        sx={{ textTransform: "none", fontWeight: 500 }}
+      >
+        {tCommon("delete")}
+      </Button>
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={handleSubmit}
+        disabled={isSubmitting}
+        startIcon={<FiSend size={16} />}
+        sx={{ textTransform: "none", fontWeight: 500 }}
+      >
+        {isSubmitting ? tCommon("submitting") : tCommon("submit")}
+      </Button>
+    </Box>
+  );
 }

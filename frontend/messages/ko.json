@@ -18,7 +18,9 @@
     "search": "검색",
     "noResults": "결과가 없습니다",
     "viewAll": "전체 보기",
-    "required": "필수"
+    "required": "필수",
+    "deleting": "삭제 중...",
+    "deleteAndResubmit": "삭제 후 다시 제출"
   },
   "auth": {
     "login": "로그인",
@@ -252,7 +254,9 @@
     "failedToSaveRecording": "녹음 저장 실패. 다시 시도해 주세요.",
     "submissionSuccessful": "녹음이 검토를 위해 제출되었습니다.",
     "failedToSubmitRecording": "녹음 제출 실패. 다시 시도해 주세요.",
-    "audioProcessingError": "오디오 처리 중 오류가 발생했습니다."
+    "audioProcessingError": "오디오 처리 중 오류가 발생했습니다.",
+    "submissionDeleted": "제출이 삭제되었습니다. 다시 녹음할 수 있습니다.",
+    "failedToDeleteSubmission": "제출 삭제 실패. 다시 시도해 주세요."
   },
   "errors": {
     "somethingWentWrong": "문제가 발생했습니다",

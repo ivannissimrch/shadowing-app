@@ -123,8 +123,10 @@ export interface RecorderPanelContextType {
   resumeRecording: () => void;
   stopRecording: () => void;
   handleSubmit: () => Promise<void>;
+  handleDeleteSubmission: () => Promise<void>;
   isAudioMutating: boolean;
   isLessonMutating: boolean;
+  isDeleting: boolean;
 }
 
 export interface List {

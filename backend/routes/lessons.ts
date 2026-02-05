@@ -98,4 +98,29 @@ router.patch(
   })
 );
 
+router.delete(
+  "/:lessonId",
+  asyncHandler(async (req: Request, res: Response) => {
+    const { lessonId } = req.params;
+    const userId = req?.user?.id;
+    if (!userId) {
+      throw createError(401, "Unauthorized");
+    }
+
+    const assignment = await assignmentRepository.resetSubmission(
+      userId,
+      lessonId
+    );
+
+    if (!assignment) {
+      throw createError(404, "Assignment not found or cannot be deleted");
+    }
+
+    res.json({
+      success: true,
+      data: assignment,
+    });
+  })
+);
+
 export default router;
