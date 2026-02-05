@@ -6,6 +6,7 @@ export const API_PATHS = {
   // Student Lessons
   LESSONS: "/api/lessons",
   LESSON: (id: string) => `/api/lessons/${id}`,
+  DELETE_SUBMISSION: (id: string) => `/api/lessons/${id}`,
 
   // Teacher Dashboard
   DASHBOARD_STATS: "/api/teacher/dashboard-stats",

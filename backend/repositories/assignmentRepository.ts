@@ -43,6 +43,17 @@ export const assignmentRepository = {
     return result.rows[0];
   },
 
+  resetSubmission: async (studentId: string, lessonId: string) => {
+    const result: QueryResult<Assignment> = await db.query(
+      `UPDATE assignments
+       SET status = 'new', audio_file = NULL, updated_at = CURRENT_TIMESTAMP
+       WHERE student_id = $1 AND lesson_id = $2 AND status = 'submitted'
+       RETURNING *`,
+      [studentId, lessonId]
+    );
+    return result.rows[0];
+  },
+
   // Called when teacher marks lesson as completed after review
   markCompleted: async (studentId: string, lessonId: string) => {
     const result: QueryResult<Assignment> = await db.query(

@@ -31,8 +31,10 @@ export const RecorderPanelContext = createContext<RecorderPanelContextType>({
   resumeRecording: () => {},
   stopRecording: () => {},
   handleSubmit: async () => {},
+  handleDeleteSubmission: async () => {},
   isAudioMutating: false,
   isLessonMutating: false,
+  isDeleting: false,
 });
 
 interface RecorderPanelContextProviderProps {
@@ -57,6 +59,11 @@ export default function RecorderPanelContextProvider({
     useSWRMutationHook<LessonResponse, { audio_file: string | null }>(
       selectedLesson?.id ? API_PATHS.LESSON(selectedLesson.id) : null,
       { method: "PATCH" }
+    );
+  const { trigger: triggerDeleteSubmission, isMutating: isDeleting } =
+    useSWRMutationHook<LessonResponse, undefined>(
+      selectedLesson?.id ? API_PATHS.DELETE_SUBMISSION(selectedLesson.id) : null,
+      { method: "DELETE" }
     );
   const [recorderState, dispatch] = useReducer(recorderReducer, {
     status: "idle",
@@ -176,6 +183,23 @@ export default function RecorderPanelContextProvider({
     t,
   ]);
 
+  const handleDeleteSubmission = useCallback(async () => {
+    try {
+      const response = await triggerDeleteSubmission(undefined);
+      if (!response) {
+        showSnackbar(t("failedToDeleteSubmission"), "error");
+        return;
+      }
+      showSnackbar(t("submissionDeleted"), "success");
+      if (selectedLesson?.id) {
+        await mutate(API_PATHS.LESSON(selectedLesson.id));
+      }
+    } catch (error) {
+      logger.error("Error deleting submission:", error);
+      showSnackbar(t("failedToDeleteSubmission"), "error");
+    }
+  }, [triggerDeleteSubmission, showSnackbar, selectedLesson, t]);
+
   const value = useMemo(
     () => ({
       recorderState,
@@ -185,8 +209,10 @@ export default function RecorderPanelContextProvider({
       resumeRecording,
       stopRecording,
       handleSubmit,
+      handleDeleteSubmission,
       isAudioMutating,
       isLessonMutating,
+      isDeleting,
     }),
     [
       recorderState,
@@ -195,8 +221,10 @@ export default function RecorderPanelContextProvider({
       resumeRecording,
       stopRecording,
       handleSubmit,
+      handleDeleteSubmission,
       isAudioMutating,
       isLessonMutating,
+      isDeleting,
     ]
   );
 

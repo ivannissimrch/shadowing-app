@@ -18,7 +18,9 @@
     "search": "Search",
     "noResults": "No results found",
     "viewAll": "View All",
-    "required": "Required"
+    "required": "Required",
+    "deleting": "Deleting...",
+    "deleteAndResubmit": "Delete & Resubmit"
   },
   "auth": {
     "login": "Sign In",
@@ -252,7 +254,9 @@
     "failedToSaveRecording": "Failed to save recording. Please try again.",
     "submissionSuccessful": "Your recording has been submitted for review.",
     "failedToSubmitRecording": "Failed to submit recording. Please try again.",
-    "audioProcessingError": "An error occurred while processing your audio."
+    "audioProcessingError": "An error occurred while processing your audio.",
+    "submissionDeleted": "Submission deleted. You can now record again.",
+    "failedToDeleteSubmission": "Failed to delete submission. Please try again."
   },
   "errors": {
     "somethingWentWrong": "Something went wrong",
