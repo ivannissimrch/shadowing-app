@@ -85,6 +85,7 @@ export default function VideoScriptToggle({
             sx={{
               overflow: "hidden",
               borderRadius: 2,
+              boxShadow: "0 2px 14px 0 rgb(32 40 45 / 8%)",
             }}
           >
             <SegmentPlayer selectedLesson={selectedLesson} />
@@ -99,6 +100,7 @@ export default function VideoScriptToggle({
             sx={{
               overflow: "hidden",
               borderRadius: 2,
+              boxShadow: "0 2px 14px 0 rgb(32 40 45 / 8%)",
               position: "relative",
               // Fullscreen styles
               "&:fullscreen": {

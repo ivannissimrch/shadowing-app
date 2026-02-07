@@ -51,7 +51,7 @@ export default function RecorderPanel({ selectedLesson }: RecorderProps) {
         <Alert severity="error">{t("errorLoadingRecorder")}</Alert>
       }
     >
-      <Paper sx={{ p: 3 }}>
+      <Paper sx={{ p: 3, boxShadow: "0 2px 14px 0 rgb(32 40 45 / 8%)" }}>
         {!hasAudio && <RecorderVoiceRecorder />}
         {hasAudio && <RecorderAudioPlayer selectedLesson={selectedLesson} />}
         {selectedLesson?.feedback && (

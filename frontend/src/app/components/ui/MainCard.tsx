@@ -39,8 +39,7 @@ const MainCard = forwardRef<HTMLDivElement, MainCardProps>(
         ref={ref}
         elevation={0}
         sx={{
-          border: "1px solid",
-          borderColor: "grey.200",
+          boxShadow: "0 2px 14px 0 rgb(32 40 45 / 8%)",
           borderRadius: 2,
           ...sx,
         }}

@@ -69,8 +69,8 @@ export const componentOverrides = (
     styleOverrides: {
       root: {
         borderRadius: `${borderRadius}px`,
-        boxShadow: "0 1px 2px 0 rgba(0, 0, 0, 0.12)",
-        border: `1px solid ${theme.palette.divider}`,
+        boxShadow: "0 2px 14px 0 rgb(32 40 45 / 8%)",
+        border: "none",
       },
     },
   },
@@ -104,9 +104,8 @@ export const componentOverrides = (
     styleOverrides: {
       root: {
         borderRadius: `${borderRadius}px`,
-        border: `1px solid ${theme.palette.divider}`,
       },
-      elevation1: { boxShadow: "0 1px 2px 0 rgba(0, 0, 0, 0.12)" },
+      elevation1: { boxShadow: "0 2px 14px 0 rgb(32 40 45 / 8%)" },
       elevation2: { boxShadow: "0 8px 16px 0 rgba(0, 0, 0, 0.12)" },
     },
   },

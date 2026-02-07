@@ -65,8 +65,8 @@ export const palette = {
   },
 
   background: {
-    paper: "#ffffff",
-    default: "#e3e8ef",
+    paper: "#f8fafc",
+    default: "#eef2f6",
   },
 
   text: {
