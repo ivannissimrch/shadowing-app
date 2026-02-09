@@ -88,7 +88,7 @@ export default function Sidebar({ menuItems, open, onClose, variant, mini = fals
         {mini ? (
           <Image
             src="/favicon.png"
-            alt="ShadowSpeak"
+            alt="ShadowSpeak with Lynnex English"
             width={50}
             height={40}
             style={{ objectFit: 'contain' }}
@@ -96,7 +96,7 @@ export default function Sidebar({ menuItems, open, onClose, variant, mini = fals
         ) : (
           <Image
             src="/logo.png"
-            alt="ShadowSpeak"
+            alt="ShadowSpeak with Lynnex English"
             width={180}
             height={48}
             style={{ objectFit: 'contain', maxWidth: '100%' }}
@@ -202,7 +202,7 @@ export default function Sidebar({ menuItems, open, onClose, variant, mini = fals
               textAlign: 'center',
             }}
           >
-            ShadowSpeak v1.0
+            ShadowSpeak with Lynnex English v1.0
           </Typography>
         </Box>
       )}

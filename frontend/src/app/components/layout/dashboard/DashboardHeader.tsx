@@ -92,7 +92,7 @@ export default function DashboardHeader({
           <Box sx={{ display: { xs: 'flex', md: 'none' }, alignItems: 'center' }}>
             <Image
               src="/favicon.png"
-              alt="ShadowSpeak"
+              alt="ShadowSpeak with Lynnex English"
               width={32}
               height={32}
               style={{ objectFit: 'contain' }}

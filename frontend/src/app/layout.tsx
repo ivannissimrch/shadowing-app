@@ -9,7 +9,7 @@ import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
 
 export const metadata: Metadata = {
-  title: "ShadowSpeak",
+  title: "ShadowSpeak with Lynnex English",
   description: "English Pronunciation Learning",
 };
 
