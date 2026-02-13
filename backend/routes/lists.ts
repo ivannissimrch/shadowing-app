@@ -3,6 +3,7 @@ import createError from "http-errors";
 import asyncHandler from "../handlers/asyncHandler.js";
 import { requireTeacher } from "../middleware/auth.js";
 import { listRepository } from "../repositories/listRepository.js";
+import { assignmentRepository } from "../repositories/assignmentRepository.js";
 
 const router = Router();
 
@@ -174,6 +175,42 @@ router.post(
       success: true,
       message: "Lessons added to list",
       data: list,
+    });
+  })
+);
+
+// Assign all lessons in a course to a student
+router.post(
+  "/:id/assign",
+  asyncHandler(async (req: Request, res: Response) => {
+    const teacherId = req?.user?.id;
+    if (!teacherId) {
+      throw createError(401, "Unauthorized");
+    }
+
+    const { id } = req.params;
+    const { studentId } = req.body;
+
+    if (!studentId) {
+      throw createError(400, "Student ID is required");
+    }
+
+    // Check ownership
+    const isOwner = await listRepository.isOwnedByTeacher(id, teacherId);
+    if (!isOwner) {
+      throw createError(404, "List not found");
+    }
+
+    const count = await assignmentRepository.bulkAssignFromList(
+      studentId,
+      id,
+      teacherId
+    );
+
+    res.status(201).json({
+      success: true,
+      message: `${count} lessons assigned`,
+      data: { assignedCount: count },
     });
   })
 );

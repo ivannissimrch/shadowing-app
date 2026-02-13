@@ -128,6 +128,16 @@ const initDatabase = async () => {
       );
     `);
 
+    // Add position column to list_lessons for ordering lessons within a course
+    await addColumnIfNotExists("list_lessons", "position", "INTEGER DEFAULT 0");
+
+    // Add list_id to assignments to track which course an assignment came from
+    await addColumnIfNotExists(
+      "assignments",
+      "list_id",
+      "UUID REFERENCES lists(id) ON DELETE SET NULL"
+    );
+
     logger.info("Database tables initialized");
   } catch (error) {
     logger.error("Error initializing database:", error);

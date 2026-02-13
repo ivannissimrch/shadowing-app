@@ -1,27 +1,22 @@
 import SegmentPlayer from "../media/SegmentPlayer";
 import { Lesson } from "@/app/Types";
-import { useState, useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
+import { useTranslations } from "next-intl";
 import DOMPurify from "dompurify";
-import ToggleButtons from "./ToggleButtons";
 import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
+import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
 import { FiMaximize2, FiX } from "react-icons/fi";
 
-export enum ToggleState {
-  SHOW_BOTH,
-  SHOW_VIDEO_ONLY,
-  SHOW_SCRIPT_ONLY,
-}
-
 export default function VideoScriptToggle({
   selectedLesson,
+  belowVideo,
 }: {
   selectedLesson: Lesson;
+  belowVideo?: React.ReactNode;
 }) {
-  const [toggleState, setToggleState] = useState<ToggleState>(
-    ToggleState.SHOW_BOTH
-  );
+  const tTeacher = useTranslations("teacher");
   const [isFullscreen, setIsFullscreen] = useState(false);
   const imageContainerRef = useRef<HTMLDivElement>(null);
 
@@ -34,24 +29,17 @@ export default function VideoScriptToggle({
     return () => document.removeEventListener("fullscreenchange", handleFullscreenChange);
   }, []);
 
-  function updateToggleState(newState: ToggleState) {
-    setToggleState(newState);
-  }
-
   async function handleFullscreen() {
     const container = imageContainerRef.current;
     if (!container) return;
 
     try {
       await container.requestFullscreen();
-      // Try to lock to landscape (works on mobile if supported)
       const orientation = screen.orientation as ScreenOrientation & {
         lock?: (orientation: string) => Promise<void>;
       };
       if (orientation?.lock) {
-        await orientation.lock("landscape").catch(() => {
-          // Orientation lock not supported or failed - that's ok
-        });
+        await orientation.lock("landscape").catch(() => {});
       }
     } catch {
       // Fullscreen not supported
@@ -65,43 +53,52 @@ export default function VideoScriptToggle({
   }
 
   return (
-    <Box>
+    <Box sx={{
+      display: "flex",
+      flexDirection: "column",
+    }}>
       <Box
         sx={{
           display: "grid",
           gridTemplateColumns: {
             xs: "1fr",
-            lg: toggleState === ToggleState.SHOW_BOTH ? "1fr 1fr" : "1fr",
+            lg: "1fr 1fr",
           },
           alignItems: { xs: "start", lg: "stretch" },
           gap: 3,
-          mb: 2,
+          flex: { lg: 1 },
+          minHeight: { lg: 0 },
         }}
       >
         {/* Video section - left side on desktop */}
-        {(toggleState === ToggleState.SHOW_BOTH ||
-          toggleState === ToggleState.SHOW_VIDEO_ONLY) && (
+        <Box sx={{ display: "flex", flexDirection: "column", gap: 2, minHeight: { lg: 0 }, overflow: { lg: "hidden" } }}>
           <Paper
             sx={{
               overflow: "hidden",
               borderRadius: 2,
               boxShadow: "0 2px 14px 0 rgb(32 40 45 / 8%)",
+              bgcolor: "#ffffff",
+              flex: { lg: 1 },
+              minHeight: { lg: 0 },
+              display: { lg: "flex" },
+              flexDirection: { lg: "column" },
             }}
           >
             <SegmentPlayer selectedLesson={selectedLesson} />
           </Paper>
-        )}
+          {belowVideo}
+        </Box>
 
         {/* Script/Image section - right side on desktop */}
-        {(toggleState === ToggleState.SHOW_BOTH ||
-          toggleState === ToggleState.SHOW_SCRIPT_ONLY) && (
-          <Paper
-            ref={imageContainerRef}
-            sx={{
-              overflow: "hidden",
-              borderRadius: 2,
-              boxShadow: "0 2px 14px 0 rgb(32 40 45 / 8%)",
-              position: "relative",
+        <Paper
+          ref={imageContainerRef}
+          sx={{
+            overflow: "hidden",
+            overflowY: { lg: "auto" },
+            borderRadius: 2,
+            boxShadow: "0 2px 14px 0 rgb(32 40 45 / 8%)",
+            position: "relative",
+            minHeight: { lg: 0 },
               // Fullscreen styles
               "&:fullscreen": {
                 display: "flex",
@@ -197,13 +194,17 @@ export default function VideoScriptToggle({
               />
             )}
           </Paper>
-        )}
       </Box>
-
-      <ToggleButtons
-        toggleState={toggleState}
-        updateToggleState={updateToggleState}
-      />
+      {selectedLesson.feedback && (
+        <Paper sx={{ mt: 2, p: 2, boxShadow: "0 2px 14px 0 rgb(32 40 45 / 8%)" }}>
+          <Typography variant="subtitle2" sx={{ fontWeight: 600, color: "primary.dark", mb: 1 }}>
+            {tTeacher("feedback")}
+          </Typography>
+          <Typography variant="body1" color="text.primary">
+            {selectedLesson.feedback}
+          </Typography>
+        </Paper>
+      )}
     </Box>
   );
 }

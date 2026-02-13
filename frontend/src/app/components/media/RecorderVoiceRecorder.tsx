@@ -23,23 +23,27 @@ export default function RecorderVoiceRecorder() {
     <Box
       sx={{
         display: "flex",
-        flexDirection: "column",
         alignItems: "center",
-        py: 3,
+        justifyContent: "center",
+        gap: 2,
+        py: 1,
       }}
     >
-      <Typography variant="body1" color="text.secondary" sx={{ mb: 2 }}>
-        {isRecording && t("recordingInProgress")}
-        {isPaused && t("recordingPaused")}
-      </Typography>
+      {(isRecording || isPaused) && (
+        <Typography variant="body2" color="text.secondary">
+          {isRecording && t("recordingInProgress")}
+          {isPaused && t("recordingPaused")}
+        </Typography>
+      )}
 
-      <Box sx={{ display: "flex", gap: 2 }}>
+      <Box sx={{ display: "flex", gap: 1 }}>
         {isIdle && (
           <Button
             variant="contained"
             color="primary"
+            size="small"
             onClick={startRecording}
-            startIcon={<FiMic size={16} />}
+            startIcon={<FiMic size={14} />}
             sx={{ textTransform: "none", fontWeight: 500 }}
           >
             {t("startRecording")}
@@ -49,8 +53,9 @@ export default function RecorderVoiceRecorder() {
           <Button
             variant="outlined"
             color="secondary"
+            size="small"
             onClick={pauseRecording}
-            startIcon={<FiPause size={16} />}
+            startIcon={<FiPause size={14} />}
             sx={{ textTransform: "none", fontWeight: 500 }}
           >
             {t("pause")}
@@ -60,8 +65,9 @@ export default function RecorderVoiceRecorder() {
           <Button
             variant="contained"
             color="primary"
+            size="small"
             onClick={resumeRecording}
-            startIcon={<FiPlay size={16} />}
+            startIcon={<FiPlay size={14} />}
             sx={{ textTransform: "none", fontWeight: 500 }}
           >
             {t("resume")}
@@ -71,8 +77,9 @@ export default function RecorderVoiceRecorder() {
           <Button
             variant="contained"
             color="error"
+            size="small"
             onClick={stopRecording}
-            startIcon={<FiSquare size={16} />}
+            startIcon={<FiSquare size={14} />}
             sx={{ textTransform: "none", fontWeight: 500 }}
           >
             {t("stop")}

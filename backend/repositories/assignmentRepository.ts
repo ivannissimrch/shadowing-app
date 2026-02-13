@@ -4,6 +4,8 @@ import {
   Assignment,
   CreateAssignmentBody,
   AssignmentWithLesson,
+  StudentProgressWithLessons,
+  StudentLessonSummary,
 } from "../types.js";
 
 export const assignmentRepository = {
@@ -184,5 +186,68 @@ export const assignmentRepository = {
       totalLessons: parseInt(row.total_lessons, 10),
       completedLessons: parseInt(row.completed_lessons, 10),
     }));
+  },
+
+  getStudentsWithLessons: async (): Promise<StudentProgressWithLessons[]> => {
+    // Query 1: students with counts
+    const progressResult = await db.query(
+      `SELECT
+         u.id,
+         u.username,
+         COUNT(a.id) as total_lessons,
+         COUNT(CASE WHEN a.completed = true THEN 1 END) as completed_lessons
+       FROM users u
+       LEFT JOIN assignments a ON u.id = a.student_id
+       WHERE u.role = 'student'
+       GROUP BY u.id, u.username
+       ORDER BY u.username ASC`
+    );
+
+    // Query 2: all assignments with lesson info
+    const lessonsResult = await db.query(
+      `SELECT
+         a.student_id,
+         a.lesson_id,
+         l.title as lesson_title,
+         a.status
+       FROM assignments a
+       JOIN lessons l ON a.lesson_id = l.id
+       ORDER BY a.assigned_at DESC`
+    );
+
+    // Group lessons by student_id
+    const lessonsByStudent = new Map<string, StudentLessonSummary[]>();
+    for (const row of lessonsResult.rows) {
+      const lessons = lessonsByStudent.get(row.student_id) || [];
+      lessons.push({
+        lesson_id: row.lesson_id,
+        lesson_title: row.lesson_title,
+        status: row.status,
+      });
+      lessonsByStudent.set(row.student_id, lessons);
+    }
+
+    return progressResult.rows.map((row) => ({
+      id: row.id,
+      username: row.username,
+      totalLessons: parseInt(row.total_lessons, 10),
+      completedLessons: parseInt(row.completed_lessons, 10),
+      lessons: lessonsByStudent.get(row.id) || [],
+    }));
+  },
+
+  bulkAssignFromList: async (
+    studentId: string,
+    listId: string,
+    assignedBy: string
+  ) => {
+    const result = await db.query(
+      `INSERT INTO assignments (student_id, lesson_id, assigned_by, status, list_id)
+       SELECT $1, ll.lesson_id, $2, 'new', $3
+       FROM list_lessons ll WHERE ll.list_id = $3
+       ON CONFLICT (student_id, lesson_id) DO NOTHING`,
+      [studentId, assignedBy, listId]
+    );
+    return result.rowCount || 0;
   },
 };

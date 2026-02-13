@@ -165,6 +165,17 @@ export interface DashboardStats {
   studentProgress: StudentProgress[];
 }
 
+// Per-student lesson summary for dashboard accordion
+export interface StudentLessonSummary {
+  lesson_id: string;
+  lesson_title: string;
+  status: "new" | "submitted" | "completed";
+}
+
+export interface StudentProgressWithLessons extends StudentProgress {
+  lessons: StudentLessonSummary[];
+}
+
 // List types for lesson organization
 export interface List {
   id: string;

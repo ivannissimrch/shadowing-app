@@ -7,9 +7,7 @@ import MainCard from "../../components/ui/MainCard";
 import Transitions from "../../components/ui/Transitions";
 import AnimateButton from "../../components/ui/AnimateButton";
 import RecentLessonsCard from "../../components/ui/RecentLessonsCard";
-import StudentProgressCard, {
-  StudentProgress,
-} from "../../components/ui/StudentProgressCard";
+import StudentLessonsAccordion from "../../components/ui/StudentLessonsAccordion";
 import useModal from "@/app/hooks/useModal";
 import { useSWRAxios } from "../../hooks/useSWRAxios";
 import { API_PATHS } from "../../constants/apiKeys";
@@ -31,7 +29,6 @@ interface DashboardStats {
   pendingReviewCount: number;
   completedThisWeek: number;
   recentLessons: Lesson[];
-  studentProgress: StudentProgress[];
 }
 
 export default function TeacherPage() {
@@ -146,10 +143,7 @@ export default function TeacherPage() {
             />
           </Grid>
           <Grid size={{ xs: 12, md: 6 }}>
-            <StudentProgressCard
-              students={dashboardStats?.studentProgress}
-              isLoading={statsLoading}
-            />
+            <StudentLessonsAccordion />
           </Grid>
         </Grid>
       </Transitions>

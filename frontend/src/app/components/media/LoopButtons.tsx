@@ -1,8 +1,6 @@
 import getFormattedTime from "../../helpers/getFormattedTime";
-import { LoopState } from "./loopTypes";
 import { memo, useState, useEffect } from "react";
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import Slider from "@mui/material/Slider";
 import Typography from "@mui/material/Typography";
@@ -17,7 +15,6 @@ interface LoopButtonsProps {
   seekTo: (time: number) => void;
   toggleLoop: () => void;
   clearLoop: () => void;
-  state: LoopState;
 }
 
 function LoopButtons({
@@ -29,14 +26,10 @@ function LoopButtons({
   seekTo,
   toggleLoop,
   clearLoop,
-  state,
 }: LoopButtonsProps) {
   const [expanded, setExpanded] = useState(false);
   const [sliderValue, setSliderValue] = useState<number[]>([0, duration || 100]);
   const [prevSliderValue, setPrevSliderValue] = useState<number[]>([0, duration || 100]);
-
-  const hasRange = state.status === "ready" || state.status === "looping";
-  const loopDuration = sliderValue[1] - sliderValue[0];
 
   useEffect(() => {
     if (duration > 0) {
@@ -82,25 +75,43 @@ function LoopButtons({
     return null;
   }
 
-  // Collapsed state - just show button
+  // Collapsed state - icon only
   if (!expanded && !isLooping) {
     return (
-      <Button
+      <IconButton
         onClick={() => setExpanded(true)}
-        variant="outlined"
         size="small"
-        startIcon={<FiRepeat size={14} />}
-        sx={{ textTransform: "none", fontSize: "0.75rem" }}
+        sx={{
+          color: "grey.600",
+          border: 1,
+          borderColor: "grey.300",
+          borderRadius: 1,
+          p: 0.5,
+        }}
       >
-        Set Loop
-      </Button>
+        <FiRepeat size={14} />
+      </IconButton>
     );
   }
 
   // Expanded state - compact slider + toggle
   return (
-    <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, width: "100%" }}>
-      <Typography variant="caption" color="text.secondary" sx={{ minWidth: 32 }}>
+    <Box
+      sx={{
+        display: "flex",
+        alignItems: "center",
+        gap: 0.75,
+        flex: 1,
+        minWidth: 0,
+        bgcolor: "grey.100",
+        borderRadius: 1,
+        px: 1,
+        py: 0.5,
+      }}
+    >
+      <FiRepeat size={12} style={{ flexShrink: 0, color: "grey" }} />
+
+      <Typography variant="caption" color="text.secondary" sx={{ fontSize: "0.65rem" }}>
         {getFormattedTime(sliderValue[0])}
       </Typography>
 
@@ -114,38 +125,32 @@ function LoopButtons({
         valueLabelFormat={(value) => getFormattedTime(value)}
         disableSwap
         size="small"
-        sx={{ flex: 1 }}
+        sx={{ flex: 1, minWidth: 60 }}
       />
 
-      <Typography variant="caption" color="text.secondary" sx={{ minWidth: 32 }}>
+      <Typography variant="caption" color="text.secondary" sx={{ fontSize: "0.65rem" }}>
         {getFormattedTime(sliderValue[1])}
       </Typography>
 
-      <Button
+      <IconButton
         onClick={toggleLoop}
-        variant={isLooping ? "contained" : "outlined"}
         size="small"
-        color="primary"
         sx={{
-          textTransform: "none",
-          fontSize: "0.75rem",
-          minWidth: "auto",
-          px: 1.5,
+          p: 0.5,
+          color: isLooping ? "primary.main" : "grey.600",
+          bgcolor: isLooping ? "primary.light" : "transparent",
         }}
       >
-        {isLooping ? `Loop ${loopDuration}s` : "Loop"}
-      </Button>
+        <FiRepeat size={12} />
+      </IconButton>
 
-      {hasRange && (
-        <IconButton
-          onClick={handleClear}
-          size="small"
-          color="error"
-          sx={{ p: 0.5 }}
-        >
-          <FiX size={14} />
-        </IconButton>
-      )}
+      <IconButton
+        onClick={handleClear}
+        size="small"
+        sx={{ p: 0.5, color: "grey.600" }}
+      >
+        <FiX size={12} />
+      </IconButton>
     </Box>
   );
 }

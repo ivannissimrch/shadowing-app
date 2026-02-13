@@ -26,6 +26,19 @@ router.get(
   })
 );
 
+// Students with their assigned lessons (for dashboard accordion)
+router.get(
+  "/students-with-lessons",
+  asyncHandler(async (_req: Request, res: Response) => {
+    const data = await assignmentRepository.getStudentsWithLessons();
+
+    res.json({
+      success: true,
+      data,
+    });
+  })
+);
+
 // Dashboard stats endpoint
 router.get(
   "/dashboard-stats",

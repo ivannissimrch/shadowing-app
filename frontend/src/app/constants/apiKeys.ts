@@ -11,6 +11,7 @@ export const API_PATHS = {
   // Teacher Dashboard
   DASHBOARD_STATS: "/api/teacher/dashboard-stats",
   PENDING_REVIEWS: "/api/teacher/pending-reviews",
+  STUDENTS_WITH_LESSONS: "/api/teacher/students-with-lessons",
 
   // Teacher Lessons
   CREATE_LESSON: "/api/teacher/lessons",
@@ -61,4 +62,7 @@ export const API_PATHS = {
   LIST_LESSONS: (id: string) => `/api/teacher/lists/${id}/lessons`,
   LIST_REMOVE_LESSON: (listId: string, lessonId: string) =>
     `/api/teacher/lists/${listId}/lessons/${lessonId}`,
+
+  // Course assignment
+  ASSIGN_COURSE: (listId: string) => `/api/teacher/lists/${listId}/assign`,
 } as const;

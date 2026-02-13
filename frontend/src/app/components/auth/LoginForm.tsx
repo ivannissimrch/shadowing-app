@@ -19,6 +19,7 @@ import IconButton from "@mui/material/IconButton";
 import Alert from "@mui/material/Alert";
 import CircularProgress from "@mui/material/CircularProgress";
 import { FiEye, FiEyeOff, FiLogIn } from "react-icons/fi";
+import Image from "next/image";
 import DarkModeToggle from "../ui/DarkModeToggle";
 import LanguageSwitcher from "../ui/LanguageSwitcher";
 
@@ -117,17 +118,31 @@ export default function LoginForm() {
         <CardContent sx={{ p: 4 }}>
           {/* Logo/Brand */}
           <Box sx={{ textAlign: "center", mb: 4 }}>
-            <Typography
-              variant="h4"
-              component="h1"
-              sx={{
-                fontWeight: 700,
-                color: "primary.main",
-                mb: 1,
-              }}
-            >
-              ShadowSpeak
-            </Typography>
+            <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 1.5, mb: 1 }}>
+              <Image
+                src="/favicon.png"
+                alt="ShadowSpeak"
+                width={40}
+                height={40}
+                style={{ objectFit: "contain" }}
+              />
+              <Box>
+                <Typography
+                  variant="h4"
+                  component="h1"
+                  sx={{
+                    fontWeight: 700,
+                    color: "primary.main",
+                    lineHeight: 1.2,
+                  }}
+                >
+                  ShadowSpeak |
+                </Typography>
+                <Typography variant="body2" sx={{ color: "primary.main" }}>
+                  Lynnex English
+                </Typography>
+              </Box>
+            </Box>
             <Typography variant="body2" color="text.secondary">
               {t("signInToContinue")}
             </Typography>

@@ -15,6 +15,7 @@ import CardGrid from "@/app/components/ui/CardGrid";
 import AddListModal from "@/app/components/teacher/AddListModal";
 import AddLessonsToListModal from "@/app/components/teacher/AddLessonsToListModal";
 import AssignLessonModal from "@/app/components/teacher/AssignLessonModal";
+import AssignCourseModal from "@/app/components/teacher/AssignCourseModal";
 import EditLessonModal from "@/app/components/teacher/EditLessonModal";
 import DeleteLessonModal from "@/app/components/teacher/DeleteLessonModal";
 import Box from "@mui/material/Box";
@@ -55,6 +56,7 @@ function ListDetailContent({ listId }: ListDetailContentProps) {
 
   const editListModal = useModal();
   const addLessonsModal = useModal();
+  const assignCourseModal = useModal();
 
   const [selectedLesson, setSelectedLesson] = useState<Lesson | null>(null);
   const [assignLesson, setAssignLesson] = useState<{
@@ -148,15 +150,27 @@ function ListDetailContent({ listId }: ListDetailContentProps) {
       <MainCard
         title={`${t("lessonsCount")} (${list.lessons.length})`}
         secondary={
-          <Button
-            variant="contained"
-            size="small"
-            onClick={() => addLessonsModal.openModal()}
-            startIcon={<FiPlus size={14} />}
-            sx={{ textTransform: "none" }}
-          >
-            {t("addLessons")}
-          </Button>
+          <Box sx={{ display: "flex", gap: 1 }}>
+            <Button
+              variant="contained"
+              color="secondary"
+              size="small"
+              onClick={() => assignCourseModal.openModal()}
+              startIcon={<FiUserPlus size={14} />}
+              sx={{ textTransform: "none" }}
+            >
+              {t("assignCourse")}
+            </Button>
+            <Button
+              variant="contained"
+              size="small"
+              onClick={() => addLessonsModal.openModal()}
+              startIcon={<FiPlus size={14} />}
+              sx={{ textTransform: "none" }}
+            >
+              {t("addLessons")}
+            </Button>
+          </Box>
         }
       >
         {list.lessons.length === 0 ? (
@@ -358,6 +372,13 @@ function ListDetailContent({ listId }: ListDetailContentProps) {
           lessonTitle={lessonToDelete.title}
         />
       )}
+
+      <AssignCourseModal
+        isOpen={assignCourseModal.isModalOpen}
+        onClose={() => assignCourseModal.closeModal()}
+        listId={listId}
+        listName={list.name}
+      />
       </Box>
     </Transitions>
   );

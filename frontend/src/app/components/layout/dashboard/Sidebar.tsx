@@ -88,20 +88,29 @@ export default function Sidebar({ menuItems, open, onClose, variant, mini = fals
         {mini ? (
           <Image
             src="/favicon.png"
-            alt="ShadowSpeak with Lynnex English"
-            width={50}
+            alt="ShadowSpeak"
+            width={40}
             height={40}
             style={{ objectFit: 'contain' }}
           />
         ) : (
-          <Image
-            src="/logo.png"
-            alt="ShadowSpeak with Lynnex English"
-            width={180}
-            height={48}
-            style={{ objectFit: 'contain', maxWidth: '100%' }}
-            priority
-          />
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+            <Image
+              src="/favicon.png"
+              alt="ShadowSpeak"
+              width={40}
+              height={40}
+              style={{ objectFit: 'contain' }}
+            />
+            <Box>
+              <Typography variant="h6" sx={{ fontWeight: 700, color: 'primary.main', lineHeight: 1.2 }}>
+                ShadowSpeak |
+              </Typography>
+              <Typography variant="caption" sx={{ color: 'primary.main' }}>
+                Lynnex English
+              </Typography>
+            </Box>
+          </Box>
         )}
       </Box>
 
@@ -202,7 +211,7 @@ export default function Sidebar({ menuItems, open, onClose, variant, mini = fals
               textAlign: 'center',
             }}
           >
-            ShadowSpeak with Lynnex English v1.0
+            ShadowSpeak | Lynnex English v1.0
           </Typography>
         </Box>
       )}

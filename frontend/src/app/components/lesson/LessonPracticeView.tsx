@@ -12,12 +12,12 @@ export function LessonPracticeView({ id }: { id: string }) {
   return (
     <>
       {selectedLesson && (
-        <>
-          <VideoScriptToggle selectedLesson={selectedLesson} />
-          <RecorderPanelContextProvider selectedLesson={selectedLesson}>
-            <RecorderPanel selectedLesson={selectedLesson} />
-          </RecorderPanelContextProvider>
-        </>
+        <RecorderPanelContextProvider selectedLesson={selectedLesson}>
+          <VideoScriptToggle
+            selectedLesson={selectedLesson}
+            belowVideo={<RecorderPanel selectedLesson={selectedLesson} />}
+          />
+        </RecorderPanelContextProvider>
       )}
     </>
   );
