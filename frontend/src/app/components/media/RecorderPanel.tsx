@@ -6,11 +6,9 @@ import { ErrorBoundary } from "react-error-boundary";
 import RecorderAudioPlayer from "./RecorderAudioplayer";
 import { useRecorderPanelContext } from "@/app/RecorderpanelContext";
 import RecorderVoiceRecorder from "./RecorderVoiceRecorder";
-import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
 import Button from "@mui/material/Button";
 import Alert from "@mui/material/Alert";
-import Typography from "@mui/material/Typography";
 
 interface RecorderProps {
   selectedLesson: Lesson | undefined;
@@ -18,7 +16,6 @@ interface RecorderProps {
 
 export default function RecorderPanel({ selectedLesson }: RecorderProps) {
   const t = useTranslations("media");
-  const tTeacher = useTranslations("teacher");
   const { recorderState, dispatch } = useRecorderPanelContext();
 
   // Check for error state
@@ -51,19 +48,9 @@ export default function RecorderPanel({ selectedLesson }: RecorderProps) {
         <Alert severity="error">{t("errorLoadingRecorder")}</Alert>
       }
     >
-      <Paper sx={{ p: 3, boxShadow: "0 2px 14px 0 rgb(32 40 45 / 8%)" }}>
+      <Paper sx={{ p: 2, boxShadow: "0 2px 14px 0 rgb(32 40 45 / 8%)" }}>
         {!hasAudio && <RecorderVoiceRecorder />}
         {hasAudio && <RecorderAudioPlayer selectedLesson={selectedLesson} />}
-        {selectedLesson?.feedback && (
-          <Box sx={{ mt: 3, p: 2, bgcolor: "primary.light", borderRadius: 1 }}>
-            <Typography variant="subtitle2" sx={{ fontWeight: 600, color: "primary.dark", mb: 1 }}>
-              {tTeacher("feedback")}
-            </Typography>
-            <Typography variant="body1" color="text.primary">
-              {selectedLesson.feedback}
-            </Typography>
-          </Box>
-        )}
       </Paper>
     </ErrorBoundary>
   );

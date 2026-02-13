@@ -141,3 +141,17 @@ export interface List {
 export interface ListWithLessons extends Omit<List, "lesson_count"> {
   lessons: Lesson[];
 }
+
+export interface StudentLessonSummary {
+  lesson_id: string;
+  lesson_title: string;
+  status: "new" | "submitted" | "completed";
+}
+
+export interface StudentProgressWithLessons {
+  id: string;
+  username: string;
+  totalLessons: number;
+  completedLessons: number;
+  lessons: StudentLessonSummary[];
+}

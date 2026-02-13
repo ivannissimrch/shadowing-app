@@ -1,7 +1,6 @@
 "use client";
 import { useEffect, useRef, useState, useCallback, useImperativeHandle, forwardRef } from "react";
 import { Lesson } from "../../Types";
-import VideoTimer from "./VideoTimer";
 import LoopButtons from "./LoopButtons";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
@@ -268,6 +267,7 @@ const CloudinaryPlayer = forwardRef<VideoPlayerRef, CloudinaryPlayerProps>(
         component="section"
         role="region"
         aria-label="Video player for pronunciation practice"
+        sx={{ display: "flex", flexDirection: "column" }}
       >
         <Box
           sx={{
@@ -289,23 +289,14 @@ const CloudinaryPlayer = forwardRef<VideoPlayerRef, CloudinaryPlayerProps>(
         </Box>
         <Box
           sx={{
-            p: 2,
-            bgcolor: "grey.50",
+            p: 1.5,
+            bgcolor: "#ffffff",
+            display: "flex",
+            alignItems: "center",
+            gap: 1.5,
+            flexWrap: "wrap",
           }}
         >
-          <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", mb: 2 }}>
-            <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-              <VideoTimer currentTime={currentTime} />
-              <Typography variant="caption" sx={{ color: "grey.600" }}>
-                / {Math.floor(duration / 60)}:{String(duration % 60).padStart(2, "0")}
-              </Typography>
-            </Box>
-            <SpeedControl
-              speed={playbackRate}
-              onSpeedChange={handleSpeedChange}
-              disabled={!isReady}
-            />
-          </Box>
           <LoopButtons
             startTime={startTime}
             endTime={endTime}
@@ -317,6 +308,13 @@ const CloudinaryPlayer = forwardRef<VideoPlayerRef, CloudinaryPlayerProps>(
             clearLoop={clearLoop}
             state={state}
           />
+          <Box sx={{ ml: "auto" }}>
+            <SpeedControl
+              speed={playbackRate}
+              onSpeedChange={handleSpeedChange}
+              disabled={!isReady}
+            />
+          </Box>
         </Box>
       </Box>
     );

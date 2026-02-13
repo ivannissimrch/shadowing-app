@@ -33,9 +33,9 @@ function SpeedControl({ speed, onSpeedChange, disabled = false }: SpeedControlPr
           key={option}
           value={option}
           sx={{
-            px: 1.5,
-            py: 0.5,
-            fontSize: "0.75rem",
+            px: 1,
+            py: 0.25,
+            fontSize: "0.7rem",
             textTransform: "none",
             // Force dark text on light background (grey.50 container)
             color: "grey.700",

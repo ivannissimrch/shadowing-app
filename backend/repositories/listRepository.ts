@@ -50,7 +50,7 @@ export const listRepository = {
        FROM lessons l
        JOIN list_lessons ll ON l.id = ll.lesson_id
        WHERE ll.list_id = $1
-       ORDER BY ll.added_at DESC`,
+       ORDER BY ll.position ASC, ll.added_at DESC`,
       [listId]
     );
 
@@ -94,13 +94,20 @@ export const listRepository = {
   addLessons: async (listId: string, lessonIds: string[]) => {
     if (lessonIds.length === 0) return;
 
-    // Build a query to insert multiple rows, ignoring duplicates
+    // Get current max position
+    const maxResult = await db.query(
+      `SELECT COALESCE(MAX(position), -1) as max_pos FROM list_lessons WHERE list_id = $1`,
+      [listId]
+    );
+    let nextPos = parseInt(maxResult.rows[0].max_pos, 10) + 1;
+
+    // Build a query to insert multiple rows with incrementing positions
     const values = lessonIds
-      .map((_, i) => `($1, $${i + 2})`)
+      .map((_, i) => `($1, $${i + 2}, ${nextPos + i})`)
       .join(", ");
 
     await db.query(
-      `INSERT INTO list_lessons (list_id, lesson_id)
+      `INSERT INTO list_lessons (list_id, lesson_id, position)
        VALUES ${values}
        ON CONFLICT (list_id, lesson_id) DO NOTHING`,
       [listId, ...lessonIds]

@@ -89,14 +89,22 @@ export default function DashboardHeader({
           </IconButton>
 
           {/* Mobile logo - only on mobile since sidebar is hidden */}
-          <Box sx={{ display: { xs: 'flex', md: 'none' }, alignItems: 'center' }}>
+          <Box sx={{ display: { xs: 'flex', md: 'none' }, alignItems: 'center', gap: 0.5 }}>
             <Image
               src="/favicon.png"
-              alt="ShadowSpeak with Lynnex English"
-              width={32}
-              height={32}
+              alt="ShadowSpeak"
+              width={28}
+              height={28}
               style={{ objectFit: 'contain' }}
             />
+            <Box>
+              <Typography variant="subtitle2" sx={{ fontWeight: 700, color: 'primary.main', lineHeight: 1.1 }}>
+                ShadowSpeak
+              </Typography>
+              <Typography variant="caption" sx={{ color: 'primary.main', lineHeight: 1.1 }}>
+                Lynnex English
+              </Typography>
+            </Box>
           </Box>
         </Box>
 

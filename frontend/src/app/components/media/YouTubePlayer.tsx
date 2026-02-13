@@ -1,7 +1,6 @@
 "use client";
 import YouTube, { YouTubePlayer as YTPlayer } from "react-youtube";
 import { Lesson } from "../../Types";
-import VideoTimer from "./VideoTimer";
 import LoopButtons from "./LoopButtons";
 import useLoopButtons from "@/app/hooks/useLoopButtons";
 import useYouTubePlayer from "@/app/hooks/useYouTubePlayer";
@@ -82,12 +81,14 @@ export default function YouTubePlayer({ selectedLesson }: YouTubePlayerProps) {
       component="section"
       role="region"
       aria-label="YouTube video player for pronunciation practice"
+      sx={{ display: "flex", flexDirection: "column" }}
     >
       <Box sx={{
         "& iframe": {
           display: "block",
           width: "100%",
           aspectRatio: "16/9",
+          maxHeight: { lg: "calc(100vh - 370px)" },
         }
       }}>
         <YouTube
@@ -99,16 +100,14 @@ export default function YouTubePlayer({ selectedLesson }: YouTubePlayerProps) {
       </Box>
       <Box
         sx={{
-          p: 2,
-          bgcolor: "grey.50",
+          p: 1.5,
+          bgcolor: "#ffffff",
+          display: "flex",
+          alignItems: "center",
+          gap: 2,
+          flexWrap: "wrap",
         }}
       >
-        <Box sx={{ display: "flex", alignItems: "center", gap: 2, mb: 2 }}>
-          <VideoTimer currentTime={currentTime} />
-          <Typography variant="caption" sx={{ color: "grey.600" }}>
-            / {Math.floor(duration / 60)}:{String(duration % 60).padStart(2, "0")}
-          </Typography>
-        </Box>
         <LoopButtons
           startTime={startTime}
           endTime={endTime}
