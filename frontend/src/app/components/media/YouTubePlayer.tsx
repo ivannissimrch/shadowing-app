@@ -30,7 +30,7 @@ export default function YouTubePlayer({ selectedLesson }: YouTubePlayerProps) {
       ? null
       : state.endTime;
 
-  const { onPlayerReady, onPlayerError, opts, currentTime, duration, hasError } =
+  const { onPlayerReady, onPlayerError, opts, duration, hasError } =
     useYouTubePlayer(playerRef);
 
   const seekTo = useCallback((time: number) => {
@@ -117,7 +117,6 @@ export default function YouTubePlayer({ selectedLesson }: YouTubePlayerProps) {
           seekTo={seekTo}
           toggleLoop={toggleLoop}
           clearLoop={clearLoop}
-          state={state}
         />
       </Box>
     </Box>

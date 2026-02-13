@@ -90,7 +90,7 @@ const CloudinaryPlayer = forwardRef<VideoPlayerRef, CloudinaryPlayerProps>(
     const videoRef = useRef<HTMLVideoElement>(null);
     const playerRef = useRef<VideoPlayerRef | null>(null);
     const cloudinaryPlayerRef = useRef<CloudinaryVideoPlayer | null>(null);
-    const [currentTime, setCurrentTime] = useState(0);
+    const [, setCurrentTime] = useState(0);
     const [duration, setDuration] = useState(0);
     const [hasError, setHasError] = useState(false);
     const [isReady, setIsReady] = useState(false);
@@ -306,7 +306,6 @@ const CloudinaryPlayer = forwardRef<VideoPlayerRef, CloudinaryPlayerProps>(
             seekTo={seekTo}
             toggleLoop={toggleLoop}
             clearLoop={clearLoop}
-            state={state}
           />
           <Box sx={{ ml: "auto" }}>
             <SpeedControl

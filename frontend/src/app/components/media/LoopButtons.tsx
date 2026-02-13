@@ -1,5 +1,4 @@
 import getFormattedTime from "../../helpers/getFormattedTime";
-import { LoopState } from "./loopTypes";
 import { memo, useState, useEffect } from "react";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
@@ -16,7 +15,6 @@ interface LoopButtonsProps {
   seekTo: (time: number) => void;
   toggleLoop: () => void;
   clearLoop: () => void;
-  state: LoopState;
 }
 
 function LoopButtons({
@@ -28,14 +26,10 @@ function LoopButtons({
   seekTo,
   toggleLoop,
   clearLoop,
-  state,
 }: LoopButtonsProps) {
   const [expanded, setExpanded] = useState(false);
   const [sliderValue, setSliderValue] = useState<number[]>([0, duration || 100]);
   const [prevSliderValue, setPrevSliderValue] = useState<number[]>([0, duration || 100]);
-
-  const hasRange = state.status === "ready" || state.status === "looping";
-  const loopDuration = sliderValue[1] - sliderValue[0];
 
   useEffect(() => {
     if (duration > 0) {
