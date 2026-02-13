@@ -1,5 +1,8 @@
 import SegmentPlayer from "../media/SegmentPlayer";
+import FeedbackReplyThread from "@/app/components/feedback/FeedbackReplyThread";
+import { useAuthContext } from "@/app/AuthContext";
 import { Lesson } from "@/app/Types";
+import { API_PATHS } from "@/app/constants/apiKeys";
 import { useRef, useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import DOMPurify from "dompurify";
@@ -12,11 +15,17 @@ import { FiMaximize2, FiX } from "react-icons/fi";
 export default function VideoScriptToggle({
   selectedLesson,
   belowVideo,
+  hideFeedback = false,
 }: {
   selectedLesson: Lesson;
   belowVideo?: React.ReactNode;
+  hideFeedback?: boolean;
 }) {
   const tTeacher = useTranslations("teacher");
+  const { token } = useAuthContext();
+  const currentUserId = token
+    ? JSON.parse(atob(token.split(".")[1])).id
+    : undefined;
   const [isFullscreen, setIsFullscreen] = useState(false);
   const imageContainerRef = useRef<HTMLDivElement>(null);
 
@@ -195,14 +204,31 @@ export default function VideoScriptToggle({
             )}
           </Paper>
       </Box>
-      {selectedLesson.feedback && (
+      {!hideFeedback && selectedLesson.feedback && (
         <Paper sx={{ mt: 2, p: 2, boxShadow: "0 2px 14px 0 rgb(32 40 45 / 8%)" }}>
           <Typography variant="subtitle2" sx={{ fontWeight: 600, color: "primary.dark", mb: 1 }}>
             {tTeacher("feedback")}
           </Typography>
-          <Typography variant="body1" color="text.primary">
-            {selectedLesson.feedback}
-          </Typography>
+          <Box
+            sx={{
+              "& p": { mb: 0.5, mt: 0 },
+              "& p:last-child": { mb: 0 },
+              "& ul, & ol": { pl: 3 },
+              "& strong, & b": { fontWeight: 600 },
+              "& s": { textDecoration: "line-through" },
+              "& mark": { borderRadius: "2px", padding: "0 2px" },
+            }}
+            dangerouslySetInnerHTML={{
+              __html: DOMPurify.sanitize(selectedLesson.feedback, {
+                ALLOWED_TAGS: ["p", "br", "strong", "b", "em", "i", "u", "s", "span", "ul", "ol", "li", "h1", "h2", "h3", "mark"],
+                ALLOWED_ATTR: ["style", "data-color"],
+              }),
+            }}
+          />
+          <FeedbackReplyThread
+            repliesEndpoint={API_PATHS.STUDENT_FEEDBACK_REPLIES(selectedLesson.id)}
+            currentUserId={currentUserId}
+          />
         </Paper>
       )}
     </Box>

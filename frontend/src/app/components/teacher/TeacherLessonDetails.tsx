@@ -9,12 +9,12 @@ import "react-h5-audio-player/lib/styles.css";
 import { API_PATHS } from "../../constants/apiKeys";
 import FeedBack from "./FeedBack";
 import VideoScriptToggle from "../lesson/VideoScriptToggle";
-import MainCard from "../ui/MainCard";
 import Breadcrumbs from "../ui/Breadcrumbs";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import Chip from "@mui/material/Chip";
+import Paper from "@mui/material/Paper";
 import CircularProgress from "@mui/material/CircularProgress";
 import { mutate } from "swr";
 import { FiCheckCircle, FiClock } from "react-icons/fi";
@@ -54,7 +54,6 @@ export default function TeacherLessonDetails({
     setIsMarking(true);
     try {
       await markComplete({});
-      // Revalidate the lesson data
       mutate(API_PATHS.TEACHER_STUDENT_LESSON(idInfo.studentId, idInfo.lessonId));
       mutate(API_PATHS.TEACHER_STUDENT_LESSONS(idInfo.studentId));
       mutate(API_PATHS.DASHBOARD_STATS);
@@ -62,6 +61,31 @@ export default function TeacherLessonDetails({
       setIsMarking(false);
     }
   }
+
+  // Only the audio player goes below the video (compact, like student's RecorderPanel)
+  const belowVideoContent = hasSubmission ? (
+    <Paper sx={{ p: 2, borderRadius: 2, boxShadow: "0 2px 14px 0 rgb(32 40 45 / 8%)" }}>
+      <Typography variant="subtitle2" sx={{ fontWeight: 600, color: "primary.dark", mb: 1 }}>
+        {t("studentRecording")}
+      </Typography>
+      <AudioPlayer
+        src={selectedLesson.audio_file}
+        showJumpControls={false}
+      />
+    </Paper>
+  ) : (
+    <Paper sx={{ p: 2, borderRadius: 2, boxShadow: "0 2px 14px 0 rgb(32 40 45 / 8%)" }}>
+      <Box sx={{ textAlign: "center", py: 4 }}>
+        <FiClock size={48} color="#9e9e9e" />
+        <Typography variant="h6" sx={{ mt: 2, color: "text.secondary" }}>
+          {t("noSubmissionYet")}
+        </Typography>
+        <Typography variant="body2" sx={{ color: "text.secondary" }}>
+          {t("waitingForStudent")}
+        </Typography>
+      </Box>
+    </Paper>
+  );
 
   return (
     <Box>
@@ -95,26 +119,26 @@ export default function TeacherLessonDetails({
         )}
       </Box>
 
-      <VideoScriptToggle selectedLesson={selectedLesson} />
+      <VideoScriptToggle
+        selectedLesson={selectedLesson}
+        belowVideo={belowVideoContent}
+        hideFeedback
+      />
 
+      {/* Feedback, mark complete, etc. go BELOW the two-column grid */}
       {hasSubmission && (
-        <Box sx={{ mt: 3 }}>
-          {/* Student Recording */}
-          <MainCard title={t("studentRecording")} sx={{ mb: 3 }}>
-            <AudioPlayer
-              src={selectedLesson.audio_file}
-              showJumpControls={false}
-            />
-          </MainCard>
-
+        <Box sx={{ display: "flex", flexDirection: "column", gap: 2, mt: 2 }}>
           {/* Feedback Section */}
-          <MainCard title={t("feedback")} sx={{ mb: 3 }}>
+          <Paper sx={{ p: 2, borderRadius: 2, boxShadow: "0 2px 14px 0 rgb(32 40 45 / 8%)" }}>
+            <Typography variant="subtitle2" sx={{ fontWeight: 600, color: "primary.dark", mb: 1 }}>
+              {t("feedback")}
+            </Typography>
             <FeedBack idsInfo={idInfo} selectedLesson={selectedLesson} />
-          </MainCard>
+          </Paper>
 
-          {/* Mark as Completed Button */}
+          {/* Mark as Completed */}
           {isPendingReview && (
-            <MainCard>
+            <Paper sx={{ p: 2, borderRadius: 2, boxShadow: "0 2px 14px 0 rgb(32 40 45 / 8%)" }}>
               <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
                 <Box>
                   <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
@@ -135,12 +159,12 @@ export default function TeacherLessonDetails({
                   {isMarking ? t("marking") : t("markAsCompleted")}
                 </Button>
               </Box>
-            </MainCard>
+            </Paper>
           )}
 
           {/* Completed Message */}
           {isCompleted && (
-            <MainCard sx={{ bgcolor: "success.light", borderColor: "success.main" }}>
+            <Paper sx={{ p: 2, borderRadius: 2, bgcolor: "success.light", boxShadow: "0 2px 14px 0 rgb(32 40 45 / 8%)" }}>
               <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
                 <FiCheckCircle size={24} color="#2e7d32" />
                 <Box>
@@ -152,24 +176,9 @@ export default function TeacherLessonDetails({
                   </Typography>
                 </Box>
               </Box>
-            </MainCard>
+            </Paper>
           )}
         </Box>
-      )}
-
-      {/* No submission yet */}
-      {!hasSubmission && (
-        <MainCard sx={{ mt: 3 }}>
-          <Box sx={{ textAlign: "center", py: 4 }}>
-            <FiClock size={48} color="#9e9e9e" />
-            <Typography variant="h6" sx={{ mt: 2, color: "text.secondary" }}>
-              {t("noSubmissionYet")}
-            </Typography>
-            <Typography variant="body2" sx={{ color: "text.secondary" }}>
-              {t("waitingForStudent")}
-            </Typography>
-          </Box>
-        </MainCard>
       )}
     </Box>
   );

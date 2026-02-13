@@ -1,12 +1,30 @@
 import { Router } from "express";
 import createError from "http-errors";
+import sanitizeHtml from "sanitize-html";
 import asyncHandler from "../handlers/asyncHandler.js";
 import { requireTeacher } from "../middleware/auth.js";
 import { lessonRepository } from "../repositories/lessonRepository.js";
 import { assignmentRepository } from "../repositories/assignmentRepository.js";
 import { userRepository } from "../repositories/userRepository.js";
+import { feedbackReplyRepository } from "../repositories/feedbackReplyRepository.js";
 import { emailService } from "../services/emailService.js";
 import { Request, Response } from "express";
+
+const SANITIZE_OPTIONS: sanitizeHtml.IOptions = {
+  allowedTags: ["p", "br", "strong", "b", "em", "i", "u", "s", "span", "ul", "ol", "li", "h1", "h2", "h3", "mark"],
+  allowedAttributes: {
+    span: ["style", "data-color"],
+    mark: ["style", "data-color"],
+  },
+  allowedStyles: {
+    "*": {
+      color: [/.*/],
+      "background-color": [/.*/],
+      "font-family": [/.*/],
+      "font-size": [/.*/],
+    },
+  },
+};
 
 const router = Router();
 
@@ -339,10 +357,12 @@ router.patch(
     const { studentId, lessonId } = req.params;
     const { feedback } = req.body;
 
+    const sanitizedFeedback = sanitizeHtml(feedback, SANITIZE_OPTIONS);
+
     const assignment = await assignmentRepository.addFeedback(
       studentId,
       lessonId,
-      feedback
+      sanitizedFeedback
     );
 
     if (!assignment) {
@@ -405,6 +425,160 @@ router.patch(
       success: true,
       message: "Lesson marked as completed",
       data: assignment,
+    });
+  })
+);
+
+// Get feedback replies for a student assignment
+router.get(
+  "/student/:studentId/lesson/:lessonId/feedback/replies",
+  asyncHandler(async (req: Request, res: Response) => {
+    const { studentId, lessonId } = req.params;
+
+    const assignment = await assignmentRepository.findByStudentAndLesson(
+      studentId,
+      lessonId
+    );
+
+    if (!assignment) {
+      throw createError(404, "Assignment not found");
+    }
+
+    const replies = await feedbackReplyRepository.findByAssignment(
+      assignment.id
+    );
+
+    res.json({
+      success: true,
+      data: replies,
+    });
+  })
+);
+
+// Post a feedback reply as teacher
+router.post(
+  "/student/:studentId/lesson/:lessonId/feedback/replies",
+  asyncHandler(async (req: Request, res: Response) => {
+    const { studentId, lessonId } = req.params;
+    const { content } = req.body;
+    const userId = req?.user?.id;
+
+    if (!userId) {
+      throw createError(401, "Unauthorized");
+    }
+
+    if (!content?.trim()) {
+      throw createError(400, "Reply content is required");
+    }
+
+    const assignment = await assignmentRepository.findByStudentAndLesson(
+      studentId,
+      lessonId
+    );
+
+    if (!assignment) {
+      throw createError(404, "Assignment not found");
+    }
+
+    const sanitizedContent = sanitizeHtml(content, SANITIZE_OPTIONS);
+
+    const reply = await feedbackReplyRepository.create(
+      assignment.id,
+      userId,
+      sanitizedContent
+    );
+
+    // Send email notification to student (async, don't block response)
+    const [student, lesson] = await Promise.all([
+      userRepository.findById(studentId),
+      lessonRepository.findById(lessonId),
+    ]);
+
+    if (student?.email && lesson) {
+      emailService
+        .notifyFeedbackReply(
+          student.email,
+          student.username,
+          lesson.title,
+          "teacher"
+        )
+        .catch((err) =>
+          console.error("[Email] Failed to notify student of reply:", err)
+        );
+    }
+
+    res.status(201).json({
+      success: true,
+      data: reply,
+    });
+  })
+);
+
+// Edit a feedback reply as teacher (own replies only)
+router.patch(
+  "/student/:studentId/lesson/:lessonId/feedback/replies/:replyId",
+  asyncHandler(async (req: Request, res: Response) => {
+    const { replyId } = req.params;
+    const { content } = req.body;
+    const userId = req?.user?.id;
+
+    if (!userId) {
+      throw createError(401, "Unauthorized");
+    }
+
+    if (!content?.trim()) {
+      throw createError(400, "Reply content is required");
+    }
+
+    const reply = await feedbackReplyRepository.findById(replyId);
+
+    if (!reply) {
+      throw createError(404, "Reply not found");
+    }
+
+    if (reply.user_id !== userId) {
+      throw createError(403, "You can only edit your own replies");
+    }
+
+    const sanitizedContent = sanitizeHtml(content, SANITIZE_OPTIONS);
+    const updated = await feedbackReplyRepository.update(
+      replyId,
+      sanitizedContent
+    );
+
+    res.json({
+      success: true,
+      data: updated,
+    });
+  })
+);
+
+// Delete a feedback reply as teacher (own replies only)
+router.delete(
+  "/student/:studentId/lesson/:lessonId/feedback/replies/:replyId",
+  asyncHandler(async (req: Request, res: Response) => {
+    const { replyId } = req.params;
+    const userId = req?.user?.id;
+
+    if (!userId) {
+      throw createError(401, "Unauthorized");
+    }
+
+    const reply = await feedbackReplyRepository.findById(replyId);
+
+    if (!reply) {
+      throw createError(404, "Reply not found");
+    }
+
+    if (reply.user_id !== userId) {
+      throw createError(403, "You can only delete your own replies");
+    }
+
+    await feedbackReplyRepository.delete(replyId);
+
+    res.json({
+      success: true,
+      message: "Reply deleted",
     });
   })
 );

@@ -138,6 +138,17 @@ const initDatabase = async () => {
       "UUID REFERENCES lists(id) ON DELETE SET NULL"
     );
 
+    // Feedback replies table for conversation threads on assignments
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS feedback_replies (
+        id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+        assignment_id UUID REFERENCES assignments(id) ON DELETE CASCADE,
+        user_id UUID REFERENCES users(id) ON DELETE CASCADE,
+        content TEXT NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      );
+    `);
+
     logger.info("Database tables initialized");
   } catch (error) {
     logger.error("Error initializing database:", error);
