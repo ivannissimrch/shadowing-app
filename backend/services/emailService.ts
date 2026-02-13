@@ -2,7 +2,7 @@ import { Resend } from "resend";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-const FROM_EMAIL = "ShadowSpeak <noreply@shadowspeak.app>";
+const FROM_EMAIL = "ShadowSpeak <noreply@shadowspeak.net>";
 
 interface SendEmailOptions {
   to: string;
@@ -24,10 +24,24 @@ export const emailService = {
         subject,
         html,
       });
+
+      if (result.error) {
+        console.error("[Email] Resend API error:", {
+          to,
+          subject,
+          error: result.error,
+        });
+        return null;
+      }
+
       console.log("[Email] Sent successfully:", { to, subject, id: result.data?.id });
       return result;
     } catch (error) {
-      console.error("[Email] Failed to send:", error);
+      console.error("[Email] Failed to send:", {
+        to,
+        subject,
+        error: error instanceof Error ? error.message : error,
+      });
       return null;
     }
   },
@@ -109,5 +123,42 @@ export const emailService = {
     `;
 
     return this.send({ to: studentEmail, subject, html });
+  },
+
+  // Notify user when they receive a reply on feedback
+  async notifyFeedbackReply(
+    recipientEmail: string,
+    recipientName: string,
+    lessonTitle: string,
+    senderRole: "student" | "teacher"
+  ) {
+    if (!recipientEmail) {
+      console.log("[Email] Skipping reply notification (no email):", recipientName);
+      return null;
+    }
+
+    const senderLabel = senderRole === "teacher" ? "Your teacher" : "Your student";
+    const subject = `New Reply on "${lessonTitle}"`;
+    const html = `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+        <h2 style="color: #1976d2;">New Reply</h2>
+        <p>Hi ${recipientName},</p>
+        <p>${senderLabel} has replied to the feedback on:</p>
+        <div style="background: #f5f5f5; padding: 16px; border-radius: 8px; margin: 16px 0;">
+          <h3 style="margin: 0; color: #333;">${lessonTitle}</h3>
+        </div>
+        <p>Log in to view the reply and continue the conversation.</p>
+        <a href="${process.env.APP_URL || 'http://localhost:3000'}/en/student/lessons"
+           style="display: inline-block; background: #1976d2; color: white; padding: 12px 24px;
+                  text-decoration: none; border-radius: 8px; margin-top: 16px;">
+          View Reply
+        </a>
+        <p style="color: #666; margin-top: 24px; font-size: 14px;">
+          — ShadowSpeak ESL App
+        </p>
+      </div>
+    `;
+
+    return this.send({ to: recipientEmail, subject, html });
   },
 };

@@ -207,3 +207,13 @@ export interface UpdateListBody {
 export interface AddLessonsToListBody {
   lessonIds: string[];
 }
+
+export interface FeedbackReply {
+  id: string;
+  assignment_id: string;
+  user_id: string;
+  content: string;
+  created_at: Date;
+  username: string;
+  role: "student" | "teacher";
+}

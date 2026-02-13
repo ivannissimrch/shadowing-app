@@ -25,6 +25,7 @@ interface RichTextEditorProps {
   value: string;
   onChange: (html: string) => void;
   placeholder?: string;
+  compact?: boolean;
 }
 
 const FONT_FAMILIES = [
@@ -62,6 +63,7 @@ export default function RichTextEditor({
   value,
   onChange,
   placeholder,
+  compact = false,
 }: RichTextEditorProps) {
   const [fontFamilyAnchor, setFontFamilyAnchor] = useState<null | HTMLElement>(null);
   const [fontSizeAnchor, setFontSizeAnchor] = useState<null | HTMLElement>(null);
@@ -365,15 +367,15 @@ export default function RichTextEditor({
       {/* Editor content area */}
       <Box
         sx={{
-          p: 2,
-          minHeight: 200,
+          p: compact ? 1.5 : 2,
+          minHeight: compact ? 80 : 200,
           bgcolor: "#ffffff",
           "& .ProseMirror": {
             outline: "none",
-            minHeight: 180,
+            minHeight: compact ? 60 : 180,
             color: "#000",
             fontFamily: "Verdana, sans-serif",
-            fontSize: "1.1rem",
+            fontSize: compact ? "0.9rem" : "1.1rem",
             lineHeight: 1.6,
           },
           "& .ProseMirror p.is-editor-empty:first-of-type::before": {
@@ -398,7 +400,7 @@ export default function RichTextEditor({
         {editor ? (
           <EditorContent editor={editor} />
         ) : (
-          <Box sx={{ minHeight: 180, display: "grid", placeItems: "center" }}>
+          <Box sx={{ minHeight: compact ? 60 : 180, display: "grid", placeItems: "center" }}>
             <CircularProgress size={32} />
           </Box>
         )}

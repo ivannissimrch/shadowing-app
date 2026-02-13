@@ -40,6 +40,18 @@ export const API_PATHS = {
     `/api/teacher/student/${studentId}/lesson/${lessonId}/feedback`,
   TEACHER_STUDENT_LESSON_COMPLETE: (studentId: string, lessonId: string) =>
     `/api/teacher/student/${studentId}/lesson/${lessonId}/complete`,
+  TEACHER_FEEDBACK_REPLIES: (studentId: string, lessonId: string) =>
+    `/api/teacher/student/${studentId}/lesson/${lessonId}/feedback/replies`,
+
+  // Student Feedback Replies
+  STUDENT_FEEDBACK_REPLIES: (lessonId: string) =>
+    `/api/lessons/${lessonId}/feedback/replies`,
+  STUDENT_FEEDBACK_REPLY: (lessonId: string, replyId: string) =>
+    `/api/lessons/${lessonId}/feedback/replies/${replyId}`,
+
+  // Teacher Feedback Reply (single)
+  TEACHER_FEEDBACK_REPLY: (studentId: string, lessonId: string, replyId: string) =>
+    `/api/teacher/student/${studentId}/lesson/${lessonId}/feedback/replies/${replyId}`,
 
   // Uploads
   UPLOAD_IMAGE: "/api/upload-image",

@@ -122,23 +122,34 @@ export default function LoginForm() {
               <Image
                 src="/favicon.png"
                 alt="ShadowSpeak"
-                width={40}
-                height={40}
+                width={54}
+                height={54}
                 style={{ objectFit: "contain" }}
               />
               <Box>
                 <Typography
-                  variant="h4"
                   component="h1"
                   sx={{
                     fontWeight: 700,
-                    color: "primary.main",
+                    fontSize: "1.4rem",
                     lineHeight: 1.2,
+                    background: "linear-gradient(90deg, #1E88E5, #9C27B0)",
+                    WebkitBackgroundClip: "text",
+                    WebkitTextFillColor: "transparent",
                   }}
                 >
                   ShadowSpeak |
                 </Typography>
-                <Typography variant="body2" sx={{ color: "primary.main" }}>
+                <Typography
+                  sx={{
+                    fontWeight: 600,
+                    fontSize: "0.9rem",
+                    textAlign: "center",
+                    background: "linear-gradient(90deg, #1E88E5, #9C27B0)",
+                    WebkitBackgroundClip: "text",
+                    WebkitTextFillColor: "transparent",
+                  }}
+                >
                   Lynnex English
                 </Typography>
               </Box>

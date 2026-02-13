@@ -76,6 +76,14 @@ export const assignmentRepository = {
     return result.rows.length > 0;
   },
 
+  findByStudentAndLesson: async (studentId: string, lessonId: string) => {
+    const result: QueryResult<Assignment> = await db.query(
+      `SELECT * FROM assignments WHERE student_id = $1 AND lesson_id = $2`,
+      [studentId, lessonId]
+    );
+    return result.rows[0];
+  },
+
   delete: async (studentId: string, lessonId: string) => {
     await db.query(
       `DELETE FROM assignments WHERE student_id = $1 AND lesson_id = $2`,

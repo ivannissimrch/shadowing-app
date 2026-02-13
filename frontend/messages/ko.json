@@ -181,7 +181,17 @@
     "assignCourse": "코스 배정",
     "assigningCourse": "배정 중...",
     "courseAssigned": "코스가 성공적으로 배정되었습니다",
-    "courseAssignedCount": "{count}개 레슨이 배정되었습니다"
+    "courseAssignedCount": "{count}개 레슨이 배정되었습니다",
+    "reply": "답변",
+    "replies": "답변",
+    "writeReply": "답변을 작성하세요...",
+    "sendReply": "답변 보내기",
+    "sending": "보내는 중...",
+    "noRepliesYet": "아직 답변이 없습니다",
+    "editReply": "답변 편집",
+    "deleteReply": "답변 삭제",
+    "confirmDeleteReply": "이 답변을 삭제하시겠습니까?",
+    "replyDeleted": "답변이 삭제되었습니다"
   },
   "lesson": {
     "title": "제목",

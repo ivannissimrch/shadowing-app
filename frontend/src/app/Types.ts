@@ -155,3 +155,13 @@ export interface StudentProgressWithLessons {
   completedLessons: number;
   lessons: StudentLessonSummary[];
 }
+
+export interface FeedbackReply {
+  id: string;
+  assignment_id: string;
+  user_id: string;
+  content: string;
+  created_at: string;
+  username: string;
+  role: "student" | "teacher";
+}

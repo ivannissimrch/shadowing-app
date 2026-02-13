@@ -93,15 +93,34 @@ export default function DashboardHeader({
             <Image
               src="/favicon.png"
               alt="ShadowSpeak"
-              width={28}
-              height={28}
+              width={32}
+              height={32}
               style={{ objectFit: 'contain' }}
             />
             <Box>
-              <Typography variant="subtitle2" sx={{ fontWeight: 700, color: 'primary.main', lineHeight: 1.1 }}>
-                ShadowSpeak
+              <Typography
+                sx={{
+                  fontWeight: 700,
+                  fontSize: '0.95rem',
+                  lineHeight: 1.1,
+                  background: 'linear-gradient(90deg, #1E88E5, #9C27B0)',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                }}
+              >
+                ShadowSpeak |
               </Typography>
-              <Typography variant="caption" sx={{ color: 'primary.main', lineHeight: 1.1 }}>
+              <Typography
+                sx={{
+                  fontWeight: 600,
+                  fontSize: '0.75rem',
+                  lineHeight: 1.1,
+                  textAlign: 'center',
+                  background: 'linear-gradient(90deg, #1E88E5, #9C27B0)',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                }}
+              >
                 Lynnex English
               </Typography>
             </Box>
