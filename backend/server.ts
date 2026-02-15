@@ -59,6 +59,15 @@ const initDatabase = async () => {
       );
     `);
 
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS practice_words (
+        id SERIAL PRIMARY KEY,
+        student_id UUID REFERENCES users(id) ON DELETE CASCADE,
+        word TEXT NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      );
+    `);
+
     // Migration: Add Cloudinary video support columns to lessons table
     // These run safely - if column exists, it just skips
     const addColumnIfNotExists = async (
@@ -145,6 +154,19 @@ const initDatabase = async () => {
         assignment_id UUID REFERENCES assignments(id) ON DELETE CASCADE,
         user_id UUID REFERENCES users(id) ON DELETE CASCADE,
         content TEXT NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      );
+    `);
+
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS practice_results (
+        id SERIAL PRIMARY KEY,
+        practice_word_id INTEGER REFERENCES practice_words(id) ON DELETE CASCADE,
+        accuracy_score NUMERIC(5,2) NOT NULL,
+        fluency_score NUMERIC(5,2) NOT NULL,
+        completeness_score NUMERIC(5,2) NOT NULL,
+        pronunciation_score NUMERIC(5,2) NOT NULL,
+        words_breakdown JSONB,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       );
     `);

@@ -6,6 +6,7 @@ import { API_PATHS } from "../../constants/apiKeys";
 import toIpa from "@/app/helpers/toIpa";
 import { useSWRMutationHook } from "../../hooks/useSWRMutation";
 import { useSpeakMutation } from "../../hooks/useSpeakMutation";
+import api from "../../helpers/axiosFetch";
 
 import MuiCard from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
@@ -25,7 +26,7 @@ interface CoachResponse {
   feedback: string;
 }
 
-interface EvaluationResult {
+export interface EvaluationResult {
   text: string;
   accuracyScore: number;
   fluencyScore: number;
@@ -43,14 +44,23 @@ export default function PracticeCard({
   text,
   onDelete,
   nativeLanguage,
+  wordId,
+  initialEvaluation,
+  onEvaluationSaved,
 }: {
   text: string;
   onDelete?: () => void;
   nativeLanguage?: string | null;
+  wordId?: number;
+  initialEvaluation?: EvaluationResult | null;
+  onEvaluationSaved?: () => void;
 }) {
   const t = useTranslations("practice");
   const tPracticeWords = useTranslations("practiceWords");
   const [speechRate, setSpeechRate] = useState(0.9);
+  const [displayedEvaluation, setDisplayedEvaluation] = useState<EvaluationResult | null>(
+    initialEvaluation ?? null
+  );
 
   const { speak } = useSpeakMutation();
 
@@ -58,7 +68,6 @@ export default function PracticeCard({
     trigger: evaluate,
     isMutating: isEvaluating,
     error: evalError,
-    data: evaluation,
     reset: resetEvaluation,
   } = useSWRMutationHook<
     EvaluationResult,
@@ -82,10 +91,28 @@ export default function PracticeCard({
       reader.readAsDataURL(blob);
     });
 
-    await evaluate({
+    const result = await evaluate({
       audioData: base64,
       referenceText: text,
     });
+
+    if (result) {
+      setDisplayedEvaluation(result);
+      if (wordId) {
+        try {
+          await api.post(API_PATHS.PRACTICE_WORD_RESULTS(wordId), {
+            accuracyScore: result.accuracyScore,
+            fluencyScore: result.fluencyScore,
+            completenessScore: result.completenessScore,
+            pronunciationScore: result.pronunciationScore,
+            words: result.words,
+          });
+          onEvaluationSaved?.();
+        } catch {
+          // Save failure is non-blocking — the user still sees the evaluation
+        }
+      }
+    }
   }
 
   const error = evalError ? t("evaluationFailed") : null;
@@ -102,13 +129,14 @@ export default function PracticeCard({
     } else {
       resetEvaluation();
       resetCoach();
+      setDisplayedEvaluation(null);
       startRecording();
     }
   }
 
   function handleGetHelp() {
-    if (evaluation) {
-      getCoachHelp({ referenceText: text, evaluation, nativeLanguage: nativeLanguage || undefined });
+    if (displayedEvaluation) {
+      getCoachHelp({ referenceText: text, evaluation: displayedEvaluation, nativeLanguage: nativeLanguage || undefined });
     }
   }
 
@@ -184,25 +212,25 @@ export default function PracticeCard({
           {isEvaluating && <LinearProgress sx={{ mb: 2 }} />}
           {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
 
-          {evaluation && (
+          {displayedEvaluation && (
             <Box>
               <Divider sx={{ my: 2 }} />
 
               {/* Scores */}
               <Box sx={{ display: "flex", gap: 1, mb: 2, flexWrap: "wrap" }}>
                 <Chip
-                  label={`${t("accuracy")}: ${Math.round(evaluation.accuracyScore)}%`}
-                  color={getScoreColor(evaluation.accuracyScore)}
+                  label={`${t("accuracy")}: ${Math.round(displayedEvaluation.accuracyScore)}%`}
+                  color={getScoreColor(displayedEvaluation.accuracyScore)}
                   size="small"
                 />
                 <Chip
-                  label={`${t("fluency")}: ${Math.round(evaluation.fluencyScore)}%`}
-                  color={getScoreColor(evaluation.fluencyScore)}
+                  label={`${t("fluency")}: ${Math.round(displayedEvaluation.fluencyScore)}%`}
+                  color={getScoreColor(displayedEvaluation.fluencyScore)}
                   size="small"
                 />
                 <Chip
-                  label={`${t("overall")}: ${Math.round(evaluation.pronunciationScore)}%`}
-                  color={getScoreColor(evaluation.pronunciationScore)}
+                  label={`${t("overall")}: ${Math.round(displayedEvaluation.pronunciationScore)}%`}
+                  color={getScoreColor(displayedEvaluation.pronunciationScore)}
                   size="small"
                   variant="filled"
                 />
@@ -210,7 +238,7 @@ export default function PracticeCard({
 
               {/* Word breakdown */}
               <Box sx={{ display: "flex", flexWrap: "wrap", gap: 2, mb: 2 }}>
-                {evaluation.words.map((word, i) => (
+                {displayedEvaluation.words.map((word, i) => (
                   <Box key={i} sx={{ textAlign: "center" }}>
                     <Typography variant="body1" sx={{ fontWeight: 500 }}>
                       {word.word}
@@ -273,7 +301,7 @@ export default function PracticeCard({
             </Box>
           )}
 
-          {!mediaBlobUrl && !isEvaluating && !evaluation && status !== "recording" && (
+          {!mediaBlobUrl && !isEvaluating && !displayedEvaluation && status !== "recording" && (
             <Typography variant="body2" color="text.secondary">
               {t("feedbackWillAppear")}
             </Typography>

@@ -191,7 +191,13 @@
     "editReply": "답변 편집",
     "deleteReply": "답변 삭제",
     "confirmDeleteReply": "이 답변을 삭제하시겠습니까?",
-    "replyDeleted": "답변이 삭제되었습니다"
+    "replyDeleted": "답변이 삭제되었습니다",
+    "assignedLessons": "배정된 레슨",
+    "practiceWords": "연습 단어",
+    "addPracticeWord": "학생이 연습할 단어를 추가하세요...",
+    "noPracticeWords": "아직 연습 단어가 없습니다",
+    "wordAdded": "단어가 추가되었습니다",
+    "wordExists": "이미 존재하는 단어입니다"
   },
   "lesson": {
     "title": "제목",

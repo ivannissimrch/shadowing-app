@@ -191,7 +191,13 @@
     "editReply": "Edit reply",
     "deleteReply": "Delete reply",
     "confirmDeleteReply": "Are you sure you want to delete this reply?",
-    "replyDeleted": "Reply deleted"
+    "replyDeleted": "Reply deleted",
+    "assignedLessons": "Assigned Lessons",
+    "practiceWords": "Practice Words",
+    "addPracticeWord": "Add a word for student to practice...",
+    "noPracticeWords": "No practice words yet",
+    "wordAdded": "Word added",
+    "wordExists": "Word already exists"
   },
   "lesson": {
     "title": "Title",
