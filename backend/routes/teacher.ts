@@ -7,6 +7,8 @@ import { lessonRepository } from "../repositories/lessonRepository.js";
 import { assignmentRepository } from "../repositories/assignmentRepository.js";
 import { userRepository } from "../repositories/userRepository.js";
 import { feedbackReplyRepository } from "../repositories/feedbackReplyRepository.js";
+import { practiceWordRepository } from "../repositories/practiceWordRepository.js";
+import { practiceResultRepository } from "../repositories/practiceResultRepository.js";
 import { emailService } from "../services/emailService.js";
 import { Request, Response } from "express";
 
@@ -579,6 +581,60 @@ router.delete(
     res.json({
       success: true,
       message: "Reply deleted",
+    });
+  })
+);
+
+// Get practice words for a student (with latest results)
+router.get(
+  "/student/:studentId/practice-words",
+  asyncHandler(async (req: Request, res: Response) => {
+    const { studentId } = req.params;
+
+    const [words, latestResults] = await Promise.all([
+      practiceWordRepository.findByStudentId(studentId),
+      practiceResultRepository.findLatestByStudentId(studentId),
+    ]);
+
+    const resultsByWordId = new Map(
+      latestResults.map((r) => [r.practice_word_id, r])
+    );
+
+    const wordsWithResults = words.map((word) => ({
+      ...word,
+      latest_result: resultsByWordId.get(word.id) || null,
+    }));
+
+    res.json({
+      success: true,
+      data: wordsWithResults,
+    });
+  })
+);
+
+// Add a practice word for a student
+router.post(
+  "/student/:studentId/practice-words",
+  asyncHandler(async (req: Request, res: Response) => {
+    const { studentId } = req.params;
+    const { word } = req.body;
+
+    if (!word || typeof word !== "string" || word.trim().length === 0) {
+      throw createError(400, "Word is required");
+    }
+
+    const trimmedWord = word.trim();
+
+    const exists = await practiceWordRepository.exists(studentId, trimmedWord);
+    if (exists) {
+      throw createError(409, "Word already exists in student's practice list");
+    }
+
+    const newWord = await practiceWordRepository.create(studentId, trimmedWord);
+
+    res.status(201).json({
+      success: true,
+      data: newWord,
     });
   })
 );

@@ -150,6 +150,18 @@ export interface PracticeWord {
   created_at: Date;
 }
 
+// Practice evaluation result
+export interface PracticeResult {
+  id: number;
+  practice_word_id: number;
+  accuracy_score: number;
+  fluency_score: number;
+  completeness_score: number;
+  pronunciation_score: number;
+  words_breakdown: unknown;
+  created_at: Date;
+}
+
 // Dashboard stats types
 export interface StudentProgress {
   id: string;

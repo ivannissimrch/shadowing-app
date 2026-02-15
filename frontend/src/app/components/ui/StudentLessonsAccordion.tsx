@@ -1,4 +1,5 @@
 "use client";
+import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/routing";
 import { useSWRAxios } from "@/app/hooks/useSWRAxios";
@@ -17,6 +18,7 @@ import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import Button from "@mui/material/Button";
 import CardActions from "@mui/material/CardActions";
+import CircularProgress from "@mui/material/CircularProgress";
 import { FiUsers, FiChevronDown, FiChevronRight } from "react-icons/fi";
 
 const MAX_LESSONS_PER_STUDENT = 5;
@@ -51,6 +53,7 @@ export default function StudentLessonsAccordion() {
   const tDashboard = useTranslations("dashboard");
   const tLesson = useTranslations("lesson");
   const tCommon = useTranslations("common");
+  const [navigatingLessonId, setNavigatingLessonId] = useState<string | null>(null);
 
   const { data: students, isLoading } =
     useSWRAxios<StudentProgressWithLessons[]>(API_PATHS.STUDENTS_WITH_LESSONS);
@@ -220,6 +223,7 @@ export default function StudentLessonsAccordion() {
                           key={lesson.lesson_id}
                           component={Link}
                           href={`/teacher/student/${student.id}/lesson/${lesson.lesson_id}`}
+                          onClick={() => setNavigatingLessonId(lesson.lesson_id)}
                           sx={{
                             display: "flex",
                             alignItems: "center",
@@ -245,18 +249,22 @@ export default function StudentLessonsAccordion() {
                           >
                             {lesson.lesson_title}
                           </Typography>
-                          <Chip
-                            label={
-                              lesson.status === "completed"
-                                ? tLesson("completed")
-                                : lesson.status === "submitted"
-                                  ? tLesson("submitted")
-                                  : tLesson("new")
-                            }
-                            size="small"
-                            color={getStatusColor(lesson.status)}
-                            sx={{ height: 22, fontSize: "0.7rem" }}
-                          />
+                          {navigatingLessonId === lesson.lesson_id ? (
+                            <CircularProgress size={16} />
+                          ) : (
+                            <Chip
+                              label={
+                                lesson.status === "completed"
+                                  ? tLesson("completed")
+                                  : lesson.status === "submitted"
+                                    ? tLesson("submitted")
+                                    : tLesson("new")
+                              }
+                              size="small"
+                              color={getStatusColor(lesson.status)}
+                              sx={{ height: 22, fontSize: "0.7rem" }}
+                            />
+                          )}
                         </Box>
                       ))}
                       {student.lessons.length > MAX_LESSONS_PER_STUDENT && (

@@ -27,7 +27,7 @@ export default function StudentInfo({ id }: { id: string }) {
           { label: student.username },
         ]}
       />
-      <Paper sx={{ p: 3, mb: 3 }}>
+      <Paper sx={{ p: 3 }}>
       <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
         <Avatar
           sx={{
