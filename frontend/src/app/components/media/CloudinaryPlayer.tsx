@@ -8,6 +8,7 @@ import { FiAlertCircle } from "react-icons/fi";
 import { VideoPlayerRef } from "./playerTypes";
 import { LoopState } from "./loopTypes";
 import SpeedControl from "./SpeedControl";
+import VolumeControl from "./VolumeControl";
 
 // Import Cloudinary video player CSS
 import "cloudinary-video-player/cld-video-player.min.css";
@@ -95,6 +96,8 @@ const CloudinaryPlayer = forwardRef<VideoPlayerRef, CloudinaryPlayerProps>(
     const [hasError, setHasError] = useState(false);
     const [isReady, setIsReady] = useState(false);
     const [playbackRate, setPlaybackRate] = useState(1);
+    const [volume, setVolume] = useState(1);
+    const [muted, setMuted] = useState(false);
 
     const { state, setRange, toggleLoop, clearLoop } = useCloudinaryLoop(playerRef);
 
@@ -239,6 +242,23 @@ const CloudinaryPlayer = forwardRef<VideoPlayerRef, CloudinaryPlayerProps>(
       }
     }, []);
 
+    const handleVolumeChange = useCallback((newVolume: number) => {
+      if (videoRef.current) {
+        videoRef.current.volume = newVolume;
+        videoRef.current.muted = newVolume === 0;
+        setVolume(newVolume);
+        setMuted(newVolume === 0);
+      }
+    }, []);
+
+    const handleMuteToggle = useCallback(() => {
+      if (videoRef.current) {
+        const newMuted = !videoRef.current.muted;
+        videoRef.current.muted = newMuted;
+        setMuted(newMuted);
+      }
+    }, []);
+
     if (hasError) {
       return (
         <Box
@@ -306,6 +326,13 @@ const CloudinaryPlayer = forwardRef<VideoPlayerRef, CloudinaryPlayerProps>(
             seekTo={seekTo}
             toggleLoop={toggleLoop}
             clearLoop={clearLoop}
+          />
+          <VolumeControl
+            volume={volume}
+            muted={muted}
+            onVolumeChange={handleVolumeChange}
+            onMuteToggle={handleMuteToggle}
+            disabled={!isReady}
           />
           <Box sx={{ ml: "auto" }}>
             <SpeedControl
