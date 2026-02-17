@@ -318,6 +318,14 @@
     "english": "English",
     "korean": "Korean"
   },
+  "greeting": {
+    "goodMorning": "Good Morning",
+    "goodAfternoon": "Good Afternoon",
+    "goodEvening": "Good Evening",
+    "welcomeBack": "Welcome back, {username}!",
+    "pendingLessons": "You have {count} lessons waiting for review",
+    "noPending": "You're all caught up! No lessons pending."
+  },
   "practiceWords": {
     "addWord": "Add a word or phrase to practice...",
     "practiceWord": "Practice Word",

@@ -14,7 +14,6 @@ import { API_PATHS } from "../../constants/apiKeys";
 import { Lesson, Student } from "../../Types";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
-import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import {
   FiUsers,
@@ -24,6 +23,9 @@ import {
   FiCheckCircle,
 } from "react-icons/fi";
 import { useRouter } from "@/i18n/routing";
+import { useAuthContext } from "@/app/AuthContext";
+import decodeToken from "@/app/helpers/decodeToken";
+import GreetingCard from "@/app/components/ui/GreetingCard";
 
 interface DashboardStats {
   pendingReviewCount: number;
@@ -48,15 +50,18 @@ export default function TeacherPage() {
   const lessonCount = lessons?.length || 0;
   const pendingReview = dashboardStats?.pendingReviewCount || 0;
   const completedThisWeek = dashboardStats?.completedThisWeek || 0;
+  const { token } = useAuthContext();
+  const user = token ? decodeToken(token) : null;
 
   return (
     <Box>
-      <Typography
-        variant="h4"
-        sx={{ fontWeight: 600, color: "text.primary", mb: 3 }}
-      >
-        {t("dashboard")}
-      </Typography>
+      <Transitions type="fade">
+        <GreetingCard
+          username={user?.username}
+          role="teacher"
+          pendingCount={pendingReview}
+        />
+      </Transitions>
 
       <Transitions type="fade">
         <Grid container spacing={3} sx={{ mb: 4 }}>

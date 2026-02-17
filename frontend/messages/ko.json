@@ -318,6 +318,14 @@
     "english": "영어",
     "korean": "한국어"
   },
+  "greeting": {
+    "goodMorning": "좋은 아침이에요",
+    "goodAfternoon": "좋은 오후예요",
+    "goodEvening": "좋은 저녁이에요",
+    "welcomeBack": "{username}님, 돌아오신 걸 환영합니다!",
+    "pendingLessons": "검토 대기 중인 레슨이 {count}개 있습니다",
+    "noPending": "모두 완료했습니다! 대기 중인 레슨이 없습니다."
+  },
   "practiceWords": {
     "addWord": "연습할 단어나 문장을 추가하세요...",
     "practiceWord": "연습 단어",
