@@ -52,7 +52,5 @@ export function usePersistedState<T>(key: string, initialValue: T) {
     }
   }
 
-  // Return undefined until loaded to prevent hydration mismatch
-  // undefined = loading, null = no value, value = actual value
   return [isLoaded ? value : undefined, setValue] as const;
 }

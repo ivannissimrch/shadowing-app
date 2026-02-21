@@ -68,8 +68,7 @@ export default function useLoopButtons(
         intervalRef.current = null;
       }
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [state]);
+  }, [state, playerRef]);
 
   return {
     updateStartAtCurrentTime,
