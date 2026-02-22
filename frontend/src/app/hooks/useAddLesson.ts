@@ -37,6 +37,7 @@ export default function useAddLesson(closeAddLessonDialog: () => void) {
         videoType: VideoType;
         cloudinaryPublicId?: string;
         cloudinaryUrl?: string;
+        audioUrl?: string;
         category?: string;
       }
     >(
@@ -204,6 +205,7 @@ export default function useAddLesson(closeAddLessonDialog: () => void) {
         cloudinaryPublicId?: string;
         cloudinaryUrl?: string;
         category?: string;
+        audioUrl?: string;
       } = {
         title: formData.title,
         scriptType: scriptType,
@@ -237,6 +239,9 @@ export default function useAddLesson(closeAddLessonDialog: () => void) {
         const videoResult = await triggerVideoUpload(videoFormData);
         lessonData.cloudinaryPublicId = videoResult.publicId;
         lessonData.cloudinaryUrl = videoResult.url;
+        if (videoResult.audioUrl) {
+          lessonData.audioUrl = videoResult.audioUrl;
+        }
       }
 
       // Create the lesson

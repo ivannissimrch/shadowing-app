@@ -22,7 +22,7 @@ export default function PracticeCardHeader({
       }}
     >
       <Typography
-        variant="h4"
+        variant="h6"
         sx={{ fontWeight: 600, color: "text.primary", flex: 1 }}
       >
         {text}

@@ -4,7 +4,7 @@ import {
   EvaluationResult,
   PracticeCardProps,
 } from "../components/ui/PracticeCard";
-import { useState } from "react";
+import { useState, useRef, useCallback } from "react";
 import { useSpeakMutation } from "./useSpeakMutation";
 import { useSWRMutationHook } from "./useSWRMutation";
 import { API_PATHS } from "../constants/apiKeys";
@@ -17,12 +17,16 @@ export default function usePracticeCard({
   wordId,
   initialEvaluation,
   onEvaluationSaved,
+  audioSegment,
 }: PracticeCardProps) {
   const t = useTranslations("practice");
   const tPracticeWords = useTranslations("practiceWords");
   const [speechRate, setSpeechRate] = useState(0.9);
   const [displayedEvaluation, setDisplayedEvaluation] =
     useState<EvaluationResult | null>(initialEvaluation ?? null);
+
+  // Ref for audio segment playback (real teacher audio)
+  const segmentAudioRef = useRef<HTMLAudioElement | null>(null);
 
   const { speak } = useSpeakMutation();
 
@@ -49,6 +53,32 @@ export default function usePracticeCard({
       nativeLanguage?: string;
     }
   >(API_PATHS.SPEECH_COACH, { method: "POST" }, { throwOnError: false });
+
+  // Play real audio segment from lesson video
+  const listenToSegment = useCallback(() => {
+    if (!audioSegment) return;
+
+    // Stop any currently playing segment
+    if (segmentAudioRef.current) {
+      segmentAudioRef.current.pause();
+      segmentAudioRef.current.removeEventListener("timeupdate", handleTimeUpdate);
+    }
+
+    const audio = new Audio(audioSegment.audioUrl);
+    segmentAudioRef.current = audio;
+    audio.playbackRate = speechRate;
+    audio.currentTime = audioSegment.startTime;
+
+    function handleTimeUpdate() {
+      if (audio.currentTime >= audioSegment!.endTime) {
+        audio.pause();
+        audio.removeEventListener("timeupdate", handleTimeUpdate);
+      }
+    }
+
+    audio.addEventListener("timeupdate", handleTimeUpdate);
+    audio.play();
+  }, [audioSegment, speechRate]);
 
   async function handleRecordingStop(_blobUrl: string, blob: Blob) {
     const reader = new FileReader();
@@ -129,5 +159,7 @@ export default function usePracticeCard({
     t,
     speechRate,
     speak,
+    // Only return listenToSegment if we have a real audio segment
+    listenToSegment: audioSegment ? listenToSegment : undefined,
   };
 }

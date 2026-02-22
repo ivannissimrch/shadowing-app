@@ -7,6 +7,7 @@ interface PracticeCardActionsProps {
   isEvaluating: boolean;
   handleSpeak: () => void;
   speak: (text: string, rate: number) => void;
+  listenToSegment?: () => void;
   speechRate: number;
   t: (key: string) => string;
   mediaBlobUrl?: string | null;
@@ -16,6 +17,7 @@ export default function PracticeCardActions({
   text,
   speechRate,
   speak,
+  listenToSegment,
   status,
   isEvaluating,
   handleSpeak,
@@ -35,7 +37,7 @@ export default function PracticeCardActions({
       <Button
         variant="outlined"
         startIcon={<FiVolume2 />}
-        onClick={() => speak(text, speechRate)}
+        onClick={listenToSegment ? listenToSegment : () => speak(text, speechRate)}
         sx={{ textTransform: "none" }}
       >
         {t("listen")}

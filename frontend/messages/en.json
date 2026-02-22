@@ -329,6 +329,28 @@
   "practiceWords": {
     "addWord": "Add a word or phrase to practice...",
     "practiceWord": "Practice Word",
-    "deleteWord": "Delete Word"
+    "deleteWord": "Delete Word",
+    "myWords": "My Words",
+    "lessonPhrases": "Lesson Phrases",
+    "selectLesson": "Select a lesson",
+    "noSegments": "No phrases available for this lesson yet.",
+    "noLessonsWithSegments": "No lessons with phrases available.",
+    "backToLesson": "Back to Lesson",
+    "listenToPhrase": "Listen to phrase",
+    "practicePhrases": "Practice Phrases"
+  },
+  "segments": {
+    "phraseBuilder": "Phrase Builder",
+    "addSegment": "Add Segment",
+    "saveSegments": "Save Segments",
+    "saving": "Saving...",
+    "reset": "Reset",
+    "segmentsSaved": "Segments saved successfully!",
+    "noSegmentsYet": "Click \"Add Segment\" to mark phrases on the waveform.",
+    "playSegment": "Play segment",
+    "segmentLabel": "Enter phrase text...",
+    "deleteSegment": "Delete segment",
+    "emptyLabelsError": "All segments must have a phrase label before saving.",
+    "saveFailed": "Failed to save segments. Please try again."
   }
 }

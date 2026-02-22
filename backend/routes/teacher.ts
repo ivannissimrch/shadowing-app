@@ -102,6 +102,7 @@ router.post(
       cloudinaryUrl,
       lessonStartTime,
       lessonEndTime,
+      audioUrl,
     } = req.body;
     // Create new lesson content
     const lesson = await lessonRepository.create({
@@ -115,6 +116,7 @@ router.post(
       cloudinaryUrl,
       lessonStartTime,
       lessonEndTime,
+      audioUrl,
     });
     res.status(201).json({
       success: true,
@@ -215,6 +217,7 @@ router.patch(
       lessonStartTime,
       lessonEndTime,
       category,
+      audioUrl,
     } = req.body;
 
     // Check if lesson exists
@@ -237,6 +240,7 @@ router.patch(
       lessonStartTime,
       lessonEndTime,
       category,
+      audioUrl,
     });
 
     res.json({

@@ -42,10 +42,21 @@ export interface Lesson {
   completed_at: string | null;
   lesson_start_time: string | null;
   lesson_end_time: string | null;
+  audio_url: string | null;
   category: string | null;
   created_at: string;
   updated_at: string;
   feedback: string | null;
+}
+
+export interface AudioSegment {
+  id: string;
+  lesson_id: string;
+  label: string;
+  start_time: number;
+  end_time: number;
+  position: number;
+  created_at: string;
 }
 
 export const LESSON_CATEGORIES = [
@@ -113,6 +124,7 @@ export type VideoUploadResponse = {
   url: string;
   duration: number;
   format: string;
+  audioUrl?: string | null;
 };
 
 export interface RecorderPanelContextType {

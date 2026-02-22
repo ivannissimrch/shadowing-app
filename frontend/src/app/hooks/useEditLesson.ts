@@ -64,6 +64,7 @@ export default function useEditLesson(
         cloudinaryPublicId?: string;
         cloudinaryUrl?: string;
         category?: string;
+        audioUrl?: string;
       }
     >(
       lesson ? `${API_PATHS.CREATE_LESSON}/${lesson.id}` : null,
@@ -237,6 +238,7 @@ export default function useEditLesson(
         cloudinaryPublicId?: string;
         cloudinaryUrl?: string;
         category?: string;
+        audioUrl?: string;
       } = {
         title: formData.title,
         scriptType: scriptType,
@@ -274,6 +276,9 @@ export default function useEditLesson(
         const videoResult = await triggerVideoUpload(videoFormData);
         updateData.cloudinaryPublicId = videoResult.publicId;
         updateData.cloudinaryUrl = videoResult.url;
+        if (videoResult.audioUrl) {
+          updateData.audioUrl = videoResult.audioUrl;
+        }
       }
 
       // Update the lesson

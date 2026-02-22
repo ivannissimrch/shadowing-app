@@ -80,4 +80,11 @@ export const API_PATHS = {
 
   // Course assignment
   ASSIGN_COURSE: (listId: string) => `/api/teacher/lists/${listId}/assign`,
+
+  // Audio Segments
+  LESSON_SEGMENTS: (lessonId: string) => `/api/lessons/${lessonId}/segments`,
+  TEACHER_LESSON_SEGMENTS: (lessonId: string) =>
+    `/api/teacher/lessons/${lessonId}/segments`,
+  TEACHER_LESSON_SEGMENT: (lessonId: string, segmentId: string) =>
+    `/api/teacher/lessons/${lessonId}/segments/${segmentId}`,
 } as const;

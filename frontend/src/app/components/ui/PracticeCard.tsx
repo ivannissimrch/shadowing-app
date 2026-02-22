@@ -1,4 +1,5 @@
 "use client";
+import { useState } from "react";
 import MuiCard from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import PracticeCardSpeedControl from "./PracticeCardSpeedControl";
@@ -24,6 +25,12 @@ export interface EvaluationResult {
     phonemes: { phoneme: string; accuracyScore: number }[];
   }[];
 }
+export interface AudioSegmentPlayback {
+  audioUrl: string;
+  startTime: number;
+  endTime: number;
+}
+
 export interface PracticeCardProps {
   text: string;
   onDelete?: () => void;
@@ -31,6 +38,7 @@ export interface PracticeCardProps {
   wordId?: number;
   initialEvaluation?: EvaluationResult | null;
   onEvaluationSaved?: () => void;
+  audioSegment?: AudioSegmentPlayback;
 }
 
 export default function PracticeCard({
@@ -40,6 +48,7 @@ export default function PracticeCard({
   wordId,
   initialEvaluation,
   onEvaluationSaved,
+  audioSegment,
 }: PracticeCardProps) {
   const {
     tPracticeWords,
@@ -47,22 +56,23 @@ export default function PracticeCard({
     error,
     mediaBlobUrl,
     isEvaluating,
-    isLoadingCoach,
     displayedEvaluation,
-    handleGetHelp,
     handleSpeak,
     updateSpeechRate,
     t,
-    coachData,
     speechRate,
     speak,
+    listenToSegment,
   } = usePracticeCard({
     text,
     nativeLanguage,
     wordId,
     initialEvaluation,
     onEvaluationSaved,
+    audioSegment,
   });
+
+  const [isExpanded, setIsExpanded] = useState(false);
 
   return (
     <MuiCard sx={{ mb: 2 }}>
@@ -77,6 +87,7 @@ export default function PracticeCard({
           text={text}
           speechRate={speechRate}
           speak={speak}
+          listenToSegment={listenToSegment}
           status={status}
           isEvaluating={isEvaluating}
           handleSpeak={handleSpeak}
@@ -94,11 +105,10 @@ export default function PracticeCard({
           isEvaluating={isEvaluating}
           error={error}
           displayedEvaluation={displayedEvaluation}
-          isLoadingCoach={isLoadingCoach}
-          handleGetHelp={handleGetHelp}
-          coachData={coachData}
           mediaBlobUrl={mediaBlobUrl}
           t={t}
+          isExpanded={isExpanded}
+          onToggleExpand={() => setIsExpanded((prev) => !prev)}
         />
       </CardContent>
     </MuiCard>

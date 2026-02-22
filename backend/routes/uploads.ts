@@ -3,8 +3,13 @@ import createError from "http-errors";
 import multer, { FileFilterCallback } from "multer";
 import path from "path";
 import asyncHandler from "../handlers/asyncHandler.js";
-import { uploadImage, uploadAudio } from "../services/azureBlobStorage.js";
+import {
+  uploadImage,
+  uploadAudio,
+  uploadLessonAudio,
+} from "../services/azureBlobStorage.js";
 import { uploadVideo } from "../services/cloudinaryStorage.js";
+import { extractAudioFromVideo } from "../services/audioExtraction.js";
 
 const router = Router();
 
@@ -126,8 +131,29 @@ router.post(
       : "lesson_video";
     const fileName = `${baseName}_${Date.now()}`;
 
-    // Upload to Cloudinary
-    const result = await uploadVideo(req.file.buffer, fileName);
+    // Upload to Cloudinary AND extract audio in parallel
+    const cloudinaryPromise = uploadVideo(req.file.buffer, fileName);
+    const audioPromise = extractAudioFromVideo(req.file.buffer).catch(
+      (err) => {
+        console.error("Audio extraction failed (non-blocking):", err);
+        return null;
+      }
+    );
+
+    const [result, audioBuffer] = await Promise.all([
+      cloudinaryPromise,
+      audioPromise,
+    ]);
+
+    // Upload extracted audio to Azure if extraction succeeded
+    let audioUrl: string | null = null;
+    if (audioBuffer) {
+      try {
+        audioUrl = await uploadLessonAudio(audioBuffer, `${fileName}.mp3`);
+      } catch (err) {
+        console.error("Audio upload to Azure failed (non-blocking):", err);
+      }
+    }
 
     res.json({
       success: true,
@@ -136,6 +162,7 @@ router.post(
         url: result.url,
         duration: result.duration,
         format: result.format,
+        audioUrl,
       },
       message: "Video uploaded successfully",
     });

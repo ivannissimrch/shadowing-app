@@ -38,6 +38,20 @@ export async function uploadAudio(audioBuffer: Buffer, fileName: string) {
 
   return blockBlobClient.url;
 }
+// Upload extracted lesson audio (MP3) to Azure Blob Storage
+export async function uploadLessonAudio(
+  audioBuffer: Buffer,
+  fileName: string
+) {
+  const blockBlobClient = audioContainerClient.getBlockBlobClient(fileName);
+
+  await blockBlobClient.uploadData(audioBuffer, {
+    blobHTTPHeaders: { blobContentType: "audio/mpeg" },
+  });
+
+  return blockBlobClient.url;
+}
+
 // Delete a blob from a specified container
 export async function deleteBlob(containerName: string, blobName: string) {
   const containerClient = blobServiceClient.getContainerClient(containerName);
