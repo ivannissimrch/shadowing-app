@@ -10,6 +10,9 @@ import Box from "@mui/material/Box";
 import CircularProgress from "@mui/material/CircularProgress";
 import Typography from "@mui/material/Typography";
 import type { LocalSegment } from "@/app/hooks/useAudioSegmenter";
+import type WaveSurfer from "wavesurfer.js";
+import type RegionsPlugin from "wavesurfer.js/dist/plugins/regions";
+import type { Region } from "wavesurfer.js/dist/plugins/regions";
 
 const REGION_COLORS = [
   "rgba(25, 118, 210, 0.2)",
@@ -38,9 +41,9 @@ interface WaveformPlayerProps {
 const WaveformPlayer = forwardRef<WaveformPlayerRef, WaveformPlayerProps>(
   ({ audioUrl, segments, onRegionUpdated, onPlaybackEnd }, ref) => {
     const containerRef = useRef<HTMLDivElement>(null);
-    const wavesurferRef = useRef<any>(null);
-    const regionsPluginRef = useRef<any>(null);
-    const regionMapRef = useRef<Map<string, any>>(new Map());
+    const wavesurferRef = useRef<WaveSurfer | null>(null);
+    const regionsPluginRef = useRef<RegionsPlugin | null>(null);
+    const regionMapRef = useRef<Map<string, Region>>(new Map());
     const [isLoading, setIsLoading] = useState(true);
 
     // Use refs for callbacks to avoid re-creating wavesurfer on callback changes
@@ -106,7 +109,7 @@ const WaveformPlayer = forwardRef<WaveformPlayerRef, WaveformPlayerProps>(
         });
 
         // When user drags/resizes a region, update React state
-        regionsPlugin.on("region-updated", (region: any) => {
+        regionsPlugin.on("region-updated", (region: Region) => {
           onRegionUpdatedRef.current(region.id, region.start, region.end);
         });
 
@@ -119,12 +122,14 @@ const WaveformPlayer = forwardRef<WaveformPlayerRef, WaveformPlayerProps>(
 
       init();
 
+      const currentRegionMap = regionMapRef.current;
+
       return () => {
         destroyed = true;
         wavesurferRef.current?.destroy();
         wavesurferRef.current = null;
         regionsPluginRef.current = null;
-        regionMapRef.current.clear();
+        currentRegionMap.clear();
       };
     }, [audioUrl]);
 
@@ -151,7 +156,7 @@ const WaveformPlayer = forwardRef<WaveformPlayerRef, WaveformPlayerProps>(
           existing.setOptions({ content: segment.label || undefined });
         } else {
           // New region
-          const region = regionsPluginRef.current.addRegion({
+          const region = regionsPluginRef.current!.addRegion({
             id: segment.id,
             start: segment.start_time,
             end: segment.end_time,
