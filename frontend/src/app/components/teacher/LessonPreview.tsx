@@ -11,6 +11,7 @@ import Button from "@mui/material/Button";
 import Chip from "@mui/material/Chip";
 import Skeleton from "@mui/material/Skeleton";
 import { FiEdit2, FiUserPlus } from "react-icons/fi";
+import AudioSegmenter from "../segments/AudioSegmenter";
 
 interface LessonPreviewProps {
   lessonId: string;
@@ -110,6 +111,19 @@ export default function LessonPreview({
       <MainCard title="Lesson Content" divider={true}>
         <VideoScriptToggle selectedLesson={lesson} />
       </MainCard>
+
+      {/* Phrase Builder - only show if lesson has audio */}
+      {(lesson.audio_url || lesson.cloudinary_url) && (
+        <MainCard sx={{ mt: 3 }}>
+          <AudioSegmenter
+            lessonId={lesson.id}
+            audioUrl={
+              lesson.audio_url ||
+              lesson.cloudinary_url!.replace("/upload/", "/upload/f_mp3/")
+            }
+          />
+        </MainCard>
+      )}
     </Box>
   );
 }

@@ -158,6 +158,35 @@ const initDatabase = async () => {
       );
     `);
 
+    // Audio segments table for phrase practice pipeline
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS audio_segments (
+        id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+        lesson_id UUID NOT NULL REFERENCES lessons(id) ON DELETE CASCADE,
+        label TEXT NOT NULL,
+        start_time FLOAT NOT NULL,
+        end_time FLOAT NOT NULL,
+        position INTEGER NOT NULL,
+        created_at TIMESTAMP DEFAULT NOW()
+      );
+    `);
+
+    // Index for fast segment lookup by lesson
+    await pool.query(`
+      CREATE INDEX IF NOT EXISTS idx_audio_segments_lesson_id
+      ON audio_segments(lesson_id);
+    `);
+
+    // Add audio_url to lessons for extracted audio from Cloudinary videos
+    await addColumnIfNotExists("lessons", "audio_url", "TEXT");
+
+    // Add segment_id to practice_words to link phrases to audio segments
+    await addColumnIfNotExists(
+      "practice_words",
+      "segment_id",
+      "UUID REFERENCES audio_segments(id) ON DELETE SET NULL"
+    );
+
     await pool.query(`
       CREATE TABLE IF NOT EXISTS practice_results (
         id SERIAL PRIMARY KEY,

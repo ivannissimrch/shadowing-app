@@ -45,12 +45,13 @@ export const lessonRepository = {
       lessonStartTime,
       lessonEndTime,
       category,
+      audioUrl,
     } = lesson;
     const result: QueryResult<Lesson> = await db.query(
-      `INSERT INTO lessons (title, image, script_text, script_type, video_id, video_type, cloudinary_public_id, cloudinary_url, lesson_start_time, lesson_end_time, category)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+      `INSERT INTO lessons (title, image, script_text, script_type, video_id, video_type, cloudinary_public_id, cloudinary_url, lesson_start_time, lesson_end_time, category, audio_url)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
        RETURNING *`,
-      [title, image, scriptText, scriptType, videoId, videoType, cloudinaryPublicId, cloudinaryUrl, lessonStartTime, lessonEndTime, category]
+      [title, image, scriptText, scriptType, videoId, videoType, cloudinaryPublicId, cloudinaryUrl, lessonStartTime, lessonEndTime, category, audioUrl]
     );
     return result.rows[0];
   },
@@ -68,6 +69,7 @@ export const lessonRepository = {
       lessonStartTime,
       lessonEndTime,
       category,
+      audioUrl,
     } = updates;
 
     const result: QueryResult<Lesson> = await db.query(
@@ -83,10 +85,11 @@ export const lessonRepository = {
            lesson_start_time = COALESCE($9, lesson_start_time),
            lesson_end_time = COALESCE($10, lesson_end_time),
            category = COALESCE($11, category),
+           audio_url = COALESCE($12, audio_url),
            updated_at = CURRENT_TIMESTAMP
-       WHERE id = $12
+       WHERE id = $13
        RETURNING *`,
-      [title, image, scriptText, scriptType, videoId, videoType, cloudinaryPublicId, cloudinaryUrl, lessonStartTime, lessonEndTime, category, lessonId]
+      [title, image, scriptText, scriptType, videoId, videoType, cloudinaryPublicId, cloudinaryUrl, lessonStartTime, lessonEndTime, category, audioUrl, lessonId]
     );
     return result.rows[0] || null;
   },

@@ -21,6 +21,7 @@ export interface Lesson {
   cloudinary_url: string | null;
   lesson_start_time: number | null;
   lesson_end_time: number | null;
+  audio_url: string | null;
   category: string | null;
   created_at: Date;
   updated_at: Date;
@@ -98,6 +99,7 @@ export interface CreateLessonBody {
   lessonStartTime?: number;
   lessonEndTime?: number;
   category?: string;
+  audioUrl?: string;
 }
 
 // Update lesson request body (all fields optional)
@@ -113,6 +115,7 @@ export interface UpdateLessonBody {
   lessonStartTime?: number;
   lessonEndTime?: number;
   category?: string;
+  audioUrl?: string;
 }
 
 // Create assignment input
@@ -142,11 +145,30 @@ export interface FeedbackBody {
   feedback: string;
 }
 
+// Audio segments for phrase practice pipeline
+export interface AudioSegment {
+  id: string;
+  lesson_id: string;
+  label: string;
+  start_time: number;
+  end_time: number;
+  position: number;
+  created_at: Date;
+}
+
+export interface CreateSegmentInput {
+  label: string;
+  start_time: number;
+  end_time: number;
+  position: number;
+}
+
 // Practice words for pronunciation practice
 export interface PracticeWord {
   id: number;
   student_id: string;
   word: string;
+  segment_id: string | null;
   created_at: Date;
 }
 

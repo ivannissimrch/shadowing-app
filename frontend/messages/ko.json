@@ -329,6 +329,28 @@
   "practiceWords": {
     "addWord": "연습할 단어나 문장을 추가하세요...",
     "practiceWord": "연습 단어",
-    "deleteWord": "단어 삭제"
+    "deleteWord": "단어 삭제",
+    "myWords": "내 단어",
+    "lessonPhrases": "수업 문장",
+    "selectLesson": "수업 선택",
+    "noSegments": "이 수업에 사용 가능한 문장이 아직 없습니다.",
+    "noLessonsWithSegments": "문장이 포함된 수업이 없습니다.",
+    "backToLesson": "수업으로 돌아가기",
+    "listenToPhrase": "문장 듣기",
+    "practicePhrases": "문장 연습"
+  },
+  "segments": {
+    "phraseBuilder": "문장 구분",
+    "addSegment": "구간 추가",
+    "saveSegments": "구간 저장",
+    "saving": "저장 중...",
+    "reset": "초기화",
+    "segmentsSaved": "구간이 성공적으로 저장되었습니다!",
+    "noSegmentsYet": "\"구간 추가\"를 클릭하여 파형에서 문장을 표시하세요.",
+    "playSegment": "구간 재생",
+    "segmentLabel": "문장 텍스트 입력...",
+    "deleteSegment": "구간 삭제",
+    "emptyLabelsError": "저장하기 전에 모든 구간에 문장을 입력해야 합니다.",
+    "saveFailed": "구간 저장에 실패했습니다. 다시 시도해주세요."
   }
 }

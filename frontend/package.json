@@ -37,7 +37,8 @@
     "react-icons": "^5.5.0",
     "react-media-recorder": "^1.7.2",
     "react-youtube": "^10.1.0",
-    "swr": "^2.3.6"
+    "swr": "^2.3.6",
+    "wavesurfer.js": "^7.12.1"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",

@@ -6,10 +6,12 @@ import teacherRouter from "./routes/teacher.js";
 import speechRouter from "./routes/speech.js";
 import practiceWordsRouter from "./routes/practiceWords.js";
 import listsRouter from "./routes/lists.js";
+import segmentsRouter from "./routes/segments.js";
 
 const router = Router();
 
 router.use("/", uploadsRouter);
+router.use("/", segmentsRouter);
 router.use("/lessons", lessonsRouter);
 router.use("/users", usersRouter);
 router.use("/teacher", teacherRouter);
