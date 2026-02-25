@@ -16,6 +16,9 @@ frontend/.next/
 backend/build/
 backend/dist/
 
+# TypeScript build cache
+*.tsbuildinfo
+
 # Logs
 *.log
 npm-debug.log*
