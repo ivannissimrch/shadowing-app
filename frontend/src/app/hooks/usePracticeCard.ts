@@ -61,13 +61,12 @@ export default function usePracticeCard({
     // Stop any currently playing segment
     if (segmentAudioRef.current) {
       segmentAudioRef.current.pause();
-      segmentAudioRef.current.removeEventListener("timeupdate", handleTimeUpdate);
+      segmentAudioRef.current = null;
     }
 
     const audio = new Audio(audioSegment.audioUrl);
     segmentAudioRef.current = audio;
     audio.playbackRate = speechRate;
-    audio.currentTime = audioSegment.startTime;
 
     function handleTimeUpdate() {
       if (audio.currentTime >= audioSegment!.endTime) {
@@ -76,8 +75,11 @@ export default function usePracticeCard({
       }
     }
 
-    audio.addEventListener("timeupdate", handleTimeUpdate);
-    audio.play();
+    audio.addEventListener("loadedmetadata", () => {
+      audio.currentTime = audioSegment.startTime;
+      audio.addEventListener("timeupdate", handleTimeUpdate);
+      audio.play();
+    });
   }, [audioSegment, speechRate]);
 
   async function handleRecordingStop(_blobUrl: string, blob: Blob) {
