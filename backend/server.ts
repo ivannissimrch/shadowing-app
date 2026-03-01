@@ -11,6 +11,7 @@ import { signin } from "./handlers/user.js";
 import pool from "./db.js";
 import handleError from "./handlers/handleError.js";
 import logger from "./helpers/logger.js";
+import { configureAzureCors } from "./services/azureBlobStorage.js";
 const app = express();
 
 // Initialize database tables if they do not already exist
@@ -207,6 +208,10 @@ const initDatabase = async () => {
 };
 
 initDatabase();
+
+configureAzureCors()
+  .then(() => logger.info("Azure CORS configured"))
+  .catch((err) => logger.error("Azure CORS setup failed:", err));
 
 // Middleware
 app.use(

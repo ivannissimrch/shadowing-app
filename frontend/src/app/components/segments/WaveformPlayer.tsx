@@ -44,7 +44,12 @@ const WaveformPlayer = forwardRef<WaveformPlayerRef, WaveformPlayerProps>(
     const wavesurferRef = useRef<WaveSurfer | null>(null);
     const regionsPluginRef = useRef<RegionsPlugin | null>(null);
     const regionMapRef = useRef<Map<string, Region>>(new Map());
+    const regionLabelsRef = useRef<Map<string, string>>(new Map());
+    const activeRegionIdRef = useRef<string | null>(null);
+    const activeRegionEndRef = useRef<number | null>(null);
+    const isActiveRef = useRef(false);
     const [isLoading, setIsLoading] = useState(true);
+    const [loadError, setLoadError] = useState<string | null>(null);
 
     // Use refs for callbacks to avoid re-creating wavesurfer on callback changes
     const onRegionUpdatedRef = useRef(onRegionUpdated);
@@ -58,13 +63,19 @@ const WaveformPlayer = forwardRef<WaveformPlayerRef, WaveformPlayerProps>(
       playRegion: (id: string) => {
         const region = regionMapRef.current.get(id);
         if (region) {
+          activeRegionIdRef.current = id;
+          activeRegionEndRef.current = region.end;
+          isActiveRef.current = true;
           region.play();
         }
       },
       stop: () => {
+        activeRegionIdRef.current = null;
+        activeRegionEndRef.current = null;
+        isActiveRef.current = false;
         wavesurferRef.current?.pause();
       },
-      isPlaying: () => wavesurferRef.current?.isPlaying() ?? false,
+      isPlaying: () => isActiveRef.current,
     }));
 
     // Initialize wavesurfer (only on mount or audioUrl change)
@@ -80,6 +91,8 @@ const WaveformPlayer = forwardRef<WaveformPlayerRef, WaveformPlayerProps>(
         ).default;
 
         if (destroyed) return;
+
+        console.log("[WaveformPlayer] Loading audio from:", audioUrl);
 
         // Use HTML5 audio element for playback (browser decodes correctly)
         const audio = new Audio(audioUrl);
@@ -108,15 +121,32 @@ const WaveformPlayer = forwardRef<WaveformPlayerRef, WaveformPlayerProps>(
           }
         });
 
+        ws.on("error", (err: Error) => {
+          if (!destroyed) {
+            console.error("[WaveformPlayer] Error:", err.message, "URL:", audioUrl);
+            setIsLoading(false);
+            setLoadError(`${err.message} — URL: ${audioUrl}`);
+          }
+        });
+
         // When user drags/resizes a region, update React state
         regionsPlugin.on("region-updated", (region: Region) => {
           onRegionUpdatedRef.current(region.id, region.start, region.end);
         });
 
-        // When playback ends (region finished or paused)
-        regionsPlugin.on("region-out", () => {
-          ws.pause();
-          onPlaybackEndRef.current?.();
+        // Stop playback when the active region's end time is reached
+        ws.on("timeupdate", (time: number) => {
+          if (
+            !destroyed &&
+            activeRegionEndRef.current !== null &&
+            time >= activeRegionEndRef.current
+          ) {
+            activeRegionIdRef.current = null;
+            activeRegionEndRef.current = null;
+            isActiveRef.current = false;
+            ws.pause();
+            onPlaybackEndRef.current?.();
+          }
         });
       }
 
@@ -145,6 +175,7 @@ const WaveformPlayer = forwardRef<WaveformPlayerRef, WaveformPlayerProps>(
         if (!newIds.has(id)) {
           region.remove();
           currentRegions.delete(id);
+          regionLabelsRef.current.delete(id);
         }
       }
 
@@ -152,8 +183,13 @@ const WaveformPlayer = forwardRef<WaveformPlayerRef, WaveformPlayerProps>(
       segments.forEach((segment, index) => {
         const existing = currentRegions.get(segment.id);
         if (existing) {
-          // Only update label (times come FROM region drag, not to it)
-          existing.setOptions({ content: segment.label || undefined });
+          // Only call setOptions when label actually changed - skip during drag
+          const prevLabel = regionLabelsRef.current.get(segment.id) ?? "";
+          const newLabel = segment.label ?? "";
+          if (prevLabel !== newLabel) {
+            existing.setOptions({ content: newLabel || undefined });
+            regionLabelsRef.current.set(segment.id, newLabel);
+          }
         } else {
           // New region
           const region = regionsPluginRef.current!.addRegion({
@@ -166,6 +202,7 @@ const WaveformPlayer = forwardRef<WaveformPlayerRef, WaveformPlayerProps>(
             content: segment.label || undefined,
           });
           regionMapRef.current.set(segment.id, region);
+          regionLabelsRef.current.set(segment.id, segment.label ?? "");
         }
       });
     }, [segments, isLoading]);
@@ -173,7 +210,7 @@ const WaveformPlayer = forwardRef<WaveformPlayerRef, WaveformPlayerProps>(
     return (
       <Box sx={{ position: "relative" }}>
         <Box ref={containerRef} sx={{ minHeight: 100 }} />
-        {isLoading && (
+        {isLoading && !loadError && (
           <Box
             sx={{
               position: "absolute",
@@ -191,6 +228,26 @@ const WaveformPlayer = forwardRef<WaveformPlayerRef, WaveformPlayerProps>(
             <CircularProgress size={24} />
             <Typography variant="body2" sx={{ ml: 1 }}>
               Loading waveform...
+            </Typography>
+          </Box>
+        )}
+        {loadError && (
+          <Box
+            sx={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              bgcolor: "action.hover",
+              borderRadius: 1,
+            }}
+          >
+            <Typography variant="body2" color="error">
+              Audio failed to load: {loadError}
             </Typography>
           </Box>
         )}
