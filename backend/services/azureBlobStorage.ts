@@ -1,4 +1,4 @@
-import { BlobServiceClient } from "@azure/storage-blob";
+import { BlobServiceClient, CorsRule } from "@azure/storage-blob";
 import * as dotenv from "dotenv";
 
 if (process.env.NODE_ENV !== "production") {
@@ -50,6 +50,24 @@ export async function uploadLessonAudio(
   });
 
   return blockBlobClient.url;
+}
+
+// Set CORS rules on the Azure storage account so browsers can fetch audio/images
+export async function configureAzureCors() {
+  const corsRules: CorsRule[] = [
+    {
+      allowedOrigins:
+        "https://shadowspeak.net,https://www.shadowspeak.net,http://localhost:3000,http://localhost:3001",
+      allowedMethods: "GET,HEAD,OPTIONS",
+      allowedHeaders: "*",
+      exposedHeaders: "*",
+      maxAgeInSeconds: 86400,
+    },
+  ];
+
+  const properties = await blobServiceClient.getProperties();
+  properties.cors = corsRules;
+  await blobServiceClient.setProperties(properties);
 }
 
 // Delete a blob from a specified container

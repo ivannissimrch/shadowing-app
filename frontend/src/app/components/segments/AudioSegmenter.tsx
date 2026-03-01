@@ -70,10 +70,10 @@ export default function AudioSegmenter({
       return;
     }
 
-    // Stop any current playback, play the new segment
-    wf.stop();
-    wf.playRegion(id);
+    // Don't stop first - region.play() handles the seek internally.
+    // Calling pause() then play() immediately causes a browser race condition.
     setPlayingSegmentId(id);
+    wf.playRegion(id);
   }, [playingSegmentId]);
 
   const errorMessage = validationError || (saveError ? t(saveError) : null);
