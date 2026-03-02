@@ -43,8 +43,8 @@ router.post(
     }
 
     // Validate segments array
-    if (!Array.isArray(segments) || segments.length === 0) {
-      throw createError(400, "segments array is required and must not be empty");
+    if (!Array.isArray(segments)) {
+      throw createError(400, "segments must be an array");
     }
 
     // Validate each segment
