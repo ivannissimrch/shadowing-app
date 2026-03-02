@@ -122,7 +122,7 @@ export default function AudioSegmenter({
             )
           }
           onClick={handleSave}
-          disabled={isSaving || segments.length === 0}
+          disabled={isSaving}
           sx={{ textTransform: "none" }}
         >
           {isSaving ? t("saving") : t("saveSegments")}
