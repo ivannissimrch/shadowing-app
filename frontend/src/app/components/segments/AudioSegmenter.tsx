@@ -48,7 +48,9 @@ export default function AudioSegmenter({
 
   const handleSave = useCallback(async () => {
     // Validate all segments have labels before sending to API
-    const hasEmptyLabel = segments.some((s) => !s.label.trim());
+    const hasEmptyLabel = segments.some(
+      (s) => !s.label.replace(/<[^>]*>/g, "").trim()
+    );
     if (hasEmptyLabel) {
       setValidationError(t("emptyLabelsError"));
       return;
