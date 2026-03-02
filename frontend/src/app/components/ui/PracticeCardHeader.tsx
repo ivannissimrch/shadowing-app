@@ -24,9 +24,8 @@ export default function PracticeCardHeader({
       <Typography
         variant="h6"
         sx={{ fontWeight: 600, color: "text.primary", flex: 1 }}
-      >
-        {text}
-      </Typography>
+        dangerouslySetInnerHTML={{ __html: text }}
+      />
       {onDelete && (
         <Tooltip title={tPracticeWords("deleteWord")}>
           <IconButton onClick={onDelete} size="small" color="error">

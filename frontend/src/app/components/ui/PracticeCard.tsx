@@ -50,6 +50,14 @@ export default function PracticeCard({
   onEvaluationSaved,
   audioSegment,
 }: PracticeCardProps) {
+  const plainText = (() => {
+    const doc = new DOMParser().parseFromString(text, "text/html");
+    return (doc.body.textContent ?? "")
+      .replace(/\/+/g, " ")
+      .replace(/\s+/g, " ")
+      .trim();
+  })();
+
   const {
     tPracticeWords,
     status,
@@ -64,7 +72,7 @@ export default function PracticeCard({
     speak,
     listenToSegment,
   } = usePracticeCard({
-    text,
+    text: plainText,
     nativeLanguage,
     wordId,
     initialEvaluation,
@@ -84,7 +92,7 @@ export default function PracticeCard({
         />
 
         <PracticeCardActions
-          text={text}
+          text={plainText}
           speechRate={speechRate}
           speak={speak}
           listenToSegment={listenToSegment}
