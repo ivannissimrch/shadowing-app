@@ -1,3 +1,4 @@
+"use client";
 import SegmentPlayer from "../media/SegmentPlayer";
 import FeedbackReplyThread from "@/app/components/feedback/FeedbackReplyThread";
 import { useAuthContext } from "@/app/AuthContext";
@@ -10,18 +11,25 @@ import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
+import ToggleButton from "@mui/material/ToggleButton";
+import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
+import { MdOndemandVideo, MdRecordVoiceOver } from "react-icons/md";
 import { FiMaximize2, FiX } from "react-icons/fi";
 import { usePersistedState } from "@/app/hooks/usePersistedState";
+import PracticePhrases from "../ui/PracticePhrases";
+import RecorderPanel from "../media/RecorderPanel";
+
+interface VideoScriptToggleProps {
+  selectedLesson: Lesson;
+  belowVideo?: React.ReactNode;
+  hideFeedback?: boolean;
+}
 
 export default function VideoScriptToggle({
   selectedLesson,
   belowVideo,
   hideFeedback = false,
-}: {
-  selectedLesson: Lesson;
-  belowVideo?: React.ReactNode;
-  hideFeedback?: boolean;
-}) {
+}: VideoScriptToggleProps) {
   const tTeacher = useTranslations("teacher");
   const { token } = useAuthContext();
   const currentUserId = token
@@ -30,6 +38,12 @@ export default function VideoScriptToggle({
   const [isFullscreen, setIsFullscreen] = useState(false);
   const imageContainerRef = useRef<HTMLDivElement>(null);
   const [fontSize, setFontSize] = usePersistedState("fontSize", 1.3);
+  const [isVideoVisible, setIsVideoVisible] = useState(true);
+
+  function toggleVideoPhrases(_: React.MouseEvent, value: string | null) {
+    if (value === null) return;
+    setIsVideoVisible(value === "video");
+  }
 
   useEffect(() => {
     function handleFullscreenChange() {
@@ -108,11 +122,63 @@ export default function VideoScriptToggle({
               minHeight: { lg: 0 },
               display: { lg: "flex" },
               flexDirection: { lg: "column" },
+              ...(!isVideoVisible && { maxHeight: "60vh", overflowY: "auto" }),
             }}
           >
-            <SegmentPlayer selectedLesson={selectedLesson} />
+            <Box
+              sx={{
+                px: 2,
+                pt: 1,
+                pb: 0.5,
+                display: "flex",
+                justifyContent: "space-between",
+              }}
+            >
+              <ToggleButtonGroup
+                value={isVideoVisible ? "video" : "practice"}
+                exclusive
+                onChange={toggleVideoPhrases}
+                size="small"
+                sx={{
+                  "& .MuiToggleButton-root": {
+                    textTransform: "none",
+                    fontWeight: 600,
+                    fontSize: "0.85rem",
+                    px: 1,
+                    py: 0,
+                    Height: 18,
+                    margin: 0.5,
+                    color: "text.secondary",
+                    borderColor: "#e0e0e0",
+                    borderRadius: 1,
+                    "&.Mui-selected": {
+                      color: "primary.main",
+                      bgcolor: "primary.lighter",
+                      "&:hover": { bgcolor: "primary.lighter" },
+                    },
+                  },
+                }}
+              >
+                <ToggleButton value="video">
+                  <MdOndemandVideo size={16} />
+                  Video
+                </ToggleButton>
+                <ToggleButton value="practice">
+                  <MdRecordVoiceOver size={16} />
+                  Practice
+                </ToggleButton>
+              </ToggleButtonGroup>
+            </Box>
+            {isVideoVisible ? (
+              <SegmentPlayer selectedLesson={selectedLesson} />
+            ) : (
+              <PracticePhrases
+                selectedLesson={selectedLesson}
+                userId={currentUserId}
+              />
+            )}
           </Paper>
-          {belowVideo}
+          {belowVideo ?? <RecorderPanel selectedLesson={selectedLesson} />}
         </Box>
 
         <Paper

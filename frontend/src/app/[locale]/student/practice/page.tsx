@@ -33,13 +33,10 @@ function PracticePageContent() {
   const [newWord, setNewWord] = useState("");
   const [addError, setAddError] = useState<string | null>(null);
 
-  // Check if lessonId is in URL params (coming from lesson page)
   const searchParams = useSearchParams();
   const hasLessonId = searchParams.has("lessonId");
-
   const [activeTab, setActiveTab] = useState(hasLessonId ? 1 : 0);
 
-  // Add word mutation
   const { trigger: addWord, isMutating: isAdding } = useSWRMutationHook<
     PracticeWord,
     { word: string }
@@ -89,7 +86,6 @@ function PracticePageContent() {
             <Tab label={tPractice("lessonPhrases")} />
           </Tabs>
 
-          {/* My Words tab */}
           {activeTab === 0 && (
             <>
               <Box
@@ -150,7 +146,6 @@ function PracticePageContent() {
             </>
           )}
 
-          {/* Lesson Phrases tab */}
           {activeTab === 1 && (
             <ErrorBoundary
               fallbackRender={({ error, resetErrorBoundary }) => (
@@ -173,7 +168,6 @@ function PracticePageContent() {
   );
 }
 
-// Wrap in Suspense because LessonPhrasesList uses useSearchParams
 export default function PracticePage() {
   return (
     <Suspense>
