@@ -12,7 +12,7 @@ import MenuItem from "@mui/material/MenuItem";
 import TextField from "@mui/material/TextField";
 import type { AudioSegment, Lesson } from "../../../Types";
 
-interface UserProfile {
+export interface UserProfile {
   id: string;
   username: string;
   email: string | null;
@@ -29,24 +29,19 @@ export default function LessonPhrasesList() {
     preselectedLessonId || ""
   );
 
-  // Fetch student's assigned lessons for the dropdown
   const { data: lessons } = useSWRAxios<Lesson[]>(API_PATHS.LESSONS);
 
-  // Fetch segments for the selected lesson
   const { data: segments } = useSWRAxios<AudioSegment[]>(
     selectedLessonId ? API_PATHS.LESSON_SEGMENTS(selectedLessonId) : null
   );
 
-  // Fetch user profile for native language (AI coaching)
   const { token } = useAuthContext();
   const user = token ? JSON.parse(atob(token.split(".")[1])) : null;
   const { data: profile } = useSWRAxios<UserProfile>(
     user?.id ? API_PATHS.USER_PROFILE(user.id) : null
   );
 
-  // Find the selected lesson to get its audio_url
   const selectedLesson = lessons?.find((l) => l.id === selectedLessonId);
-
   if (!lessons || lessons.length === 0) {
     return (
       <Typography
@@ -61,7 +56,6 @@ export default function LessonPhrasesList() {
 
   return (
     <Box>
-      {/* Lesson selector dropdown */}
       <TextField
         select
         fullWidth
@@ -78,7 +72,6 @@ export default function LessonPhrasesList() {
         ))}
       </TextField>
 
-      {/* Segments list */}
       {selectedLessonId && segments && segments.length > 0 && (
         <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
           {segments.map((segment) => (
@@ -105,7 +98,6 @@ export default function LessonPhrasesList() {
         </Box>
       )}
 
-      {/* Empty state - lesson selected but no segments */}
       {selectedLessonId && segments && segments.length === 0 && (
         <Typography
           variant="body1"
@@ -116,7 +108,6 @@ export default function LessonPhrasesList() {
         </Typography>
       )}
 
-      {/* No lesson selected yet */}
       {!selectedLessonId && (
         <Typography
           variant="body1"

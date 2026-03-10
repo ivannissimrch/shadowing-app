@@ -40,13 +40,18 @@ export default function TeacherLessonDetails({
   );
 
   const { trigger: markComplete } = useSWRMutationHook(
-    API_PATHS.TEACHER_STUDENT_LESSON_COMPLETE(idInfo.studentId, idInfo.lessonId),
+    API_PATHS.TEACHER_STUDENT_LESSON_COMPLETE(
+      idInfo.studentId,
+      idInfo.lessonId
+    ),
     { method: "PATCH" }
   );
 
   if (!selectedLesson) return null;
 
-  const hasSubmission = selectedLesson.status === "submitted" || selectedLesson.status === "completed";
+  const hasSubmission =
+    selectedLesson.status === "submitted" ||
+    selectedLesson.status === "completed";
   const isCompleted = selectedLesson.status === "completed";
   const isPendingReview = selectedLesson.status === "submitted";
 
@@ -54,7 +59,9 @@ export default function TeacherLessonDetails({
     setIsMarking(true);
     try {
       await markComplete({});
-      mutate(API_PATHS.TEACHER_STUDENT_LESSON(idInfo.studentId, idInfo.lessonId));
+      mutate(
+        API_PATHS.TEACHER_STUDENT_LESSON(idInfo.studentId, idInfo.lessonId)
+      );
       mutate(API_PATHS.TEACHER_STUDENT_LESSONS(idInfo.studentId));
       mutate(API_PATHS.DASHBOARD_STATS);
     } finally {
@@ -62,19 +69,30 @@ export default function TeacherLessonDetails({
     }
   }
 
-  // Only the audio player goes below the video (compact, like student's RecorderPanel)
   const belowVideoContent = hasSubmission ? (
-    <Paper sx={{ p: 2, borderRadius: 2, boxShadow: "0 2px 14px 0 rgb(32 40 45 / 8%)" }}>
-      <Typography variant="subtitle2" sx={{ fontWeight: 600, color: "primary.dark", mb: 1 }}>
+    <Paper
+      sx={{
+        p: 2,
+        borderRadius: 2,
+        boxShadow: "0 2px 14px 0 rgb(32 40 45 / 8%)",
+      }}
+    >
+      <Typography
+        variant="subtitle2"
+        sx={{ fontWeight: 600, color: "primary.dark", mb: 1 }}
+      >
         {t("studentRecording")}
       </Typography>
-      <AudioPlayer
-        src={selectedLesson.audio_file}
-        showJumpControls={false}
-      />
+      <AudioPlayer src={selectedLesson.audio_file} showJumpControls={false} />
     </Paper>
   ) : (
-    <Paper sx={{ p: 2, borderRadius: 2, boxShadow: "0 2px 14px 0 rgb(32 40 45 / 8%)" }}>
+    <Paper
+      sx={{
+        p: 2,
+        borderRadius: 2,
+        boxShadow: "0 2px 14px 0 rgb(32 40 45 / 8%)",
+      }}
+    >
       <Box sx={{ textAlign: "center", py: 4 }}>
         <FiClock size={48} color="#9e9e9e" />
         <Typography variant="h6" sx={{ mt: 2, color: "text.secondary" }}>
@@ -92,7 +110,10 @@ export default function TeacherLessonDetails({
       <Breadcrumbs
         items={[
           { label: tNav("students"), href: "/teacher/students" },
-          { label: student?.username || "...", href: `/teacher/student/${idInfo.studentId}` },
+          {
+            label: student?.username || "...",
+            href: `/teacher/student/${idInfo.studentId}`,
+          },
           { label: selectedLesson.title },
         ]}
       />
@@ -125,21 +146,39 @@ export default function TeacherLessonDetails({
         hideFeedback
       />
 
-      {/* Feedback, mark complete, etc. go BELOW the two-column grid */}
       {hasSubmission && (
         <Box sx={{ display: "flex", flexDirection: "column", gap: 2, mt: 2 }}>
-          {/* Feedback Section */}
-          <Paper sx={{ p: 2, borderRadius: 2, boxShadow: "0 2px 14px 0 rgb(32 40 45 / 8%)" }}>
-            <Typography variant="subtitle2" sx={{ fontWeight: 600, color: "primary.dark", mb: 1 }}>
+          <Paper
+            sx={{
+              p: 2,
+              borderRadius: 2,
+              boxShadow: "0 2px 14px 0 rgb(32 40 45 / 8%)",
+            }}
+          >
+            <Typography
+              variant="subtitle2"
+              sx={{ fontWeight: 600, color: "primary.dark", mb: 1 }}
+            >
               {t("feedback")}
             </Typography>
             <FeedBack idsInfo={idInfo} selectedLesson={selectedLesson} />
           </Paper>
 
-          {/* Mark as Completed */}
           {isPendingReview && (
-            <Paper sx={{ p: 2, borderRadius: 2, boxShadow: "0 2px 14px 0 rgb(32 40 45 / 8%)" }}>
-              <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+            <Paper
+              sx={{
+                p: 2,
+                borderRadius: 2,
+                boxShadow: "0 2px 14px 0 rgb(32 40 45 / 8%)",
+              }}
+            >
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                }}
+              >
                 <Box>
                   <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
                     {t("readyToComplete")}
@@ -153,7 +192,13 @@ export default function TeacherLessonDetails({
                   color="success"
                   onClick={handleMarkComplete}
                   disabled={isMarking}
-                  startIcon={isMarking ? <CircularProgress size={16} color="inherit" /> : <FiCheckCircle size={16} />}
+                  startIcon={
+                    isMarking ? (
+                      <CircularProgress size={16} color="inherit" />
+                    ) : (
+                      <FiCheckCircle size={16} />
+                    )
+                  }
                   sx={{ textTransform: "none", minWidth: 160 }}
                 >
                   {isMarking ? t("marking") : t("markAsCompleted")}
@@ -162,13 +207,22 @@ export default function TeacherLessonDetails({
             </Paper>
           )}
 
-          {/* Completed Message */}
           {isCompleted && (
-            <Paper sx={{ p: 2, borderRadius: 2, bgcolor: "success.light", boxShadow: "0 2px 14px 0 rgb(32 40 45 / 8%)" }}>
+            <Paper
+              sx={{
+                p: 2,
+                borderRadius: 2,
+                bgcolor: "success.light",
+                boxShadow: "0 2px 14px 0 rgb(32 40 45 / 8%)",
+              }}
+            >
               <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
                 <FiCheckCircle size={24} color="#2e7d32" />
                 <Box>
-                  <Typography variant="subtitle1" sx={{ fontWeight: 600, color: "success.dark" }}>
+                  <Typography
+                    variant="subtitle1"
+                    sx={{ fontWeight: 600, color: "success.dark" }}
+                  >
                     {t("lessonCompleted")}
                   </Typography>
                   <Typography variant="body2" sx={{ color: "success.dark" }}>
