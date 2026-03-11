@@ -1,0 +1,21 @@
+export const SANITIZE_CONFIG = {
+  ALLOWED_TAGS: [
+    "p",
+    "br",
+    "strong",
+    "b",
+    "em",
+    "i",
+    "u",
+    "s",
+    "span",
+    "ul",
+    "ol",
+    "li",
+    "h1",
+    "h2",
+    "h3",
+    "mark",
+  ],
+  ALLOWED_ATTR: ["style", "data-color"],
+};

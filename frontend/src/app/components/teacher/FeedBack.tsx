@@ -8,8 +8,6 @@ import { Lesson } from "@/app/Types";
 import DOMPurify from "dompurify";
 import RichTextEditor from "@/app/components/ui/RichTextEditor";
 import FeedbackReplyThread from "@/app/components/feedback/FeedbackReplyThread";
-import { useAuthContext } from "@/app/AuthContext";
-
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
@@ -17,14 +15,8 @@ import Alert from "@mui/material/Alert";
 import Paper from "@mui/material/Paper";
 import IconButton from "@mui/material/IconButton";
 import { FiSend, FiEdit2, FiX, FiCheck } from "react-icons/fi";
-
-const SANITIZE_CONFIG = {
-  ALLOWED_TAGS: [
-    "p", "br", "strong", "b", "em", "i", "u", "s", "span",
-    "ul", "ol", "li", "h1", "h2", "h3", "mark",
-  ],
-  ALLOWED_ATTR: ["style", "data-color"],
-};
+import useCurrentUserId from "@/app/hooks/useCurrentUserId";
+import { SANITIZE_CONFIG } from "@/app/constants/sanitizeConfig";
 
 interface FeedBackProps {
   idsInfo: { studentId: string; lessonId: string };
@@ -35,10 +27,7 @@ export default function FeedBack({ idsInfo, selectedLesson }: FeedBackProps) {
   const t = useTranslations("teacher");
   const tCommon = useTranslations("common");
   const tErrors = useTranslations("errors");
-  const { token } = useAuthContext();
-  const currentUserId = token
-    ? JSON.parse(atob(token.split(".")[1])).id
-    : undefined;
+
   const { studentId, lessonId } = idsInfo;
   const [feedback, setFeedback] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
@@ -55,6 +44,8 @@ export default function FeedBack({ idsInfo, selectedLesson }: FeedBackProps) {
       },
     }
   );
+
+  const currentUserId = useCurrentUserId();
 
   const handleSubmit = async () => {
     setErrorMessage("");
@@ -96,15 +87,29 @@ export default function FeedBack({ idsInfo, selectedLesson }: FeedBackProps) {
   };
 
   const hasFeedbackContent = feedback.replace(/<[^>]*>/g, "").trim().length > 0;
-  const hasEditedContent = editedFeedback.replace(/<[^>]*>/g, "").trim().length > 0;
+  const hasEditedContent =
+    editedFeedback.replace(/<[^>]*>/g, "").trim().length > 0;
 
-  const repliesEndpoint = API_PATHS.TEACHER_FEEDBACK_REPLIES(studentId, lessonId);
+  const repliesEndpoint = API_PATHS.TEACHER_FEEDBACK_REPLIES(
+    studentId,
+    lessonId
+  );
 
   if (selectedLesson?.feedback != null) {
     return (
       <Paper sx={{ p: 3, bgcolor: "primary.light" }}>
-        <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", mb: 1 }}>
-          <Typography variant="subtitle2" sx={{ fontWeight: 600, color: "primary.dark" }}>
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            mb: 1,
+          }}
+        >
+          <Typography
+            variant="subtitle2"
+            sx={{ fontWeight: 600, color: "primary.dark" }}
+          >
             {t("yourFeedback")}
           </Typography>
           {!isEditing && (
@@ -181,7 +186,10 @@ export default function FeedBack({ idsInfo, selectedLesson }: FeedBackProps) {
           </Alert>
         )}
 
-        <FeedbackReplyThread repliesEndpoint={repliesEndpoint} currentUserId={currentUserId} />
+        <FeedbackReplyThread
+          repliesEndpoint={repliesEndpoint}
+          currentUserId={currentUserId}
+        />
       </Paper>
     );
   }
