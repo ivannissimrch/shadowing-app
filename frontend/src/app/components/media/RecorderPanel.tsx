@@ -9,6 +9,7 @@ import RecorderVoiceRecorder from "./RecorderVoiceRecorder";
 import Paper from "@mui/material/Paper";
 import Button from "@mui/material/Button";
 import Alert from "@mui/material/Alert";
+import useUserRole from "@/app/hooks/useUserRole";
 
 interface RecorderProps {
   selectedLesson: Lesson | undefined;
@@ -17,8 +18,8 @@ interface RecorderProps {
 export default function RecorderPanel({ selectedLesson }: RecorderProps) {
   const t = useTranslations("media");
   const { recorderState, dispatch } = useRecorderPanelContext();
+  const role = useUserRole();
 
-  // Check for error state
   if (recorderState.status === "error") {
     return (
       <Alert
@@ -44,12 +45,10 @@ export default function RecorderPanel({ selectedLesson }: RecorderProps) {
 
   return (
     <ErrorBoundary
-      fallback={
-        <Alert severity="error">{t("errorLoadingRecorder")}</Alert>
-      }
+      fallback={<Alert severity="error">{t("errorLoadingRecorder")}</Alert>}
     >
       <Paper sx={{ p: 2, boxShadow: "0 2px 14px 0 rgb(32 40 45 / 8%)" }}>
-        {!hasAudio && <RecorderVoiceRecorder />}
+        {!hasAudio && role === "student" && <RecorderVoiceRecorder />}
         {hasAudio && <RecorderAudioPlayer selectedLesson={selectedLesson} />}
       </Paper>
     </ErrorBoundary>
