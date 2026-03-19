@@ -89,10 +89,18 @@ export default function usePracticeCard({
       reader.readAsDataURL(blob);
     });
 
-    const result = await evaluate({
-      audioData: base64,
-      referenceText: text,
-    });
+    let result;
+    try {
+      result = await evaluate({
+        audioData: base64,
+        referenceText: text,
+      });
+    } catch (err) {
+      // AbortError fires when a rapid second tap cancels the in-flight request.
+      // It's safe to ignore — the UI will show the error state from evalError.
+      if (err instanceof DOMException && err.name === "AbortError") return;
+      throw err;
+    }
 
     if (result) {
       setDisplayedEvaluation(result);

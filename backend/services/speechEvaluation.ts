@@ -17,9 +17,43 @@ if (!speechKey || !speechRegion) {
   throw new Error("AZURE_SPEECH_KEY or AZURE_SPEECH_REGION not defined");
 }
 
-// Convert webm buffer to WAV buffer
+// Detect actual audio format from magic bytes — MIME type labels from browsers
+// (especially iOS in-app browsers) are unreliable. iOS records as MP4 but may
+// label the blob as audio/wav. Reading the raw bytes is the only reliable method.
+function detectAudioFormat(buffer: Buffer): string {
+  if (buffer.length < 8) return "webm";
+
+  // MP4/ISOBMFF: bytes 4-7 are 'ftyp'
+  if (
+    buffer[4] === 0x66 && buffer[5] === 0x74 &&
+    buffer[6] === 0x79 && buffer[7] === 0x70
+  ) return "mp4";
+
+  // WebM: starts with EBML header 0x1A 0x45 0xDF 0xA3
+  if (
+    buffer[0] === 0x1a && buffer[1] === 0x45 &&
+    buffer[2] === 0xdf && buffer[3] === 0xa3
+  ) return "webm";
+
+  // WAV: starts with 'RIFF'
+  if (
+    buffer[0] === 0x52 && buffer[1] === 0x49 &&
+    buffer[2] === 0x46 && buffer[3] === 0x46
+  ) return "wav";
+
+  // OGG: starts with 'OggS'
+  if (
+    buffer[0] === 0x4f && buffer[1] === 0x67 &&
+    buffer[2] === 0x67 && buffer[3] === 0x53
+  ) return "ogg";
+
+  return "webm"; // fallback
+}
+
+// Convert audio buffer to WAV buffer (normalised to 16kHz mono PCM for Azure)
 function convertToWav(inputBuffer: Buffer): Promise<Buffer> {
   return new Promise((resolve, reject) => {
+    const format = detectAudioFormat(inputBuffer);
     const inputStream = Readable.from(inputBuffer);
     const outputStream = new PassThrough();
     const chunks: Buffer[] = [];
@@ -29,12 +63,16 @@ function convertToWav(inputBuffer: Buffer): Promise<Buffer> {
     outputStream.on("error", reject);
 
     ffmpeg(inputStream)
-      .inputFormat("webm")
+      .inputFormat(format)
       .audioFrequency(16000)
       .audioChannels(1)
       .audioCodec("pcm_s16le")
       .format("wav")
-      .on("error", () => {
+      .on("stderr", (line) => {
+        console.error(`[ffmpeg stderr] (detected format: ${format})`, line);
+      })
+      .on("error", (err) => {
+        console.error(`[ffmpeg error] input format: ${format} —`, err.message);
         reject(new Error("Failed to process audio. The recording may be empty or corrupted."));
       })
       .pipe(outputStream);

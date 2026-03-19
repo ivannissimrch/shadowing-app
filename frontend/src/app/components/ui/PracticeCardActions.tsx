@@ -47,7 +47,7 @@ export default function PracticeCardActions({
         color={status === "recording" ? "error" : "primary"}
         startIcon={status === "recording" ? <FiSquare /> : <FiMic />}
         onClick={handleSpeak}
-        disabled={isEvaluating}
+        disabled={isEvaluating || status === "stopping"}
         sx={{ textTransform: "none" }}
       >
         {status === "recording"
