@@ -52,6 +52,7 @@ export default function useCloudinaryPlayer(
           fluid: true,
           muted: false,
           preload: "auto",
+          analytics: false,
         });
 
         cloudinaryPlayerRef.current.source(publicId);
