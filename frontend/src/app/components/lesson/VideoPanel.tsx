@@ -6,6 +6,7 @@ import PracticePhrases from "../ui/PracticePhrases";
 import useVideoPhrasesToggle from "@/app/hooks/useVideoPhrasesToggle";
 import { Lesson } from "@/app/Types";
 import RecorderPanel from "../media/RecorderPanel";
+import DownloadVideo from "./DownloadVideo";
 
 export default function VideoPanel({
   belowVideo,
@@ -61,7 +62,6 @@ export default function VideoPanel({
                 fontSize: "0.85rem",
                 px: 1,
                 py: 0,
-                Height: 18,
                 margin: 0.5,
                 color: "text.secondary",
                 borderColor: "#e0e0e0",
@@ -83,6 +83,12 @@ export default function VideoPanel({
               Practice
             </ToggleButton>
           </ToggleButtonGroup>
+          {isVideoVisible && selectedLesson.video_type === "cloudinary" && (
+            <DownloadVideo
+              cloudinary_public_id={selectedLesson.cloudinary_public_id ?? ""}
+              title={selectedLesson.title}
+            />
+          )}
         </Box>
         {isVideoVisible ? (
           <SegmentPlayer selectedLesson={selectedLesson} />
