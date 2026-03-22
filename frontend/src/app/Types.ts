@@ -139,6 +139,8 @@ export interface RecorderPanelContextType {
   isAudioMutating: boolean;
   isLessonMutating: boolean;
   isDeleting: boolean;
+  isPracticeRecording: boolean;
+  setIsPracticeRecording: (value: boolean) => void;
 }
 
 export interface List {

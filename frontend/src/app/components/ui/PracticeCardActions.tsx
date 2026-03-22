@@ -5,6 +5,7 @@ interface PracticeCardActionsProps {
   text: string;
   status: string;
   isEvaluating: boolean;
+  isLessonRecording?: boolean;
   handleSpeak: () => void;
   speak: (text: string, rate: number) => void;
   listenToSegment?: () => void;
@@ -20,6 +21,7 @@ export default function PracticeCardActions({
   listenToSegment,
   status,
   isEvaluating,
+  isLessonRecording,
   handleSpeak,
   t,
   mediaBlobUrl,
@@ -47,7 +49,7 @@ export default function PracticeCardActions({
         color={status === "recording" ? "error" : "primary"}
         startIcon={status === "recording" ? <FiSquare /> : <FiMic />}
         onClick={handleSpeak}
-        disabled={isEvaluating || status === "stopping"}
+        disabled={isEvaluating || status === "stopping" || isLessonRecording}
         sx={{ textTransform: "none" }}
       >
         {status === "recording"
