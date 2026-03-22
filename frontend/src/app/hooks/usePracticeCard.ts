@@ -77,8 +77,14 @@ export default function usePracticeCard({
 
     audio.addEventListener("loadedmetadata", () => {
       audio.currentTime = audioSegment.startTime;
-      audio.addEventListener("timeupdate", handleTimeUpdate);
-      audio.play();
+
+      function onSeeked() {
+        audio.removeEventListener("seeked", onSeeked);
+        audio.addEventListener("timeupdate", handleTimeUpdate);
+        audio.play();
+      }
+
+      audio.addEventListener("seeked", onSeeked);
     });
   }, [audioSegment, speechRate]);
 
