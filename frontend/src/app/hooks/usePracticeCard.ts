@@ -8,8 +8,64 @@ import { useState, useRef, useCallback } from "react";
 import { useSpeakMutation } from "./useSpeakMutation";
 import { useSWRMutationHook } from "./useSWRMutation";
 import { API_PATHS } from "../constants/apiKeys";
-import { useReactMediaRecorder } from "react-media-recorder";
 import api from "../helpers/axiosFetch";
+
+function useAudioRecorder(onStop: (blobUrl: string, blob: Blob) => void) {
+  const [status, setStatus] = useState<"idle" | "recording">("idle");
+  const [mediaBlobUrl, setMediaBlobUrl] = useState<string | undefined>();
+  const recorderRef = useRef<MediaRecorder | null>(null);
+  const chunksRef = useRef<Blob[]>([]);
+  const onStopRef = useRef(onStop);
+  onStopRef.current = onStop;
+
+  const startRecording = useCallback(async () => {
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+
+    const preferredTypes = [
+      "audio/mp4;codecs=mp4a.40.2",
+      "audio/mp4",
+      "audio/webm;codecs=opus",
+      "audio/webm",
+    ];
+    const mimeType = preferredTypes.find((t) => MediaRecorder.isTypeSupported(t)) ?? "";
+
+    let recorder: MediaRecorder;
+    try {
+      recorder = new MediaRecorder(stream, mimeType ? { mimeType } : {});
+    } catch {
+      recorder = new MediaRecorder(stream);
+    }
+
+    recorderRef.current = recorder;
+    chunksRef.current = [];
+
+    recorder.ondataavailable = (e) => {
+      if (e.data && e.data.size > 0) chunksRef.current.push(e.data);
+    };
+
+    recorder.onstop = () => {
+      stream.getTracks().forEach((t) => t.stop());
+      const blob = new Blob(chunksRef.current, {
+        type: recorder.mimeType || mimeType || "audio/mp4",
+      });
+      const url = URL.createObjectURL(blob);
+      setMediaBlobUrl(url);
+      setStatus("idle");
+      onStopRef.current(url, blob);
+    };
+
+    recorder.start(250);
+    setStatus("recording");
+  }, []);
+
+  const stopRecording = useCallback(() => {
+    if (recorderRef.current?.state === "recording") {
+      recorderRef.current.stop();
+    }
+  }, []);
+
+  return { status, startRecording, stopRecording, mediaBlobUrl };
+}
 
 export default function usePracticeCard({
   text,
@@ -120,10 +176,7 @@ export default function usePracticeCard({
   const error = evalError ? t("evaluationFailed") : null;
 
   const { status, startRecording, stopRecording, mediaBlobUrl } =
-    useReactMediaRecorder({
-      audio: true,
-      onStop: handleRecordingStop,
-    });
+    useAudioRecorder(handleRecordingStop);
 
   function handleSpeak() {
     if (status === "recording") {
