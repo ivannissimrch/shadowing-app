@@ -11,12 +11,6 @@ import { API_PATHS } from "../constants/apiKeys";
 import { useReactMediaRecorder } from "react-media-recorder";
 import api from "../helpers/axiosFetch";
 
-const mimeType =
-  typeof MediaRecorder !== "undefined" &&
-  MediaRecorder.isTypeSupported("audio/mp4")
-    ? "audio/mp4"
-    : undefined;
-
 export default function usePracticeCard({
   text,
   nativeLanguage,
@@ -129,7 +123,6 @@ export default function usePracticeCard({
     useReactMediaRecorder({
       audio: true,
       onStop: handleRecordingStop,
-      ...(mimeType && { mediaRecorderOptions: { mimeType } }),
     });
 
   function handleSpeak() {

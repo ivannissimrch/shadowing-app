@@ -29,6 +29,12 @@ function detectAudioFormat(buffer: Buffer): string {
     buffer[6] === 0x79 && buffer[7] === 0x70
   ) return "mp4";
 
+  // MP4 live recording (Safari MediaRecorder): first box is 'mdat' instead of 'ftyp'
+  if (
+    buffer[4] === 0x6d && buffer[5] === 0x64 &&
+    buffer[6] === 0x61 && buffer[7] === 0x74
+  ) return "mp4";
+
   // WebM: starts with EBML header 0x1A 0x45 0xDF 0xA3
   if (
     buffer[0] === 0x1a && buffer[1] === 0x45 &&
