@@ -11,6 +11,12 @@ import { API_PATHS } from "../constants/apiKeys";
 import { useReactMediaRecorder } from "react-media-recorder";
 import api from "../helpers/axiosFetch";
 
+const mimeType =
+  typeof MediaRecorder !== "undefined" &&
+  MediaRecorder.isTypeSupported("audio/mp4")
+    ? "audio/mp4"
+    : undefined;
+
 export default function usePracticeCard({
   text,
   nativeLanguage,
@@ -25,11 +31,8 @@ export default function usePracticeCard({
   const [displayedEvaluation, setDisplayedEvaluation] =
     useState<EvaluationResult | null>(initialEvaluation ?? null);
 
-  // Ref for audio segment playback (real teacher audio)
   const segmentAudioRef = useRef<HTMLAudioElement | null>(null);
-
   const { speak } = useSpeakMutation();
-
   const {
     trigger: evaluate,
     isMutating: isEvaluating,
@@ -54,11 +57,8 @@ export default function usePracticeCard({
     }
   >(API_PATHS.SPEECH_COACH, { method: "POST" }, { throwOnError: false });
 
-  // Play real audio segment from lesson video
   const listenToSegment = useCallback(() => {
     if (!audioSegment) return;
-
-    // Stop any currently playing segment
     if (segmentAudioRef.current) {
       segmentAudioRef.current.pause();
       segmentAudioRef.current = null;
@@ -102,8 +102,6 @@ export default function usePracticeCard({
         referenceText: text,
       });
     } catch (err) {
-      // AbortError fires when a rapid second tap cancels the in-flight request.
-      // It's safe to ignore — the UI will show the error state from evalError.
       if (err instanceof DOMException && err.name === "AbortError") return;
       throw err;
     }
@@ -120,9 +118,7 @@ export default function usePracticeCard({
             words: result.words,
           });
           onEvaluationSaved?.();
-        } catch {
-          // Save failure is non-blocking — the user still sees the evaluation
-        }
+        } catch {}
       }
     }
   }
@@ -133,6 +129,7 @@ export default function usePracticeCard({
     useReactMediaRecorder({
       audio: true,
       onStop: handleRecordingStop,
+      ...(mimeType && { mediaRecorderOptions: { mimeType } }),
     });
 
   function handleSpeak() {
@@ -175,7 +172,6 @@ export default function usePracticeCard({
     t,
     speechRate,
     speak,
-    // Only return listenToSegment if we have a real audio segment
     listenToSegment: audioSegment ? listenToSegment : undefined,
   };
 }
