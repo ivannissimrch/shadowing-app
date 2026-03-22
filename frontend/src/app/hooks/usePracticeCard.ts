@@ -10,6 +10,13 @@ import { useSWRMutationHook } from "./useSWRMutation";
 import { API_PATHS } from "../constants/apiKeys";
 import { useReactMediaRecorder } from "react-media-recorder";
 import api from "../helpers/axiosFetch";
+import { useRecorderPanelContext } from "../RecorderpanelContext";
+
+const safariMimeType =
+  typeof MediaRecorder !== "undefined" &&
+  MediaRecorder.isTypeSupported("audio/mp4")
+    ? "audio/mp4"
+    : undefined;
 
 export default function usePracticeCard({
   text,
@@ -119,19 +126,26 @@ export default function usePracticeCard({
 
   const error = evalError ? t("evaluationFailed") : null;
 
+  const { recorderState, setIsPracticeRecording } = useRecorderPanelContext();
+  const isLessonRecording =
+    recorderState.status === "recording" || recorderState.status === "paused";
+
   const { status, startRecording, stopRecording, mediaBlobUrl } =
     useReactMediaRecorder({
       audio: true,
       onStop: handleRecordingStop,
+      ...(safariMimeType && { mediaRecorderOptions: { mimeType: safariMimeType } }),
     });
 
   function handleSpeak() {
     if (status === "recording") {
       stopRecording();
+      setIsPracticeRecording(false);
     } else {
       resetEvaluation();
       resetCoach();
       setDisplayedEvaluation(null);
+      setIsPracticeRecording(true);
       startRecording();
     }
   }
@@ -166,5 +180,6 @@ export default function usePracticeCard({
     speechRate,
     speak,
     listenToSegment: audioSegment ? listenToSegment : undefined,
+    isLessonRecording,
   };
 }

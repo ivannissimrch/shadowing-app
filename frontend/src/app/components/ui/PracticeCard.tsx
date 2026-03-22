@@ -64,6 +64,7 @@ export default function PracticeCard({
     error,
     mediaBlobUrl,
     isEvaluating,
+    isLessonRecording,
     displayedEvaluation,
     handleSpeak,
     updateSpeechRate,
@@ -98,6 +99,7 @@ export default function PracticeCard({
           listenToSegment={listenToSegment}
           status={status}
           isEvaluating={isEvaluating}
+          isLessonRecording={isLessonRecording}
           handleSpeak={handleSpeak}
           t={t}
           mediaBlobUrl={mediaBlobUrl}

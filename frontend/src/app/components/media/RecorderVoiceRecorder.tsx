@@ -13,6 +13,7 @@ export default function RecorderVoiceRecorder() {
     pauseRecording,
     resumeRecording,
     stopRecording,
+    isPracticeRecording,
   } = useRecorderPanelContext();
 
   const isRecording = recorderState.status === "recording";
@@ -43,6 +44,7 @@ export default function RecorderVoiceRecorder() {
             color="primary"
             size="small"
             onClick={startRecording}
+            disabled={isPracticeRecording}
             startIcon={<FiMic size={14} />}
             sx={{ textTransform: "none", fontWeight: 500 }}
           >

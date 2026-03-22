@@ -5,6 +5,7 @@ import {
   useReducer,
   useCallback,
   useMemo,
+  useState,
 } from "react";
 import { useReactMediaRecorder } from "react-media-recorder";
 import { useRouter } from "next/navigation";
@@ -35,6 +36,8 @@ export const RecorderPanelContext = createContext<RecorderPanelContextType>({
   isAudioMutating: false,
   isLessonMutating: false,
   isDeleting: false,
+  isPracticeRecording: false,
+  setIsPracticeRecording: () => {},
 });
 
 interface RecorderPanelContextProviderProps {
@@ -68,6 +71,7 @@ export default function RecorderPanelContextProvider({
   const [recorderState, dispatch] = useReducer(recorderReducer, {
     status: "idle",
   });
+  const [isPracticeRecording, setIsPracticeRecording] = useState(false);
 
   // react-media-recorder hook handles all the browser MediaRecorder complexity
   const {
@@ -213,6 +217,8 @@ export default function RecorderPanelContextProvider({
       isAudioMutating,
       isLessonMutating,
       isDeleting,
+      isPracticeRecording,
+      setIsPracticeRecording,
     }),
     [
       recorderState,
@@ -225,6 +231,7 @@ export default function RecorderPanelContextProvider({
       isAudioMutating,
       isLessonMutating,
       isDeleting,
+      isPracticeRecording,
     ]
   );
 
