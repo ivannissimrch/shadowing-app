@@ -39,7 +39,9 @@ export default function PracticeCardActions({
       <Button
         variant="outlined"
         startIcon={<FiVolume2 />}
-        onClick={listenToSegment ? listenToSegment : () => speak(text, speechRate)}
+        onClick={
+          listenToSegment ? listenToSegment : () => speak(text, speechRate)
+        }
         sx={{ textTransform: "none" }}
       >
         {t("listen")}
@@ -60,6 +62,7 @@ export default function PracticeCardActions({
       </Button>
       {mediaBlobUrl && status !== "recording" && (
         <Box
+          playsInline
           component="audio"
           src={mediaBlobUrl}
           controls
