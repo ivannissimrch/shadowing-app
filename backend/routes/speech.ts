@@ -40,7 +40,12 @@ router.post(
 
     const base64Data = audioData.replace(/^data:[^;]+;base64,/, "");
     const audioBuffer = Buffer.from(base64Data, "base64");
-
+    if (audioBuffer.length === 0) {
+      throw createError(
+        400,
+        "No audio data received. The recording may have failed. Please try again.",
+      );
+    }
     const result = await evaluatePronunciation(audioBuffer, referenceText);
 
     res.json({
