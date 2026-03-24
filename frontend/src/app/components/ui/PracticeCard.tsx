@@ -84,8 +84,18 @@ export default function PracticeCard({
   const [isExpanded, setIsExpanded] = useState(false);
 
   return (
-    <MuiCard sx={{ mb: 2 }}>
-      <CardContent>
+    <MuiCard sx={{
+      mb: 2,
+      width: "100%",
+      maxWidth: { xs: "100vw", sm: "100%" },
+      minWidth: 0,
+      overflow: "hidden"
+    }}>
+      <CardContent sx={{
+        px: { xs: 2, sm: 3 },
+        py: { xs: 2, sm: 3 },
+        "&:last-child": { pb: { xs: 2, sm: 3 } }
+      }}>
         <PracticeCardHeader
           text={text}
           onDelete={onDelete}

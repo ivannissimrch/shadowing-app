@@ -30,10 +30,19 @@ export default function PracticeCardActions({
     <Box
       sx={{
         display: "flex",
+        flexDirection: { xs: "column", sm: "row" },
         gap: 1,
         mb: 2,
-        flexWrap: "wrap",
-        alignItems: "center",
+        alignItems: { xs: "stretch", sm: "center" },
+        "& .MuiButton-root": {
+          fontSize: { xs: "0.875rem", sm: "0.875rem" },
+          px: { xs: 2, sm: 2 },
+          flex: { xs: "none", sm: "0 1 auto" }
+        },
+        "& audio": {
+          width: "100%",
+          maxWidth: "300px"
+        }
       }}
     >
       <Button
