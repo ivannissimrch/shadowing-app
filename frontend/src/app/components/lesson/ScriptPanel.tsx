@@ -29,8 +29,9 @@ export default function ScriptPanel({
     >
       {selectedLesson.script_type === "text" && selectedLesson.script_text ? (
         <>
-          <FontSizeControls />
+          <FontSizeControls lessonTitle={selectedLesson.title} />
           <Box
+            id="script-content"
             sx={{
               p: 2,
               pt: 1,
