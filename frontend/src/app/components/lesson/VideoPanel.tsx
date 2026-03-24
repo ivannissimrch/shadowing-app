@@ -90,14 +90,15 @@ export default function VideoPanel({
             />
           )}
         </Box>
-        {isVideoVisible ? (
+        <Box sx={{ display: isVideoVisible ? "block" : "none" }}>
           <SegmentPlayer selectedLesson={selectedLesson} />
-        ) : (
+        </Box>
+        <Box sx={{ display: isVideoVisible ? "none" : "block" }}>
           <PracticePhrases
             selectedLesson={selectedLesson}
             userId={currentUserId}
           />
-        )}
+        </Box>
       </Paper>
       {belowVideo ?? <RecorderPanel selectedLesson={selectedLesson} />}
     </Box>
