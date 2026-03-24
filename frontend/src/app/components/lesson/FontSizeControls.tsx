@@ -1,8 +1,22 @@
 import useFontSize from "@/app/hooks/useFontSize";
+import usePdfDownload from "@/app/hooks/usePdfDownload";
 import { Box, IconButton } from "@mui/material";
+import { MdDownload } from "react-icons/md";
 
-export default function FontSizeControls() {
+interface FontSizeControlsProps {
+  lessonTitle?: string;
+}
+
+export default function FontSizeControls({ lessonTitle }: FontSizeControlsProps) {
   const { increaseFontSize, decreaseFontSize } = useFontSize();
+  const { downloadAsPdf } = usePdfDownload();
+
+  const handleDownload = () => {
+    const fileName = lessonTitle
+      ? `${lessonTitle.replace(/[^a-zA-Z0-9]/g, '-').toLowerCase()}-script`
+      : "lesson-script";
+    downloadAsPdf("script-content", fileName);
+  };
 
   return (
     <Box
@@ -47,6 +61,24 @@ export default function FontSizeControls() {
         onClick={increaseFontSize}
       >
         A+
+      </IconButton>
+      <IconButton
+        size="small"
+        sx={{
+          fontSize: "0.85rem",
+          fontWeight: 600,
+          border: "1px solid",
+          borderColor: "#e0e0e0",
+          color: "#1a1a1a",
+          borderRadius: 1,
+          px: 1,
+          minWidth: 32,
+          ml: 1,
+        }}
+        onClick={handleDownload}
+        title="Download as PDF"
+      >
+        <MdDownload />
       </IconButton>
     </Box>
   );
