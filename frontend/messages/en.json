@@ -83,6 +83,7 @@
     "completedLessons": "Completed Lessons",
     "pendingLessons": "Pending Lessons",
     "noLessons": "No lessons assigned yet",
+    "noActiveLessons": "All caught up! Check your completed lessons below.",
     "noPracticeWords": "No practice words yet. Add some above!"
   },
   "teacher": {
