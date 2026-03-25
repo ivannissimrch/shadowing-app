@@ -83,6 +83,7 @@
     "completedLessons": "완료된 레슨",
     "pendingLessons": "대기 중인 레슨",
     "noLessons": "아직 배정된 레슨이 없습니다",
+    "noActiveLessons": "모두 완료했습니다! 아래에서 완료된 레슨을 확인하세요.",
     "noPracticeWords": "연습할 단어가 없습니다. 위에서 추가하세요!"
   },
   "teacher": {
