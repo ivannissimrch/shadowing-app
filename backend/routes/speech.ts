@@ -5,7 +5,6 @@ import {
   evaluatePronunciation,
   synthesizeSpeech,
 } from "../services/speechEvaluation.js";
-import { getCoachFeedback } from "../services/eslCoach.js";
 
 const router = Router();
 
@@ -51,29 +50,6 @@ router.post(
     res.json({
       success: true,
       data: result,
-    });
-  }),
-);
-
-// ESL Coach - get feedback on pronunciation
-router.post(
-  "/coach",
-  asyncHandler(async (req: Request, res: Response) => {
-    const { referenceText, evaluation, nativeLanguage } = req.body;
-
-    if (!referenceText || !evaluation) {
-      throw createError(400, "referenceText and evaluation are required");
-    }
-
-    const feedback = await getCoachFeedback(
-      referenceText,
-      evaluation,
-      nativeLanguage,
-    );
-
-    res.json({
-      success: true,
-      data: { feedback },
     });
   }),
 );

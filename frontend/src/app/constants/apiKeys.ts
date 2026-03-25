@@ -63,7 +63,6 @@ export const API_PATHS = {
   // Speech
   SPEECH_EVALUATE: "/api/speech/evaluate",
   SPEECH_SYNTHESIZE: "/api/speech/synthesize",
-  SPEECH_COACH: "/api/speech/coach",
 
   // Practice Words
   PRACTICE_WORDS: "/api/practice-words",
