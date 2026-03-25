@@ -210,7 +210,7 @@ api.interceptors.response.use(
       window.location.href = "/";
     }
     return Promise.reject(error);
-  }
+  },
 );
 ```
 
@@ -291,11 +291,5 @@ I built this to solve a real problem I was experiencing in my ESL classes, we we
 2. **Role-Based Access Control**: Implemented both client-side and server-side route protection, with JWT middleware that checks user roles before allowing teacher-only actions like deleting lessons or viewing student submissions.
 
 3. **Error Handling Strategy**: Built multiple layers of error handling - error boundaries for component crashes, Axios interceptors for API errors, try-catch blocks for async operations, and user-friendly error messages instead of technical stack traces.
-
----
-
-### Planned Features
-
-- AI Pronunciation Scoring - Azure Speech API integration for automated feedback
 
 ---
