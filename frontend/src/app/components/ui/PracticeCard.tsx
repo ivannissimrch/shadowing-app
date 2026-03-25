@@ -8,10 +8,6 @@ import PracticeCardFeedback from "./PracticeCardFeedback";
 import usePracticeCard from "@/app/hooks/usePracticeCard";
 import PracticeCardActions from "./PracticeCardActions";
 
-export interface CoachResponse {
-  feedback: string;
-}
-
 export interface EvaluationResult {
   text: string;
   accuracyScore: number;

@@ -1,6 +1,5 @@
 import { useTranslations } from "next-intl";
 import {
-  CoachResponse,
   EvaluationResult,
   PracticeCardProps,
 } from "../components/ui/PracticeCard";
@@ -43,20 +42,6 @@ export default function usePracticeCard({
     EvaluationResult,
     { audioData: string; referenceText: string }
   >(API_PATHS.SPEECH_EVALUATE, { method: "POST" }, { throwOnError: false });
-
-  const {
-    trigger: getCoachHelp,
-    isMutating: isLoadingCoach,
-    data: coachData,
-    reset: resetCoach,
-  } = useSWRMutationHook<
-    CoachResponse,
-    {
-      referenceText: string;
-      evaluation: EvaluationResult;
-      nativeLanguage?: string;
-    }
-  >(API_PATHS.SPEECH_COACH, { method: "POST" }, { throwOnError: false });
 
   const listenToSegment = useCallback(() => {
     if (!audioSegment) return;
@@ -143,20 +128,9 @@ export default function usePracticeCard({
       setIsPracticeRecording(false);
     } else {
       resetEvaluation();
-      resetCoach();
       setDisplayedEvaluation(null);
       setIsPracticeRecording(true);
       startRecording();
-    }
-  }
-
-  function handleGetHelp() {
-    if (displayedEvaluation) {
-      getCoachHelp({
-        referenceText: text,
-        evaluation: displayedEvaluation,
-        nativeLanguage: nativeLanguage || undefined,
-      });
     }
   }
 
@@ -170,12 +144,9 @@ export default function usePracticeCard({
     error,
     mediaBlobUrl,
     isEvaluating,
-    isLoadingCoach,
     displayedEvaluation,
-    handleGetHelp,
     handleSpeak,
     updateSpeechRate,
-    coachData,
     t,
     speechRate,
     speak,
