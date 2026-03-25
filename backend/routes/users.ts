@@ -145,6 +145,42 @@ router.patch(
   })
 );
 
+// Reset student password (teacher only)
+router.patch(
+  "/teacher/students/:studentId/reset-password",
+  requireTeacher,
+  asyncHandler(async (req: Request, res: Response, _next: NextFunction) => {
+    const { studentId } = req.params;
+    const { newPassword } = req.body;
+
+    if (!newPassword) {
+      throw createError(400, "New password is required");
+    }
+
+    if (newPassword.length < 8) {
+      throw createError(400, "Password must be at least 8 characters");
+    }
+
+    const student = await userRepository.checkExists(studentId);
+
+    if (!student) {
+      throw createError(404, "Student not found");
+    }
+
+    if (student.role !== "student") {
+      throw createError(403, "Can only reset passwords for students");
+    }
+
+    const hashedPassword = await hashPassword(newPassword);
+    await userRepository.updatePassword(studentId, hashedPassword);
+
+    res.json({
+      success: true,
+      message: "Password reset successfully",
+    });
+  })
+);
+
 // Update own email (for notifications)
 router.patch(
   "/:userId/email",

@@ -11,15 +11,17 @@ import IconButton from "@mui/material/IconButton";
 import Box from "@mui/material/Box";
 import Avatar from "@mui/material/Avatar";
 import Tooltip from "@mui/material/Tooltip";
-import { FiUser, FiEye, FiTrash2 } from "react-icons/fi";
+import { FiUser, FiEye, FiTrash2, FiKey } from "react-icons/fi";
 import { Student } from "../../Types";
 
 export default function StudentCard({
   students,
   onDeleteStudent,
+  onResetPassword,
 }: {
   students: Student[] | undefined;
   onDeleteStudent: (student: Student) => void;
+  onResetPassword: (student: Student) => void;
 }) {
   const t = useTranslations("teacher");
   const tCommon = useTranslations("common");
@@ -90,6 +92,16 @@ export default function StudentCard({
         >
           {loadingId === student.id ? tCommon("loading") : t("viewDetails")}
         </Button>
+        <Tooltip title={t("resetPassword")}>
+          <IconButton
+            onClick={() => onResetPassword(student)}
+            color="warning"
+            aria-label={`${t("resetPassword")} ${student.username}`}
+            sx={{ ml: 1 }}
+          >
+            <FiKey size={18} />
+          </IconButton>
+        </Tooltip>
         <Tooltip title={t("deleteStudent")}>
           <IconButton
             onClick={() => onDeleteStudent(student)}
