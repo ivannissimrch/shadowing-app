@@ -19,7 +19,6 @@ const safariMimeType =
 
 export default function usePracticeCard({
   text,
-  nativeLanguage,
   wordId,
   initialEvaluation,
   onEvaluationSaved,
