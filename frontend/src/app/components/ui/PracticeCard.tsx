@@ -68,6 +68,7 @@ export default function PracticeCard({
     speechRate,
     speak,
     listenToSegment,
+    recordingCountdown,
   } = usePracticeCard({
     text: plainText,
     nativeLanguage,
@@ -109,6 +110,7 @@ export default function PracticeCard({
           handleSpeak={handleSpeak}
           t={t}
           mediaBlobUrl={mediaBlobUrl}
+          recordingCountdown={recordingCountdown}
         />
 
         <PracticeCardSpeedControl

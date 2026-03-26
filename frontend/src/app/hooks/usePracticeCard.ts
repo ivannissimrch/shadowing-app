@@ -10,12 +10,7 @@ import { API_PATHS } from "../constants/apiKeys";
 import { useReactMediaRecorder } from "react-media-recorder";
 import api from "../helpers/axiosFetch";
 import { useRecorderPanelContext } from "../RecorderpanelContext";
-
-const safariMimeType =
-  typeof MediaRecorder !== "undefined" &&
-  MediaRecorder.isTypeSupported("audio/mp4")
-    ? "audio/mp4"
-    : undefined;
+import { getMediaRecorderOptions, getBlobPropertyBag, resumeAudioContextForIOS } from "../helpers/audioMimeTypes";
 
 export default function usePracticeCard({
   text,
@@ -29,6 +24,7 @@ export default function usePracticeCard({
   const [speechRate, setSpeechRate] = useState(0.9);
   const [displayedEvaluation, setDisplayedEvaluation] =
     useState<EvaluationResult | null>(initialEvaluation ?? null);
+  const [recordingCountdown, setRecordingCountdown] = useState<number | null>(null);
 
   const segmentAudioRef = useRef<HTMLAudioElement | null>(null);
   const { speak } = useSpeakMutation();
@@ -118,18 +114,41 @@ export default function usePracticeCard({
     useReactMediaRecorder({
       audio: true,
       onStop: handleRecordingStop,
-      ...(safariMimeType && { mediaRecorderOptions: { mimeType: safariMimeType } }),
+      blobPropertyBag: getBlobPropertyBag(),
+      mediaRecorderOptions: getMediaRecorderOptions(),
     });
 
-  function handleSpeak() {
+  async function handleSpeak() {
     if (status === "recording") {
       stopRecording();
       setIsPracticeRecording(false);
+      setRecordingCountdown(null);
     } else {
+      // iOS Safari fix: Resume audio context on user gesture
+      try {
+        await resumeAudioContextForIOS();
+      } catch (error) {
+        console.warn("Could not resume audio context:", error);
+      }
+
       resetEvaluation();
       setDisplayedEvaluation(null);
       setIsPracticeRecording(true);
+
+      // Start recording immediately but show countdown for when to speak
       startRecording();
+
+      // Start countdown to tell user when to speak
+      setRecordingCountdown(1);
+      const countdownTimer = setInterval(() => {
+        setRecordingCountdown(prev => {
+          if (prev === null || prev <= 1) {
+            clearInterval(countdownTimer);
+            return null;
+          }
+          return prev - 1;
+        });
+      }, 1000);
     }
   }
 
@@ -151,5 +170,6 @@ export default function usePracticeCard({
     speak,
     listenToSegment: audioSegment ? listenToSegment : undefined,
     isLessonRecording,
+    recordingCountdown,
   };
 }

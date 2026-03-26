@@ -1,4 +1,4 @@
-import { Box, Button } from "@mui/material";
+import { Box, Button, Typography } from "@mui/material";
 import { FiMic, FiSquare, FiVolume2 } from "react-icons/fi";
 
 interface PracticeCardActionsProps {
@@ -12,6 +12,7 @@ interface PracticeCardActionsProps {
   speechRate: number;
   t: (key: string) => string;
   mediaBlobUrl?: string | null;
+  recordingCountdown?: number | null;
 }
 
 export default function PracticeCardActions({
@@ -25,6 +26,7 @@ export default function PracticeCardActions({
   handleSpeak,
   t,
   mediaBlobUrl,
+  recordingCountdown,
 }: PracticeCardActionsProps) {
   return (
     <Box
@@ -69,6 +71,20 @@ export default function PracticeCardActions({
             ? t("evaluating")
             : t("speak")}
       </Button>
+      {recordingCountdown && recordingCountdown > 0 && (
+        <Typography
+          variant="h6"
+          color="primary"
+          sx={{
+            fontWeight: "bold",
+            alignSelf: "center",
+            minWidth: "60px",
+            textAlign: "center"
+          }}
+        >
+          Speak in {recordingCountdown}...
+        </Typography>
+      )}
       {mediaBlobUrl && status !== "recording" && (
         <Box
           playsInline

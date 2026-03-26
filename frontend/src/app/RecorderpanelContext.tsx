@@ -23,6 +23,7 @@ import { useSWRMutationHook } from "@/app/hooks/useSWRMutation";
 import { useAlertContext } from "@/app/AlertContext";
 import { useSnackbar } from "@/app/SnackbarContext";
 import { recorderReducer } from "./helpers/recorderReducer";
+import { getMediaRecorderOptions, getBlobPropertyBag, resumeAudioContextForIOS, createAudioBlobUrl } from "./helpers/audioMimeTypes";
 
 export const RecorderPanelContext = createContext<RecorderPanelContextType>({
   recorderState: { status: "idle" },
@@ -38,6 +39,7 @@ export const RecorderPanelContext = createContext<RecorderPanelContextType>({
   isDeleting: false,
   isPracticeRecording: false,
   setIsPracticeRecording: () => {},
+  recordingCountdown: null,
 });
 
 interface RecorderPanelContextProviderProps {
@@ -72,6 +74,7 @@ export default function RecorderPanelContextProvider({
     status: "idle",
   });
   const [isPracticeRecording, setIsPracticeRecording] = useState(false);
+  const [recordingCountdown, setRecordingCountdown] = useState<number | null>(null);
 
   // react-media-recorder hook handles all the browser MediaRecorder complexity
   const {
@@ -83,19 +86,44 @@ export default function RecorderPanelContextProvider({
     error,
   } = useReactMediaRecorder({
     audio: true,
+    blobPropertyBag: getBlobPropertyBag(),
+    mediaRecorderOptions: getMediaRecorderOptions(),
     onStop: (blobUrl, blob) => {
-      dispatch({ type: "STOP_RECORDING", blob, audioURL: blobUrl });
+      // Create iPhone-compatible blob URL with proper MIME type
+      const compatibleBlobUrl = blob ? createAudioBlobUrl(blob) : blobUrl;
+      dispatch({ type: "STOP_RECORDING", blob, audioURL: compatibleBlobUrl });
     },
   });
 
-  const startRecording = useCallback(() => {
+  const startRecording = useCallback(async () => {
     if (error) {
       logger.error("Error accessing microphone:", error);
       openAlertDialog(t("microphoneError"), t("microphoneErrorMessage"));
       return;
     }
+
+    // iOS Safari fix: Resume audio context on user gesture
+    try {
+      await resumeAudioContextForIOS();
+    } catch (error) {
+      console.warn("Could not resume audio context:", error);
+    }
+
+    // Start recording immediately but show countdown for when to speak
     startMediaRecording();
     dispatch({ type: "START_RECORDING", startedAt: Date.now() });
+
+    // Start countdown to tell user when to speak (Safari/iPhone needs time)
+    setRecordingCountdown(1);
+    const countdownTimer = setInterval(() => {
+      setRecordingCountdown(prev => {
+        if (prev === null || prev <= 1) {
+          clearInterval(countdownTimer);
+          return null;
+        }
+        return prev - 1;
+      });
+    }, 1000);
   }, [startMediaRecording, error, openAlertDialog, t]);
 
   const pauseRecording = useCallback(() => {
@@ -110,6 +138,7 @@ export default function RecorderPanelContextProvider({
 
   const stopRecording = useCallback(() => {
     stopMediaRecording();
+    setRecordingCountdown(null);
   }, [stopMediaRecording]);
 
   const handleSubmit = useCallback(async () => {
@@ -219,6 +248,7 @@ export default function RecorderPanelContextProvider({
       isDeleting,
       isPracticeRecording,
       setIsPracticeRecording,
+      recordingCountdown,
     }),
     [
       recorderState,
@@ -232,6 +262,7 @@ export default function RecorderPanelContextProvider({
       isLessonMutating,
       isDeleting,
       isPracticeRecording,
+      recordingCountdown,
     ]
   );
 
