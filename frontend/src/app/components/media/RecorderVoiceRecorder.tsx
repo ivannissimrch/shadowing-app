@@ -14,6 +14,7 @@ export default function RecorderVoiceRecorder() {
     resumeRecording,
     stopRecording,
     isPracticeRecording,
+    recordingCountdown,
   } = useRecorderPanelContext();
 
   const isRecording = recorderState.status === "recording";
@@ -34,6 +35,18 @@ export default function RecorderVoiceRecorder() {
         <Typography variant="body2" color="text.secondary">
           {isRecording && t("recordingInProgress")}
           {isPaused && t("recordingPaused")}
+        </Typography>
+      )}
+      {recordingCountdown && recordingCountdown > 0 && (
+        <Typography
+          variant="h6"
+          color="primary"
+          sx={{
+            fontWeight: "bold",
+            textAlign: "center"
+          }}
+        >
+          Speak in {recordingCountdown}...
         </Typography>
       )}
 

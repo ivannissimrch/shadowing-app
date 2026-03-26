@@ -141,6 +141,7 @@ export interface RecorderPanelContextType {
   isDeleting: boolean;
   isPracticeRecording: boolean;
   setIsPracticeRecording: (value: boolean) => void;
+  recordingCountdown: number | null;
 }
 
 export interface List {
