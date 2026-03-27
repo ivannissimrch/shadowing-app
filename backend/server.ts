@@ -213,6 +213,8 @@ configureAzureCors()
   .then(() => logger.info("Azure CORS configured"))
   .catch((err) => logger.error("Azure CORS setup failed:", err));
 
+app.set("trust proxy", 1);
+
 // Middleware
 app.use(
   cors({
