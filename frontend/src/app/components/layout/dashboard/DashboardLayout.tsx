@@ -1,12 +1,10 @@
 'use client';
-
 import { useState, useEffect, ReactNode } from 'react';
 import { useRouter } from '@/i18n/routing';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
-
 import Sidebar, { DRAWER_WIDTH, MINI_DRAWER_WIDTH } from './Sidebar';
 import DashboardHeader from './DashboardHeader';
 import { MenuGroup, teacherMenuItems, studentMenuItems } from './menuItems';
@@ -22,28 +20,23 @@ export default function DashboardLayout({ children, userType }: DashboardLayoutP
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [mobileOpen, setMobileOpen] = useState(false);
-
   const { token } = useAuthContext();
   const router = useRouter();
 
-  // Auth protection
   useEffect(() => {
     if (token === null) {
       router.push('/');
     }
   }, [token, router]);
-
-  // Close mobile drawer when switching to desktop
+  
   useEffect(() => {
     if (!isMobile) {
       setMobileOpen(false);
     }
   }, [isMobile]);
-
-  // Get menu items based on user type
+  
   const menuItems: MenuGroup[] = userType === 'teacher' ? teacherMenuItems : studentMenuItems;
-
-  const handleMenuToggle = () => {
+  function handleMenuToggle(){
     if (isMobile) {
       setMobileOpen(!mobileOpen);
     } else {
@@ -51,11 +44,10 @@ export default function DashboardLayout({ children, userType }: DashboardLayoutP
     }
   };
 
-  const handleMobileClose = () => {
+  function handleMobileClose(){
     setMobileOpen(false);
   };
 
-  // Don't render until auth is checked
   if (!token) {
     return null;
   }
