@@ -11,7 +11,7 @@ export default function useAudioDownload({ segments, lesson }: UseAudioDownloadP
   const [isDownloading, setIsDownloading] = useState(false);
 
   const trimAudioSegment = async (audioBuffer: ArrayBuffer, startTime: number, endTime: number): Promise<ArrayBuffer> => {
-    const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
+    const audioContext = new (window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext)();
     const decodedData = await audioContext.decodeAudioData(audioBuffer.slice(0));
 
     const sampleRate = decodedData.sampleRate;
