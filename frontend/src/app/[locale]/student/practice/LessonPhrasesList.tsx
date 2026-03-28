@@ -6,6 +6,7 @@ import { useSWRAxios } from "../../../hooks/useSWRAxios";
 import { API_PATHS } from "../../../constants/apiKeys";
 import { useAuthContext } from "../../../AuthContext";
 import PracticeCard from "@/app/components/ui/PracticeCard";
+import DownloadAudioButton from "@/app/components/ui/DownloadAudioButton";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import MenuItem from "@mui/material/MenuItem";
@@ -74,6 +75,7 @@ export default function LessonPhrasesList() {
 
       {selectedLessonId && segments && segments.length > 0 && (
         <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+          <DownloadAudioButton segments={segments} lesson={selectedLesson!} />
           {segments.map((segment) => (
             <PracticeCard
               key={segment.id}

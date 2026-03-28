@@ -5,6 +5,7 @@ import Box from "@mui/material/Box";
 import PracticeCard from "./PracticeCard";
 import { UserProfile } from "@/app/[locale]/student/practice/LessonPhrasesList";
 import PracticePhraseSkeleton from "./PracticePhraseSkeleton";
+import DownloadAudioButton from "./DownloadAudioButton";
 
 interface PracticePhrasesProps {
   selectedLesson: Lesson;
@@ -33,6 +34,9 @@ export default function PracticePhrases({
         gap: 2,
       }}
     >
+      {segments && segments.length > 0 && (
+        <DownloadAudioButton segments={segments} lesson={selectedLesson} />
+      )}
       {segments?.map((segment) => (
         <PracticeCard
           key={segment.id}
