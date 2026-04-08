@@ -130,8 +130,19 @@ export async function evaluatePronunciation(
   audioBuffer: Buffer,
   referenceText: string
 ) {
+  // Log original audio details for debugging iPhone issues
+  const originalFormat = detectAudioFormat(audioBuffer);
+  console.log(`[DEBUG] Audio evaluation - Original: ${audioBuffer.length} bytes, format: ${originalFormat}`);
+
   // Convert webm to WAV for Azure
   const wavBuffer = await convertToWav(audioBuffer);
+  console.log(`[DEBUG] Audio evaluation - Converted WAV: ${wavBuffer.length} bytes`);
+
+  // Log potential issues with short audio
+  if (wavBuffer.length < 8000) { // Less than ~0.25 seconds of 16kHz mono PCM
+    console.warn(`[WARNING] Very short audio detected: ${wavBuffer.length} bytes - may cause evaluation issues`);
+  }
+
   const speechConfig = sdk.SpeechConfig.fromSubscription(speechKey, speechRegion);
   speechConfig.speechRecognitionLanguage = "en-US";
 
@@ -158,6 +169,14 @@ export async function evaluatePronunciation(
         if (result.reason === sdk.ResultReason.RecognizedSpeech) {
           const pronunciationResult =
             sdk.PronunciationAssessmentResult.fromResult(result);
+
+          // Log evaluation results for debugging
+          console.log(`[DEBUG] Azure evaluation successful - Text: "${result.text}", Accuracy: ${pronunciationResult.accuracyScore}, Reference: "${referenceText}"`);
+
+          // Check if recognized text is suspiciously short compared to reference
+          if (result.text.length < referenceText.length * 0.3) {
+            console.warn(`[WARNING] Recognized text much shorter than reference - may indicate partial audio. Got: "${result.text}", Expected: "${referenceText}"`);
+          }
 
           resolve({
             text: result.text,
