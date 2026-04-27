@@ -35,3 +35,6 @@ coverage/
 # OS
 .DS_Store
 Thumbs.dbMU-Berry/
+
+.claude/settings.local.json
+
