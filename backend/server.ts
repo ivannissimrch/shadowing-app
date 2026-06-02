@@ -7,7 +7,7 @@ import {
   uploadLimiter,
 } from "./middleware/rateLimiter.js";
 import { protect } from "./auth.js";
-import { signin } from "./handlers/user.js";
+import { signin, registerStudent } from "./handlers/user.js";
 import pool from "./db.js";
 import handleError from "./handlers/handleError.js";
 import logger from "./helpers/logger.js";
@@ -246,6 +246,7 @@ app.use("/api/upload-audio", uploadLimiter);
 app.use("/api/upload-video", uploadLimiter);
 app.use("/api", apiLimiter, protect, router);
 app.post("/signin", authLimiter, signin);
+app.post("/register", authLimiter, registerStudent);
 
 app.use(handleError);
 
