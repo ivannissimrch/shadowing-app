@@ -7,6 +7,7 @@ import redirectBasedOnRole from "../../helpers/redirectBasedOnRole";
 import logger from "../../helpers/logger";
 import { AuthResponse } from "@/app/Types";
 import { useSWRMutationHook } from "@/app/hooks/useSWRMutation";
+import { API_PATHS } from "@/app/constants/apiKeys";
 
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
@@ -18,14 +19,15 @@ import InputAdornment from "@mui/material/InputAdornment";
 import IconButton from "@mui/material/IconButton";
 import Alert from "@mui/material/Alert";
 import CircularProgress from "@mui/material/CircularProgress";
-import { FiEye, FiEyeOff, FiLogIn } from "react-icons/fi";
+import { FiEye, FiEyeOff, FiUserPlus } from "react-icons/fi";
 import Image from "next/image";
 import DarkModeToggle from "../ui/DarkModeToggle";
 import LanguageSwitcher from "../ui/LanguageSwitcher";
 
-export default function LoginForm() {
+export default function RegisterForm() {
   const t = useTranslations("auth");
   const tErrors = useTranslations("errors");
+  const [name, setName] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
@@ -34,8 +36,8 @@ export default function LoginForm() {
   const inputRef = useRef<HTMLInputElement>(null);
   const { isMutating, trigger } = useSWRMutationHook<
     AuthResponse,
-    { username: string; password: string }
-  >("/signin", { method: "POST" });
+    { name: string; username: string; password: string }
+  >(API_PATHS.REGISTER, { method: "POST" });
   const [isNavigating, setIsNavigating] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
@@ -63,6 +65,7 @@ export default function LoginForm() {
 
     try {
       const response = await trigger({
+        name: name,
         username: username,
         password: password,
       });
@@ -163,7 +166,7 @@ export default function LoginForm() {
               </Box>
             </Box>
             <Typography variant="body2" color="text.secondary">
-              {t("signInToContinue")}
+              {t("signUpToStart")}
             </Typography>
           </Box>
 
@@ -178,6 +181,24 @@ export default function LoginForm() {
           <Box component="form" onSubmit={handleSubmit}>
             <TextField
               fullWidth
+              label={t("name")}
+              id="name"
+              name="name"
+              placeholder={t("enterName")}
+              value={name}
+              onChange={(e) => {
+                setName(e.target.value);
+                setErrorMessage("");
+              }}
+              disabled={isLoading}
+              required
+              inputRef={inputRef}
+              autoComplete="name"
+              sx={{ mb: 2.5 }}
+            />
+
+            <TextField
+              fullWidth
               label={t("username")}
               id="username"
               name="username"
@@ -189,7 +210,6 @@ export default function LoginForm() {
               }}
               disabled={isLoading}
               required
-              inputRef={inputRef}
               autoComplete="username"
               sx={{ mb: 2.5 }}
             />
@@ -208,8 +228,8 @@ export default function LoginForm() {
               }}
               disabled={isLoading}
               required
-              autoComplete="current-password"
-              sx={{ mb: 3 }}
+              autoComplete="new-password"
+              sx={{ mb: 1 }}
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">
@@ -232,6 +252,14 @@ export default function LoginForm() {
               }}
             />
 
+            <Typography
+              variant="caption"
+              color="text.secondary"
+              sx={{ display: "block", mb: 3 }}
+            >
+              {t("minCharacters")}
+            </Typography>
+
             <Button
               type="submit"
               variant="contained"
@@ -242,7 +270,7 @@ export default function LoginForm() {
                 isLoading ? (
                   <CircularProgress size={20} color="inherit" />
                 ) : (
-                  <FiLogIn size={18} />
+                  <FiUserPlus size={18} />
                 )
               }
               sx={{
@@ -252,22 +280,22 @@ export default function LoginForm() {
                 fontSize: "1rem",
               }}
             >
-              {isLoading ? t("signingIn") : t("login")}
+              {isLoading ? t("creatingAccount") : t("createAccount")}
             </Button>
 
-            {/* Link to registration */}
+            {/* Link back to login */}
             <Box sx={{ textAlign: "center", mt: 3 }}>
               <Typography variant="body2" color="text.secondary">
-                {t("noAccount")}{" "}
+                {t("alreadyHaveAccount")}{" "}
                 <Link
-                  href="/register"
+                  href="/"
                   style={{
                     fontWeight: 600,
                     textDecoration: "none",
                     color: "#1E88E5",
                   }}
                 >
-                  {t("signUp")}
+                  {t("login")}
                 </Link>
               </Typography>
             </Box>

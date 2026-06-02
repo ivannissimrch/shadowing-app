@@ -2,6 +2,7 @@
 export const API_PATHS = {
   // Authentication
   SIGNIN: "/signin",
+  REGISTER: "/register",
 
   // Student Lessons
   LESSONS: "/api/lessons",
@@ -17,7 +18,8 @@ export const API_PATHS = {
   CREATE_LESSON: "/api/teacher/lessons",
   ALL_LESSONS: "/api/teacher/all-lessons",
   TEACHER_LESSON: (lessonId: string) => `/api/teacher/lessons/${lessonId}`,
-  ASSIGN_LESSON: (lessonId: string) => `/api/teacher/lessons/${lessonId}/assign`,
+  ASSIGN_LESSON: (lessonId: string) =>
+    `/api/teacher/lessons/${lessonId}/assign`,
   UNASSIGN_LESSON: (lessonId: string, studentId: string) =>
     `/api/teacher/lessons/${lessonId}/unassign/${studentId}`,
   DELETE_LESSON: (lessonId: string) => `/api/teacher/lessons/${lessonId}`,
@@ -26,9 +28,11 @@ export const API_PATHS = {
   USERS: "/api/users",
   USER: (id: string) => `/api/users/${id}`,
   PASSWORD_CHANGE: (userId: string) => `/api/users/${userId}/password`,
-  RESET_STUDENT_PASSWORD: (studentId: string) => `/api/users/teacher/students/${studentId}/reset-password`,
+  RESET_STUDENT_PASSWORD: (studentId: string) =>
+    `/api/users/teacher/students/${studentId}/reset-password`,
   EMAIL_UPDATE: (userId: string) => `/api/users/${userId}/email`,
-  NATIVE_LANGUAGE_UPDATE: (userId: string) => `/api/users/${userId}/native-language`,
+  NATIVE_LANGUAGE_UPDATE: (userId: string) =>
+    `/api/users/${userId}/native-language`,
   USER_PROFILE: (userId: string) => `/api/users/${userId}`,
 
   // Teacher - Student Management
@@ -53,7 +57,11 @@ export const API_PATHS = {
     `/api/lessons/${lessonId}/feedback/replies/${replyId}`,
 
   // Teacher Feedback Reply (single)
-  TEACHER_FEEDBACK_REPLY: (studentId: string, lessonId: string, replyId: string) =>
+  TEACHER_FEEDBACK_REPLY: (
+    studentId: string,
+    lessonId: string,
+    replyId: string
+  ) =>
     `/api/teacher/student/${studentId}/lesson/${lessonId}/feedback/replies/${replyId}`,
 
   // Uploads
@@ -68,7 +76,8 @@ export const API_PATHS = {
   // Practice Words
   PRACTICE_WORDS: "/api/practice-words",
   PRACTICE_WORD: (id: number) => `/api/practice-words/${id}`,
-  PRACTICE_WORD_RESULTS: (wordId: number) => `/api/practice-words/${wordId}/results`,
+  PRACTICE_WORD_RESULTS: (wordId: number) =>
+    `/api/practice-words/${wordId}/results`,
 
   // Lists
   ALL_LISTS: "/api/teacher/lists",

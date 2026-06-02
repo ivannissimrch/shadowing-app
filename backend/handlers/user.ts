@@ -67,6 +67,31 @@ export const createNewUser = async (req: Request, res: Response) => {
   }
 };
 
+// Public self-registration. Always creates a student account — the role is
+// forced server-side so this open endpoint can never be used to create a teacher.
+export const registerStudent = async (req: Request, res: Response) => {
+  const { username, password } = req.body;
+
+  if (!username || !password) {
+    return res.status(400).json({
+      success: false,
+      message: "Username and password are required",
+    });
+  }
+
+  if (password.length < 8) {
+    return res.status(400).json({
+      success: false,
+      message: "Password must be at least 8 characters",
+    });
+  }
+
+  // Never trust a client-supplied role on a public endpoint.
+  req.body.role = "student";
+
+  return createNewUser(req, res);
+};
+
 export const signin = async (req: Request, res: Response) => {
   try {
     // Find user by username
