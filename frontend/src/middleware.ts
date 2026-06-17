@@ -7,11 +7,10 @@ export const config = {
   // Match all pathnames except for:
   // - API routes
   // - Static files
-  // - Sentry monitoring route
   matcher: [
     // Match all pathnames except for
-    // - … if they start with `/api`, `/_next`, `/_vercel`, `/monitoring`
+    // - … if they start with `/api`, `/_next`, `/_vercel`
     // - … contain a dot (e.g. `favicon.ico`)
-    "/((?!api|_next|_vercel|monitoring|.*\\..*).*)",
+    "/((?!api|_next|_vercel|.*\\..*).*)",
   ],
 };

@@ -27,7 +27,6 @@
     "@fontsource/roboto": "^5.2.9",
     "@mui/icons-material": "^7.3.9",
     "@mui/material": "^7.2.0",
-    "@sentry/nextjs": "^10.32.1",
     "@tiptap/extension-color": "^3.18.0",
     "@tiptap/extension-font-family": "^3.18.0",
     "@tiptap/extension-highlight": "^3.18.0",
