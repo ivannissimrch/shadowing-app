@@ -23,8 +23,12 @@ import { useSWRMutationHook } from "@/app/hooks/useSWRMutation";
 import { useAlertContext } from "@/app/AlertContext";
 import { useSnackbar } from "@/app/SnackbarContext";
 import { recorderReducer } from "./helpers/recorderReducer";
-import { getMediaRecorderOptions, getBlobPropertyBag, resumeAudioContextForIOS, createAudioBlobUrl } from "./helpers/audioMimeTypes";
-import * as Sentry from "@sentry/nextjs";
+import {
+  getMediaRecorderOptions,
+  getBlobPropertyBag,
+  resumeAudioContextForIOS,
+  createAudioBlobUrl,
+} from "./helpers/audioMimeTypes";
 
 export const RecorderPanelContext = createContext<RecorderPanelContextType>({
   recorderState: { status: "idle" },
@@ -68,14 +72,18 @@ export default function RecorderPanelContextProvider({
     );
   const { trigger: triggerDeleteSubmission, isMutating: isDeleting } =
     useSWRMutationHook<LessonResponse, undefined>(
-      selectedLesson?.id ? API_PATHS.DELETE_SUBMISSION(selectedLesson.id) : null,
+      selectedLesson?.id
+        ? API_PATHS.DELETE_SUBMISSION(selectedLesson.id)
+        : null,
       { method: "DELETE" }
     );
   const [recorderState, dispatch] = useReducer(recorderReducer, {
     status: "idle",
   });
   const [isPracticeRecording, setIsPracticeRecording] = useState(false);
-  const [recordingCountdown, setRecordingCountdown] = useState<number | null>(null);
+  const [recordingCountdown, setRecordingCountdown] = useState<number | null>(
+    null
+  );
 
   // react-media-recorder hook handles all the browser MediaRecorder complexity
   const {
@@ -90,39 +98,6 @@ export default function RecorderPanelContextProvider({
     blobPropertyBag: getBlobPropertyBag(),
     mediaRecorderOptions: getMediaRecorderOptions(),
     onStop: (blobUrl, blob) => {
-      // Log audio recording details for debugging iPhone issues
-      const userAgent = navigator.userAgent;
-      const isIOS = /iPad|iPhone|iPod/.test(userAgent);
-      const isSafari = /Safari/.test(userAgent) && !/Chrome/.test(userAgent);
-      const isInAppBrowser = /FBAN|FBAV|Instagram|LinkedIn|Twitter|WhatsApp/.test(userAgent);
-
-      Sentry.addBreadcrumb({
-        category: "audio.recording",
-        message: "Recording stopped",
-        data: {
-          blobSize: blob?.size || 0,
-          blobType: blob?.type || "unknown",
-          hasBlob: !!blob,
-          hasBlobUrl: !!blobUrl,
-          isIOS,
-          isSafari,
-          isInAppBrowser,
-          userAgent
-        },
-        level: "info"
-      });
-
-      if (blob && blob.size === 0) {
-        Sentry.captureMessage("Empty audio blob detected on recording stop", {
-          tags: {
-            device: isIOS ? "iOS" : "other",
-            browser: isSafari ? "Safari" : "other",
-            inAppBrowser: isInAppBrowser
-          },
-          extra: { userAgent, blobSize: 0 }
-        });
-      }
-
       // Create iPhone-compatible blob URL with proper MIME type
       const compatibleBlobUrl = blob ? createAudioBlobUrl(blob) : blobUrl;
       dispatch({ type: "STOP_RECORDING", blob, audioURL: compatibleBlobUrl });
@@ -150,7 +125,7 @@ export default function RecorderPanelContextProvider({
     // Start countdown to tell user when to speak (Safari/iPhone needs time)
     setRecordingCountdown(1);
     const countdownTimer = setInterval(() => {
-      setRecordingCountdown(prev => {
+      setRecordingCountdown((prev) => {
         if (prev === null || prev <= 1) {
           clearInterval(countdownTimer);
           return null;
@@ -198,19 +173,6 @@ export default function RecorderPanelContextProvider({
         }
 
         try {
-          // Log audio submission details for debugging
-          const audioSizeKB = Math.round((base64Audio.length * 3) / 4 / 1024);
-          Sentry.addBreadcrumb({
-            category: "audio.upload",
-            message: "Submitting audio for evaluation",
-            data: {
-              audioSizeKB,
-              lessonId: selectedLesson.id,
-              blobSize: recorderState.blob?.size || 0
-            },
-            level: "info"
-          });
-
           const uploadResponse = await triggerUploadAudio({
             audioData: base64Audio,
             lessonId: selectedLesson.id,
