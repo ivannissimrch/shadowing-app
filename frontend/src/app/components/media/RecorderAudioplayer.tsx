@@ -13,6 +13,7 @@ export default function RecorderAudioPlayer({
   const { recorderState } = useRecorderPanelContext();
   const audioURL =
     recorderState.status === "stopped" ? recorderState.audioURL : null;
+  const audioSrc = selectedLesson?.audio_file || audioURL || "";
 
   const playerRef = useRef<AudioPlayer>(null);
 
@@ -40,8 +41,9 @@ export default function RecorderAudioPlayer({
   return (
     <Box>
       <AudioPlayer
+        key={audioSrc}
         ref={playerRef}
-        src={selectedLesson?.audio_file || audioURL || ""}
+        src={audioSrc}
         showJumpControls={false}
         onLoadedMetaData={handleLoadedMetadata}
       />
