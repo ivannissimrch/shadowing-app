@@ -49,6 +49,8 @@ export default function TeacherLessonDetails({
 
   if (!selectedLesson) return null;
 
+  const cloud = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
+  const seekableSrc = `https://res.cloudinary.com/${cloud}/video/fetch/f_mp3/${selectedLesson.audio_file}`;
   const hasSubmission =
     selectedLesson.status === "submitted" ||
     selectedLesson.status === "completed";
@@ -83,7 +85,7 @@ export default function TeacherLessonDetails({
       >
         {t("studentRecording")}
       </Typography>
-      <AudioPlayer src={selectedLesson.audio_file} showJumpControls={false} />
+      <AudioPlayer src={seekableSrc} showJumpControls={false} />
     </Paper>
   ) : (
     <Paper
