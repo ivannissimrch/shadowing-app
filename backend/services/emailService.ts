@@ -130,7 +130,9 @@ export const emailService = {
     recipientEmail: string,
     recipientName: string,
     lessonTitle: string,
-    senderRole: "student" | "teacher"
+    senderRole: "student" | "teacher",
+    lessonId: string,
+    studentId: string
   ) {
     if (!recipientEmail) {
       console.log("[Email] Skipping reply notification (no email):", recipientName);
@@ -139,6 +141,15 @@ export const emailService = {
 
     const senderLabel = senderRole === "teacher" ? "Your teacher" : "Your student";
     const subject = `New Reply on "${lessonTitle}"`;
+
+    // Deep-link straight to the lesson where the reply was left.
+    // When the student replied, the recipient is the teacher -> teacher view.
+    // When the teacher replied, the recipient is the student -> student view.
+    const appUrl = process.env.APP_URL || "http://localhost:3000";
+    const replyLink =
+      senderRole === "student"
+        ? `${appUrl}/en/teacher/student/${studentId}/lesson/${lessonId}`
+        : `${appUrl}/en/student/lessons/${lessonId}`;
     const html = `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
         <h2 style="color: #1976d2;">New Reply</h2>
@@ -148,7 +159,7 @@ export const emailService = {
           <h3 style="margin: 0; color: #333;">${lessonTitle}</h3>
         </div>
         <p>Log in to view the reply and continue the conversation.</p>
-        <a href="${process.env.APP_URL || 'http://localhost:3000'}/en/student/lessons"
+        <a href="${replyLink}"
            style="display: inline-block; background: #1976d2; color: white; padding: 12px 24px;
                   text-decoration: none; border-radius: 8px; margin-top: 16px;">
           View Reply

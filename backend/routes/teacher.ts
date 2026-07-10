@@ -506,7 +506,9 @@ router.post(
           student.email,
           student.username,
           lesson.title,
-          "teacher"
+          "teacher",
+          lessonId,
+          studentId
         )
         .catch((err) =>
           console.error("[Email] Failed to notify student of reply:", err)
