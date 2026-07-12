@@ -12,7 +12,6 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Alert from "@mui/material/Alert";
-import Paper from "@mui/material/Paper";
 import IconButton from "@mui/material/IconButton";
 import { FiSend, FiEdit2, FiX, FiCheck } from "react-icons/fi";
 import useCurrentUserId from "@/app/hooks/useCurrentUserId";
@@ -95,130 +94,129 @@ export default function FeedBack({ idsInfo, selectedLesson }: FeedBackProps) {
     lessonId
   );
 
-  if (selectedLesson?.feedback != null) {
-    return (
-      <Paper sx={{ p: 3, bgcolor: "primary.light" }}>
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            mb: 1,
-          }}
-        >
-          <Typography
-            variant="subtitle2"
-            sx={{ fontWeight: 600, color: "primary.dark" }}
-          >
-            {t("yourFeedback")}
-          </Typography>
-          {!isEditing && (
-            <IconButton
-              size="small"
-              onClick={handleEditClick}
-              sx={{ color: "primary.dark" }}
-            >
-              <FiEdit2 size={16} />
-            </IconButton>
-          )}
-        </Box>
-
-        {isEditing ? (
-          <Box>
-            <RichTextEditor
-              value={editedFeedback}
-              onChange={(html) => {
-                setEditedFeedback(html);
-                setErrorMessage("");
-              }}
-              placeholder={t("leaveFeedbackPlaceholder")}
-            />
-            <Box sx={{ display: "flex", gap: 1, mt: 2 }}>
-              <Button
-                variant="contained"
-                color="primary"
-                size="small"
-                disabled={isMutating || !hasEditedContent}
-                onClick={handleSaveEdit}
-                startIcon={<FiCheck size={14} />}
-                sx={{ textTransform: "none", fontWeight: 500 }}
-              >
-                {isMutating ? tCommon("saving") : tCommon("save")}
-              </Button>
-              <Button
-                variant="outlined"
-                color="secondary"
-                size="small"
-                onClick={handleCancelEdit}
-                disabled={isMutating}
-                startIcon={<FiX size={14} />}
-                sx={{ textTransform: "none", fontWeight: 500 }}
-              >
-                {tCommon("cancel")}
-              </Button>
-            </Box>
-          </Box>
-        ) : (
-          <Box
-            sx={{
-              color: "grey.800",
-              fontWeight: 600,
-              fontSize: "0.875rem",
-              "& p": { mb: 0.5, mt: 0 },
-              "& p:last-child": { mb: 0 },
-              "& ul, & ol": { pl: 3 },
-              "& strong, & b": { fontWeight: 600 },
-              "& s": { textDecoration: "line-through" },
-              "& mark": { borderRadius: "2px", padding: "0 2px" },
-            }}
-            dangerouslySetInnerHTML={{
-              __html: DOMPurify.sanitize(
-                selectedLesson?.feedback || "",
-                SANITIZE_CONFIG
-              ),
-            }}
-          />
-        )}
-
-        {errorMessage && (
-          <Alert severity="error" sx={{ mt: 2 }}>
-            {errorMessage}
-          </Alert>
-        )}
-
-        <FeedbackReplyThread
-          repliesEndpoint={repliesEndpoint}
-          currentUserId={currentUserId}
-        />
-      </Paper>
-    );
-  }
+  const hasSubmission =
+    selectedLesson?.status === "submitted" ||
+    selectedLesson?.status === "completed";
 
   return (
     <Box>
-      <RichTextEditor
-        value={feedback}
-        onChange={(html) => {
-          setFeedback(html);
-          setErrorMessage("");
-        }}
-        placeholder={t("leaveFeedbackPlaceholder")}
-      />
-      <Button
-        variant="contained"
-        color="primary"
-        disabled={isMutating || !hasFeedbackContent}
-        onClick={handleSubmit}
-        startIcon={<FiSend size={16} />}
-        sx={{ mt: 2, textTransform: "none", fontWeight: 500 }}
-      >
-        {isMutating ? tCommon("submitting") : t("submitFeedback")}
-      </Button>
+      {selectedLesson?.feedback != null ? (
+        <>
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              mb: 1,
+            }}
+          >
+            <Typography
+              variant="subtitle2"
+              sx={{ fontWeight: 600, color: "primary.dark" }}
+            >
+              {t("yourFeedback")}
+            </Typography>
+            {!isEditing && (
+              <IconButton
+                size="small"
+                onClick={handleEditClick}
+                sx={{ color: "primary.dark" }}
+              >
+                <FiEdit2 size={16} />
+              </IconButton>
+            )}
+          </Box>
+
+          {isEditing ? (
+            <Box>
+              <RichTextEditor
+                value={editedFeedback}
+                onChange={(html) => {
+                  setEditedFeedback(html);
+                  setErrorMessage("");
+                }}
+                placeholder={t("leaveFeedbackPlaceholder")}
+              />
+              <Box sx={{ display: "flex", gap: 1, mt: 2 }}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  size="small"
+                  disabled={isMutating || !hasEditedContent}
+                  onClick={handleSaveEdit}
+                  startIcon={<FiCheck size={14} />}
+                  sx={{ textTransform: "none", fontWeight: 500 }}
+                >
+                  {isMutating ? tCommon("saving") : tCommon("save")}
+                </Button>
+                <Button
+                  variant="outlined"
+                  color="secondary"
+                  size="small"
+                  onClick={handleCancelEdit}
+                  disabled={isMutating}
+                  startIcon={<FiX size={14} />}
+                  sx={{ textTransform: "none", fontWeight: 500 }}
+                >
+                  {tCommon("cancel")}
+                </Button>
+              </Box>
+            </Box>
+          ) : (
+            <Box
+              sx={{
+                color: "grey.800",
+                fontWeight: 600,
+                fontSize: "0.875rem",
+                "& p": { mb: 0.5, mt: 0 },
+                "& p:last-child": { mb: 0 },
+                "& ul, & ol": { pl: 3 },
+                "& strong, & b": { fontWeight: 600 },
+                "& s": { textDecoration: "line-through" },
+                "& mark": { borderRadius: "2px", padding: "0 2px" },
+              }}
+              dangerouslySetInnerHTML={{
+                __html: DOMPurify.sanitize(
+                  selectedLesson?.feedback || "",
+                  SANITIZE_CONFIG
+                ),
+              }}
+            />
+          )}
+        </>
+      ) : hasSubmission ? (
+        <>
+          <RichTextEditor
+            value={feedback}
+            onChange={(html) => {
+              setFeedback(html);
+              setErrorMessage("");
+            }}
+            placeholder={t("leaveFeedbackPlaceholder")}
+          />
+          <Button
+            variant="contained"
+            color="primary"
+            disabled={isMutating || !hasFeedbackContent}
+            onClick={handleSubmit}
+            startIcon={<FiSend size={16} />}
+            sx={{ mt: 2, textTransform: "none", fontWeight: 500 }}
+          >
+            {isMutating ? tCommon("submitting") : t("submitFeedback")}
+          </Button>
+        </>
+      ) : null}
+
       {errorMessage && (
         <Alert severity="error" sx={{ mt: 2 }}>
           {errorMessage}
         </Alert>
       )}
+
+      <FeedbackReplyThread
+        repliesEndpoint={repliesEndpoint}
+        currentUserId={currentUserId}
+      />
     </Box>
   );
 }

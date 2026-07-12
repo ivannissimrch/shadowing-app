@@ -148,8 +148,24 @@ export default function TeacherLessonDetails({
         hideFeedback
       />
 
-      {hasSubmission && (
-        <Box sx={{ display: "flex", flexDirection: "column", gap: 2, mt: 2 }}>
+      <Box sx={{ display: "flex", flexDirection: "column", gap: 2, mt: 2 }}>
+        <Paper
+          sx={{
+            p: 2,
+            borderRadius: 2,
+            boxShadow: "0 2px 14px 0 rgb(32 40 45 / 8%)",
+          }}
+        >
+          <Typography
+            variant="subtitle2"
+            sx={{ fontWeight: 600, color: "primary.dark", mb: 1 }}
+          >
+            {t("feedback")}
+          </Typography>
+          <FeedBack idsInfo={idInfo} selectedLesson={selectedLesson} />
+        </Paper>
+
+        {isPendingReview && (
           <Paper
             sx={{
               p: 2,
@@ -157,85 +173,67 @@ export default function TeacherLessonDetails({
               boxShadow: "0 2px 14px 0 rgb(32 40 45 / 8%)",
             }}
           >
-            <Typography
-              variant="subtitle2"
-              sx={{ fontWeight: 600, color: "primary.dark", mb: 1 }}
-            >
-              {t("feedback")}
-            </Typography>
-            <FeedBack idsInfo={idInfo} selectedLesson={selectedLesson} />
-          </Paper>
-
-          {isPendingReview && (
-            <Paper
+            <Box
               sx={{
-                p: 2,
-                borderRadius: 2,
-                boxShadow: "0 2px 14px 0 rgb(32 40 45 / 8%)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
               }}
             >
-              <Box
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                }}
+              <Box>
+                <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
+                  {t("readyToComplete")}
+                </Typography>
+                <Typography variant="body2" sx={{ color: "text.secondary" }}>
+                  {t("markCompleteDescription")}
+                </Typography>
+              </Box>
+              <Button
+                variant="contained"
+                color="success"
+                onClick={handleMarkComplete}
+                disabled={isMarking}
+                startIcon={
+                  isMarking ? (
+                    <CircularProgress size={16} color="inherit" />
+                  ) : (
+                    <FiCheckCircle size={16} />
+                  )
+                }
+                sx={{ textTransform: "none", minWidth: 160 }}
               >
-                <Box>
-                  <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
-                    {t("readyToComplete")}
-                  </Typography>
-                  <Typography variant="body2" sx={{ color: "text.secondary" }}>
-                    {t("markCompleteDescription")}
-                  </Typography>
-                </Box>
-                <Button
-                  variant="contained"
-                  color="success"
-                  onClick={handleMarkComplete}
-                  disabled={isMarking}
-                  startIcon={
-                    isMarking ? (
-                      <CircularProgress size={16} color="inherit" />
-                    ) : (
-                      <FiCheckCircle size={16} />
-                    )
-                  }
-                  sx={{ textTransform: "none", minWidth: 160 }}
-                >
-                  {isMarking ? t("marking") : t("markAsCompleted")}
-                </Button>
-              </Box>
-            </Paper>
-          )}
+                {isMarking ? t("marking") : t("markAsCompleted")}
+              </Button>
+            </Box>
+          </Paper>
+        )}
 
-          {isCompleted && (
-            <Paper
-              sx={{
-                p: 2,
-                borderRadius: 2,
-                bgcolor: "success.light",
-                boxShadow: "0 2px 14px 0 rgb(32 40 45 / 8%)",
-              }}
-            >
-              <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-                <FiCheckCircle size={24} color="#2e7d32" />
-                <Box>
-                  <Typography
-                    variant="subtitle1"
-                    sx={{ fontWeight: 600, color: "success.dark" }}
-                  >
-                    {t("lessonCompleted")}
-                  </Typography>
-                  <Typography variant="body2" sx={{ color: "success.dark" }}>
-                    {t("lessonCompletedDescription")}
-                  </Typography>
-                </Box>
+        {isCompleted && (
+          <Paper
+            sx={{
+              p: 2,
+              borderRadius: 2,
+              bgcolor: "success.light",
+              boxShadow: "0 2px 14px 0 rgb(32 40 45 / 8%)",
+            }}
+          >
+            <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+              <FiCheckCircle size={24} color="#2e7d32" />
+              <Box>
+                <Typography
+                  variant="subtitle1"
+                  sx={{ fontWeight: 600, color: "success.dark" }}
+                >
+                  {t("lessonCompleted")}
+                </Typography>
+                <Typography variant="body2" sx={{ color: "success.dark" }}>
+                  {t("lessonCompletedDescription")}
+                </Typography>
               </Box>
-            </Paper>
-          )}
-        </Box>
-      )}
+            </Box>
+          </Paper>
+        )}
+      </Box>
     </Box>
   );
 }
