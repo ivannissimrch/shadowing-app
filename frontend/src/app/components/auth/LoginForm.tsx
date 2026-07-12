@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState, useRef } from "react";
-import { useRouter, Link } from "@/i18n/routing";
+import { useRouter } from "@/i18n/routing";
 import { useTranslations } from "next-intl";
 import { useAuthContext } from "../../AuthContext";
 import redirectBasedOnRole from "../../helpers/redirectBasedOnRole";
@@ -254,23 +254,6 @@ export default function LoginForm() {
             >
               {isLoading ? t("signingIn") : t("login")}
             </Button>
-
-            {/* Link to registration */}
-            <Box sx={{ textAlign: "center", mt: 3 }}>
-              <Typography variant="body2" color="text.secondary">
-                {t("noAccount")}{" "}
-                <Link
-                  href="/register"
-                  style={{
-                    fontWeight: 600,
-                    textDecoration: "none",
-                    color: "#1E88E5",
-                  }}
-                >
-                  {t("signUp")}
-                </Link>
-              </Typography>
-            </Box>
           </Box>
         </CardContent>
       </Card>
