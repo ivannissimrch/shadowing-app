@@ -46,9 +46,7 @@ export default function VideoScriptToggle({
         />
         <ScriptPanel selectedLesson={selectedLesson} />
       </Box>
-      {!hideFeedback && selectedLesson.feedback && (
-        <LessonFeedback selectedLesson={selectedLesson} />
-      )}
+      {!hideFeedback && <LessonFeedback selectedLesson={selectedLesson} />}
     </Box>
   );
 }
