@@ -10,10 +10,11 @@ import RichTextEditor from "@/app/components/ui/RichTextEditor";
 import FeedbackReplyThread from "@/app/components/feedback/FeedbackReplyThread";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
+import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import Alert from "@mui/material/Alert";
 import IconButton from "@mui/material/IconButton";
-import { FiSend, FiEdit2, FiX, FiCheck } from "react-icons/fi";
+import { FiSend, FiEdit2, FiX, FiCheck, FiZap } from "react-icons/fi";
 import useCurrentUserId from "@/app/hooks/useCurrentUserId";
 import { SANITIZE_CONFIG } from "@/app/constants/sanitizeConfig";
 
@@ -29,6 +30,7 @@ export default function FeedBack({ idsInfo, selectedLesson }: FeedBackProps) {
 
   const { studentId, lessonId } = idsInfo;
   const [feedback, setFeedback] = useState("");
+  const [aiInstruction, setAiInstruction] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [isEditing, setIsEditing] = useState(false);
   const [editedFeedback, setEditedFeedback] = useState("");
@@ -44,7 +46,30 @@ export default function FeedBack({ idsInfo, selectedLesson }: FeedBackProps) {
     }
   );
 
+  const { trigger: triggerAiDraft, isMutating: isDrafting } =
+    useSWRMutationHook<{ draft: string }, { instruction: string }>(
+      API_PATHS.TEACHER_STUDENT_LESSON_AI_FEEDBACK(studentId, lessonId),
+      { method: "POST" }
+    );
+
   const currentUserId = useCurrentUserId();
+
+  const handleGenerateDraft = async () => {
+    setErrorMessage("");
+
+    try {
+      const result = await triggerAiDraft({ instruction: aiInstruction });
+      if (result?.draft) {
+        // Gemini returns plain text; wrap it as HTML for the rich text editor.
+        const html = `<p>${result.draft.trim().replace(/\n+/g, "</p><p>")}</p>`;
+        setFeedback(html);
+      }
+    } catch (err) {
+      setErrorMessage(
+        err instanceof Error ? err.message : tErrors("failedToSave")
+      );
+    }
+  };
 
   const handleSubmit = async () => {
     setErrorMessage("");
@@ -186,6 +211,32 @@ export default function FeedBack({ idsInfo, selectedLesson }: FeedBackProps) {
         </>
       ) : hasSubmission ? (
         <>
+          <Box sx={{ display: "flex", gap: 1, mb: 1.5, alignItems: "center" }}>
+            <TextField
+              size="small"
+              fullWidth
+              value={aiInstruction}
+              onChange={(e) => setAiInstruction(e.target.value)}
+              placeholder={t("aiInstructionPlaceholder")}
+              disabled={isDrafting}
+            />
+            <Button
+              variant="outlined"
+              color="primary"
+              size="small"
+              disabled={isDrafting}
+              onClick={handleGenerateDraft}
+              startIcon={<FiZap size={14} />}
+              sx={{
+                textTransform: "none",
+                fontWeight: 500,
+                whiteSpace: "nowrap",
+                flexShrink: 0,
+              }}
+            >
+              {isDrafting ? t("draftingWithAi") : t("draftWithAi")}
+            </Button>
+          </Box>
           <RichTextEditor
             value={feedback}
             onChange={(html) => {

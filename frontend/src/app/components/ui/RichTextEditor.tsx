@@ -13,12 +13,8 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import Divider from "@mui/material/Divider";
 import CircularProgress from "@mui/material/CircularProgress";
-import { useState, MouseEvent } from "react";
-import {
-  FiBold,
-  FiItalic,
-  FiUnderline,
-} from "react-icons/fi";
+import { useState, useEffect, MouseEvent } from "react";
+import { FiBold, FiItalic, FiUnderline } from "react-icons/fi";
 import { ImStrikethrough } from "react-icons/im";
 
 interface RichTextEditorProps {
@@ -37,7 +33,16 @@ const FONT_FAMILIES = [
   { label: "Comic Sans MS", value: "'Comic Sans MS', cursive" },
 ];
 
-const FONT_SIZES = ["12px", "14px", "16px", "18px", "20px", "24px", "28px", "32px"];
+const FONT_SIZES = [
+  "12px",
+  "14px",
+  "16px",
+  "18px",
+  "20px",
+  "24px",
+  "28px",
+  "32px",
+];
 
 const TEXT_COLORS = [
   { label: "Black", value: "#000000" },
@@ -65,10 +70,18 @@ export default function RichTextEditor({
   placeholder,
   compact = false,
 }: RichTextEditorProps) {
-  const [fontFamilyAnchor, setFontFamilyAnchor] = useState<null | HTMLElement>(null);
-  const [fontSizeAnchor, setFontSizeAnchor] = useState<null | HTMLElement>(null);
-  const [textColorAnchor, setTextColorAnchor] = useState<null | HTMLElement>(null);
-  const [highlightAnchor, setHighlightAnchor] = useState<null | HTMLElement>(null);
+  const [fontFamilyAnchor, setFontFamilyAnchor] = useState<null | HTMLElement>(
+    null
+  );
+  const [fontSizeAnchor, setFontSizeAnchor] = useState<null | HTMLElement>(
+    null
+  );
+  const [textColorAnchor, setTextColorAnchor] = useState<null | HTMLElement>(
+    null
+  );
+  const [highlightAnchor, setHighlightAnchor] = useState<null | HTMLElement>(
+    null
+  );
 
   const editor = useEditor({
     extensions: [
@@ -91,6 +104,15 @@ export default function RichTextEditor({
       },
     },
   });
+
+  // TipTap only reads `content` at mount. Sync external `value` changes (e.g. an
+  // AI-generated draft dropped in by the parent) into the editor. The guard skips
+  // the user's own keystrokes, and `false` stops onUpdate from looping.
+  useEffect(() => {
+    if (editor && value !== editor.getHTML()) {
+      editor.commands.setContent(value, { emitUpdate: false });
+    }
+  }, [value, editor]);
 
   const handleFontFamilyClick = (e: MouseEvent<HTMLButtonElement>) => {
     setFontFamilyAnchor(e.currentTarget);
@@ -400,7 +422,13 @@ export default function RichTextEditor({
         {editor ? (
           <EditorContent editor={editor} />
         ) : (
-          <Box sx={{ minHeight: compact ? 60 : 180, display: "grid", placeItems: "center" }}>
+          <Box
+            sx={{
+              minHeight: compact ? 60 : 180,
+              display: "grid",
+              placeItems: "center",
+            }}
+          >
             <CircularProgress size={32} />
           </Box>
         )}

@@ -10,6 +10,11 @@ import { feedbackReplyRepository } from "../repositories/feedbackReplyRepository
 import { practiceWordRepository } from "../repositories/practiceWordRepository.js";
 import { practiceResultRepository } from "../repositories/practiceResultRepository.js";
 import { emailService } from "../services/emailService.js";
+import { evaluatePronunciation } from "../services/speechEvaluation.js";
+import {
+  generateFeedbackDraft,
+  PronunciationStats,
+} from "../services/aiFeedback.js";
 import { Request, Response } from "express";
 
 const SANITIZE_OPTIONS: sanitizeHtml.IOptions = {
@@ -393,6 +398,73 @@ router.patch(
     res.json({
       success: true,
       data: assignment,
+    });
+  })
+);
+
+// Generate an AI-drafted feedback message from the student's recording.
+// Runs Azure pronunciation assessment on the submission, then Gemini turns the
+// scores into a warm draft the teacher can edit before sending. Nothing is saved.
+router.post(
+  "/student/:studentId/lesson/:lessonId/ai-feedback",
+  asyncHandler(async (req: Request, res: Response) => {
+    const { studentId, lessonId } = req.params;
+    // Optional free-text steer from the teacher (e.g. "focus on the r sound").
+    const teacherInstruction =
+      typeof req.body?.instruction === "string"
+        ? req.body.instruction.slice(0, 500)
+        : undefined;
+
+    const lesson = await lessonRepository.findOneForStudent(studentId, lessonId);
+
+    if (!lesson) {
+      throw createError(404, "Lesson not found or not assigned to student");
+    }
+    if (!lesson.audio_file) {
+      throw createError(400, "This lesson has no recording to analyze");
+    }
+    if (!lesson.script_text) {
+      throw createError(400, "This lesson has no script to compare against");
+    }
+
+    // script_text is rich HTML from the editor (tags, inline colors, and "/"
+    // shadowing pause marks). Azure needs clean plain text to align the audio,
+    // so strip all markup and the pause marks before scoring.
+    const referenceText = sanitizeHtml(lesson.script_text, {
+      allowedTags: [],
+      allowedAttributes: {},
+    })
+      .replace(/\/+/g, " ")
+      .replace(/\s+/g, " ")
+      .trim();
+
+    if (!referenceText) {
+      throw createError(400, "This lesson's script is empty after cleanup");
+    }
+
+    // Fetch the student's raw recording so Azure can score it.
+    const audioResponse = await fetch(lesson.audio_file);
+    if (!audioResponse.ok) {
+      throw createError(502, "Failed to fetch the student's recording");
+    }
+    const audioBuffer = Buffer.from(await audioResponse.arrayBuffer());
+
+    const stats = (await evaluatePronunciation(
+      audioBuffer,
+      referenceText
+    )) as Omit<PronunciationStats, "referenceText">;
+
+    const draft = await generateFeedbackDraft(
+      {
+        ...stats,
+        referenceText,
+      },
+      teacherInstruction
+    );
+
+    res.json({
+      success: true,
+      data: { draft },
     });
   })
 );

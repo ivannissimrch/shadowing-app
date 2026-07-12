@@ -45,6 +45,8 @@ export const API_PATHS = {
     `/api/teacher/student/${studentId}/lesson/${lessonId}/feedback`,
   TEACHER_STUDENT_LESSON_COMPLETE: (studentId: string, lessonId: string) =>
     `/api/teacher/student/${studentId}/lesson/${lessonId}/complete`,
+  TEACHER_STUDENT_LESSON_AI_FEEDBACK: (studentId: string, lessonId: string) =>
+    `/api/teacher/student/${studentId}/lesson/${lessonId}/ai-feedback`,
   TEACHER_STUDENT_PRACTICE_WORDS: (studentId: string) =>
     `/api/teacher/student/${studentId}/practice-words`,
   TEACHER_FEEDBACK_REPLIES: (studentId: string, lessonId: string) =>
