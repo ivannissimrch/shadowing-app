@@ -53,11 +53,20 @@ function detectAudioFormat(buffer: Buffer): string {
     buffer[2] === 0x67 && buffer[3] === 0x53
   ) return "ogg";
 
+  // MP3: ID3v2 tag ('ID3') or a raw MPEG audio frame sync (0xFF + 11 set sync bits).
+  // Server-extracted lesson audio (audioExtraction.ts, libmp3lame) is MP3 and
+  // never comes from a browser recorder, so this can't collide with the blob
+  // formats above.
+  if (
+    buffer[0] === 0x49 && buffer[1] === 0x44 && buffer[2] === 0x33
+  ) return "mp3";
+  if (buffer[0] === 0xff && (buffer[1] & 0xe0) === 0xe0) return "mp3";
+
   return "webm"; // fallback
 }
 
 // Convert audio buffer to WAV buffer (normalised to 16kHz mono PCM for Azure)
-function convertToWav(inputBuffer: Buffer): Promise<Buffer> {
+export function convertToWav(inputBuffer: Buffer): Promise<Buffer> {
   return new Promise((resolve, reject) => {
     const format = detectAudioFormat(inputBuffer);
     const inputStream = Readable.from(inputBuffer);

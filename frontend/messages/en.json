@@ -360,6 +360,9 @@
     "segmentLabel": "Enter phrase text...",
     "deleteSegment": "Delete segment",
     "emptyLabelsError": "All segments must have a phrase label before saving.",
-    "saveFailed": "Failed to save segments. Please try again."
+    "saveFailed": "Failed to save segments. Please try again.",
+    "autoSegment": "Auto-Segment",
+    "autoSegmenting": "Analyzing audio...",
+    "autoSegmentFailed": "Auto-segmentation failed. Please try again or add segments manually."
   }
 }

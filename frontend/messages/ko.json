@@ -360,6 +360,9 @@
     "segmentLabel": "문장 텍스트 입력...",
     "deleteSegment": "구간 삭제",
     "emptyLabelsError": "저장하기 전에 모든 구간에 문장을 입력해야 합니다.",
-    "saveFailed": "구간 저장에 실패했습니다. 다시 시도해주세요."
+    "saveFailed": "구간 저장에 실패했습니다. 다시 시도해주세요.",
+    "autoSegment": "자동 구간 나누기",
+    "autoSegmenting": "오디오 분석 중...",
+    "autoSegmentFailed": "자동 구간 나누기에 실패했습니다. 다시 시도하거나 수동으로 구간을 추가해주세요."
   }
 }

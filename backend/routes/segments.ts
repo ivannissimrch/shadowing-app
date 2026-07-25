@@ -3,6 +3,7 @@ import createError from "http-errors";
 import asyncHandler from "../handlers/asyncHandler.js";
 import { segmentRepository } from "../repositories/segmentRepository.js";
 import { lessonRepository } from "../repositories/lessonRepository.js";
+import { autoSegmentLesson } from "../services/autoSegment.js";
 import { CreateSegmentInput } from "../types.js";
 
 const router = Router();
@@ -75,6 +76,51 @@ router.post(
     res.status(201).json({
       success: true,
       data: created,
+    });
+  })
+);
+
+// POST /api/teacher/lessons/:lessonId/auto-segment - AI-suggested segments
+// (transcribes the lesson audio, then asks Gemini to pick natural phrase
+// breaks). Returns suggestions only — nothing is saved until the teacher
+// reviews them and hits Save Segments.
+// Teacher only
+router.post(
+  "/teacher/lessons/:lessonId/auto-segment",
+  asyncHandler(async (req: Request, res: Response) => {
+    const { lessonId } = req.params;
+    const role = req?.user?.role;
+
+    if (role !== "teacher") {
+      throw createError(403, "Only teachers can auto-segment lessons");
+    }
+
+    const lesson = await lessonRepository.findById(lessonId);
+    if (!lesson) {
+      throw createError(404, "Lesson not found");
+    }
+
+    const audioSourceUrl = lesson.audio_url
+      ? lesson.audio_url
+      : lesson.cloudinary_url
+        ? lesson.cloudinary_url.replace("/upload/", "/upload/f_mp3/")
+        : null;
+
+    if (!audioSourceUrl) {
+      throw createError(400, "This lesson has no audio to segment.");
+    }
+
+    const audioResponse = await fetch(audioSourceUrl);
+    if (!audioResponse.ok) {
+      throw createError(502, "Failed to download lesson audio.");
+    }
+    const audioBuffer = Buffer.from(await audioResponse.arrayBuffer());
+
+    const suggestions = await autoSegmentLesson(audioBuffer);
+
+    res.json({
+      success: true,
+      data: suggestions,
     });
   })
 );
