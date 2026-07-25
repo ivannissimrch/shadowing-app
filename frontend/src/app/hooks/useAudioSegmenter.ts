@@ -21,6 +21,8 @@ export default function useAudioSegmenter(lessonId: string) {
   const [isSaving, setIsSaving] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
   const [saveSuccess, setSaveSuccess] = useState(false);
+  const [isAutoSegmenting, setIsAutoSegmenting] = useState(false);
+  const [autoSegmentError, setAutoSegmentError] = useState<string | null>(null);
 
   // Initialize local state from fetched data
   useEffect(() => {
@@ -58,9 +60,7 @@ export default function useAudioSegmenter(lessonId: string) {
   );
 
   const updateSegmentLabel = useCallback((id: string, label: string) => {
-    setSegments((prev) =>
-      prev.map((s) => (s.id === id ? { ...s, label } : s))
-    );
+    setSegments((prev) => prev.map((s) => (s.id === id ? { ...s, label } : s)));
     setSaveSuccess(false);
   }, []);
 
@@ -117,6 +117,36 @@ export default function useAudioSegmenter(lessonId: string) {
     }
   }, [lessonId, segments, mutate]);
 
+  // Auto-segmentation transcribes the full lesson and asks Gemini for natural
+  // phrase breaks server-side, so this can take a while — give it a longer
+  // timeout than the axios instance default (30s).
+  const autoSegment = useCallback(async () => {
+    setIsAutoSegmenting(true);
+    setAutoSegmentError(null);
+    setSaveSuccess(false);
+
+    try {
+      const response = await api.post<{
+        data: Omit<LocalSegment, "id">[];
+      }>(
+        API_PATHS.TEACHER_LESSON_AUTO_SEGMENT(lessonId),
+        {},
+        { timeout: 120000 }
+      );
+
+      const suggestions = response.data.data.map((s, i) => ({
+        ...s,
+        id: `auto-${Date.now()}-${i}`,
+      }));
+
+      setSegments(suggestions);
+    } catch {
+      setAutoSegmentError("autoSegmentFailed");
+    } finally {
+      setIsAutoSegmenting(false);
+    }
+  }, [lessonId]);
+
   const resetSegments = useCallback(() => {
     if (savedSegments) {
       setSegments(
@@ -140,6 +170,8 @@ export default function useAudioSegmenter(lessonId: string) {
     isSaving,
     saveError,
     saveSuccess,
+    isAutoSegmenting,
+    autoSegmentError,
     isLoaded: savedSegments !== undefined,
     addSegment,
     updateSegmentLabel,
@@ -147,5 +179,6 @@ export default function useAudioSegmenter(lessonId: string) {
     removeSegment,
     saveSegments,
     resetSegments,
+    autoSegment,
   };
 }

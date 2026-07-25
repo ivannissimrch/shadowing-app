@@ -6,7 +6,7 @@ import Button from "@mui/material/Button";
 import Alert from "@mui/material/Alert";
 import Typography from "@mui/material/Typography";
 import CircularProgress from "@mui/material/CircularProgress";
-import { FiPlus, FiSave, FiRotateCcw } from "react-icons/fi";
+import { FiPlus, FiSave, FiRotateCcw, FiZap } from "react-icons/fi";
 import useAudioSegmenter from "@/app/hooks/useAudioSegmenter";
 import WaveformPlayer, { type WaveformPlayerRef } from "./WaveformPlayer";
 import SegmentList from "./SegmentList";
@@ -29,12 +29,15 @@ export default function AudioSegmenter({
     isSaving,
     saveError,
     saveSuccess,
+    isAutoSegmenting,
+    autoSegmentError,
     addSegment,
     updateSegmentLabel,
     updateSegmentTimes,
     removeSegment,
     saveSegments,
     resetSegments,
+    autoSegment,
   } = useAudioSegmenter(lessonId);
 
   const handleAddSegment = useCallback(() => {
@@ -61,24 +64,35 @@ export default function AudioSegmenter({
 
   const [playingSegmentId, setPlayingSegmentId] = useState<string | null>(null);
 
-  const handlePlaySegment = useCallback((id: string) => {
-    const wf = waveformRef.current;
-    if (!wf) return;
+  const handlePlaySegment = useCallback(
+    (id: string) => {
+      const wf = waveformRef.current;
+      if (!wf) return;
 
-    // If this segment is already playing, stop it
-    if (playingSegmentId === id && wf.isPlaying()) {
-      wf.stop();
-      setPlayingSegmentId(null);
-      return;
-    }
+      // If this segment is already playing, stop it
+      if (playingSegmentId === id && wf.isPlaying()) {
+        wf.stop();
+        setPlayingSegmentId(null);
+        return;
+      }
 
-    // Don't stop first - region.play() handles the seek internally.
-    // Calling pause() then play() immediately causes a browser race condition.
-    setPlayingSegmentId(id);
-    wf.playRegion(id);
-  }, [playingSegmentId]);
+      // Don't stop first - region.play() handles the seek internally.
+      // Calling pause() then play() immediately causes a browser race condition.
+      setPlayingSegmentId(id);
+      wf.playRegion(id);
+    },
+    [playingSegmentId]
+  );
 
-  const errorMessage = validationError || (saveError ? t(saveError) : null);
+  const handleAutoSegment = useCallback(() => {
+    setValidationError(null);
+    autoSegment();
+  }, [autoSegment]);
+
+  const errorMessage =
+    validationError ||
+    (saveError ? t(saveError) : null) ||
+    (autoSegmentError ? t(autoSegmentError) : null);
 
   return (
     <Box>
@@ -103,6 +117,21 @@ export default function AudioSegmenter({
           sx={{ textTransform: "none" }}
         >
           {t("addSegment")}
+        </Button>
+        <Button
+          variant="outlined"
+          startIcon={
+            isAutoSegmenting ? (
+              <CircularProgress size={16} color="inherit" />
+            ) : (
+              <FiZap size={16} />
+            )
+          }
+          onClick={handleAutoSegment}
+          disabled={isAutoSegmenting || isSaving}
+          sx={{ textTransform: "none" }}
+        >
+          {isAutoSegmenting ? t("autoSegmenting") : t("autoSegment")}
         </Button>
         <Box sx={{ flex: 1 }} />
         <Button

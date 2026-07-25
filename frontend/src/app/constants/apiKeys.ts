@@ -96,4 +96,6 @@ export const API_PATHS = {
     `/api/teacher/lessons/${lessonId}/segments`,
   TEACHER_LESSON_SEGMENT: (lessonId: string, segmentId: string) =>
     `/api/teacher/lessons/${lessonId}/segments/${segmentId}`,
+  TEACHER_LESSON_AUTO_SEGMENT: (lessonId: string) =>
+    `/api/teacher/lessons/${lessonId}/auto-segment`,
 } as const;
