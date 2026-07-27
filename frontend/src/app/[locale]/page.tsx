@@ -1,5 +1,5 @@
-import LoginForm from "../components/auth/LoginForm";
+import LandingPage from "../components/marketing/LandingPage";
 
-export default async function Login() {
-  return <LoginForm />;
+export default async function Home() {
+  return <LandingPage />;
 }

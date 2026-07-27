@@ -364,5 +364,170 @@
     "autoSegment": "Auto-Segment",
     "autoSegmenting": "Analyzing audio...",
     "autoSegmentFailed": "Auto-segmentation failed. Please try again or add segments manually."
+  },
+  "landing": {
+    "brand": "ShadowSpeak",
+    "brandTagline": "with Lyn",
+    "signIn": "Sign In",
+    "hero": {
+      "eyebrow": "ESL Pronunciation & Accent Coaching",
+      "title": "Learn English with Lyn",
+      "subtitle": "Pronunciation, accent, and fluency coaching from an experienced ESL teacher, delivered through guided shadowing practice.",
+      "cta": "Contact to Sign Up"
+    },
+    "about": {
+      "eyebrow": "About Lyn",
+      "pullQuote": "If you're serious about improving your English, I'm serious about helping you get there.",
+      "title": "Meet Lyn",
+      "body": "Lyn is an EFL/ESL teacher with over 9 years of experience, currently living and teaching in South Korea. She helps non-native speakers build clear, confident English, with a focus on pronunciation, accent, phrasal verbs, idioms, and natural conversational fluency.",
+      "testimonialQuote": "I've been a student of Lyn's for over two years, and my pronunciation and overall speaking have improved so much. She gives real practice every class and genuinely cares about how I'm progressing.",
+      "testimonialAuthor": "— Ivan"
+    },
+    "courses": {
+      "eyebrow": "Self-Paced Courses",
+      "title": "Lyn's Courses",
+      "subtitle": "Message Lyn to sign up for any of these.",
+      "signUpCta": "Contact to Sign Up",
+      "featuredBadge": "Most Popular",
+      "membership": {
+        "title": "Accent Training Membership",
+        "description": "Lifetime access to Lyn's full accent training curriculum, with personal feedback on your submissions.",
+        "price": "$300 (lifetime access)",
+        "benefit1": "30 structured sessions covering pronunciation, reduction, linking & rhythm",
+        "benefit2": "Personal feedback from Lyn on your recordings",
+        "benefit3": "Access to the private Fluency Community"
+      },
+      "accent": {
+        "title": "Standard English Pronunciation and Accent Training",
+        "description": "A self-paced course covering the seven essential sounds of standard American English pronunciation.",
+        "price": "$75 ($15 on sale)",
+        "benefit1": "R/L, S/Z, and other tricky consonant sounds",
+        "benefit2": "The schwa sound, word stress, and syllable rhythm",
+        "benefit3": "Linking sounds and real practice with movie-clip analysis"
+      },
+      "phrasalVerbs": {
+        "title": "100 Phrasal Verbs with 60 Mini-Stories",
+        "description": "Learn the everyday expressions native speakers actually use, through short, memorable stories.",
+        "price": "$15",
+        "benefit1": "Common phrasal verbs and idioms, explained simply",
+        "benefit2": "Practiced through mini-stories, not flashcards",
+        "benefit3": "Sound more natural in everyday conversation"
+      },
+      "ipa": {
+        "title": "International Phonetic Alphabet Coaching",
+        "description": "1-on-1 coaching through the IPA symbols, with sample words and meanings for every sound.",
+        "price": "$100",
+        "benefit1": "Read and understand IPA transcription",
+        "benefit2": "Practice the sounds you can't hear correctly yet",
+        "benefit3": "Personal coaching time with Lyn"
+      },
+      "shadowing": {
+        "title": "1-on-1 Shadowing Online Coaching",
+        "description": "Guided shadowing sessions where you repeat real speech in real time to build natural rhythm and fluency.",
+        "price": "$200",
+        "benefit1": "Shadow real video and audio clips with Lyn",
+        "benefit2": "Build natural rhythm, stress, and intonation",
+        "benefit3": "Direct feedback on your shadowing technique"
+      }
+    },
+    "coachingPackages": {
+      "eyebrow": "Live 1-on-1 Coaching",
+      "title": "1-on-1 Coaching Packages",
+      "subtitle": "Live 50-minute sessions with Lyn, built around your goals.",
+      "signUpCta": "Contact to Sign Up",
+      "cancellationNote": "Cancel at least 8 hours before class. Arriving 10-15 minutes late counts as absent, with no refund.",
+      "starter": {
+        "title": "Master English Conversation",
+        "price": "$95",
+        "sessions": "4 classes",
+        "description": "Vocabulary through stories, speaking, listening, reading, and grammar practice, with structured feedback."
+      },
+      "intermediate": {
+        "title": "Conversational English, Pronunciation & Accent Training",
+        "price": "$280",
+        "sessions": "10 classes",
+        "description": "Idioms, phrasal verbs, travel and daily-life conversation, and American accent training through movie-clip analysis."
+      },
+      "advanced": {
+        "title": "Speak Clear Confident English",
+        "price": "$340",
+        "sessions": "20 classes",
+        "description": "The full reduction-sounds curriculum: vowels, consonants, stress, connected speech, diphthongs, triphthongs, shadowing, and movie analysis."
+      }
+    },
+    "miniCourses": {
+      "title": "Coming Soon",
+      "subtitle": "Bite-sized courses on specific sounds, launching soon.",
+      "comingSoon": "Coming Soon",
+      "vowelsConsonants": {
+        "title": "Vowels and Consonant Sounds",
+        "description": "The basic pronunciation of the 14 American English vowels and the consonant letters, with example words and meanings.",
+        "price": "$75"
+      },
+      "ipaSymbols": {
+        "title": "International Phonetic Symbols",
+        "description": "The IPA symbols with a list of sample words and their meanings.",
+        "price": "$75"
+      },
+      "diphthongsTriphthongs": {
+        "title": "Diphthongs & Triphthongs Sounds",
+        "description": "Diphthong and triphthong sounds with a list of words and sentences.",
+        "price": "$85"
+      }
+    },
+    "features": {
+      "title": "What you'll practice",
+      "pronunciation": {
+        "title": "Pronunciation & Accent",
+        "description": "Work on the sounds, rhythm, and intonation that make your English easier to understand."
+      },
+      "shadowing": {
+        "title": "Shadowing Practice",
+        "description": "Build natural rhythm and fluency by shadowing real video and audio clips."
+      },
+      "recording": {
+        "title": "Record & Compare",
+        "description": "Record yourself right in the browser and compare it side by side with the original."
+      },
+      "feedback": {
+        "title": "Feedback From Lyn",
+        "description": "Lyn reviews your recordings herself and gives you direct, personal feedback."
+      }
+    },
+    "community": {
+      "eyebrow": "Community",
+      "title": "Practice with the Community",
+      "subtitle": "Join Lyn's YouTube channel and Facebook community for free pronunciation tips and weekly practice.",
+      "youtube": "YouTube Channel",
+      "facebookGroup": "Facebook Group",
+      "facebookPage": "Facebook Page"
+    },
+    "faq": {
+      "title": "Questions",
+      "whatIsIt": {
+        "question": "What will I find here?",
+        "answer": "Lyn's pronunciation, accent, and fluency courses. Practice by shadowing real speech, recording yourself, and getting her feedback."
+      },
+      "coursesAvailable": {
+        "question": "Are Lyn's courses available now?",
+        "answer": "Yes, all of Lyn's courses and coaching packages are available now. Message her to get started."
+      },
+      "existingStudent": {
+        "question": "I'm already a student. Where do I sign in?",
+        "answer": "Use the Sign In link at the top of the page."
+      },
+      "paymentOptions": {
+        "question": "Do you have any payment options?",
+        "answer": "Payment is currently handled directly with Lyn via PayPal. Get in touch to arrange payment for any course."
+      },
+      "refundPolicy": {
+        "question": "What if a course doesn't match my needs? Can I get a refund?",
+        "answer": "Courses are digital and delivered right away, so they're non-refundable once purchased. Message Lyn first if you're not sure a course is the right fit, she's happy to help you choose."
+      }
+    },
+    "footer": {
+      "cta": "Interested? Get in touch.",
+      "signIn": "Existing student? Sign in"
+    }
   }
 }
