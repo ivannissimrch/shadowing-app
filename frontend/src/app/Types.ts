@@ -180,3 +180,30 @@ export interface FeedbackReply {
   username: string;
   role: "student" | "teacher";
 }
+
+export interface PronunciationPhoneme {
+  phoneme: string;
+  accuracyScore?: number;
+}
+
+export interface PronunciationWord {
+  word: string;
+  accuracyScore?: number;
+  errorType?: string;
+  phonemes?: PronunciationPhoneme[];
+}
+
+export interface PronunciationStats {
+  text: string;
+  referenceText: string;
+  accuracyScore: number;
+  fluencyScore: number;
+  completenessScore: number;
+  pronunciationScore: number;
+  words: PronunciationWord[];
+}
+
+export interface AiFeedbackDraftResponse {
+  draft: string;
+  stats: PronunciationStats;
+}

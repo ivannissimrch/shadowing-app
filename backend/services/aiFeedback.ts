@@ -57,10 +57,37 @@ export async function generateFeedbackDraft(
     })
     .join("\n");
 
+  // Same idea for praise: without real data here, Gemini has nothing to
+  // ground "praise something specific" in and ends up inventing plausible-
+  // sounding compliments about words it never actually saw a score for.
+  // Short function words (a, is, it, do...) make weak praise targets even
+  // when they score well, so require some real length.
+  const strongWordsSeen = new Set<string>();
+  const strongWords = [...stats.words]
+    .filter(
+      (w) =>
+        typeof w.accuracyScore === "number" &&
+        (w.accuracyScore ?? 0) >= 90 &&
+        w.word.length > 3
+    )
+    .sort((a, b) => (b.accuracyScore ?? 0) - (a.accuracyScore ?? 0))
+    .filter((w) => {
+      const key = w.word.toLowerCase();
+      if (strongWordsSeen.has(key)) return false;
+      strongWordsSeen.add(key);
+      return true;
+    })
+    .slice(0, 3)
+    .map((w) => `- "${w.word}", scored ${Math.round(w.accuracyScore ?? 0)}/100`)
+    .join("\n");
+
   const prompt = `You are helping an ESL (English as a Second Language) teacher write short, encouraging feedback for a student who just submitted a spoken lesson.
 
 The student read this reference text:
 "${stats.referenceText}"
+
+The speech engine flagged these words the student pronounced especially well (0-100, higher = better). Use ONE of these, by name, for the praise — never praise a word's pronunciation that isn't listed here:
+${strongWords || "No standout words detected — keep the opening encouraging but general, don't name a specific word."}
 
 The speech engine flagged these specific words and the exact SOUNDS inside them that the student mispronounced (0-100, lower = worse). The sounds are written in ARPAbet phonetic codes — translate them to how a learner would understand them (e.g. "dh" = the voiced "th" as in "this", "th" = the soft "th" as in "think", "f" = the "f" sound, "r" = the "r" sound, "ae" = the short "a" as in "cat", "iy" = the long "ee", "l" = the "l" sound):
 ${weakWords || "No specific problem sounds detected — the student pronounced everything well."}
@@ -70,12 +97,13 @@ ${
     : ""
 }
 Write a warm, personal note directly to the student (2-4 sentences):
-- Start by praising something specific they did well.
+- Start by praising something specific they did well — the word you name must come from the well-pronounced list above.
 - Then focus on the SINGLE most important sound to fix. Name the exact word it appeared in, describe the specific sound in plain English (NOT the phonetic code), and say where in the word it is. Give one tiny, concrete tip for making that sound.
 - End with encouragement.
 
 Rules:
 - Be specific about the sound — the teacher must know exactly which sound you mean. Never say a vague "th sound" without anchoring it to the exact word.
+- Do NOT praise, name, or make claims about any word that isn't explicitly listed above — if you have nothing grounded to praise, stay general instead of inventing a specific example.
 - Do NOT mention the speech engine, scores, numbers, or phonetic codes. Speak like a caring human teacher.
 - No jargon. No markdown. No greeting line like "Dear student".
 - Output ONLY the message text, nothing else.`;

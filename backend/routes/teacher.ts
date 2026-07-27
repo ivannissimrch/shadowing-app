@@ -9,8 +9,9 @@ import { userRepository } from "../repositories/userRepository.js";
 import { feedbackReplyRepository } from "../repositories/feedbackReplyRepository.js";
 import { practiceWordRepository } from "../repositories/practiceWordRepository.js";
 import { practiceResultRepository } from "../repositories/practiceResultRepository.js";
+import { segmentRepository } from "../repositories/segmentRepository.js";
 import { emailService } from "../services/emailService.js";
-import { evaluatePronunciation } from "../services/speechEvaluation.js";
+import { evaluatePronunciation, transcribeAudio } from "../services/speechEvaluation.js";
 import {
   generateFeedbackDraft,
   PronunciationStats,
@@ -423,23 +424,76 @@ router.post(
     if (!lesson.audio_file) {
       throw createError(400, "This lesson has no recording to analyze");
     }
-    if (!lesson.script_text) {
-      throw createError(400, "This lesson has no script to compare against");
-    }
 
-    // script_text is rich HTML from the editor (tags, inline colors, and "/"
-    // shadowing pause marks). Azure needs clean plain text to align the audio,
-    // so strip all markup and the pause marks before scoring.
-    const referenceText = sanitizeHtml(lesson.script_text, {
-      allowedTags: [],
-      allowedAttributes: {},
-    })
-      .replace(/\/+/g, " ")
-      .replace(/\s+/g, " ")
-      .trim();
+    let referenceText: string;
 
-    if (!referenceText) {
-      throw createError(400, "This lesson's script is empty after cleanup");
+    if (lesson.verified_transcript) {
+      // Already transcribed from the lesson's own audio on a prior request —
+      // reuse it instead of spending Azure quota re-transcribing every time.
+      referenceText = lesson.verified_transcript;
+    } else if (lesson.audio_url) {
+      // First feedback request for this lesson: transcribe the lesson's own
+      // narration audio once, then cache it so every student after this one
+      // hits the cached branch above. Grounds the reference text in what's
+      // actually spoken, not what the teacher typed into script_text.
+      const lessonAudioResponse = await fetch(lesson.audio_url);
+      if (!lessonAudioResponse.ok) {
+        throw createError(502, "Failed to fetch the lesson's audio");
+      }
+      const lessonAudioBuffer = Buffer.from(
+        await lessonAudioResponse.arrayBuffer()
+      );
+      const transcript = await transcribeAudio(lessonAudioBuffer);
+
+      if (!transcript.trim()) {
+        throw createError(502, "Could not transcribe this lesson's audio");
+      }
+
+      await lessonRepository.updateVerifiedTranscript(lessonId, transcript);
+      referenceText = transcript;
+    } else {
+      // No extracted lesson audio (e.g. youtube-type lessons) — fall back to
+      // the teacher-curated text.
+      if (!lesson.script_text) {
+        throw createError(400, "This lesson has no script to compare against");
+      }
+
+      // Prefer the lesson's segments as the reference text: segment.label is
+      // the same clean, curated spoken-line text the practice feature already
+      // scores against successfully (see LessonPhrasesList.tsx), free of the
+      // teacher's own notes and speaker-attribution labels that live in the
+      // freeform script_text field.
+      const segments = await segmentRepository.findByLessonId(lessonId);
+      const segmentText = segments
+        .map((segment) => segment.label?.trim())
+        .filter(Boolean)
+        .join(" ");
+
+      // Fallback for lessons that haven't been segmented yet: script_text is
+      // rich HTML from the editor (tags, inline colors, "/" shadowing pause
+      // marks, and speaker labels like "Harvey:" at the start of a line).
+      // Strip each speaker label per-paragraph (the student reads the line,
+      // never the attribution), then strip markup and pause marks.
+      const paragraphs = lesson.script_text.match(/<p[^>]*>.*?<\/p>/gs) ?? [
+        lesson.script_text,
+      ];
+      const scriptTextFallback = paragraphs
+        .map((paragraph) =>
+          sanitizeHtml(paragraph, { allowedTags: [], allowedAttributes: {} })
+            .replace(/^\s*[A-Za-z][A-Za-z .'-]*:\s*/, "")
+            .trim()
+        )
+        .filter(Boolean)
+        .join(" ")
+        .replace(/\/+/g, " ")
+        .replace(/\s+/g, " ")
+        .trim();
+
+      referenceText = segmentText || scriptTextFallback;
+
+      if (!referenceText) {
+        throw createError(400, "This lesson's script is empty after cleanup");
+      }
     }
 
     // Fetch the student's raw recording so Azure can score it.
@@ -464,7 +518,9 @@ router.post(
 
     res.json({
       success: true,
-      data: { draft },
+      // `stats.words` lets the teacher see the actual per-word/phoneme scores
+      // the draft was grounded in, instead of just trusting the AI's summary.
+      data: { draft, stats: { ...stats, referenceText } },
     });
   })
 );

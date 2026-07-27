@@ -135,6 +135,62 @@ export async function synthesizeSpeech(
   });
 }
 
+// Plain speech-to-text for a lesson's own narration audio (no reference text
+// involved). Uses continuous recognition, not recognizeOnceAsync, because a
+// lesson's audio is typically many sentences long and recognizeOnceAsync stops
+// at the first pause — that would silently truncate the transcript to just the
+// opening line.
+export async function transcribeAudio(audioBuffer: Buffer): Promise<string> {
+  const wavBuffer = await convertToWav(audioBuffer);
+
+  const speechConfig = sdk.SpeechConfig.fromSubscription(speechKey, speechRegion);
+  speechConfig.speechRecognitionLanguage = "en-US";
+  // These clips are TV dialogue, not clean ESL narration — Azure's default
+  // profanity filter masks swear words as "****" in the transcript, which then
+  // gets cached as verified_transcript and permanently corrupts that reference
+  // text. Keep the actual words so scoring has something real to align to.
+  speechConfig.setProfanity(sdk.ProfanityOption.Raw);
+
+  const pushStream = sdk.AudioInputStream.createPushStream();
+  const arrayBuffer = new Uint8Array(wavBuffer).buffer as ArrayBuffer;
+  pushStream.write(arrayBuffer);
+  pushStream.close();
+
+  const audioConfig = sdk.AudioConfig.fromStreamInput(pushStream);
+  const recognizer = new sdk.SpeechRecognizer(speechConfig, audioConfig);
+
+  const chunks: string[] = [];
+
+  return new Promise((resolve, reject) => {
+    recognizer.recognized = (_sender, event) => {
+      if (event.result.reason === sdk.ResultReason.RecognizedSpeech && event.result.text) {
+        chunks.push(event.result.text);
+      }
+    };
+
+    recognizer.canceled = (_sender, event) => {
+      recognizer.stopContinuousRecognitionAsync(() => recognizer.close());
+      if (event.reason === sdk.CancellationReason.Error) {
+        reject(new Error(`Transcription failed: ${event.errorDetails}`));
+      } else {
+        resolve(chunks.join(" "));
+      }
+    };
+
+    recognizer.sessionStopped = () => {
+      recognizer.stopContinuousRecognitionAsync(() => {
+        recognizer.close();
+        resolve(chunks.join(" "));
+      });
+    };
+
+    recognizer.startContinuousRecognitionAsync(undefined, (error) => {
+      recognizer.close();
+      reject(error);
+    });
+  });
+}
+
 export async function evaluatePronunciation(
   audioBuffer: Buffer,
   referenceText: string
@@ -154,6 +210,7 @@ export async function evaluatePronunciation(
 
   const speechConfig = sdk.SpeechConfig.fromSubscription(speechKey, speechRegion);
   speechConfig.speechRecognitionLanguage = "en-US";
+  speechConfig.setProfanity(sdk.ProfanityOption.Raw);
 
   const pronunciationConfig = new sdk.PronunciationAssessmentConfig(
     referenceText,
@@ -172,49 +229,130 @@ export async function evaluatePronunciation(
 
   pronunciationConfig.applyTo(recognizer);
 
+  // recognizeOnceAsync only scores the first utterance (stops at the first
+  // pause) — on a 60s recording that silently drops everything the student
+  // said afterward, and the missing words come back as false "Omission"
+  // errors instead of real scores. Continuous recognition walks the whole
+  // recording, firing one `recognized` event per utterance; accumulate them
+  // all before resolving.
+  const textChunks: string[] = [];
+  const words: {
+    word: string;
+    accuracyScore: number | undefined;
+    errorType: string | undefined;
+    phonemes: { phoneme: string; accuracyScore: number | undefined }[] | undefined;
+  }[] = [];
+  let durationSum = 0;
+  let accuracySum = 0;
+  let fluencySum = 0;
+  let pronunciationSum = 0;
+
+  console.log(`[DEBUG] Starting continuous recognition (${wavBuffer.length} byte WAV) — this runs roughly in step with the recording's length, expect it to take a while on longer audio.`);
+
   return new Promise((resolve, reject) => {
-    recognizer.recognizeOnceAsync(
-      (result) => {
-        if (result.reason === sdk.ResultReason.RecognizedSpeech) {
-          const pronunciationResult =
-            sdk.PronunciationAssessmentResult.fromResult(result);
+    let settled = false;
+    let inactivityTimer: ReturnType<typeof setTimeout>;
 
-          // Log evaluation results for debugging
-          console.log(`[DEBUG] Azure evaluation successful - Text: "${result.text}", Accuracy: ${pronunciationResult.accuracyScore}, Reference: "${referenceText}"`);
+    // Closing the push stream doesn't reliably trigger `sessionStopped` even
+    // after every utterance has been recognized and scored correctly — a
+    // known flakiness with continuous recognition on push streams, not a
+    // live-mic scenario. Without a fallback this hangs the request forever.
+    // Utterances land roughly every 8-10s on a normal recording, so give it
+    // a generous 15s of true silence before deciding we're actually done.
+    const scheduleFinish = () => {
+      clearTimeout(inactivityTimer);
+      inactivityTimer = setTimeout(finish, 15000);
+    };
 
-          // Check if recognized text is suspiciously short compared to reference
-          if (result.text.length < referenceText.length * 0.3) {
-            console.warn(`[WARNING] Recognized text much shorter than reference - may indicate partial audio. Got: "${result.text}", Expected: "${referenceText}"`);
-          }
+    const finish = () => {
+      if (settled) return;
+      settled = true;
+      clearTimeout(inactivityTimer);
 
-          resolve({
-            text: result.text,
-            accuracyScore: pronunciationResult.accuracyScore,
-            fluencyScore: pronunciationResult.fluencyScore,
-            completenessScore: pronunciationResult.completenessScore,
-            pronunciationScore: pronunciationResult.pronunciationScore,
-            words: pronunciationResult.detailResult.Words.map((word: any) => ({
-              word: word.Word,
-              accuracyScore: word.PronunciationAssessment?.AccuracyScore,
-              errorType: word.PronunciationAssessment?.ErrorType,
-              phonemes: word.Phonemes?.map((phoneme: any) => ({
-                phoneme: phoneme.Phoneme,
-                accuracyScore: phoneme.PronunciationAssessment?.AccuracyScore,
-              })),
-            })),
-          });
-        } else if (result.reason === sdk.ResultReason.NoMatch) {
+      recognizer.stopContinuousRecognitionAsync(() => {
+        recognizer.close();
+
+        if (words.length === 0) {
           reject(new Error("No speech detected. Please check your microphone is working and try again."));
-        } else {
-          const errorMessage = result.errorDetails || "No speech detected. Please check your microphone and try again.";
-          reject(new Error(errorMessage));
+          return;
         }
+
+        const text = textChunks.join(" ");
+        // completenessScore per utterance is scoped to whatever slice of the
+        // reference Azure thinks that utterance covers — not meaningful once
+        // stitched together. Recompute it globally instead: how many
+        // reference words actually got a real score vs. total reference length.
+        const referenceWordCount = referenceText.trim().split(/\s+/).filter(Boolean).length;
+        const scoredWordCount = words.filter((w) => w.errorType !== "Omission").length;
+
+        console.log(`[DEBUG] Azure evaluation successful - Text: "${text}", Reference: "${referenceText}"`);
+
+        resolve({
+          text,
+          accuracyScore: durationSum ? accuracySum / durationSum : 0,
+          fluencyScore: durationSum ? fluencySum / durationSum : 0,
+          completenessScore: referenceWordCount
+            ? Math.min(100, (scoredWordCount / referenceWordCount) * 100)
+            : 0,
+          pronunciationScore: durationSum ? pronunciationSum / durationSum : 0,
+          words,
+        });
+      }, () => {
         recognizer.close();
-      },
-      (error) => {
-        recognizer.close();
-        reject(error);
+        reject(new Error("Failed to stop pronunciation evaluation cleanly."));
+      });
+    };
+
+    recognizer.recognized = (_sender, event) => {
+      scheduleFinish();
+      if (event.result.reason !== sdk.ResultReason.RecognizedSpeech) return;
+
+      const utteranceResult = sdk.PronunciationAssessmentResult.fromResult(event.result);
+      console.log(`[DEBUG] Utterance scored - "${event.result.text}" (accuracy: ${utteranceResult.accuracyScore})`);
+      // Weight each utterance's contribution by its duration so a long,
+      // well-scored stretch outweighs a short mumbled one, same principle
+      // Azure's own multi-utterance samples use.
+      const duration = event.result.duration || 1;
+
+      textChunks.push(event.result.text);
+      durationSum += duration;
+      accuracySum += (utteranceResult.accuracyScore ?? 0) * duration;
+      fluencySum += (utteranceResult.fluencyScore ?? 0) * duration;
+      pronunciationSum += (utteranceResult.pronunciationScore ?? 0) * duration;
+
+      words.push(
+        ...utteranceResult.detailResult.Words.map((word: any) => ({
+          word: word.Word,
+          accuracyScore: word.PronunciationAssessment?.AccuracyScore,
+          errorType: word.PronunciationAssessment?.ErrorType,
+          phonemes: word.Phonemes?.map((phoneme: any) => ({
+            phoneme: phoneme.Phoneme,
+            accuracyScore: phoneme.PronunciationAssessment?.AccuracyScore,
+          })),
+        }))
+      );
+    };
+
+    recognizer.canceled = (_sender, event) => {
+      if (event.reason === sdk.CancellationReason.Error) {
+        settled = true;
+        clearTimeout(inactivityTimer);
+        recognizer.stopContinuousRecognitionAsync(() => recognizer.close());
+        reject(new Error(event.errorDetails || "Pronunciation evaluation failed."));
+      } else {
+        finish();
       }
-    );
+    };
+
+    recognizer.sessionStopped = () => {
+      finish();
+    };
+
+    recognizer.startContinuousRecognitionAsync(() => {
+      scheduleFinish();
+    }, (error) => {
+      recognizer.close();
+      reject(error);
+    });
   });
 }
