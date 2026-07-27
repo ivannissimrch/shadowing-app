@@ -201,6 +201,10 @@ const initDatabase = async () => {
       );
     `);
 
+    // Azure-transcribed reference text for the lesson's own audio (audio_url),
+    // cached on first AI-feedback request so later requests skip re-transcribing.
+    await addColumnIfNotExists("lessons", "verified_transcript", "TEXT");
+
     logger.info("Database tables initialized");
   } catch (error) {
     logger.error("Error initializing database:", error);

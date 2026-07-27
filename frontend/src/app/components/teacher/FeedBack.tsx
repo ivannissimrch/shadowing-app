@@ -4,16 +4,31 @@ import { useState } from "react";
 import { useSWRMutationHook } from "@/app/hooks/useSWRMutation";
 import { API_PATHS } from "@/app/constants/apiKeys";
 import { mutate } from "swr";
-import { Lesson } from "@/app/Types";
+import {
+  AiFeedbackDraftResponse,
+  Lesson,
+  PronunciationWord,
+} from "@/app/Types";
 import DOMPurify from "dompurify";
 import RichTextEditor from "@/app/components/ui/RichTextEditor";
 import FeedbackReplyThread from "@/app/components/feedback/FeedbackReplyThread";
+import PronunciationBreakdown from "@/app/components/teacher/PronunciationBreakdown";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
+import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import Alert from "@mui/material/Alert";
 import IconButton from "@mui/material/IconButton";
-import { FiSend, FiEdit2, FiX, FiCheck } from "react-icons/fi";
+import {
+  FiSend,
+  FiEdit2,
+  FiX,
+  FiCheck,
+  FiZap,
+  FiEye,
+  FiEyeOff,
+} from "react-icons/fi";
+import Tooltip from "@mui/material/Tooltip";
 import useCurrentUserId from "@/app/hooks/useCurrentUserId";
 import { SANITIZE_CONFIG } from "@/app/constants/sanitizeConfig";
 
@@ -29,6 +44,14 @@ export default function FeedBack({ idsInfo, selectedLesson }: FeedBackProps) {
 
   const { studentId, lessonId } = idsInfo;
   const [feedback, setFeedback] = useState("");
+  const [aiInstruction, setAiInstruction] = useState("");
+  const [breakdownWords, setBreakdownWords] = useState<
+    PronunciationWord[] | null
+  >(null);
+  // Hides the AI tools/score breakdown from a screen-share during a live
+  // class, without losing the analysis — the teacher can toggle it back
+  // after the call.
+  const [showAiTools, setShowAiTools] = useState(true);
   const [errorMessage, setErrorMessage] = useState("");
   const [isEditing, setIsEditing] = useState(false);
   const [editedFeedback, setEditedFeedback] = useState("");
@@ -44,7 +67,38 @@ export default function FeedBack({ idsInfo, selectedLesson }: FeedBackProps) {
     }
   );
 
+  const { trigger: triggerAiDraft, isMutating: isDrafting } =
+    useSWRMutationHook<AiFeedbackDraftResponse, { instruction: string }>(
+      API_PATHS.TEACHER_STUDENT_LESSON_AI_FEEDBACK(studentId, lessonId),
+      {
+        method: "POST",
+        // Continuous recognition scores roughly in step with the recording's
+        // real length (a 60s submission takes close to a minute), and an
+        // uncached lesson also pays a one-time full transcription on top of
+        // that — both well past the shared axios instance's 30s default.
+        timeout: 120000,
+      }
+    );
+
   const currentUserId = useCurrentUserId();
+
+  const handleGenerateDraft = async () => {
+    setErrorMessage("");
+
+    try {
+      const result = await triggerAiDraft({ instruction: aiInstruction });
+      if (result?.draft) {
+        // Gemini returns plain text; wrap it as HTML for the rich text editor.
+        const html = `<p>${result.draft.trim().replace(/\n+/g, "</p><p>")}</p>`;
+        setFeedback(html);
+      }
+      setBreakdownWords(result?.stats?.words ?? null);
+    } catch (err) {
+      setErrorMessage(
+        err instanceof Error ? err.message : tErrors("failedToSave")
+      );
+    }
+  };
 
   const handleSubmit = async () => {
     setErrorMessage("");
@@ -186,6 +240,56 @@ export default function FeedBack({ idsInfo, selectedLesson }: FeedBackProps) {
         </>
       ) : hasSubmission ? (
         <>
+          <Box sx={{ display: "flex", justifyContent: "flex-end", mb: 0.5 }}>
+            <Tooltip
+              title={
+                showAiTools ? t("hideAiToolsTooltip") : t("showAiToolsTooltip")
+              }
+            >
+              <IconButton
+                size="small"
+                onClick={() => setShowAiTools((prev) => !prev)}
+                sx={{ color: "text.secondary" }}
+              >
+                {showAiTools ? <FiEyeOff size={16} /> : <FiEye size={16} />}
+              </IconButton>
+            </Tooltip>
+          </Box>
+          {showAiTools && (
+            <>
+              <Box
+                sx={{ display: "flex", gap: 1, mb: 1.5, alignItems: "center" }}
+              >
+                <TextField
+                  size="small"
+                  fullWidth
+                  value={aiInstruction}
+                  onChange={(e) => setAiInstruction(e.target.value)}
+                  placeholder={t("aiInstructionPlaceholder")}
+                  disabled={isDrafting}
+                />
+                <Button
+                  variant="outlined"
+                  color="primary"
+                  size="small"
+                  disabled={isDrafting}
+                  onClick={handleGenerateDraft}
+                  startIcon={<FiZap size={14} />}
+                  sx={{
+                    textTransform: "none",
+                    fontWeight: 500,
+                    whiteSpace: "nowrap",
+                    flexShrink: 0,
+                  }}
+                >
+                  {isDrafting ? t("draftingWithAi") : t("draftWithAi")}
+                </Button>
+              </Box>
+              {breakdownWords && (
+                <PronunciationBreakdown words={breakdownWords} />
+              )}
+            </>
+          )}
           <RichTextEditor
             value={feedback}
             onChange={(html) => {

@@ -23,6 +23,7 @@ export interface Lesson {
   lesson_end_time: number | null;
   audio_url: string | null;
   category: string | null;
+  verified_transcript: string | null;
   created_at: Date;
   updated_at: Date;
 }

@@ -94,6 +94,14 @@ export const lessonRepository = {
     return result.rows[0] || null;
   },
 
+  updateVerifiedTranscript: async (lessonId: string, transcript: string) => {
+    const result: QueryResult<Lesson> = await db.query(
+      `UPDATE lessons SET verified_transcript = $1 WHERE id = $2 RETURNING *`,
+      [transcript, lessonId]
+    );
+    return result.rows[0] || null;
+  },
+
   exists: async (lessonId: string) => {
     const result: QueryResult<Lesson> = await db.query(
       "SELECT id FROM lessons WHERE id = $1",
