@@ -33,7 +33,7 @@ import LanguageSwitcher from "../ui/LanguageSwitcher";
 import MainCard from "../ui/MainCard";
 import { palette } from "@/themes/palette";
 
-const CONTACT_EMAIL = "hello@shadowspeak.app";
+const CONTACT_EMAIL = "analisse84.ar@gmail.com";
 const YOUTUBE_URL = "https://www.youtube.com/@FluencyAccentCoach";
 const FACEBOOK_PAGE_URL = "https://www.facebook.com/Analisse84/";
 const FACEBOOK_GROUP_URL = "https://www.facebook.com/share/g/18wdNiusvm/";
