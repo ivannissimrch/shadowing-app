@@ -228,8 +228,8 @@ export default function LandingPage() {
             sx={{
               display: "grid",
               gridTemplateColumns: { xs: "1fr", sm: "auto 1fr" },
-              gap: { xs: 3, sm: 5 },
-              alignItems: "center",
+              gap: { xs: 3, sm: 6 },
+              alignItems: { xs: "center", sm: "flex-start" },
             }}
           >
             <Box
@@ -271,15 +271,25 @@ export default function LandingPage() {
                   px: 2,
                   py: 1.5,
                   borderRadius: 1,
-                  mb: 2,
+                  mb: 3,
                   display: "inline-block",
+                  maxWidth: "62ch",
                 }}
               >
                 <Typography variant="subtitle1" fontWeight={600}>
                   {t("about.pullQuote")}
                 </Typography>
               </Box>
-              <Typography variant="body1" sx={{ color: "grey.300" }}>
+              <Typography
+                variant="body1"
+                sx={{
+                  color: "grey.300",
+                  whiteSpace: "pre-line",
+                  maxWidth: "62ch",
+                  lineHeight: 1.8,
+                  mx: { xs: "auto", sm: 0 },
+                }}
+              >
                 {t("about.body")}
               </Typography>
             </Box>
