@@ -1,23 +1,27 @@
-'use client';
-import { useState, useEffect, ReactNode } from 'react';
-import { useRouter } from '@/i18n/routing';
-import Box from '@mui/material/Box';
-import Toolbar from '@mui/material/Toolbar';
-import useMediaQuery from '@mui/material/useMediaQuery';
-import { useTheme } from '@mui/material/styles';
-import Sidebar, { DRAWER_WIDTH, MINI_DRAWER_WIDTH } from './Sidebar';
-import DashboardHeader from './DashboardHeader';
-import { MenuGroup, teacherMenuItems, studentMenuItems } from './menuItems';
-import { useAuthContext } from '../../../AuthContext';
+"use client";
+import { useState, useEffect, ReactNode } from "react";
+import { useRouter } from "@/i18n/routing";
+import AppFonts from "../../../AppFonts";
+import Box from "@mui/material/Box";
+import Toolbar from "@mui/material/Toolbar";
+import useMediaQuery from "@mui/material/useMediaQuery";
+import { useTheme } from "@mui/material/styles";
+import Sidebar, { DRAWER_WIDTH, MINI_DRAWER_WIDTH } from "./Sidebar";
+import DashboardHeader from "./DashboardHeader";
+import { MenuGroup, teacherMenuItems, studentMenuItems } from "./menuItems";
+import { useAuthContext } from "../../../AuthContext";
 
 interface DashboardLayoutProps {
   children: ReactNode;
-  userType: 'teacher' | 'student';
+  userType: "teacher" | "student";
 }
 
-export default function DashboardLayout({ children, userType }: DashboardLayoutProps) {
+export default function DashboardLayout({
+  children,
+  userType,
+}: DashboardLayoutProps) {
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [mobileOpen, setMobileOpen] = useState(false);
   const { token } = useAuthContext();
@@ -25,28 +29,29 @@ export default function DashboardLayout({ children, userType }: DashboardLayoutP
 
   useEffect(() => {
     if (token === null) {
-      router.push('/');
+      router.push("/");
     }
   }, [token, router]);
-  
+
   useEffect(() => {
     if (!isMobile) {
       setMobileOpen(false);
     }
   }, [isMobile]);
-  
-  const menuItems: MenuGroup[] = userType === 'teacher' ? teacherMenuItems : studentMenuItems;
-  function handleMenuToggle(){
+
+  const menuItems: MenuGroup[] =
+    userType === "teacher" ? teacherMenuItems : studentMenuItems;
+  function handleMenuToggle() {
     if (isMobile) {
       setMobileOpen(!mobileOpen);
     } else {
       setSidebarOpen(!sidebarOpen);
     }
-  };
+  }
 
-  function handleMobileClose(){
+  function handleMobileClose() {
     setMobileOpen(false);
-  };
+  }
 
   if (!token) {
     return null;
@@ -55,7 +60,14 @@ export default function DashboardLayout({ children, userType }: DashboardLayoutP
   const currentDrawerWidth = sidebarOpen ? DRAWER_WIDTH : MINI_DRAWER_WIDTH;
 
   return (
-    <Box sx={{ display: 'flex', minHeight: '100vh', bgcolor: 'background.default' }}>
+    <Box
+      sx={{
+        display: "flex",
+        minHeight: "100vh",
+        bgcolor: "background.default",
+      }}
+    >
+      <AppFonts />
       {!isMobile && (
         <Sidebar
           menuItems={menuItems}
@@ -88,10 +100,10 @@ export default function DashboardLayout({ children, userType }: DashboardLayoutP
           flexGrow: 1,
           p: 3,
           width: { md: `calc(100% - ${currentDrawerWidth}px)` },
-          minHeight: '100vh',
-          backgroundColor: 'background.default',
+          minHeight: "100vh",
+          backgroundColor: "background.default",
           transition: (theme) =>
-            theme.transitions.create('width', {
+            theme.transitions.create("width", {
               easing: theme.transitions.easing.sharp,
               duration: theme.transitions.duration.enteringScreen,
             }),
@@ -99,9 +111,7 @@ export default function DashboardLayout({ children, userType }: DashboardLayoutP
       >
         <Toolbar />
 
-        <Box sx={{ py: 2 }}>
-          {children}
-        </Box>
+        <Box sx={{ py: 2 }}>{children}</Box>
       </Box>
     </Box>
   );

@@ -378,23 +378,72 @@
     "brand": "ShadowSpeak",
     "brandTagline": "with Lyn",
     "signIn": "로그인",
+    "nav": {
+      "home": "홈",
+      "about": "소개",
+      "courses": "코스",
+      "coaching": "코칭",
+      "testimonials": "후기",
+      "contact": "문의"
+    },
     "hero": {
-      "eyebrow": "ESL 발음 & 액센트 코칭",
+      "eyebrow": "발음 & 액센트 코칭",
       "title": "Lyn 선생님과 함께 배우는 영어",
-      "subtitle": "경력 있는 ESL 선생님의 발음, 억양, 유창함 코칭을 섀도잉 연습을 통해 만나보세요.",
-      "cta": "문의하고 신청하기"
+      "headline": "또렷한 영어,",
+      "headlineHighlight": "매번 그렇게.",
+      "subtitle": "실제 음성을 섀도잉하고, 직접 녹음하고, 녹음마다 Lyn 선생님의 피드백을 받으세요. 10년 경력의 ESL 코칭을 실제로 연습할 수 있는 방법으로 담았습니다.",
+      "cta": "Lyn 선생님께 문의",
+      "viewCourses": "코스 보기",
+      "followUs": "팔로우",
+      "location": "대한민국",
+      "floatingTitle": "Lyn 선생님의 피드백",
+      "floatingSubtitle": "보내주시는 모든 녹음에",
+      "trustNote": "어디서 시작할지 모르겠다면, 편하게 물어보세요.",
+      "statsYearsValue": "10+",
+      "statsYearsLabel": "년 ESL 교육 경력",
+      "statsCoursesValue": "5",
+      "statsCoursesLabel": "자기주도 코스",
+      "statsSessionValue": "50분",
+      "statsSessionLabel": "1:1 라이브 수업",
+      "statsMembershipValue": "30",
+      "statsMembershipLabel": "멤버십 세션 수"
+    },
+    "proof": {
+      "item1": "10년 이상 ESL 교육",
+      "item2": "한국에서 거주 및 수업",
+      "item3": "발음 & 액센트 집중",
+      "item4": "Lyn 선생님의 직접 피드백",
+      "item5": "섀도잉 기반 학습법",
+      "item6": "비공개 Fluency 커뮤니티",
+      "item7": "IELTS & TOEIC 대비",
+      "item8": "비즈니스 영어",
+      "item9": "구동사 & 이디엄",
+      "item10": "50분 라이브 수업"
     },
     "about": {
       "eyebrow": "Lyn 소개",
+      "title": "Lyn 선생님을",
+      "titleHighlight": "소개합니다.",
+      "lead": "한국에서 10년 넘게 EFL·ESL을 가르쳐 온 영어 선생님입니다.",
+      "body1": "10년 넘게 비원어민 학습자들이 머릿속으로 문장을 고쳐 쓰지 않고 하고 싶은 말을 그대로 하도록 도와왔습니다. 제 수강생들은 배경도 다양하고, 이유도 여러분과 비슷합니다. 일, 여행, 학업, 그리고 매일의 일상이죠.",
+      "body2": "저는 발음, 액센트, 회화 유창성, 구동사와 이디엄에 집중합니다. IELTS·TOEIC 준비든, 회의와 발표를 위한 비즈니스 영어든, 아니면 그냥 미리 문장을 연습하지 않고도 말할 자신감이든 — 모든 수업은 여러분의 목표와 수준, 그리고 학습 방식에 맞춰 설계됩니다.",
       "pullQuote": "영어 실력 향상에 진심이시라면, 저도 도와드리는 데 진심입니다.",
-      "title": "Lyn 선생님을 소개합니다",
-      "body": "Lyn 선생님은 9년 이상의 경력을 가진 EFL/ESL 선생님으로, 현재 한국에서 거주하며 가르치고 있습니다. 발음, 억양, 구동사, 이디엄, 자연스러운 회화 유창함에 중점을 두고 비원어민 학습자가 더 명확하고 자신감 있는 영어를 구사할 수 있도록 돕고 있습니다.",
-      "testimonialQuote": "Lyn 선생님께 2년 넘게 배우고 있는데, 발음과 전반적인 말하기가 정말 많이 좋아졌어요. 매 수업마다 실제 연습을 시켜주시고, 제가 얼마나 성장하는지 진심으로 신경 써주세요.",
-      "testimonialAuthor": "— Ivan"
+      "credential1": "10년 이상 교육 경력",
+      "credential2": "EFL & ESL",
+      "credential3": "대한민국 거주",
+      "specialtiesLabel": "가르치는 분야",
+      "specialty1": "발음",
+      "specialty2": "액센트 트레이닝",
+      "specialty3": "섀도잉",
+      "specialty4": "구동사 & 이디엄",
+      "specialty5": "IELTS / TOEIC",
+      "specialty6": "비즈니스 영어",
+      "cta": "Lyn 선생님께 문의"
     },
     "testimonials": {
       "eyebrow": "수강생 이야기",
-      "title": "수강생들의 후기",
+      "title": "수강생들의",
+      "titleHighlight": "진짜 후기.",
       "student1": {
         "quote": "Lyn 선생님께 2년 넘게 배우고 있는데, 발음과 전반적인 말하기가 정말 많이 좋아졌어요. 매 수업마다 실제 연습을 시켜주시고, 제가 얼마나 성장하는지 진심으로 신경 써주세요.",
         "author": "Ivan"
@@ -438,149 +487,215 @@
     },
     "courses": {
       "eyebrow": "자기주도 코스",
-      "title": "Lyn 선생님의 코스",
-      "subtitle": "신청은 Lyn 선생님께 메시지로 문의해주세요.",
+      "title": "Lyn 선생님의",
+      "titleHighlight": "코스.",
+      "subtitle": "한 번 구매하고 내 속도로 학습하세요. 신청은 Lyn 선생님께 메시지로 문의해주세요.",
       "signUpCta": "문의하고 신청하기",
       "featuredBadge": "인기 코스",
+      "trustNote": "고민되시나요? 먼저 문의해주세요.",
+      "includesLabel": "포함 내용",
       "membership": {
         "title": "액센트 트레이닝 멤버십",
-        "description": "Lyn 선생님의 전체 액센트 트레이닝 커리큘럼을 평생 이용하고, 제출한 과제에 대한 개인 피드백을 받아보세요.",
-        "price": "$300 (평생 이용)",
-        "benefit1": "발음, 리덕션, 연음, 리듬을 다루는 30개의 체계적인 세션",
-        "benefit2": "Lyn 선생님의 녹음 개인 피드백",
-        "benefit3": "비공개 Fluency 커뮤니티 이용 권한"
+        "description": "전체 액센트 커리큘럼을 평생 이용하고, 제출한 과제는 Lyn 선생님이 직접 검토합니다.",
+        "price": "$300",
+        "priceNote": "평생 이용",
+        "benefit1": "30개 세션: 발음, 리덕션, 연음, 리듬",
+        "benefit2": "녹음에 대한 Lyn 선생님의 개인 피드백",
+        "benefit3": "비공개 Fluency 커뮤니티 이용"
       },
       "accent": {
-        "title": "Standard English Pronunciation and Accent Training",
-        "description": "표준 미국 영어 발음의 핵심 7가지 사운드를 다루는 자기주도 학습 코스입니다.",
-        "price": "$75 (세일가 $15)",
-        "benefit1": "R/L, S/Z 등 헷갈리기 쉬운 자음 발음",
-        "benefit2": "슈와(schwa) 발음, 단어 강세, 음절 리듬",
-        "benefit3": "연음 연습과 영화 클립 분석을 통한 실전 연습"
+        "title": "발음 & 액센트 트레이닝",
+        "description": "표준 미국식 영어를 좌우하는 7가지 핵심 사운드.",
+        "price": "$75",
+        "priceNote": "세일가 $15",
+        "benefit1": "R/L, S/Z 등 까다로운 자음",
+        "benefit2": "슈와 사운드, 강세, 음절 리듬",
+        "benefit3": "영화 클립으로 연습하는 연음"
       },
       "phrasalVerbs": {
-        "title": "100 Phrasal Verbs with 60 Mini-Stories",
-        "description": "원어민이 실제로 쓰는 일상 표현을 짧고 기억하기 쉬운 이야기로 배워보세요.",
+        "title": "구동사 100개",
+        "description": "원어민이 실제로 쓰는 표현을 60개의 짧은 이야기로 익힙니다.",
         "price": "$15",
-        "benefit1": "쉽게 설명하는 흔한 구동사와 이디엄",
-        "benefit2": "플래시카드가 아닌 미니 스토리로 연습",
-        "benefit3": "일상 대화에서 더 자연스럽게 말하기"
+        "priceNote": "",
+        "benefit1": "일상에서 쓰는 구동사와 이디엄 100개",
+        "benefit2": "단어장 대신 60개의 미니 스토리",
+        "benefit3": "실제 대화에서 자연스럽게"
       },
       "ipa": {
-        "title": "국제 음성 기호(IPA) 코칭",
-        "description": "모든 발음에 대한 예시 단어와 뜻을 곁들인 IPA 기호 1:1 코칭입니다.",
+        "title": "IPA 코칭",
+        "description": "발음 기호를 읽고, 그동안 놓쳤던 소리를 듣게 됩니다.",
         "price": "$100",
-        "benefit1": "IPA 표기를 읽고 이해하기",
-        "benefit2": "아직 정확히 듣지 못하는 발음 연습하기",
-        "benefit3": "Lyn 선생님과의 개인 코칭 시간"
+        "priceNote": "1:1",
+        "benefit1": "IPA 표기를 자신 있게 읽기",
+        "benefit2": "아직 안 들리는 소리 집중 연습",
+        "benefit3": "기호별 예시 단어와 의미"
       },
       "shadowing": {
-        "title": "1:1 섀도잉 온라인 코칭",
-        "description": "실제 발화를 실시간으로 따라 하며 자연스러운 리듬과 유창함을 기르는 섀도잉 코칭입니다.",
+        "title": "1:1 섀도잉 코칭",
+        "description": "실제 음성을 실시간으로 따라 말하며 리듬이 몸에 배도록 합니다.",
         "price": "$200",
-        "benefit1": "Lyn 선생님과 실제 영상, 오디오 클립 섀도잉",
-        "benefit2": "자연스러운 리듬, 강세, 억양 만들기",
-        "benefit3": "섀도잉 기법에 대한 직접 피드백"
+        "priceNote": "온라인",
+        "benefit1": "실제 영상·오디오를 함께 섀도잉",
+        "benefit2": "자연스러운 리듬, 강세, 억양",
+        "benefit3": "섀도잉 기술에 대한 직접 피드백"
       }
     },
     "coachingPackages": {
-      "eyebrow": "실시간 1:1 코칭",
-      "title": "1:1 코칭 패키지",
-      "subtitle": "나의 목표에 맞춰 진행되는 Lyn 선생님과의 50분 실시간 세션입니다.",
+      "eyebrow": "1:1 라이브",
+      "title": "코칭",
+      "titleHighlight": "패키지.",
+      "subtitle": "50분 동안 Lyn 선생님과 단둘이, 여러분의 목표에 맞춰 진행합니다.",
       "signUpCta": "문의하고 신청하기",
-      "cancellationNote": "수업 최소 8시간 전에 알려주세요. 10~15분 이상 늦으면 결석으로 처리되며 환불되지 않습니다.",
+      "pitchTitle": "그룹 수업도, 재탕 커리큘럼도 없습니다.",
+      "pitchBody": "모든 수업은 50분 동안 Lyn 선생님이 온전히 집중하며, 여러분의 목표와 수준에 맞춰 구성됩니다.",
+      "pitchPoint1": "50분, 1:1 수업",
+      "pitchPoint2": "목표에 맞춘 설계",
+      "pitchPoint3": "말하는 즉시 교정",
+      "sessionsLabel": "회",
+      "popularBadge": "인기",
+      "cancellationNote": "수업 8시간 전까지 취소해주세요. 10~15분 이상 지각은 결석으로 처리되며 환불되지 않습니다.",
       "starter": {
-        "title": "Master English Conversation",
+        "title": "영어 회화 마스터",
         "price": "$95",
         "sessions": "4회 수업",
-        "description": "스토리로 배우는 어휘, 말하기, 듣기, 읽기, 문법 연습과 체계적인 피드백을 제공합니다."
+        "description": "이야기, 말하기, 듣기, 문법을 체계적인 피드백과 함께.",
+        "benefit1": "이야기로 배우는 어휘",
+        "benefit2": "말하기·듣기·읽기 연습",
+        "benefit3": "체계적인 문법 피드백"
       },
       "intermediate": {
-        "title": "Conversational English, Pronunciation & Accent Training",
+        "title": "회화 · 발음 · 액센트",
         "price": "$280",
         "sessions": "10회 수업",
-        "description": "이디엄, 구동사, 여행 및 일상 대화, 영화 클립 분석을 통한 미국식 액센트 훈련을 다룹니다."
+        "description": "이디엄, 일상 회화, 그리고 실제 영화 클립으로 하는 미국식 액센트 훈련.",
+        "benefit1": "맥락 속 이디엄과 구동사",
+        "benefit2": "여행과 일상 회화",
+        "benefit3": "영화 클립 분석으로 미국식 액센트"
       },
       "advanced": {
-        "title": "Speak Clear Confident English",
+        "title": "또렷하고 자신 있는 영어",
         "price": "$340",
         "sessions": "20회 수업",
-        "description": "모음, 자음, 강세, 연음, 이중모음, 삼중모음, 섀도잉, 영화 분석까지 다루는 전체 리덕션 사운드 커리큘럼입니다."
+        "description": "리덕션 사운드 커리큘럼 전 과정을 처음부터 끝까지.",
+        "benefit1": "모음, 자음, 강세, 연결 발음",
+        "benefit2": "이중모음과 삼중모음",
+        "benefit3": "섀도잉과 영화 분석"
       }
     },
     "miniCourses": {
-      "title": "출시 예정",
-      "subtitle": "특정 발음에 집중한 미니 코스가 곧 출시됩니다.",
+      "eyebrow": "준비 중",
+      "title": "곧",
+      "titleHighlight": "만나요.",
+      "subtitle": "많은 분들이 어려워하는 소리만 짧게 다루는 코스입니다. 어떤 것이 먼저 필요한지 알려주세요.",
       "comingSoon": "출시 예정",
+      "notifyCta": "이 코스 신청 알림 요청",
       "vowelsConsonants": {
-        "title": "모음과 자음 발음",
-        "description": "미국 영어 모음 14개와 자음의 기본 발음을 예시 단어와 뜻과 함께 배웁니다.",
+        "title": "모음 & 자음",
+        "description": "미국식 영어 모음 14개와 자음 소리를 예시 단어와 함께.",
         "price": "$75"
       },
       "ipaSymbols": {
         "title": "국제 음성 기호",
-        "description": "예시 단어 목록과 뜻이 포함된 IPA 기호를 배웁니다.",
+        "description": "모든 IPA 기호를 예시 단어와 의미와 함께.",
         "price": "$75"
       },
       "diphthongsTriphthongs": {
         "title": "이중모음 & 삼중모음",
-        "description": "단어와 문장 목록으로 이중모음과 삼중모음 발음을 배웁니다.",
+        "description": "미끄러지는 소리들을 단어와 문장 속에서.",
         "price": "$85"
       }
     },
     "features": {
-      "title": "무엇을 연습하나요",
+      "eyebrow": "학습 방법",
+      "title": "이렇게",
+      "titleHighlight": "연습합니다.",
+      "subtitle": "매 세션 네 단계. 어렵지 않습니다.",
+      "stepLabel": "단계",
       "pronunciation": {
-        "title": "발음 & 억양",
-        "description": "영어를 더 알아듣기 쉽게 만들어주는 발음, 리듬, 억양을 연습하세요."
+        "title": "발음 & 액센트",
+        "description": "알아듣기 쉬운 영어를 만드는 소리, 리듬, 억양."
       },
       "shadowing": {
-        "title": "섀도잉 연습",
-        "description": "실제 영상과 오디오 클립을 섀도잉하며 자연스러운 리듬과 유창함을 길러보세요."
+        "title": "섀도잉",
+        "description": "리듬이 몸에 밸 때까지 실제 음성을 실시간으로 따라 말하기."
       },
       "recording": {
-        "title": "녹음하고 비교하기",
-        "description": "브라우저에서 바로 녹음하고 원본과 나란히 비교해보세요."
+        "title": "녹음 & 비교",
+        "description": "브라우저에서 바로 녹음하고 원본과 나란히 들어보기."
       },
       "feedback": {
         "title": "Lyn 선생님의 피드백",
-        "description": "Lyn 선생님이 직접 녹음을 검토하고 개인 맞춤 피드백을 드립니다."
+        "description": "직접 녹음을 듣고 무엇을 고쳐야 할지 알려드립니다."
+      }
+    },
+    "journey": {
+      "eyebrow": "여기까지의 과정",
+      "title": "학습자에서",
+      "titleHighlight": "코치까지.",
+      "subtitle": "Lyn 선생님이 모든 수강생과 함께 걷는 바로 그 길입니다.",
+      "step1": {
+        "title": "학습의 시작",
+        "description": "직접 영어를 배우며 기초를 다졌습니다."
+      },
+      "step2": {
+        "title": "전문성 쌓기",
+        "description": "EFL/ESL, 언어학, 발음 교육을 정식으로 공부했습니다."
+      },
+      "step3": {
+        "title": "가르치기 시작",
+        "description": "한국에서 첫 수강생들을 만났습니다."
+      },
+      "step4": {
+        "title": "방법을 다듬다",
+        "description": "섀도잉, 녹음, 그리고 진짜 피드백."
+      },
+      "step5": {
+        "title": "전문 코치",
+        "description": "10년 이상, 전 세계 학습자와 함께."
       }
     },
     "community": {
       "eyebrow": "커뮤니티",
       "title": "커뮤니티와 함께 연습하세요",
-      "subtitle": "The Fluency Community Coach의 유튜브와 페이스북에서 무료 발음 팁과 매주 연습에 참여해보세요.",
-      "youtube": "유튜브 채널",
-      "facebookGroup": "페이스북 그룹",
-      "facebookPage": "페이스북 페이지"
+      "subtitle": "YouTube와 Facebook에서 무료 발음 팁과 매주 연습을 만나보세요.",
+      "youtube": "YouTube 채널",
+      "facebookGroup": "Facebook 그룹",
+      "facebookPage": "Facebook 페이지"
     },
     "faq": {
       "title": "자주 묻는 질문",
       "whatIsIt": {
-        "question": "여기서 무엇을 볼 수 있나요?",
-        "answer": "Lyn 선생님의 발음, 억양, 유창함 코스입니다. 실제 발화를 섀도잉하고, 녹음하고, 선생님의 피드백을 받으며 연습하세요."
+        "question": "여기서 무엇을 할 수 있나요?",
+        "answer": "Lyn 선생님의 발음, 액센트, 유창성 코스를 만나보실 수 있습니다. 실제 음성을 섀도잉하고, 직접 녹음하고, 피드백을 받으며 연습하세요."
       },
       "coursesAvailable": {
-        "question": "Lyn 선생님의 코스를 지금 이용할 수 있나요?",
-        "answer": "네, Lyn 선생님의 모든 코스와 코칭 패키지를 지금 바로 이용하실 수 있습니다. 메시지를 보내 시작해보세요."
+        "question": "지금 수강할 수 있나요?",
+        "answer": "네, 모든 코스와 코칭 패키지를 지금 수강하실 수 있습니다. 메시지로 문의해주세요."
       },
       "existingStudent": {
-        "question": "이미 학생인데 어디서 로그인하나요?",
+        "question": "이미 수강생인데 어디서 로그인하나요?",
         "answer": "페이지 상단의 로그인 링크를 이용해주세요."
       },
       "paymentOptions": {
-        "question": "결제 옵션이 있나요?",
-        "answer": "현재 결제는 Lyn 선생님과 직접 PayPal로 진행됩니다. 문의해주시면 결제 방법을 안내해드립니다."
+        "question": "결제 방법은 어떻게 되나요?",
+        "answer": "현재 결제는 PayPal을 통해 Lyn 선생님과 직접 진행합니다. 원하시는 코스의 결제는 문의해주세요."
       },
       "refundPolicy": {
-        "question": "코스가 저에게 맞지 않으면 환불받을 수 있나요?",
-        "answer": "코스는 디지털 상품으로 바로 전달되기 때문에 구매 후 환불은 불가능합니다. 어떤 코스가 맞을지 확실하지 않다면 구매 전에 먼저 문의해주세요. Lyn 선생님이 기꺼이 도와드립니다."
+        "question": "코스가 맞지 않으면 환불되나요?",
+        "answer": "코스는 디지털 상품으로 즉시 제공되므로 구매 후에는 환불이 어렵습니다. 맞을지 확실하지 않다면 먼저 Lyn 선생님께 문의해주세요. 기꺼이 도와드립니다."
       }
     },
     "footer": {
-      "cta": "관심 있으신가요? 문의해주세요.",
-      "signIn": "기존 학생이신가요? 로그인"
+      "eyebrow": "시작하기",
+      "cta": "준비되셨다면",
+      "ctaHighlight": "언제든지.",
+      "body": "무엇을 목표로 하시는지 알려주시면, 어떤 코스나 패키지가 맞을지 Lyn 선생님이 알려드립니다. 부담 없이 문의하세요.",
+      "contactTitle": "Lyn 선생님께 연락하기",
+      "emailLabel": "이메일",
+      "responseNote": "결제는 PayPal을 통해 Lyn 선생님과 직접 진행합니다.",
+      "signIn": "이미 수강생이신가요? 로그인",
+      "rights": "All rights reserved.",
+      "exploreTitle": "둘러보기"
     }
   }
 }

@@ -377,24 +377,73 @@
   "landing": {
     "brand": "ShadowSpeak",
     "brandTagline": "with Lyn",
-    "signIn": "Sign In",
+    "signIn": "Sign in",
+    "nav": {
+      "home": "Home",
+      "about": "About",
+      "courses": "Courses",
+      "coaching": "Coaching",
+      "testimonials": "Reviews",
+      "contact": "Contact"
+    },
     "hero": {
-      "eyebrow": "ESL Pronunciation & Accent Coaching",
+      "eyebrow": "Pronunciation & accent coaching",
       "title": "Learn English with Lyn",
-      "subtitle": "Pronunciation, accent, and fluency coaching from an experienced ESL teacher, delivered through guided shadowing practice.",
-      "cta": "Contact to Sign Up"
+      "headline": "Clear English.",
+      "headlineHighlight": "Every single time.",
+      "subtitle": "Shadow real speech, record yourself, and get Lyn's feedback on every take. Ten years of ESL coaching, built into a method you can actually practise.",
+      "cta": "Message Lyn",
+      "viewCourses": "See the courses",
+      "followUs": "Follow",
+      "location": "South Korea",
+      "floatingTitle": "Feedback from Lyn",
+      "floatingSubtitle": "On every recording you send",
+      "trustNote": "Not sure where to start? Just ask.",
+      "statsYearsValue": "10+",
+      "statsYearsLabel": "Years teaching ESL",
+      "statsCoursesValue": "5",
+      "statsCoursesLabel": "Self-paced courses",
+      "statsSessionValue": "50 min",
+      "statsSessionLabel": "Live 1-on-1 sessions",
+      "statsMembershipValue": "30",
+      "statsMembershipLabel": "Sessions in the membership"
+    },
+    "proof": {
+      "item1": "10+ years teaching ESL",
+      "item2": "Based in South Korea",
+      "item3": "Pronunciation & accent focus",
+      "item4": "Feedback from Lyn herself",
+      "item5": "Shadowing-based method",
+      "item6": "Private Fluency Community",
+      "item7": "IELTS & TOEIC prep",
+      "item8": "Business English",
+      "item9": "Phrasal verbs & idioms",
+      "item10": "Live 50-minute sessions"
     },
     "about": {
       "eyebrow": "About Lyn",
+      "title": "Meet",
+      "titleHighlight": "Lyn.",
+      "lead": "Ten years of teaching English as a foreign and second language, from South Korea.",
+      "body1": "I've spent over a decade helping non-native speakers say what they mean without second-guessing themselves. My students come from everywhere, and they're working on English for the same reasons you probably are: their job, their travel, their studies, their everyday life.",
+      "body2": "My focus is pronunciation, accent, conversational fluency, phrasal verbs, and idioms. IELTS or TOEIC prep, Business English for meetings and presentations, or just enough confidence to stop rehearsing sentences in your head first — every lesson is built around your goals, your level, and how you actually learn.",
       "pullQuote": "If you're serious about improving your English, I'm serious about helping you get there.",
-      "title": "Meet Lyn",
-      "body": "With over 10 years of experience teaching English as a foreign and second language, Lyn helps non-native speakers communicate with confidence, clarity, and ease.\n\nBased in South Korea, she has coached students from diverse backgrounds to improve their English for work, travel, academic success, and everyday life, specializing in pronunciation, accent improvement, conversational fluency, phrasal verbs, and idioms.\n\nHer practical, student-centered approach goes beyond memorizing grammar and vocabulary. Whether you're preparing for the IELTS or TOEIC, advancing your Business English for meetings and presentations, or building confidence for travel, every lesson is personalized to match your goals, proficiency level, and learning style.",
-      "testimonialQuote": "I've been a student of Lyn's for over two years, and my pronunciation and overall speaking have improved so much. She gives real practice every class and genuinely cares about how I'm progressing.",
-      "testimonialAuthor": "— Ivan"
+      "credential1": "10+ years teaching",
+      "credential2": "EFL & ESL",
+      "credential3": "Based in South Korea",
+      "specialtiesLabel": "What I teach",
+      "specialty1": "Pronunciation",
+      "specialty2": "Accent training",
+      "specialty3": "Shadowing",
+      "specialty4": "Phrasal verbs & idioms",
+      "specialty5": "IELTS / TOEIC",
+      "specialty6": "Business English",
+      "cta": "Message Lyn"
     },
     "testimonials": {
-      "eyebrow": "Student Stories",
-      "title": "What Students Say",
+      "eyebrow": "Student stories",
+      "title": "What students",
+      "titleHighlight": "actually say.",
       "student1": {
         "quote": "I've been a student of Lyn's for over two years, and my pronunciation and overall speaking have improved so much. She gives real practice every class and genuinely cares about how I'm progressing.",
         "author": "Ivan"
@@ -437,123 +486,181 @@
       }
     },
     "courses": {
-      "eyebrow": "Self-Paced Courses",
-      "title": "Lyn's Courses",
-      "subtitle": "Message Lyn to sign up for any of these.",
-      "signUpCta": "Contact to Sign Up",
-      "featuredBadge": "Most Popular",
+      "eyebrow": "Self-paced courses",
+      "title": "Lyn's",
+      "titleHighlight": "courses.",
+      "subtitle": "Buy once, work through it at your pace. Message Lyn to get set up with any of these.",
+      "signUpCta": "Message Lyn",
+      "featuredBadge": "Most popular",
+      "trustNote": "Not sure? Message Lyn first.",
+      "includesLabel": "What's inside",
       "membership": {
         "title": "Accent Training Membership",
-        "description": "Lifetime access to Lyn's full accent training curriculum, with personal feedback on your submissions.",
-        "price": "$300 (lifetime access)",
-        "benefit1": "30 structured sessions covering pronunciation, reduction, linking & rhythm",
-        "benefit2": "Personal feedback from Lyn on your recordings",
-        "benefit3": "Access to the private Fluency Community"
+        "description": "The full accent curriculum. Yours for life, with Lyn reviewing what you send in.",
+        "price": "$300",
+        "priceNote": "lifetime access",
+        "benefit1": "30 sessions: pronunciation, reduction, linking, rhythm",
+        "benefit2": "Lyn's personal feedback on your recordings",
+        "benefit3": "Private Fluency Community access"
       },
       "accent": {
-        "title": "Standard English Pronunciation and Accent Training",
-        "description": "A self-paced course covering the seven essential sounds of standard American English pronunciation.",
-        "price": "$75 ($15 on sale)",
-        "benefit1": "R/L, S/Z, and other tricky consonant sounds",
-        "benefit2": "The schwa sound, word stress, and syllable rhythm",
-        "benefit3": "Linking sounds and real practice with movie-clip analysis"
+        "title": "Pronunciation & Accent Training",
+        "description": "The seven sounds that make or break standard American English.",
+        "price": "$75",
+        "priceNote": "$15 on sale",
+        "benefit1": "R/L, S/Z and the other tricky consonants",
+        "benefit2": "The schwa, word stress, syllable rhythm",
+        "benefit3": "Linking sounds, practised on movie clips"
       },
       "phrasalVerbs": {
-        "title": "100 Phrasal Verbs with 60 Mini-Stories",
-        "description": "Learn the everyday expressions native speakers actually use, through short, memorable stories.",
+        "title": "100 Phrasal Verbs",
+        "description": "The expressions native speakers actually use — learned through 60 short stories.",
         "price": "$15",
-        "benefit1": "Common phrasal verbs and idioms, explained simply",
-        "benefit2": "Practiced through mini-stories, not flashcards",
-        "benefit3": "Sound more natural in everyday conversation"
+        "priceNote": "",
+        "benefit1": "100 everyday phrasal verbs and idioms",
+        "benefit2": "60 mini-stories instead of flashcards",
+        "benefit3": "Sound natural in real conversation"
       },
       "ipa": {
-        "title": "International Phonetic Alphabet Coaching",
-        "description": "1-on-1 coaching through the IPA symbols, with sample words and meanings for every sound.",
+        "title": "IPA Coaching",
+        "description": "Read the phonetic alphabet, and hear the sounds you've been missing.",
         "price": "$100",
-        "benefit1": "Read and understand IPA transcription",
-        "benefit2": "Practice the sounds you can't hear correctly yet",
-        "benefit3": "Personal coaching time with Lyn"
+        "priceNote": "1-on-1",
+        "benefit1": "Read IPA transcription confidently",
+        "benefit2": "Practise the sounds you can't hear yet",
+        "benefit3": "Sample words and meanings for every symbol"
       },
       "shadowing": {
-        "title": "1-on-1 Shadowing Online Coaching",
-        "description": "Guided shadowing sessions where you repeat real speech in real time to build natural rhythm and fluency.",
+        "title": "1-on-1 Shadowing Coaching",
+        "description": "Repeat real speech in real time, live with Lyn, until the rhythm sticks.",
         "price": "$200",
-        "benefit1": "Shadow real video and audio clips with Lyn",
-        "benefit2": "Build natural rhythm, stress, and intonation",
-        "benefit3": "Direct feedback on your shadowing technique"
+        "priceNote": "online",
+        "benefit1": "Shadow real video and audio with Lyn",
+        "benefit2": "Natural rhythm, stress and intonation",
+        "benefit3": "Direct feedback on your technique"
       }
     },
     "coachingPackages": {
-      "eyebrow": "Live 1-on-1 Coaching",
-      "title": "1-on-1 Coaching Packages",
-      "subtitle": "Live 50-minute sessions with Lyn, built around your goals.",
-      "signUpCta": "Contact to Sign Up",
-      "cancellationNote": "Cancel at least 8 hours before class. Arriving 10-15 minutes late counts as absent, with no refund.",
+      "eyebrow": "Live 1-on-1",
+      "title": "Coaching",
+      "titleHighlight": "packages.",
+      "subtitle": "Fifty minutes, just you and Lyn, planned around what you're working toward.",
+      "signUpCta": "Message Lyn",
+      "pitchTitle": "No group calls. No recycled lesson plans.",
+      "pitchBody": "Every class is fifty minutes of Lyn's full attention, built around your goals and your level.",
+      "pitchPoint1": "50 minutes, one-on-one",
+      "pitchPoint2": "Planned around your goals",
+      "pitchPoint3": "Corrections as you speak",
+      "sessionsLabel": "classes",
+      "popularBadge": "Most popular",
+      "cancellationNote": "Cancel at least 8 hours before class. Arriving 10–15 minutes late counts as absent, with no refund.",
       "starter": {
         "title": "Master English Conversation",
         "price": "$95",
         "sessions": "4 classes",
-        "description": "Vocabulary through stories, speaking, listening, reading, and grammar practice, with structured feedback."
+        "description": "Stories, speaking, listening and grammar — with structured feedback.",
+        "benefit1": "Vocabulary through stories",
+        "benefit2": "Speaking, listening and reading practice",
+        "benefit3": "Structured grammar feedback"
       },
       "intermediate": {
-        "title": "Conversational English, Pronunciation & Accent Training",
+        "title": "Conversation, Pronunciation & Accent",
         "price": "$280",
         "sessions": "10 classes",
-        "description": "Idioms, phrasal verbs, travel and daily-life conversation, and American accent training through movie-clip analysis."
+        "description": "Idioms, everyday conversation, and American accent work on real movie clips.",
+        "benefit1": "Idioms and phrasal verbs in context",
+        "benefit2": "Travel and daily-life conversation",
+        "benefit3": "American accent via movie-clip analysis"
       },
       "advanced": {
-        "title": "Speak Clear Confident English",
+        "title": "Speak Clear, Confident English",
         "price": "$340",
         "sessions": "20 classes",
-        "description": "The full reduction-sounds curriculum: vowels, consonants, stress, connected speech, diphthongs, triphthongs, shadowing, and movie analysis."
+        "description": "The full reduction-sounds curriculum, start to finish.",
+        "benefit1": "Vowels, consonants, stress, connected speech",
+        "benefit2": "Diphthongs and triphthongs",
+        "benefit3": "Shadowing plus movie analysis"
       }
     },
     "miniCourses": {
-      "title": "Coming Soon",
-      "subtitle": "Bite-sized courses on specific sounds, launching soon.",
-      "comingSoon": "Coming Soon",
+      "eyebrow": "In the works",
+      "title": "Coming",
+      "titleHighlight": "soon.",
+      "subtitle": "Short courses on the specific sounds that trip people up. Tell Lyn which one you want first.",
+      "comingSoon": "Coming soon",
+      "notifyCta": "Tell Lyn you want this",
       "vowelsConsonants": {
-        "title": "Vowels and Consonant Sounds",
-        "description": "The basic pronunciation of the 14 American English vowels and the consonant letters, with example words and meanings.",
+        "title": "Vowels & Consonants",
+        "description": "All 14 American vowels and the consonant sounds, with example words.",
         "price": "$75"
       },
       "ipaSymbols": {
-        "title": "International Phonetic Symbols",
-        "description": "The IPA symbols with a list of sample words and their meanings.",
+        "title": "Phonetic Symbols",
+        "description": "Every IPA symbol, with sample words and their meanings.",
         "price": "$75"
       },
       "diphthongsTriphthongs": {
-        "title": "Diphthongs & Triphthongs Sounds",
-        "description": "Diphthong and triphthong sounds with a list of words and sentences.",
+        "title": "Diphthongs & Triphthongs",
+        "description": "The gliding sounds, in words and in full sentences.",
         "price": "$85"
       }
     },
     "features": {
-      "title": "What you'll practice",
+      "eyebrow": "The method",
+      "title": "What you'll",
+      "titleHighlight": "practise.",
+      "subtitle": "Four steps, every session. Nothing mystical about it.",
+      "stepLabel": "Step",
       "pronunciation": {
         "title": "Pronunciation & Accent",
-        "description": "Work on the sounds, rhythm, and intonation that make your English easier to understand."
+        "description": "The sounds, rhythm and intonation that make you easy to follow."
       },
       "shadowing": {
-        "title": "Shadowing Practice",
-        "description": "Build natural rhythm and fluency by shadowing real video and audio clips."
+        "title": "Shadowing",
+        "description": "Repeat real speech in real time until the rhythm sticks."
       },
       "recording": {
         "title": "Record & Compare",
-        "description": "Record yourself right in the browser and compare it side by side with the original."
+        "description": "Record in the browser. Play it back against the original."
       },
       "feedback": {
         "title": "Feedback From Lyn",
-        "description": "Lyn reviews your recordings herself and gives you direct, personal feedback."
+        "description": "She listens to your takes herself and tells you what to fix."
+      }
+    },
+    "journey": {
+      "eyebrow": "How she got here",
+      "title": "From learner to",
+      "titleHighlight": "coach.",
+      "subtitle": "The same path Lyn walks every student through.",
+      "step1": {
+        "title": "Start learning",
+        "description": "Learned English the long way herself."
+      },
+      "step2": {
+        "title": "Master the skills",
+        "description": "Formal EFL/ESL, linguistics and pronunciation training."
+      },
+      "step3": {
+        "title": "Start teaching",
+        "description": "First students in South Korea."
+      },
+      "step4": {
+        "title": "Refine the method",
+        "description": "Shadowing, recording, real feedback."
+      },
+      "step5": {
+        "title": "Expert coach",
+        "description": "10+ years in, learners worldwide."
       }
     },
     "community": {
       "eyebrow": "Community",
-      "title": "Practice with the Community",
-      "subtitle": "Join The Fluency Community Coach on YouTube and Facebook for free pronunciation tips and weekly practice.",
-      "youtube": "YouTube Channel",
-      "facebookGroup": "Facebook Group",
-      "facebookPage": "Facebook Page"
+      "title": "Practise with the community",
+      "subtitle": "Free pronunciation tips and weekly practice on YouTube and Facebook.",
+      "youtube": "YouTube channel",
+      "facebookGroup": "Facebook group",
+      "facebookPage": "Facebook page"
     },
     "faq": {
       "title": "Questions",
@@ -579,8 +686,16 @@
       }
     },
     "footer": {
-      "cta": "Interested? Get in touch.",
-      "signIn": "Existing student? Sign in"
+      "eyebrow": "Get started",
+      "cta": "Ready when",
+      "ctaHighlight": "you are.",
+      "body": "Tell Lyn what you're working toward and she'll point you at the course or package that fits. No sales pitch.",
+      "contactTitle": "Reach Lyn",
+      "emailLabel": "Email",
+      "responseNote": "Payment is arranged directly with Lyn via PayPal.",
+      "signIn": "Already a student? Sign in",
+      "rights": "All rights reserved.",
+      "exploreTitle": "Explore"
     }
   }
 }
