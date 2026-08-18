@@ -392,6 +392,50 @@
       "testimonialQuote": "I've been a student of Lyn's for over two years, and my pronunciation and overall speaking have improved so much. She gives real practice every class and genuinely cares about how I'm progressing.",
       "testimonialAuthor": "— Ivan"
     },
+    "testimonials": {
+      "eyebrow": "Student Stories",
+      "title": "What Students Say",
+      "student1": {
+        "quote": "I've been a student of Lyn's for over two years, and my pronunciation and overall speaking have improved so much. She gives real practice every class and genuinely cares about how I'm progressing.",
+        "author": "Ivan"
+      },
+      "student2": {
+        "quote": "Before Lyn's classes, I was afraid to speak in meetings. Now I lead presentations in English with confidence. Her feedback on my recordings changed everything.",
+        "author": "Min-Ji"
+      },
+      "student3": {
+        "quote": "The accent training membership is worth every penny. The structured sessions and Lyn's personal feedback helped me finally master the R and L sounds.",
+        "author": "Carlos"
+      },
+      "student4": {
+        "quote": "Lyn makes shadowing feel natural and fun. I practice every day now, and my colleagues notice how much clearer my English sounds.",
+        "author": "Yuki"
+      },
+      "student5": {
+        "quote": "I needed to improve my IELTS speaking score, and Lyn's focused approach got me from 6.0 to 7.5 in just three months.",
+        "author": "Sofia"
+      },
+      "student6": {
+        "quote": "Phrasal verbs and idioms used to confuse me completely. Lyn breaks them down in a way that finally makes sense in real conversation.",
+        "author": "Ahmed"
+      },
+      "student7": {
+        "quote": "The live coaching sessions are incredibly personalized. Lyn listens carefully, corrects gently, and always pushes me to speak more.",
+        "author": "Lin"
+      },
+      "student8": {
+        "quote": "My TOEIC speaking score jumped after working with Lyn. She knows exactly which sounds and patterns Korean speakers struggle with.",
+        "author": "Priya"
+      },
+      "student9": {
+        "quote": "I've tried many English teachers, but Lyn is different. She combines real-world practice with clear explanations you actually remember.",
+        "author": "Marco"
+      },
+      "student10": {
+        "quote": "Joining Lyn's Fluency Community was the best decision I made. Weekly practice with her tips keeps me motivated and improving.",
+        "author": "Hana"
+      }
+    },
     "courses": {
       "eyebrow": "Self-Paced Courses",
       "title": "Lyn's Courses",
