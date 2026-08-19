@@ -44,7 +44,7 @@ import { PiGraduationCapFill } from "react-icons/pi";
 import { HiSparkles } from "react-icons/hi2";
 
 import HeroWaveRing from "./HeroWaveRing";
-import { mailto } from "./links";
+import { HERO_PROOF_AVATARS, mailto } from "./links";
 import { CountUpStat, Magnetic, Shell } from "./primitives";
 import {
   accentStyles,
@@ -127,12 +127,11 @@ export default function HeroSection() {
     },
   ];
 
-  // Social-proof avatars reuse the real testimonial authors rather than stock
-  // faces, so the row carries existing content instead of invented numbers.
-  const proofAuthors: Array<{ name: string; tone: AccentTone }> = [
-    { name: t("testimonials.student1.author"), tone: "blue" },
-    { name: t("testimonials.student2.author"), tone: "violet" },
-    { name: t("testimonials.student3.author"), tone: "cyan" },
+  // Social-proof avatars — photo faces paired with testimonial author names.
+  const proofAuthors: Array<{ name: string; image: string }> = [
+    { name: t("testimonials.student1.author"), image: HERO_PROOF_AVATARS[0] },
+    { name: t("testimonials.student2.author"), image: HERO_PROOF_AVATARS[1] },
+    { name: t("testimonials.student3.author"), image: HERO_PROOF_AVATARS[2] },
   ];
 
   return (
@@ -377,46 +376,60 @@ export default function HeroSection() {
               </Box>
             </Stack>
 
-            {/* Social proof — real testimonial authors, existing trust line */}
+            {/* Social proof — stacked student avatars + trust line */}
             <Stack
               component={motion.div}
               variants={riseIn}
               direction="row"
-              spacing={1.75}
+              spacing={1.5}
               alignItems="center"
               sx={{ justifyContent: { xs: "center", lg: "flex-start" } }}
             >
-              <Stack direction="row" aria-hidden sx={{ flexShrink: 0 }}>
-                {proofAuthors.map((author, index) => {
-                  const a = accentStyles[author.tone];
-                  return (
-                    <Box
-                      key={author.name}
-                      sx={{
-                        width: 34,
-                        height: 34,
-                        ml: index === 0 ? 0 : "-10px",
-                        borderRadius: "50%",
-                        display: "grid",
-                        placeItems: "center",
-                        bgcolor: a.bg,
-                        color: a.color,
-                        border: "2px solid #fff",
-                        boxShadow: "0 2px 8px rgba(10,37,64,0.12)",
-                        fontSize: "0.78rem",
-                        fontWeight: 700,
+              <Stack
+                direction="row"
+                aria-label={proofAuthors.map((a) => a.name).join(", ")}
+                sx={{
+                  flexShrink: 0,
+                  pl: 0.5,
+                  "& > *": { position: "relative" },
+                }}
+              >
+                {proofAuthors.map((author, index) => (
+                  <Box
+                    key={author.name}
+                    sx={{
+                      width: 38,
+                      height: 38,
+                      ml: index === 0 ? 0 : "-12px",
+                      zIndex: proofAuthors.length - index,
+                      borderRadius: "50%",
+                      overflow: "hidden",
+                      border: "2.5px solid #fff",
+                      boxShadow: "0 3px 10px rgba(10,37,64,0.14)",
+                      flexShrink: 0,
+                    }}
+                  >
+                    <Image
+                      src={author.image}
+                      alt={author.name}
+                      width={38}
+                      height={38}
+                      sizes="38px"
+                      style={{
+                        objectFit: "cover",
+                        width: "100%",
+                        height: "100%",
                       }}
-                    >
-                      {author.name.charAt(0)}
-                    </Box>
-                  );
-                })}
+                    />
+                  </Box>
+                ))}
               </Stack>
               <Typography
                 sx={{
-                  fontSize: "0.88rem",
+                  fontSize: { xs: "0.84rem", md: "0.9rem" },
                   color: TEXT.secondary,
                   lineHeight: 1.45,
+                  fontWeight: 500,
                 }}
               >
                 {t("hero.trustNote")}
